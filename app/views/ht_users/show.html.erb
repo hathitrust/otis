@@ -1,0 +1,24 @@
+<div id="maincontent" class="row">
+  <h1><%= @user.userid %></h1>
+  
+  <div class="col-sm-6">
+    <dl class="dl-horizontal">
+      <dt>User ID:</dt> <dd><%= @user.userid %></dd>
+      <dt>Display Name:</dt> <dd><%= @user.displayname %></dd>
+      <dt>E-mail:</dt> <dd><%= @user.email %></dd>
+      <dt>Activity Contact:</dt> <dd><%= @user.activitycontact %></dd>
+      <dt>Approver:</dt> <dd><%= @user.approver %></dd>
+      <dt>Authorizer:</dt> <dd><%= @user.authorizer %></dd>
+      <dt>User Type:</dt> <dd><%= @user.usertype %></dd>
+      <dt>Role:</dt> <dd><%= @user.role %></dd>
+      <dt>Access:</dt> <dd><%= @user.access %></dd>
+      <dt>Expires:</dt> <dd><%= @user.expires %></dd>
+      <dt>Expire Type:</dt> <dd><%= @user.expire_type %></dd>
+      <dt>IP Restriction:</dt> <dd><%= @user.iprestrict %></dd>
+      <dt>Multi-Factor?:</dt> <dd><%= @user.mfa %></dd>
+      <dt>Identity Provider:</dt> <dd><%= @user.identity_provider %></dd>
+    </dl>
+  </div>
+</div>
+
+
