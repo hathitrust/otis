@@ -1,6 +1,8 @@
 <div id="maincontent" class="row">
   <h1><%= @user.userid %></h1>
   
+  <%= render 'shared/flash_message' %>
+  
   <div class="col-sm-6">
     <dl class="dl-horizontal">
       <dt>User ID:</dt> <dd><%= @user.userid %></dd>
@@ -18,6 +20,8 @@
       <dt>Multi-Factor?:</dt> <dd><%= @user.mfa %></dd>
       <dt>Identity Provider:</dt> <dd><%= @user.identity_provider %></dd>
     </dl>
+    
+    <%= link_to 'Edit', edit_ht_user_path %>
   </div>
 </div>
 

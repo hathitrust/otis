@@ -1,0 +1,21 @@
+<div id="maincontent" class="row">
+  <h1>Edit <%= "#{@user.userid}" %></h1>
+
+  <%= render 'shared/flash_message' %>
+
+  <%= form_with(model: @user, local: true) do |form| %>
+ 
+   <%= form.hidden_field :userid %>
+    <p>
+      <%= form.label :iprestrict %><br>
+      <%= form.text_field :iprestrict %>
+    </p>
+    <p>
+      <%= form.submit 'Submit Changes' %>
+    </p>
+ 
+  <% end %>
+ 
+  <%= link_to 'Back', ht_users_path %>
+</div>
+

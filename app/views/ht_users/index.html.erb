@@ -1,32 +1,34 @@
-<h1>Users</h1>
+<div id="maincontent" class="row">
+  <h1>Users</h1>
 
-<%= form_tag(ht_users_path, method: :get) do %>
-  E-mail <%= text_field_tag :email %>
-  <%= submit_tag 'Search', name: nil %>
-<% end %>
-
-<table class="table table-striped">
-  <th>ID</th>
-  <th>Name</th>
-  <th>E-mail</th>
-  <th>Role</th>
-  <th>Expires</th>
-  <th>IP Restriction</th>
-  <th>MFA?</th>
-
-  <% @users.each do |u| %>
-    <tr>
-      <td><%= link_to u[:userid], ht_user_path(Base64.encode64(u[:userid])) %></td>
-      <td><%= u[:displayname] %></td>
-      <td><%= u[:email] %></td>
-      <td><%= u[:role] %></td>
-      <td><%= u[:expires].strftime("%Y-%m-%d") %></td>
-      <td><%= u[:iprestrict] %></td>
-      <td>
-        <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
-      </td>
-    </tr>
+  <%= render 'shared/flash_message' %>
+  <%= form_tag(ht_users_path, method: :get) do %>
+    E-mail <%= text_field_tag :email %>
+    <%= submit_tag 'Search', name: nil %>
   <% end %>
-</table>
 
+  <table class="table table-striped">
+    <th>ID</th>
+    <th>Name</th>
+    <th>E-mail</th>
+    <th>Role</th>
+    <th>Expires</th>
+    <th>IP Restriction</th>
+    <th>MFA?</th>
+
+    <% @users.each do |u| %>
+      <tr>
+        <td><%= link_to u.userid, ht_user_path(u) %></td>
+        <td><%= u[:displayname] %></td>
+        <td><%= u[:email] %></td>
+        <td><%= u[:role] %></td>
+        <td><%= u[:expires]&.strftime("%Y-%m-%d") %></td>
+        <td><%= u.iprestrict %></td>
+        <td>
+          <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
   

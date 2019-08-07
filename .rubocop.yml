@@ -12,11 +12,19 @@ AllCops:
     - 'db/**/*'
     - 'log/**/*'
     - 'ruumba/**/*'
-    - 'test/**/*'
     - 'tmp/**/*'
     - 'vendor/**/*'
 
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
 Metrics/LineLength:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/ConditionalAssignment:
