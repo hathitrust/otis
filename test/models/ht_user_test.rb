@@ -22,4 +22,10 @@ class HTUserTest < ActiveSupport::TestCase
     assert_equal user[:iprestrict], '^127\.0\.0\.1$'
     assert_equal user.iprestrict, '127.0.0.1'
   end
+
+  test 'iprestrict with whitespace' do
+    user = HTUser.new(userid: 'user', iprestrict: ' 127.0.0.1 ')
+    assert_equal user[:iprestrict], '^127\.0\.0\.1$'
+    assert_equal user.iprestrict, '127.0.0.1'
+  end
 end
