@@ -27,6 +27,7 @@ class HTUser < ApplicationRecord
   end
 
   def iprestrict=(val)
+    val = val.strip
     escaped = '^' + val.gsub('.', '\.') + '$'
     write_attribute(:iprestrict, escaped)
   end
