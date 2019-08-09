@@ -6,7 +6,7 @@ class HTUsersController < ApplicationController
   def index
     if params[:email]
       @users = HTUser.where('email LIKE ?', "%#{params[:email]}%").order(:userid)
-      flash.now[:alert] = "No results for '#{params[:email]}'" unless @users.count.positive?
+      flash.now[:alert] = "No results for '#{params[:email]}'" if @users.empty?
     else
       @users = HTUser.all.order(:userid)
     end
