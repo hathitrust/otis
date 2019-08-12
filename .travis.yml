@@ -1,9 +1,14 @@
-sudo: false
+dist: trusty
 language: ruby
+cache: bundler
+sudo: required
+bundler_args: --without production
 rvm:
   - 2.4.1
+
 services:
   - mysql
+
 branches:
   only:
     - master
