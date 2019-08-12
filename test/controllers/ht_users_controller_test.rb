@@ -1,0 +1,69 @@
+# frozen_string_literal: true
+
+require 'test_helper'
+require 'byebug'
+
+class HTUsersControllerTest < ActionDispatch::IntegrationTest
+  test 'should get index' do
+    get ht_users_url
+    assert_response :success
+    assert_not_nil assigns(:users)
+    assert_equal 'index', @controller.action_name
+    # assert_equal "application/x-www-form-urlencoded", @request.media_type
+    assert_match 'Users', @response.body
+    assert_match 'me@here.edu', @response.body
+    assert_match 'him@there.com', @response.body
+  end
+
+  test 'should get index with successful e-mail search' do
+    get ht_users_url, params: { email: 'me@here.edu' }
+    assert_response :success
+    assert_equal assigns(:users).count, 1
+    assert_equal 'index', @controller.action_name
+    assert_empty flash
+    assert_match 'Users', @response.body
+  end
+
+  test 'should get index with unsuccessful e-mail search' do
+    get ht_users_url, params: { email: 'nobody@here.edu' }
+    assert_response :success
+    assert_equal assigns(:users).count, 0
+    assert_equal 'index', @controller.action_name
+    assert_match 'nobody', flash[:alert]
+    assert_match 'Users', @response.body
+  end
+
+  test 'should get show page' do
+    get ht_users_url :user1
+    assert_response :success
+    assert_not_nil assigns(:users)
+    assert_match 'user1', @response.body
+  end
+
+  test 'should get edit page' do
+    get edit_ht_user_url Base64.encode64(ht_users(:user1).userid)
+    assert_response :success
+    assert_equal 'edit', @controller.action_name
+  end
+
+  test 'edit IP address succeeds' do
+    @encoded = Base64.encode64(ht_users(:user1).userid)
+    patch ht_user_url @encoded, params: {'ht_user' => {'iprestrict' => '33.33.33.33'}}
+    assert_response :redirect
+    assert_equal 'update', @controller.action_name
+    assert_not_empty flash[:notice]
+    assert_redirected_to ht_user_path(@encoded)
+    follow_redirect!
+    assert_match '33.33.33.33', @response.body
+    assert_equal '^33\.33\.33\.33$', HTUser.find(:user1)[:iprestrict]
+  end
+
+  test 'edit IP address fails' do
+    @encoded = Base64.encode64(ht_users(:user2).userid)
+    patch ht_user_url @encoded, params: {'ht_user' => {'iprestrict' => '33.33.33.blah'}}
+    assert_response :success
+    assert_equal 'update', @controller.action_name
+    assert_match 'IPv4', flash[:alert]
+    assert_match '127.0.0.2', @response.body
+  end
+end

@@ -90,3 +90,7 @@ group :development, :test do
   gem 'rubocop'
 end
 
+group :test do
+  gem 'rails-controller-testing'
+end
+
