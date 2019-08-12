@@ -1,0 +1,27 @@
+dist: trusty
+language: ruby
+cache: bundler
+sudo: required
+bundler_args: --without production
+rvm:
+  - 2.4.1
+
+services:
+  - mysql
+
+branches:
+  only:
+    - master
+    - develop
+
+before_install:
+  - sudo service mysql restart
+  - gem update --system
+  - gem install bundler
+
+before_script:
+  - bundle exec rails db:setup
+
+script:
+  - bundle exec rubocop
+  - bundle exec rails test
