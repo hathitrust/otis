@@ -15,6 +15,7 @@ branches:
     - develop
 
 before_install:
+  - sudo service mysql restart
   - gem update --system
   - gem install bundler
 
