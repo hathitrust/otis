@@ -73,9 +73,6 @@ gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'jquery-rails'
 
-# Keycard provides authentication support and user/request information
-gem 'keycard'
-
 gem 'moku', git: 'https://github.com/mlibrary/moku'
 
 # Use MySQL as the database for Active Record
