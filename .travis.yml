@@ -4,7 +4,8 @@ cache: bundler
 sudo: required
 bundler_args: --without production
 rvm:
-  - 2.4.1
+  - 2.5
+  - 2.6
 
 services:
   - mysql
