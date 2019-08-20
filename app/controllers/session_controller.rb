@@ -1,19 +1,22 @@
 # frozen_string_literal: true
 
 class SessionController < ApplicationController
-  skip_before_action :authenticate!
+  skip_before_action :authenticate!, :authorize!
 
   def new
     if login
       redirect_back_or_to '/'
-    else
+    elsif Otis.config.allow_impersonation
       render 'shared/login_form'
+    else
+      render_unauthorized
     end
   end
 
   def create
-    username = params[:username]
-    user = User.find_by_username(username)
+    return forbidden! unless Otis.config.allow_impersonation
+
+    user = User.new(params[:username])
     if user
       auto_login(user)
       redirect_back_or_to '/'

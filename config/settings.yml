@@ -1,2 +1,3 @@
-
+# Allow users to impersonate (login as) anyone -- useful for development
+allow_impersonation: false
 

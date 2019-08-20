@@ -1,2 +1,4 @@
+allow_impersonation: true
+
 users:
 - nobody@example.com

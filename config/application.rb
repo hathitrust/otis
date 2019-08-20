@@ -7,6 +7,16 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module Otis
+
+  class << self
+    def config
+      @config ||= Ettin.for(Ettin.settings_files('config', Rails.env))
+    end
+  end
+
+  # eager load
+  config
+
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2

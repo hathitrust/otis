@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
 
   before_action :validate_session
   before_action :authenticate!
+  before_action :authorize!
   protect_from_forgery with: :exception, unless: -> { authentication.csrf_safe? }
   before_action :set_csrf_cookie
 
@@ -18,9 +19,16 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::InvalidAuthenticityToken, with: :user_not_authorized
   rescue_from NotAuthorizedError, with: :user_not_authorized
 
+  def authorize!
+    return if current_user.nil?
+
+    raise NotAuthorizedError unless Otis.config.users.include? current_user.id
+  end
+
   private
 
   def user_not_authorized
+    logout
     render_forbidden
   end
 

@@ -3,15 +3,32 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  test 'find_by_username accepts known user' do
-    assert_nothing_raised do
-      User.find_by_username('nobody@example.com')
+  test 'authenticate_by_auth_token raises' do
+    assert_raises StandardError do
+      User.authenticate_by_auth_token('id')
     end
   end
 
-  test 'find_by_username raises for unknown user' do
-    assert_raises ApplicationController::NotAuthorizedError do
-      User.find_by_username('nobody_at_all@example.com')
-    end
+  test 'authenticate_by_id returns a User' do
+    user = User.authenticate_by_id('id')
+    assert_instance_of User, user
+    assert_equal user.id, 'id'
+  end
+
+  test 'authenticate_by_user_eid returns a User' do
+    user = User.authenticate_by_user_eid('eid')
+    assert_instance_of User, user
+    assert_equal user.id, 'eid'
+  end
+
+  test 'new returns a User' do
+    user = User.new('id')
+    assert_instance_of User, user
+    assert_equal user.id, 'id'
+  end
+
+  test 'identity returns something' do
+    user = User.new('id')
+    assert_equal user.identity, username: 'id'
   end
 end
