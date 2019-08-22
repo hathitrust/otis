@@ -31,7 +31,4 @@ test:
 # Warning: Do not set username and password in the file!
 # Assign username and password to environment variables.
 production:
-  <<: *default
-  database: ht_repository
-  username: <required>
-  password:	<required>
+  url: <%= Rails.env.production? ? Otis.config.db&.url : '' %>
