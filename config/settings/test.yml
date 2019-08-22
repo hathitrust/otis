@@ -2,3 +2,11 @@ allow_impersonation: true
 
 users:
 - nobody@example.com
+
+# relative_url_root doesn't work for tests
+relative_url_root: '/'
+
+keycard:
+  database:
+    adapter: sqlite
+    database: tmp/keycard_test.sqlite3
