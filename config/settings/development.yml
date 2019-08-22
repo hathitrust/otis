@@ -1,1 +1,6 @@
 allow_impersonation: true
+
+keycard:
+  database:
+    adapter: sqlite
+    database: db/keycard_development.sqlite3

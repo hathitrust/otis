@@ -2,3 +2,8 @@ allow_impersonation: true
 
 users:
 - nobody@example.com
+
+keycard:
+  database:
+    adapter: sqlite
+    database: db/keycard_test.sqlite3
