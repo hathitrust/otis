@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'byebug'
 
 class HTUsersControllerTest < ActionDispatch::IntegrationTest
   test 'should get index' do
+    sign_in!
     get ht_users_url
     assert_response :success
     assert_not_nil assigns(:users)
@@ -16,6 +16,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index with successful e-mail search' do
+    sign_in!
     get ht_users_url, params: { email: 'me@here.edu' }
     assert_response :success
     assert_equal assigns(:users).count, 1
@@ -25,6 +26,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get index with unsuccessful e-mail search' do
+    sign_in!
     get ht_users_url, params: { email: 'nobody@here.edu' }
     assert_response :success
     assert_equal assigns(:users).count, 0
@@ -34,6 +36,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get show page' do
+    sign_in!
     get ht_users_url :user1
     assert_response :success
     assert_not_nil assigns(:users)
@@ -41,12 +44,14 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get edit page' do
+    sign_in!
     get edit_ht_user_url Base64.encode64(ht_users(:user1).userid)
     assert_response :success
     assert_equal 'edit', @controller.action_name
   end
 
   test 'edit IP address succeeds' do
+    sign_in!
     @encoded = Base64.encode64(ht_users(:user1).userid)
     patch ht_user_url @encoded, params: {'ht_user' => {'iprestrict' => '33.33.33.33'}}
     assert_response :redirect
@@ -59,6 +64,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'edit IP address fails' do
+    sign_in!
     @encoded = Base64.encode64(ht_users(:user2).userid)
     patch ht_user_url @encoded, params: {'ht_user' => {'iprestrict' => '33.33.33.blah'}}
     assert_response :success

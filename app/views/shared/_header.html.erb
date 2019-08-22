@@ -1,0 +1,9 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+  <% if logged_in? %>
+    <span class="navbar-brand" href="#"><%= "Logged in as #{current_user.id}" %></span>
+    <a class="navbar-brand" href="<%= logout_path %>">Log Out</a>
+  <% else %>
+    <span class="navbar-brand" href="#"><%= 'Not logged in' %></span>
+  <% end %>
+</nav>
+
