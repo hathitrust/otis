@@ -9,7 +9,7 @@ class SessionController < ApplicationController
     elsif Otis.config.allow_impersonation
       render 'shared/login_form'
     else
-      render_unauthorized
+      render_forbidden
     end
   end
 
@@ -21,7 +21,7 @@ class SessionController < ApplicationController
       auto_login(user)
       redirect_back_or_to '/'
     else
-      render_unauthorized
+      render_forbidden
     end
   end
 
