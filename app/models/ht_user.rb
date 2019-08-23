@@ -13,10 +13,6 @@ class HTUser < ApplicationRecord
     HUMANIZED_ATTRIBUTES[attr.to_sym] || super
   end
 
-  def to_param
-    Base64.encode64(userid)
-  end
-
   # iprestrict is in the database as an escaped IPv4 regex e.g., ^127\.0\.0\.1$
   # For the UI we strip out and restore the ^/./$ characters
   def iprestrict
