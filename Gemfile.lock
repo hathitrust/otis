@@ -77,6 +77,10 @@ GEM
     concurrent-ruby (1.1.5)
     crass (1.0.4)
     deep_merge (1.2.1)
+    dotenv (2.7.5)
+    dotenv-rails (2.7.5)
+      dotenv (= 2.7.5)
+      railties (>= 3.2, < 6.1)
     erubi (1.8.0)
     ettin (1.3.0)
       deep_merge
@@ -237,6 +241,7 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15, < 4.0)
   coffee-rails (~> 4.2)
+  dotenv-rails
   ettin
   faker
   jbuilder (~> 2.5)

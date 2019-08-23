@@ -75,9 +75,8 @@ gem 'keycard'
 
 # Use MySQL as the database for Active Record
 gem 'mysql2'
-
 gem 'simple_form'
-gem 'sqlite3'
+gem 'dotenv-rails'
 
 
 group :development, :test do
