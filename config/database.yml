@@ -8,25 +8,20 @@
 # Use mysql2 as the database for Active Record
 #
 default: &default
-  adapter: mysql2
+  adapter: sqlite3
   encoding: utf8
   pool: 5
-  #timeout: 5000
-  username: root
-  #password:
-  #shost: localhost
-  #port: 3306
 
 development:
   <<: *default
-  database: ht_repository_development
+  database: db/development.sqlite3
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: ht_repository_test
+  database: db/test.sqlite3
 
 # Warning: Do not set username and password in the file!
 # Assign username and password to environment variables.

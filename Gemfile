@@ -86,6 +86,10 @@ gem 'sqlite3'
 group :development, :test do
   gem 'byebug'
   gem 'rubocop'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'sqlite3'
+  gem 'faker'
 end
 
 group :test do
