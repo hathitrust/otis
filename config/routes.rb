@@ -2,7 +2,9 @@
 
 Rails.application.routes.draw do
   resources :users
-  resources :ht_users, defaults: { format: 'html' }
+  scope format:false, constraints: { id: /.+/ } do
+    resources :ht_users
+  end
   root 'ht_users#index'
 
   get "/login", to: "session#new", as: "login"
