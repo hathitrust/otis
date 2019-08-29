@@ -5,7 +5,7 @@ class SessionController < ApplicationController
 
   def new
     if login
-      redirect_back_or_to '/'
+      redirect_back_or_to root_path
     elsif Otis.config.allow_impersonation
       render 'shared/login_form'
     else
@@ -19,7 +19,7 @@ class SessionController < ApplicationController
     user = User.new(params[:username])
     if user
       auto_login(user)
-      redirect_back_or_to '/'
+      redirect_back_or_to root_path
     else
       render_forbidden
     end
@@ -27,13 +27,13 @@ class SessionController < ApplicationController
 
   def destroy
     logout
-    redirect_back_or_to '/'
+    redirect_back_or_to root_path
   end
 
   private
 
   def redirect_back_or_to(destination)
-    destination = session[:return_to] || destination || '/'
+    destination = session[:return_to] || destination || root_path
     session.delete(:return_to)
     redirect_to destination
   end

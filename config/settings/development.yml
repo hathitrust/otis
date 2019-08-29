@@ -1,1 +1,10 @@
 allow_impersonation: true
+relative_url_root: '/useradmin'
+
+keycard:
+  database:
+    adapter: sqlite
+    database: tmp/keycard_dev.sqlite3
+
+users:
+  - somebody@default.invalid

@@ -11,19 +11,25 @@ $ bundle install
 
 ### 2. Database
 
-Use a local copy of the `ht_repository` database. Only the `ht_users` table
-is needed at the moment.
+Development mode uses sqlite3 with generated data. The keycard database also
+needs to be set up:
 
 ```
-$ ssh <some HathiTrust server>
-$ mysqldump -u <MySQL user> -p -h <MySQL host> ht_repository ht_users
+bundle exec rake keycard:migrate RAILS_ENV=development
+bundle exec rake keycard:migrate RAILS_ENV=test
+bundle exec rake db:setup
 ```
 
 ### 3. Testing
 
-We still need a CI setup, but for now we have Rails tests and RuboCop:
+```
+bundle exec rake test
+```
+
+### 4. Trying it out
 
 ```
-bin/rails test test/
-bundle exec rubocop
+bundle exec rails s
 ```
+
+Go to http://localhost:3000 and log in as `somebody@default.invalid`

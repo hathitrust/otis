@@ -1,3 +1,6 @@
 # Allow users to impersonate (login as) anyone -- useful for development
 allow_impersonation: false
 
+# By default don't allow any users to log in
+users: []
+

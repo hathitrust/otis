@@ -47,9 +47,6 @@ group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '< 3.2', '>= 3.0.5'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 group :test do
@@ -78,14 +75,17 @@ gem 'keycard'
 
 # Use MySQL as the database for Active Record
 gem 'mysql2'
-
 gem 'simple_form'
-gem 'sqlite3'
+gem 'dotenv-rails'
 
 
 group :development, :test do
   gem 'byebug'
   gem 'rubocop'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'sqlite3'
+  gem 'faker'
 end
 
 group :test do

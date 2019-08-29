@@ -21,6 +21,7 @@ before_install:
   - gem install bundler
 
 before_script:
+  - bundle exec rake keycard:migrate RAILS_ENV=test
   - bundle exec rails db:setup
 
 script:
