@@ -37,7 +37,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get show page' do
     sign_in!
-    get ht_users_url :user1
+    get ht_users_url 'me@here.edu'
     assert_response :success
     assert_not_nil assigns(:users)
     assert_match 'user1', @response.body
@@ -45,26 +45,26 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get edit page' do
     sign_in!
-    get edit_ht_user_url ht_users(:user1).userid
+    get edit_ht_user_url 'me@here.edu'
     assert_response :success
     assert_equal 'edit', @controller.action_name
   end
 
   test 'edit IP address succeeds' do
     sign_in!
-    patch ht_user_url ht_users(:user1).userid, params: {'ht_user' => {'iprestrict' => '33.33.33.33'}}
+    patch ht_user_url 'me@here.edu', params: {'ht_user' => {'iprestrict' => '33.33.33.33'}}
     assert_response :redirect
     assert_equal 'update', @controller.action_name
     assert_not_empty flash[:notice]
-    assert_redirected_to ht_user_path(ht_users(:user1).userid)
+    assert_redirected_to ht_user_path('me@here.edu')
     follow_redirect!
     assert_match '33.33.33.33', @response.body
-    assert_equal '^33\.33\.33\.33$', HTUser.find(:user1)[:iprestrict]
+    assert_equal '^33\.33\.33\.33$', HTUser.find('me@here.edu')[:iprestrict]
   end
 
   test 'edit IP address fails' do
     sign_in!
-    patch ht_user_url ht_users(:user2).userid, params: {'ht_user' => {'iprestrict' => '33.33.33.blah'}}
+    patch ht_user_url 'him@there.com', params: {'ht_user' => {'iprestrict' => '33.33.33.blah'}}
     assert_response :success
     assert_equal 'update', @controller.action_name
     assert_match 'IPv4', flash[:alert]
