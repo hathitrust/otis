@@ -8,9 +8,9 @@
   <% end %>
 
   <table class="table table-striped">
-    <th>ID</th>
-    <th>Name</th>
     <th>E-mail</th>
+    <th>Name</th>
+    <th>ID</th>
     <th>Role</th>
     <th>Expires</th>
     <th>IP Restriction</th>
@@ -18,11 +18,11 @@
 
     <% @users.each do |u| %>
       <tr>
-        <td><%= link_to u.userid, ht_user_path(u) %></td>
-        <td><%= u[:displayname] %></td>
-        <td><%= u[:email] %></td>
-        <td><%= u[:role] %></td>
-        <td><%= u[:expires]&.strftime("%Y-%m-%d") %></td>
+        <td><%= link_to u.email, ht_user_path(u) %></td>
+        <td><%= u.displayname %></td>
+        <td><%= u.userid %></td>
+        <td><%= u.role %></td>
+        <td><%= u.expires&.strftime("%Y-%m-%d") %></td>
         <td><%= u.iprestrict %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
