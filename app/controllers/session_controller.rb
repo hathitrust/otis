@@ -6,10 +6,8 @@ class SessionController < ApplicationController
   def new
     if login
       redirect_back_or_to root_path
-    elsif Otis.config.allow_impersonation
-      render 'shared/login_form'
     else
-      render_forbidden
+      default_login
     end
   end
 
@@ -40,5 +38,18 @@ class SessionController < ApplicationController
 
   def forbidden!
     head 403
+  end
+
+  def default_login
+    redirect_to shib_login_url(request.base_url + (session[:return_to] || ''))
+  end
+
+  def shib_login_url(target)
+    URI("#{Otis.config.shibboleth.sp.url}/Login").tap do |url|
+      url.query = URI.encode_www_form(
+        target: target,
+        entityID: Otis.config.shibboleth.default_idp.entity_id
+      )
+    end.to_s
   end
 end

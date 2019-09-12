@@ -5,7 +5,8 @@ require 'test_helper'
 class SessionControllerTest < ActionDispatch::IntegrationTest
   test 'should get login URL' do
     get login_url
-    assert_response :success
+    assert_response :redirect
+    assert_redirected_to %r{/Shibboleth\.sso/}
   end
 
   test 'login succeeds for known user' do
