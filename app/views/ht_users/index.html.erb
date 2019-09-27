@@ -3,7 +3,7 @@
 
   <%= render 'shared/flash_message' %>
   <%= form_tag(ht_users_path, method: :get) do %>
-    E-mail <%= text_field_tag :email %>
+    E-mail <%= text_field_tag :email, params[:email] %>
     <%= submit_tag 'Search', name: nil %>
   <% end %>
 
@@ -12,6 +12,7 @@
     <th>Name</th>
     <th>ID</th>
     <th>Role</th>
+    <th>Institution</th>
     <th>Expires</th>
     <th>IP Restriction</th>
     <th>MFA?</th>
@@ -22,6 +23,7 @@
         <td><%= u.displayname %></td>
         <td><%= u.userid %></td>
         <td><%= u.role %></td>
+        <td><%= u.institution %></td>
         <td><%= u.expires&.strftime("%Y-%m-%d") %></td>
         <td><%= u.iprestrict %></td>
         <td>

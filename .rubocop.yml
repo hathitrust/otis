@@ -9,7 +9,6 @@ AllCops:
   Exclude:
     - 'bin/**/*'
     - 'config/**/*'
-    - 'db/**/*'
     - 'log/**/*'
     - 'ruumba/**/*'
     - 'tmp/**/*'
