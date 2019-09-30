@@ -5,8 +5,10 @@ user1:
   iprestrict: ^127\.0\.0\.1$
   email: me@here.edu
   identity_provider: entity1
+  expires: '2020-01-01 00:00:00'
 
 user2:
   userid: user2
   iprestrict: ^127\.0\.0\.2$
   email: him@there.com
+  expires: '2020-01-01 00:00:00'

@@ -24,7 +24,7 @@
         <td><%= u.userid %></td>
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
-        <td><%= u.expires&.strftime("%Y-%m-%d") %></td>
+        <td><%= u.expires(short: true) %></td>
         <td><%= u.iprestrict %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>

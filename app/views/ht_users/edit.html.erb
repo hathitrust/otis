@@ -7,8 +7,16 @@
  
    <%= form.hidden_field :userid %>
     <p>
-      <%= form.label :iprestrict %><br>
+      <%= form.label :iprestrict %><br/>
       <%= form.text_field :iprestrict %>
+    </p>
+    <p>
+      <% expired = @user.expires < Time.current %>
+      <%= form.label :expires, expired ? 'Expired' : 'Expires' %><br/>
+      <%= form.text_field :expires, value: @user.expires, size: 30, id: :expires_field %>
+      <% unless expired %>
+        <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');" %>
+      <% end %>
     </p>
     <p>
       <%= form.submit 'Submit Changes' %>

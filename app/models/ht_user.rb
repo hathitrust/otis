@@ -6,6 +6,11 @@ class HTUser < ApplicationRecord
   validates :iprestrict, presence: true,
                          format: { with: /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/,
                                    message: 'requires a valid IPv4 address' }
+  validate do
+    DateTime.parse(expires.to_s)
+  rescue StandardError
+    errors[:expires] << 'must be a valid timestamp'
+  end
 
   HUMANIZED_ATTRIBUTES = {
     iprestrict: 'IP Restriction'
@@ -28,6 +33,11 @@ class HTUser < ApplicationRecord
     val = val.strip
     escaped = '^' + val.gsub('.', '\.') + '$'
     write_attribute(:iprestrict, escaped)
+  end
+
+  # Display datetime without UTC suffix or just date
+  def expires(short: false)
+    short ? self[:expires]&.strftime('%Y-%m-%d') : self[:expires]&.to_s(:db)
   end
 
   def institution
