@@ -34,8 +34,8 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
   end
 
   create_table :ht_institutions, id: false do |t|
-    t.string :sdrinst, primary_key: true
-    t.string :inst_id
+    t.string :sdrinst # deprecated
+    t.string :inst_id, primary_key: true
     t.string :grin_instance
     t.string :name
     t.string :template

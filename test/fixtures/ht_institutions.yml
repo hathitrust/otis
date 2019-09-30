@@ -1,9 +1,9 @@
 institution1:
-  sdrinst: inst1
+  inst_id: inst1
   name: "Institution 1"
   entityID: entity1
 
 institution2:
-  sdrinst: inst2
+  inst_id: inst2
   name: "Institution 2"
   entityID: entity2
