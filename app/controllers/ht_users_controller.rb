@@ -30,6 +30,6 @@ class HTUsersController < ApplicationController
   end
 
   def user_params
-    params.require(:ht_user).permit(:userid, :iprestrict)
+    params.require(:ht_user).permit(:userid, :iprestrict, :expires)
   end
 end

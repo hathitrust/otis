@@ -14,5 +14,7 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
-  # Add more helper methods to be used by all tests here...
+  def create_test_ht_user(userid, iprestrict: '127.0.0.1', expires: '2020-09-30 16:03:09')
+    HTUser.new(userid: userid, iprestrict: iprestrict, expires: expires)
+  end
 end
