@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,9 +13,9 @@
 # It's strongly recommended that you check this file into your version control system.
 #
 
-raise "Not for production use" if Rails.env.production?
+raise StandardError, 'Not for production use' if Rails.env.production?
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
   create_table :ht_users, id: false do |t|
     t.string :userid, primary_key: true
     t.string :displayname
@@ -31,4 +33,24 @@ ActiveRecord::Schema.define(version: 0) do
     t.string :identity_provider
   end
 
+  create_table :ht_institutions, id: false do |t|
+    t.string :sdrinst # deprecated
+    t.string :inst_id, primary_key: true
+    t.string :grin_instance
+    t.string :name
+    t.string :template
+    t.string :authtype
+    t.string :domain
+    t.boolean :us
+    t.string :mapto_domain
+    t.string :mapto_sdrinst
+    t.string :mapto_inst_id
+    t.string :mapto_name
+    t.string :mapto_entityID
+    t.boolean :enabled
+    t.boolean :orph_agree
+    t.string :entityID
+    t.text :allowed_affiliations
+    t.string :shib_authncontext_class
+  end
 end

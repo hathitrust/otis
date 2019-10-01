@@ -41,6 +41,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_nil assigns(:users)
     assert_match 'user1', @response.body
+    assert_match 'Institution 1', @response.body
   end
 
   test 'should get edit page' do
