@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :logged_in?, :current_user
 
-  before_action :safe_validate_session
+  before_action :validate_session
   before_action :authenticate!
   before_action :authorize!
   protect_from_forgery with: :exception, unless: -> { authentication.csrf_safe? }
@@ -55,12 +55,5 @@ class ApplicationController < ActionController::Base
 
   def notary
     @notary ||= Keycard::Notary.default
-  end
-
-  # Keycard workaround: validate_session clobbers the session
-  def safe_validate_session
-    rt = session[:return_to]
-    validate_session
-    session[:return_to] = rt
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FakeShibController < ApplicationController
-  skip_before_action :authenticate!, :authorize!
+  skip_before_action :validate_session, :authenticate!, :authorize!
 
   def new
     raise StandardError, 'fake_shib_controller should not be used in Production' if Rails.env.production?
