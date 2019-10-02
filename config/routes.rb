@@ -9,5 +9,11 @@ Rails.application.routes.draw do
 
   get "/login", to: "session#new", as: "login"
   post "/login", to: "session#create", as: "login_as"
-  match "/logout", to: "session#destroy", as: "logout", via: [:get, :post]
+  unless Rails.env.production?
+    match "/logout", to: "session#destroy", as: "logout", via: [:get, :post]
+  end
+  
+  unless Rails.env.production?
+    get 'Shibboleth.sso/Login', controller: :fake_shib, as: :fake_shib, action: :new
+  end
 end
