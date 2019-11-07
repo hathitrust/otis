@@ -11,4 +11,5 @@ user2:
   userid: user2
   iprestrict: ^127\.0\.0\.2$
   email: him@there.com
+  identity_provider: entity2
   expires: '2020-01-01 00:00:00'

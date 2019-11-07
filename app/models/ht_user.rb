@@ -11,6 +11,7 @@ class HTUser < ApplicationRecord
   validates :email, presence: true
   validates :userid, presence: true
   validates :expires, presence: true
+  validates :identity_provider, presence: true
 
   scope :active, -> { where('expires > CURRENT_TIMESTAMP') }
   scope :expired, -> { where('expires <= CURRENT_TIMESTAMP') }
