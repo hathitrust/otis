@@ -3,9 +3,18 @@
 class HTUser < ApplicationRecord
   self.primary_key = 'email'
   has_one :ht_institution, foreign_key: :entityID, primary_key: :identity_provider
+
   validates :iprestrict, presence: true,
                          format: { with: /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/,
                                    message: 'requires a valid IPv4 address' }
+
+  validates :email, presence: true
+  validates :userid, presence: true
+  validates :expires, presence: true
+
+  scope :active, -> { where('expires > CURRENT_TIMESTAMP') }
+  scope :expired, -> { where('expires <= CURRENT_TIMESTAMP') }
+
   validate do
     DateTime.parse(expires.to_s)
   rescue StandardError
