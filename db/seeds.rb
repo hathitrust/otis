@@ -12,12 +12,8 @@ raise StandardError, 'Not for production use' if Rails.env.production?
 
 require 'faker'
 
-identity_providers = []
-10.times do
-  identity_providers << Faker::Internet.unique.url
-end
-
-10.times do
+# rubocop:disable Metrics/MethodLength
+def create_ht_user(expires:)
   u = HTUser.new(
     userid: Faker::Internet.email,
     displayname: Faker::Name.name,
@@ -28,31 +24,30 @@ end
     usertype: %w[staff external student].sample,
     role: %w[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd].sample,
     access: %w[total normal].sample,
-    expires: Faker::Time.forward,
+    expires: expires,
     expire_type: %w[expiresannually expiresbiannually expirescustom90 expirescustom60].sample,
     mfa: 0,
-    identity_provider: identity_providers.sample
+    identity_provider: HTInstitution.all.sample.entityID
   )
   u.iprestrict = Faker::Internet.ip_v4_address
   u.save
 end
+# rubocop:enable Metrics/MethodLength
 
-10.times do
-  name = Faker::Name.unique.last_name.downcase
-  domain = Faker::Internet.domain_name
-  i = HTInstitution.new(
-    sdrinst: name,
-    inst_id: name,
-    name: Faker::Educator.university,
-    template: Faker::Internet.url,
-    authtype: ['shibboleth', ''].sample,
-    domain: domain,
-    us: [0, 1].sample,
-    enabled: [0, 1, 2, 3].sample,
-    orph_agree: [0, 1].sample,
-    entityID: identity_providers.sample,
-    allowed_affiliations: '^(alum|member)@' + domain,
-    shib_authncontext_class: Faker::Internet.url
+5.times do
+  HTInstitution.create(
+    inst_id: Faker::Internet.domain_word,
+    name: Faker::University.name,
+    entityID: Faker::Internet.url
   )
-  i.save
+end
+
+# active users
+10.times do
+  create_ht_user(expires: Faker::Time.forward)
+end
+
+# expired users
+5.times do
+  create_ht_user(expires: Faker::Time.backward)
 end
