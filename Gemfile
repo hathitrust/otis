@@ -86,6 +86,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'sqlite3'
   gem 'faker'
+  gem 'factory_bot_rails'
 end
 
 group :test do
