@@ -77,4 +77,24 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match 'IPv4', flash[:alert]
     assert_match '127.0.0.2', @response.body
   end
+
+  test 'active users separated from expired users' do
+    active = create(:ht_user, :active)
+    expired = create(:ht_user, :expired)
+
+    sign_in!
+    get ht_users_url
+
+    assert_match(/Active Users.*#{active.userid}.*Expired Users.*#{expired.userid}/m, @response.body)
+  end
+
+  test 'users sorted by institution' do
+    create(:ht_user, ht_institution: create(:ht_institution, name: 'Zebra College'))
+    create(:ht_user, ht_institution: create(:ht_institution, name: 'Aardvark University'))
+
+    sign_in!
+    get ht_users_url
+
+    assert_match(/Aardvark.*Zebra/m, @response.body)
+  end
 end

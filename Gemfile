@@ -87,6 +87,7 @@ group :development, :test do
   gem 'sqlite3'
   gem 'faker'
   gem 'factory_bot_rails'
+  gem 'simplecov'
 end
 
 group :test do
