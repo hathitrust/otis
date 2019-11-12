@@ -11,10 +11,5 @@ end
 Keycard::DB.migrate!
 
 class ActiveSupport::TestCase
-  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-  fixtures :all
-
-  def create_test_ht_user(userid, iprestrict: '127.0.0.1', expires: '2020-09-30 16:03:09', email: Faker::Internet.email)
-    HTUser.new(userid: userid, iprestrict: iprestrict, expires: expires, email: email)
-  end
+  include FactoryBot::Syntax::Methods
 end
