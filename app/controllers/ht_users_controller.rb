@@ -5,10 +5,10 @@ class HTUsersController < ApplicationController
 
   def index
     if params[:email]
-      @users = HTUser.includes(:ht_institution).where('email LIKE ?', "%#{params[:email]}%").order(:userid)
+      @users = HTUser.joins(:ht_institution).where('email LIKE ?', "%#{params[:email]}%").order(:userid)
       flash.now[:alert] = "No results for '#{params[:email]}'" if @users.empty?
     else
-      @users = HTUser.includes(:ht_institution).order(:userid)
+      @users = HTUser.joins(:ht_institution).order('ht_institutions.name')
     end
   end
 
@@ -26,7 +26,7 @@ class HTUsersController < ApplicationController
   private
 
   def fetch_user
-    @user = HTUser.includes(:ht_institution).find(params[:id])
+    @user = HTUser.joins(:ht_institution).find(params[:id])
   end
 
   def user_params
