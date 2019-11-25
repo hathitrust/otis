@@ -3,6 +3,19 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+######################################
+# SECURITY UPDATES                   #
+######################################
+
+# https://github.com/advisories/GHSA-r74q-gxcg-73hx
+gem "simple_form", "~> 5.0"
+
+# https://github.com/advisories/GHSA-5m2v-hc64-56h6
+gem 'rubyzip', '~> 1.3'
+
+# https://github.com/advisories/GHSA-c3gv-9cxf-6f57
+gem 'loofah', ['~> 2.3', '>= 2.3.1']
+
 # ruby '2.5.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -75,7 +88,6 @@ gem 'keycard'
 
 # Use MySQL as the database for Active Record
 gem 'mysql2'
-gem 'simple_form'
 gem 'dotenv-rails'
 
 
