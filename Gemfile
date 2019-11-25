@@ -11,7 +11,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gem "simple_form", "~> 5.0"
 
 # https://github.com/advisories/GHSA-5m2v-hc64-56h6
-gem 'rubyzip', '~> 1.3'
+gem 'rubyzip', '~> 2.0'
 
 # https://github.com/advisories/GHSA-c3gv-9cxf-6f57
 gem 'loofah', ['~> 2.3', '>= 2.3.1']
