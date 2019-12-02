@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require "application_system_test_case"
 
 class HTUsersControllerTest < ActionDispatch::IntegrationTest
   def setup
@@ -97,4 +98,20 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_match(/Aardvark.*Zebra/m, @response.body)
   end
+
+  test 'Expiring soon? column is there' do
+    sign_in!
+    get ht_users_url
+    assert_match(/Expiring soon\?/im, @response.body)
+  end
+
+  test 'Expiring soon user marked' do
+    # Make at least one user who's expiring soon
+    create(:ht_user, email: 'user@nowhere.com', expires: (Date.today + 10).to_s)
+    sign_in!
+    get ht_users_url
+    # look for the class name
+    assert_match(/expiring-soon/m, @response.body)
+  end
+
 end

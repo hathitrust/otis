@@ -38,7 +38,7 @@
         </td>
         <td>
           <% if u.expiring_soon? %>
-            <span class="glyphicon glyphicon-exclamation-sign text-danger"><br><%= u.days_until_expiration %></span>
+            <span class="expiring-soon glyphicon glyphicon-exclamation-sign text-danger"><br><%= u.days_until_expiration %></span>
           <% end %>
         </td>
       </tr>
