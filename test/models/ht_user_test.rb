@@ -72,14 +72,13 @@ class HTUserExpiringSoon < ActiveSupport::TestCase
 
   # Do assert_in_delta because we're getting a full timestamp but
   # rounding to days
-  test "#days_until_expiration" do
-    assert_in_delta 10, @expiring_user.days_until_expiration, 1
-    assert_in_delta -10, @expired_user.days_until_expiration, 1
-    assert_in_delta 100, @safe_user.days_until_expiration, 1
-
+  test '#days_until_expiration' do
+    assert_in_delta(10, @expiring_user.days_until_expiration, 1)
+    assert_in_delta(-10, @expired_user.days_until_expiration, 1)
+    assert_in_delta(100, @safe_user.days_until_expiration, 1)
   end
 
-  test "#expiring_soon is correct for those in and outside the range" do
+  test '#expiring_soon is correct for those in and outside the range' do
     assert(@expiring_user.expiring_soon?)
     assert_not(@expired_user.expiring_soon?)
     assert_not(@safe_user.expiring_soon?)

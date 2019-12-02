@@ -5,8 +5,8 @@ class HTUser < ApplicationRecord
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
 
   validates :iprestrict, presence: true,
-                         format: { with: /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/,
-                                   message: 'requires a valid IPv4 address' }
+                         format: {with: /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/,
+                                  message: 'requires a valid IPv4 address' }
 
   validates :email, presence: true
   validates :userid, presence: true
@@ -57,7 +57,6 @@ class HTUser < ApplicationRecord
     days_from_seconds(seconds_until_expiration)
   end
 
-
   # Is this person expiring "soon" (based on the config)?
   # @return [Boolean]
   def expiring_soon?
@@ -69,11 +68,12 @@ class HTUser < ApplicationRecord
   end
 
   private
+
   # Convert seconds (what we get when subtracting one date from another)
   # to days
   # @param [Number] secs How many seconds
   # @return [Fixnum] How many days that represents, rounded
   def days_from_seconds(secs)
-    (secs / (24*60*60)).to_i
+    (secs / (24 * 60 * 60)).to_i
   end
 end
