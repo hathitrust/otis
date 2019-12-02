@@ -8,18 +8,19 @@
   <% end %>
 
   <h2>Active Users</h2>
-  <table class="table table-striped">
+  <table id="active_users" class="table table-striped" data-toggle="table"  data-pagination="true"
+         data-search="true">
     <thead class="thead-dark">
       <tr>
-        <th>E-mail</th>
+        <th data-sortable="true">E-mail</th>
         <th>Name</th>
-        <th>ID</th>
-        <th>Role</th>
-        <th>Institution</th>
-        <th>Expires</th>
+        <th data-sortable="true">ID</th>
+        <th data-sortable="true">Role</th>
+        <th data-sortable="true">Institution</th>
+        <th data-sortable="true">Expires</th>
         <th>IP Restriction</th>
-        <th>MFA?</th>
-        <th>Expiring Soon?</th>
+        <th data-sortable="true">MFA?</th>
+        <th data-sortable="true">Expiring Soon?</th>
       </tr>
     </thead>
 
@@ -45,17 +46,18 @@
   </table>
 
   <h2>Expired Users</h2>
-  <table class="table table-striped">
+  <table id="expired_users" class="table table-striped" data-toggle="table"  data-pagination="true"
+         data-search="true">
     <thead class="thead-dark">
       <tr>
-        <th>E-mail</th>
+        <th data-sortable="true">E-mail</th>
         <th>Name</th>
-        <th>ID</th>
-        <th>Role</th>
-        <th>Institution</th>
-        <th>Expires</th>
+        <th data-sortable="true">ID</th>
+        <th data-sortable="true">Role</th>
+        <th data-sortable="true">Institution</th>
+        <th data-sortable="true">Expires</th>
         <th>IP Restriction</th>
-        <th>MFA?</th>
+        <th data-sortable="true">MFA?</th>
       </tr>
     </thead>
     <% @users.expired.each do |u| %>

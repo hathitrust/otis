@@ -7,6 +7,9 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css") %>
+
   </head>
 
   <%= render 'shared/header' %>
@@ -15,6 +18,9 @@
     <div id="main-container" class="container">
       <%= yield %>
     </div>
+    <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
   </body>
-  
+
+
+
 </html>
