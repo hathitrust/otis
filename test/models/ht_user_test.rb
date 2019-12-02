@@ -48,7 +48,7 @@ end
 
 class HTUserActiveExpiredTest < ActiveSupport::TestCase
   def setup
-    @active = create(:ht_user, :active)
+    @active  = create(:ht_user, :active)
     @expired = create(:ht_user, :expired)
   end
 
@@ -60,5 +60,28 @@ class HTUserActiveExpiredTest < ActiveSupport::TestCase
   test '#expired returns only expired users' do
     assert_includes(HTUser.expired, @expired)
     assert_not_includes(HTUser.expired, @active)
+  end
+end
+
+class HTUserExpiringSoon < ActiveSupport::TestCase
+  def setup
+    @expiring_user = build(:ht_user, expires: Date.today + 10)
+    @expired_user  = build(:ht_user, expires: Date.today - 10)
+    @safe_user     = build(:ht_user, expires: Date.today + 100)
+  end
+
+  # Do assert_in_delta because we're getting a full timestamp but
+  # rounding to days
+  test "#days_until_expiration" do
+    assert_in_delta 10, @expiring_user.days_until_expiration, 1
+    assert_in_delta -10, @expired_user.days_until_expiration, 1
+    assert_in_delta 100, @safe_user.days_until_expiration, 1
+
+  end
+
+  test "#expiring_soon is correct for those in and outside the range" do
+    assert(@expiring_user.expiring_soon?)
+    assert_not(@expired_user.expiring_soon?)
+    assert_not(@safe_user.expiring_soon?)
   end
 end

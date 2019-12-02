@@ -7,21 +7,21 @@
     <%= submit_tag 'Search', name: nil %>
   <% end %>
 
+  <h2>Active Users</h2>
   <table class="table table-striped">
-    <tr>
-      <th>E-mail</th>
-      <th>Name</th>
-      <th>ID</th>
-      <th>Role</th>
-      <th>Institution</th>
-      <th>Expires</th>
-      <th>IP Restriction</th>
-      <th>MFA?</th>
-    </tr>
-
-    <tr>
-      <th colspan="8">Active Users</th>
-    </tr>
+    <thead class="thead-dark">
+      <tr>
+        <th>E-mail</th>
+        <th>Name</th>
+        <th>ID</th>
+        <th>Role</th>
+        <th>Institution</th>
+        <th>Expires</th>
+        <th>IP Restriction</th>
+        <th>MFA?</th>
+        <th>Expiring Soon?</th>
+      </tr>
+    </thead>
 
     <% @users.active.each do |u| %>
       <tr>
@@ -35,13 +35,29 @@
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
         </td>
+        <td>
+          <% if u.expiring_soon? %>
+            <span class="glyphicon glyphicon-exclamation-sign text-danger"><br><%= u.days_until_expiration %></span>
+          <% end %>
+        </td>
       </tr>
     <% end %>
+  </table>
 
-    <tr>
-      <th colspan="8">Expired Users</th>
-    </tr>
-
+  <h2>Expired Users</h2>
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>E-mail</th>
+        <th>Name</th>
+        <th>ID</th>
+        <th>Role</th>
+        <th>Institution</th>
+        <th>Expires</th>
+        <th>IP Restriction</th>
+        <th>MFA?</th>
+      </tr>
+    </thead>
     <% @users.expired.each do |u| %>
       <tr>
         <td><%= link_to u.email, ht_user_path(u) %></td>
@@ -58,4 +74,4 @@
     <% end %>
   </table>
 </div>
-  
+

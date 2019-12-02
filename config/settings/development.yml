@@ -1,6 +1,9 @@
 allow_impersonation: true
 relative_url_root: '/useradmin'
 
+# How many days away does expiration need to be before we start to worry?
+expires_soon_in_days: 30
+
 keycard:
   database:
     adapter: sqlite

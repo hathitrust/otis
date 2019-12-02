@@ -50,7 +50,30 @@ class HTUser < ApplicationRecord
     short ? self[:expires]&.strftime('%Y-%m-%d') : self[:expires]&.to_s(:db)
   end
 
+  # How many days until expiration?
+  # @return [Number] days until expiration
+  def days_until_expiration
+    seconds_until_expiration = self[:expires] - Time.zone.now
+    days_from_seconds(seconds_until_expiration)
+  end
+
+
+  # Is this person expiring "soon" (based on the config)?
+  # @return [Boolean]
+  def expiring_soon?
+    days_until_expiration.between? 0, (Otis.config&.expires_soon_in_days || 30)
+  end
+
   def institution
     ht_institution&.name
+  end
+
+  private
+  # Convert seconds (what we get when subtracting one date from another)
+  # to days
+  # @param [Number] secs How many seconds
+  # @return [Fixnum] How many days that represents, rounded
+  def days_from_seconds(secs)
+    (secs / (24*60*60)).to_i
   end
 end
