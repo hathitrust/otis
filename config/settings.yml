@@ -4,6 +4,10 @@ allow_impersonation: false
 # By default don't allow any users to log in
 users: []
 
+# How many days away does expiration need to be before we start to worry?
+expires_soon_in_days: 30
+
+
 shibboleth:
   fallback_to_idp: true
   default_idp:
