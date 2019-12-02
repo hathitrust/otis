@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require "application_system_test_case"
 
 class HTUsersControllerTest < ActionDispatch::IntegrationTest
   def setup
@@ -113,5 +112,4 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     # look for the class name
     assert_match(/expiring-soon/m, @response.body)
   end
-
 end
