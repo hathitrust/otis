@@ -8,19 +8,18 @@
   <% end %>
 
   <h2>Active Users</h2>
-  <table id="active_users" class="table table-striped" data-toggle="table"  data-pagination="true"
+  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true">
     <thead class="thead-dark">
-      <tr>
-        <th data-sortable="true">E-mail</th>
-        <th>Name</th>
-        <th data-sortable="true">Role</th>
-        <th data-sortable="true">Institution</th>
-        <th data-sortable="true">Expires</th>
-        <th>IP Restriction</th>
-        <th data-sortable="true">MFA?</th>
-        <th data-sortable="true">Expiring?</th>
-      </tr>
+    <tr>
+      <th data-sortable="true">E-mail</th>
+      <th>Name</th>
+      <th data-sortable="true">Role</th>
+      <th data-sortable="true">Institution</th>
+      <th data-sortable="true">Expires</th>
+      <th>IP Restriction</th>
+      <th data-sortable="true">MFA?</th>
+    </tr>
     </thead>
 
     <% @users.active.each do |u| %>
@@ -29,33 +28,36 @@
         <td><%= u.displayname %></td>
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
-        <td class="text-nowrap"><%= u.expires(short: true) %></td>
+        <td class="text-nowrap <%= u.expiring_soon? ? "bg-danger" : '' %>">
+          <%= u.expires(short: true) %>
+          <% if u.expiring_soon? %>
+            <div class="text-danger">
+              <span class="expiring-soon text-danger"><%= u.days_until_expiration %>
+                days</span>
+            </div>
+          <% end %>
+        </td>
         <td><%= u.iprestrict %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
-        </td>
-        <td>
-          <% if u.expiring_soon? %>
-            <span class="expiring-soon glyphicon glyphicon-exclamation-sign text-danger"><br><%= u.days_until_expiration %></span>
-          <% end %>
         </td>
       </tr>
     <% end %>
   </table>
 
   <h2>Expired Users</h2>
-  <table id="expired_users" class="table table-striped" data-toggle="table"  data-pagination="true"
-         data-search="true">
-    <thead class="thead-dark">
-      <tr>
-        <th data-sortable="true">E-mail</th>
-        <th>Name</th>
-        <th data-sortable="true">Role</th>
-        <th data-sortable="true">Institution</th>
-        <th data-sortable="true">Expired</th>
-        <th>IP Restriction</th>
-        <th data-sortable="true">MFA?</th>
-      </tr>
+  <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-thead-classes="thead-dark">
+    <thead>
+    <tr>
+      <th data-sortable="true">E-mail</th>
+      <th>Name</th>
+      <th data-sortable="true">Role</th>
+      <th data-sortable="true">Institution</th>
+      <th data-sortable="true">Expired</th>
+      <th>IP Restriction</th>
+      <th data-sortable="true">MFA?</th>
+    </tr>
     </thead>
     <% @users.expired.each do |u| %>
       <tr>

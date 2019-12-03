@@ -43,7 +43,7 @@ end
 end
 
 # active users
-10.times do
+150.times do
   create_ht_user(expires: Faker::Time.forward)
 end
 
