@@ -14,13 +14,12 @@
       <tr>
         <th data-sortable="true">E-mail</th>
         <th>Name</th>
-        <th data-sortable="true">ID</th>
         <th data-sortable="true">Role</th>
         <th data-sortable="true">Institution</th>
         <th data-sortable="true">Expires</th>
         <th>IP Restriction</th>
         <th data-sortable="true">MFA?</th>
-        <th data-sortable="true">Expiring Soon?</th>
+        <th data-sortable="true">Expiring?</th>
       </tr>
     </thead>
 
@@ -28,10 +27,9 @@
       <tr>
         <td><%= link_to u.email, ht_user_path(u) %></td>
         <td><%= u.displayname %></td>
-        <td><%= u.userid %></td>
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
-        <td><%= u.expires(short: true) %></td>
+        <td class="text-nowrap"><%= u.expires(short: true) %></td>
         <td><%= u.iprestrict %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
@@ -52,10 +50,9 @@
       <tr>
         <th data-sortable="true">E-mail</th>
         <th>Name</th>
-        <th data-sortable="true">ID</th>
         <th data-sortable="true">Role</th>
         <th data-sortable="true">Institution</th>
-        <th data-sortable="true">Expires</th>
+        <th data-sortable="true">Expired</th>
         <th>IP Restriction</th>
         <th data-sortable="true">MFA?</th>
       </tr>
@@ -64,10 +61,9 @@
       <tr>
         <td><%= link_to u.email, ht_user_path(u) %></td>
         <td><%= u.displayname %></td>
-        <td><%= u.userid %></td>
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
-        <td><%= u.expires(short: true) %></td>
+        <td class="text-nowrap"><%= u.expires(short: true) %></td>
         <td><%= u.iprestrict %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
