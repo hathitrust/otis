@@ -5,8 +5,8 @@ class HTUser < ApplicationRecord
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
 
   validates :iprestrict, presence: true,
-                         format: { with: /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/,
-                                   message: 'requires a valid IPv4 address' }
+                         format: {with: /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/,
+                                  message: 'requires a valid IPv4 address' }
 
   validates :email, presence: true
   validates :userid, presence: true
@@ -48,6 +48,18 @@ class HTUser < ApplicationRecord
   # Display datetime without UTC suffix or just date
   def expires(short: false)
     short ? self[:expires]&.strftime('%Y-%m-%d') : self[:expires]&.to_s(:db)
+  end
+
+  # How many days until expiration?
+  # @return [Number] days until expiration
+  def days_until_expiration
+    (self[:expires].to_date - Date.today).to_i
+  end
+
+  # Is this person expiring "soon" (based on the config)?
+  # @return [Boolean]
+  def expiring_soon?
+    days_until_expiration.between? 0, (Otis.config&.expires_soon_in_days || 30)
   end
 
   def institution

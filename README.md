@@ -32,4 +32,4 @@ bundle exec rake test
 bundle exec rails s
 ```
 
-Go to http://localhost:3000 and log in as `somebody@default.invalid`
+Go to http://localhost:3000/useradmin and log in as `somebody@default.invalid`
