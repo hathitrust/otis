@@ -45,7 +45,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     get ht_users_url @user1
     assert_response :success
     assert_not_nil assigns(:users)
-    assert_match @user1.userid, @response.body
+    assert_match @user1.email, @response.body
     assert_match @user1.institution, @response.body
   end
 
@@ -85,7 +85,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get ht_users_url
 
-    assert_match(/Active Users.*#{active.userid}.*Expired Users.*#{expired.userid}/m, @response.body)
+    assert_match(/Active Users.*#{active.email}.*Expired Users.*#{expired.email}/m, @response.body)
   end
 
   test 'users sorted by institution' do
@@ -96,12 +96,6 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     get ht_users_url
 
     assert_match(/Aardvark.*Zebra/m, @response.body)
-  end
-
-  test 'Expiring soon? column is there' do
-    sign_in!
-    get ht_users_url
-    assert_match(/Expiring soon\?/im, @response.body)
   end
 
   test 'Expiring soon user marked' do

@@ -8,29 +8,35 @@
   <% end %>
 
   <h2>Active Users</h2>
-  <table class="table table-striped">
+  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
-      <tr>
-        <th>E-mail</th>
-        <th>Name</th>
-        <th>ID</th>
-        <th>Role</th>
-        <th>Institution</th>
-        <th>Expires</th>
-        <th>IP Restriction</th>
-        <th>MFA?</th>
-        <th>Expiring Soon?</th>
-      </tr>
+    <tr>
+      <th data-sortable="true">E-mail</th>
+      <th>Name</th>
+      <th data-sortable="true">Role</th>
+      <th data-sortable="true">Institution</th>
+      <th data-sortable="true">Expires</th>
+      <th>IP Restriction</th>
+      <th data-sortable="true">MFA?</th>
+    </tr>
     </thead>
 
     <% @users.active.each do |u| %>
       <tr>
         <td><%= link_to u.email, ht_user_path(u) %></td>
         <td><%= u.displayname %></td>
-        <td><%= u.userid %></td>
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
-        <td><%= u.expires(short: true) %></td>
+        <td class="text-nowrap <%= u.expiring_soon? ? "bg-danger" : '' %>">
+          <%= u.expires(short: true) %>
+          <% if u.expiring_soon? %>
+            <div class="text-danger">
+              <span class="expiring-soon text-danger"><%= u.days_until_expiration %>
+                days</span>
+            </div>
+          <% end %>
+        </td>
         <td><%= u.iprestrict %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
@@ -45,27 +51,26 @@
   </table>
 
   <h2>Expired Users</h2>
-  <table class="table table-striped">
-    <thead class="thead-dark">
-      <tr>
-        <th>E-mail</th>
-        <th>Name</th>
-        <th>ID</th>
-        <th>Role</th>
-        <th>Institution</th>
-        <th>Expires</th>
-        <th>IP Restriction</th>
-        <th>MFA?</th>
-      </tr>
+  <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true">
+    <thead>
+    <tr>
+      <th data-sortable="true">E-mail</th>
+      <th>Name</th>
+      <th data-sortable="true">Role</th>
+      <th data-sortable="true">Institution</th>
+      <th data-sortable="true">Expired</th>
+      <th>IP Restriction</th>
+      <th data-sortable="true">MFA?</th>
+    </tr>
     </thead>
     <% @users.expired.each do |u| %>
       <tr>
         <td><%= link_to u.email, ht_user_path(u) %></td>
         <td><%= u.displayname %></td>
-        <td><%= u.userid %></td>
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
-        <td><%= u.expires(short: true) %></td>
+        <td class="text-nowrap"><%= u.expires(short: true) %></td>
         <td><%= u.iprestrict %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
