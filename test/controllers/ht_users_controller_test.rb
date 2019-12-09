@@ -22,7 +22,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get index with successful e-mail search' do
     sign_in!
-    get ht_users_url, params: { email: @user1.email }
+    get ht_users_url, params: {email: @user1.email}
     assert_response :success
     assert_equal assigns(:users).count, 1
     assert_equal 'index', @controller.action_name
@@ -32,7 +32,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get index with unsuccessful e-mail search' do
     sign_in!
-    get ht_users_url, params: { email: 'nobody@here.edu' }
+    get ht_users_url, params: {email: 'nobody@here.edu'}
     assert_response :success
     assert_equal assigns(:users).count, 0
     assert_equal 'index', @controller.action_name
@@ -79,7 +79,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'active users separated from expired users' do
-    active = create(:ht_user, :active)
+    active  = create(:ht_user, :active)
     expired = create(:ht_user, :expired)
 
     sign_in!
@@ -105,5 +105,15 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     get ht_users_url
     # look for the class name
     assert_match(/expiring-soon/m, @response.body)
+  end
+
+  test 'Editable fields present' do
+    EDITABLE_FIELDS = %w[approver iprestrict expires].freeze
+    create(:ht_user, id: 'test', email: 'user@nowhere.com', expires: (Date.today + 10).to_s)
+    sign_in!
+    get edit_ht_user_url id: 'test'
+    EDITABLE_FIELDS.each do |ef|
+      assert_match(/name="ht_user\[#{ef}\]"/, @response.body)
+    end
   end
 end
