@@ -29,7 +29,7 @@ class HTUserTest < ActiveSupport::TestCase
 
   test 'expires suppresses UTC suffix' do
     user = build(:ht_user)
-    assert_no_match(/UTC$/, user.expires)
+    assert_no_match(/UTC$/, user.expires.to_s)
   end
 
   test 'expires validation rejects various bogative timestamps' do
@@ -82,5 +82,22 @@ class HTUserExpiringSoon < ActiveSupport::TestCase
     assert(@expiring_user.expiring_soon?)
     assert_not(@expired_user.expiring_soon?)
     assert_not(@safe_user.expiring_soon?)
+  end
+
+  test 'Expiration date can be set via #expires' do
+    user = build(:ht_user, expires: Date.today - 10)
+    assert user.expired?
+    assert user.expiration_date.expired?
+
+    user.expires = Date.today + 100
+    assert_not user.expired?
+    assert_not user.expiration_date.expired?
+  end
+
+  test 'Extend date by default period' do
+    initial_date = '2019-01-01'
+    u1 = build(:ht_user, expires: initial_date, expire_type: 'expirescustom60')
+    u1.extend_by_default_period!
+    assert_equal Date.parse(initial_date) + 60, u1.expires.to_date
   end
 end
