@@ -35,3 +35,6 @@ Style/ConditionalAssignment:
 
 Style/Documentation:
   Enabled: false
+
+Layout/AlignHash:
+  Enabled: false
