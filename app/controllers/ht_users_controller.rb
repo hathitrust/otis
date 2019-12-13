@@ -3,6 +3,8 @@
 class HTUsersController < ApplicationController
   before_action :fetch_user, only: %i[show edit update]
 
+  PERMITTED_UPDATE_FIELDS = [:userid, :iprestrict, :expires, :approver]
+
   def index
     if params[:email]
       @users = HTUser.joins(:ht_institution).where('email LIKE ?', "%#{params[:email]}%").order(:userid)
@@ -30,6 +32,6 @@ class HTUsersController < ApplicationController
   end
 
   def user_params
-    params.require(:ht_user).permit(:userid, :iprestrict, :expires)
+    params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
   end
 end
