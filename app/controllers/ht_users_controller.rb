@@ -3,7 +3,7 @@
 class HTUsersController < ApplicationController
   before_action :fetch_user, only: %i[show edit update]
 
-  PERMITTED_UPDATE_FIELDS = [:userid, :iprestrict, :expires, :approver]
+  PERMITTED_UPDATE_FIELDS = %i[userid iprestrict expires approver].freeze
 
   def index
     if params[:email]
