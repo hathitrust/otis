@@ -33,3 +33,9 @@ bundle exec rails s
 ```
 
 Go to http://localhost:3000/useradmin and log in as `somebody@default.invalid`
+
+### 5. Staged version
+
+* Living at https://moseshll.babel.hathitrust.org/useradmin-staging
+* Deploy via moku with ssh deployhost-001 deploy useradmin-staging the-name-of-your-branch
+

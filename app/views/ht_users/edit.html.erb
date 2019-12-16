@@ -1,29 +1,51 @@
 <div id="maincontent" class="row">
-  <h1>Edit <%= "#{@user.userid}" %></h1>
+  <h1><%= "#{@user.displayname}" %></h1>
 
   <%= render 'shared/flash_message' %>
 
   <%= form_with(model: @user, local: true) do |form| %>
- 
-   <%= form.hidden_field :userid %>
-    <p>
-      <%= form.label :iprestrict %><br/>
-      <%= form.text_field :iprestrict %>
-    </p>
-    <p>
-      <% expired = @user.expires < Time.current %>
-      <%= form.label :expires, expired ? 'Expired' : 'Expires' %><br/>
-      <%= form.text_field :expires, value: @user.expires, size: 30, id: :expires_field %>
-      <% unless expired %>
-        <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');" %>
-      <% end %>
-    </p>
-    <p>
+
+    <% expired_text = @user.expired? ? "Expired" : "Expires"
+       expires_class = @user.expiring_soon? ? "expiring-soon" : ""
+    %>
+
+    <div class="col-2">
+      <dl class="dl-horizontal">
+        <%= form.hidden_field :userid %>
+
+        <dt>E-mail:</dt> <dd><%= @user.email %></dd>
+        <dt>Display Name:</dt> <dd><%= @user.displayname %></dd>
+        <dt>User ID:</dt> <dd><%= @user.userid %></dd>
+        <dt>Activity Contact:</dt> <dd><%= @user.activitycontact %></dd>
+        <dt><%= form.label :approver %></dt>
+        <dd><%= form.text_field :approver, size: 40 %></dd>
+        <dt>Authorizer:</dt> <dd><%= @user.authorizer %></dd>
+        <dt>User Type:</dt> <dd><%= @user.usertype %></dd>
+        <dt>Role:</dt> <dd><%= @user.role %></dd>
+        <dt>Access:</dt> <dd><%= @user.access %></dd>
+        <dt>Expire Type:</dt> <dd><%= @user.expire_type %></dd>
+        <dt><%= form.label :expires, expired_text %></dt>
+        <dd><%= form.text_field :expires, value: @user.expires(short: true), size: 12, id: :expires_field, class: expires_class %>
+          <% unless @user.expired? %>
+            <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');" %>
+          <% end %>
+        </dd>
+
+        <dt><%= form.label :iprestrict %></dt>
+        <dd><%= form.text_field :iprestrict, size: 40 %></dd>
+        <dt>Multi-Factor?:</dt> <dd><%= @user.mfa %></dd>
+        <dt>Identity Provider:</dt> <dd><%= @user.identity_provider %></dd>
+        <dt>Institution:</dt> <dd><%= @user.institution %></dd>
+      </dl>
+    </div>
+
+
+    <div>
       <%= form.submit 'Submit Changes' %>
-    </p>
- 
+    </div>
+
   <% end %>
- 
+
   <%= link_to 'Back', ht_users_path %>
 </div>
 

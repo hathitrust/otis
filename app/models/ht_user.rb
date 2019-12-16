@@ -62,6 +62,11 @@ class HTUser < ApplicationRecord
     days_until_expiration.between? 0, (Otis.config&.expires_soon_in_days || 30)
   end
 
+  # Is this person, in fact, expired?
+  def expired?
+    days_until_expiration.negative?
+  end
+
   def institution
     ht_institution&.name
   end
