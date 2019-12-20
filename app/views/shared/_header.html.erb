@@ -1,7 +1,50 @@
-<header class="site-header">
-  <div id="header-navbar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-inverse">
+  <div class="navbar-header">
+    <div class="site-title-container">
+      <a href="<%= root_path %>" class="navbar-brand site-link site-title-flex">
+        <span class="site-title">Elevated Access Administration</span>
+      </a>
+    </div>
+  </div>
+  <div id="user-util-collapse">
+    <div class="navbar-right">
+      <ul class="nav navbar-nav">
+        <li class="nav-item">
+          <% if logged_in? %>
+            <%= current_user.id %>
+          <% else %>
+            <span><%= 'Not logged in' %></span>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <a href="<%= logout_path %>">Log Out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 
+  <div id="header-navbar-secondary" role="navigation">
     <div class="container container--full site-header-container">
+      <ul>
+        <li>
+          <a href="<%= root_path %>">Users</a>
+        </li>
+        <li>
+          <a href="<%= institutions_path %>">Institutions</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+<!--
+
+<header class="site-header">
+  <nav id="header-navbar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+    <div id="top-header" class="container container--full site-header-container">
 
       <div class="site-title-container">
         <a href="<%= root_path %>" class="navbar-brand site-link site-title-flex">
@@ -14,8 +57,8 @@
             <ul class="nav navbar-nav">
               <li class="nav-item">
                 <% if logged_in? %>
-                  <%= current_user.id %>
-                <% else %>
+  <%= current_user.id %>
+<% else %>
                   <span><%= 'Not logged in' %></span>
                 <% end %>
               </li>
@@ -40,16 +83,6 @@
         </div>
       </div>
 
-    </div>
+    </nav>
 </header>
-
-<!--
-<% if logged_in? %>
-  <%= "Logged in as #{current_user.id}" %>
-  <% unless Rails.env.production? %>
-            <a href="<%= logout_path %>">Log Out</a>
-          <% end %>
-<% else %>
-          <span><%= 'Not logged in' %></span>
-        <% end %>
 -->

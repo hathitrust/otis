@@ -9,9 +9,6 @@
   <%= javascript_include_tag 'application' %>
 
   <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css") %>
-
-
-  </script>
 </head>
 
 <body>
@@ -19,9 +16,9 @@
 
 
 <div class="d-flex" id="wrapper">
-  <div id="page-content-wrapper">
+  <div id="page-content-wrapper container-fluid">
     <%= render 'shared/header' %>
-    <div id="main-container" class="container">
+    <div id="main-container">
       <%= yield %>
     </div>
     <!-- Use bootstrap-table https://bootstrap-table.com/  -->
