@@ -27,11 +27,6 @@ class HTUserTest < ActiveSupport::TestCase
     assert_equal user.iprestrict, '127.0.0.1'
   end
 
-  test 'expires suppresses UTC suffix' do
-    user = build(:ht_user)
-    assert_no_match(/UTC$/, user.expires.to_s)
-  end
-
   test 'expires validation rejects various bogative timestamps' do
     user = build(:ht_user, expires: '2020-21-01 00:00:00')
     assert_not user.valid?
