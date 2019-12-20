@@ -22,6 +22,8 @@ gem 'loofah', ['~> 2.3', '>= 2.3.1']
 gem 'rails', '~> 5.2.0'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
+# # Nab font-awesome
+gem 'font-awesome-rails'
 # Use Puma as the app server
 gem 'puma', '~> 3.12'
 # Use SCSS for stylesheets

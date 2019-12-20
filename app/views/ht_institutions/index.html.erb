@@ -1,4 +1,4 @@
-<div id="maincontent" class="row">
+<div id="maincontent" class="container-fluid">
   <h1 class="heading-large">Institutions</h1>
 
   <table id="institutions" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
@@ -15,7 +15,7 @@
     <tbody>
     <% institutions.each do |inst| %>
       <tr>
-        <td><%= link_to(inst.name, ht_users_path, filter_text: inst.name) %></td>
+        <td><%= link_to(inst.name, ht_users_path(filter_text: inst.name)) %></td>
         <td><%= inst.active + inst.expired %></td>
         <td><%= inst.active %></td>
         <td><%= inst.expired %></td>
