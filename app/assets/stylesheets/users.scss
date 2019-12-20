@@ -2,10 +2,16 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+// Force some space at the bottom
+
+body {
+  padding-bottom: 4rem;
+}
 
 .expiring-soon {
   @extend .alert-danger;
   @extend .btn-general;
+  margin-left: 1rem;
 }
 
 a.btn-general {

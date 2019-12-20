@@ -25,11 +25,7 @@
       <td class="text-nowrap <%= u.expiring_soon? ? "bg-danger" : '' %>">
         <%= u.expires_string %>
         <% if u.expiring_soon? %>
-          <div class="text-danger">
-            >>>>>>> expiration_date_object
-            <span class="expiring-soon text-danger"><%= u.days_until_expiration %>
-              days</span>
-          </div>
+            <span class="expiring-soon text-danger"><%= u.days_until_expiration %> days</span>
         <% end %>
       </td>
       <td><%= u.iprestrict %></td>
