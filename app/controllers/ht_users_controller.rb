@@ -18,7 +18,6 @@ class HTUsersController < ApplicationController
     render 'index', locals: {filter_text: filter_text}
   end
 
-
   def update
     if @user.update(user_params)
       flash[:notice] = 'User updated'
@@ -39,5 +38,4 @@ class HTUsersController < ApplicationController
   def user_params
     params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
   end
-
 end

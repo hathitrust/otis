@@ -20,7 +20,7 @@ Layout/SpaceInsideHashLiteralBraces:
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 
 Style/ClassAndModuleChildren:
