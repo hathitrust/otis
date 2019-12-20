@@ -1,5 +1,5 @@
 <div id="maincontent" class="row">
-  <h1><%= "#{@user.displayname}" %></h1>
+  <h1 class="heading-large"><%= "#{@user.displayname}" %></h1>
 
   <%= render 'shared/flash_message' %>
 
@@ -27,25 +27,32 @@
         <dt><%= form.label :expires, expired_text %></dt>
         <dd><%= form.text_field :expires, value: @user.expires(short: true), size: 12, id: :expires_field, class: expires_class %>
           <% unless @user.expired? %>
-            <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');" %>
+            <button class="btn-expire btn btn-info" onclick="$('#expires_field').val('<%= Date.today%>'); false;">Expire today</button>
           <% end %>
         </dd>
 
         <dt><%= form.label :iprestrict %></dt>
         <dd><%= form.text_field :iprestrict, size: 40 %></dd>
-        <dt>Multi-Factor?:</dt> <dd><%= @user.mfa %></dd>
+        <dt>Multi-Factor:</dt> <dd><%= @user.mfa %></dd>
         <dt>Identity Provider:</dt> <dd><%= @user.identity_provider %></dd>
         <dt>Institution:</dt> <dd><%= @user.institution %></dd>
       </dl>
     </div>
 
 
-    <div>
-      <%= form.submit 'Submit Changes' %>
-    </div>
+    <ul class="edit-submit-cancel">
+      <li> <%= form.submit 'Submit Changes'%></li>
 
-  <% end %>
 
-  <%= link_to 'Back', ht_users_path %>
+    <li><button type="button" class="btn btn-danger btn-cancel">
+      <%= link_to 'Cancel', root_path %>
+    </button>
+    </li>
+
+    </ul>
+
+  <% end # form %>
+
+
 </div>
 

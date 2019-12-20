@@ -1,27 +1,34 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Otis Elevated Access Tool</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<html id="top_of_page">
+<head>
+  <title>Otis Elevated Access Tool</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
 
-    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css") %>
+  <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css") %>
 
-  </head>
 
-  <%= render 'shared/header' %>
+  </script>
+</head>
 
-  <body>
+<body>
+<!-- a convenient "top of page" -->
+
+
+<div class="d-flex" id="wrapper">
+  <div id="page-content-wrapper">
+    <%= render 'shared/header' %>
     <div id="main-container" class="container">
       <%= yield %>
     </div>
-    <%# Uses bootstrap-table  %>
+    <!-- Use bootstrap-table https://bootstrap-table.com/  -->
     <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
-  </body>
-
+  </div>
+</div>
+</body>
 
 
 </html>

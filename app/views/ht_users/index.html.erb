@@ -1,15 +1,15 @@
 <div id="maincontent" class="row">
-  <h1>Users</h1>
 
   <%= render 'shared/flash_message' %>
-  <%= form_tag(ht_users_path, method: :get) do %>
-    E-mail <%= text_field_tag :email, params[:email] %>
-    <%= submit_tag 'Search', name: nil %>
-  <% end %>
 
-  <h2>Active Users</h2>
-  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-show-search-clear-button="true">
+
+
+  <h1 class="heading-large">Active Users</h1>
+  <p>
+    <a href="#expired">Jump down to expired users</a>
+  </p>
+  <table id="active_users" class="table table-striped" data-toggle="table" data-height="660" data-virtual-scroll="true"
+         data-search="true" data-search-text="<%= filter_text %>" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
       <th data-sortable="true">E-mail</th>
@@ -24,7 +24,7 @@
 
     <% @users.active.each do |u| %>
       <tr>
-        <td><%= link_to u.email, ht_user_path(u) %></td>
+        <td><%= link_to u.email, edit_ht_user_path(u) %></td>
         <td><%= u.displayname %></td>
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
@@ -45,7 +45,10 @@
     <% end %>
   </table>
 
-  <h2>Expired Users</h2>
+  <h1 id="expired" class="heading-large">Expired Users</h1>
+  <p>
+    <a href="#top_of_page">Jump up to active users</a>
+  </p>
   <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true">
     <thead>

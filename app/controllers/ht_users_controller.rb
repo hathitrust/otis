@@ -7,12 +7,17 @@ class HTUsersController < ApplicationController
 
   def index
     if params[:email]
-      @users = HTUser.joins(:ht_institution).where('email LIKE ?', "%#{params[:email]}%").order(:userid)
+      @users            = HTUser.joins(:ht_institution).where('email LIKE ?', "%#{params[:email]}%").order(:userid)
       flash.now[:alert] = "No results for '#{params[:email]}'" if @users.empty?
     else
       @users = HTUser.joins(:ht_institution).order('ht_institutions.name')
     end
+    # Optionally passing in a starting value for the
+    # ht-table filter
+    filter_text = params[:filter_text] || ''
+    render 'index', locals: {filter_text: filter_text}
   end
+
 
   def update
     if @user.update(user_params)
@@ -34,4 +39,5 @@ class HTUsersController < ApplicationController
   def user_params
     params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
   end
+
 end
