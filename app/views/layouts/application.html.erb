@@ -15,16 +15,17 @@
 <!-- a convenient "top of page" -->
 
 
-<div class="d-flex" id="wrapper">
   <div id="page-content-wrapper container-fluid">
     <%= render 'shared/header' %>
     <div id="main-container">
-      <%= yield %>
+      <div id="maincontent" class="container-fluid">
+        <%= render 'shared/flash_message' %>
+        <%= yield %>
+      </div>
     </div>
     <!-- Use bootstrap-table https://bootstrap-table.com/  -->
     <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
   </div>
-</div>
 </body>
 
 

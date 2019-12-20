@@ -1,28 +1,26 @@
-<div id="maincontent" class="container-fluid">
-  <h1 class="heading-large">Institutions</h1>
+<h1 class="heading-large">Institutions</h1>
 
-  <table id="institutions" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-show-search-clear-button="true">
-    <thead>
+<table id="institutions" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+       data-search="true" data-show-search-clear-button="true">
+  <thead>
+  <tr>
+    <th data-sortable="true">Institution</th>
+    <th data-sortable="true">Total users</th>
+    <th data-sortable="true">Active users</th>
+    <th data-sortable="true">Expired users</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% institutions.each do |inst| %>
     <tr>
-      <th data-sortable="true">Institution</th>
-      <th data-sortable="true">Total users</th>
-      <th data-sortable="true">Active users</th>
-      <th data-sortable="true">Expired users</th>
+      <td><%= link_to(inst.name, ht_users_path(filter_text: inst.name)) %></td>
+      <td><%= inst.active + inst.expired %></td>
+      <td><%= inst.active %></td>
+      <td><%= inst.expired %></td>
     </tr>
-    </thead>
+  <% end %>
+  </tbody>
+</table>
 
-    <tbody>
-    <% institutions.each do |inst| %>
-      <tr>
-        <td><%= link_to(inst.name, ht_users_path(filter_text: inst.name)) %></td>
-        <td><%= inst.active + inst.expired %></td>
-        <td><%= inst.active %></td>
-        <td><%= inst.expired %></td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-
-</div>
 
