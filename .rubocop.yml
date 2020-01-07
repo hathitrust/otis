@@ -32,5 +32,5 @@ Style/ConditionalAssignment:
 Style/Documentation:
   Enabled: false
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
