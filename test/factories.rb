@@ -13,6 +13,11 @@ FactoryBot.define do
     trait :expired do
       expires { Faker::Time.backward }
     end
+
+    factory :ht_user_mfa do
+      mfa { true }
+      iprestrict { nil }
+    end
   end
 
   factory :ht_institution do
