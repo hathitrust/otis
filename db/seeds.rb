@@ -26,10 +26,10 @@ def create_ht_user(expires:)
     access: %w[total normal].sample,
     expires: expires,
     expire_type: %w[expiresannually expiresbiannually expirescustom90 expirescustom60].sample,
-    mfa: 0,
+    mfa: [false, true].sample,
     identity_provider: HTInstitution.all.sample.entityID
   )
-  u.iprestrict = Faker::Internet.ip_v4_address
+  u.iprestrict = Faker::Internet.ip_v4_address unless u.mfa
   u.save
 end
 # rubocop:enable Metrics/MethodLength

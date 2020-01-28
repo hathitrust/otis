@@ -84,3 +84,15 @@ class HTUserExpiringSoon < ActiveSupport::TestCase
     assert_not(@safe_user.expiring_soon?)
   end
 end
+
+class HTUserMFA < ActiveSupport::TestCase
+  def setup
+    @mfa_user = build(:ht_user_mfa)
+  end
+
+  test 'User with MFA and no iprestrict is valid' do
+    assert_equal(@mfa_user.mfa, true)
+    assert_nil @mfa_user.iprestrict
+    assert @mfa_user.valid?
+  end
+end
