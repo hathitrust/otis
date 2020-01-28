@@ -78,6 +78,14 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match '127.0.0.2', @response.body
   end
 
+  test 'updating expiration for mfa user retains nil iprestrict' do
+    user = create(:ht_user, mfa: true, iprestrict: nil)
+    sign_in!
+    patch ht_user_url user, params: {'ht_user' => {'iprestrict' => '', 'expires' => Date.today.to_s}}
+    assert_redirected_to ht_user_path(user.email)
+    assert_nil HTUser.find(user.email)[:iprestrict]
+  end
+
   test 'active users separated from expired users' do
     active  = create(:ht_user, :active)
     expired = create(:ht_user, :expired)

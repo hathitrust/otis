@@ -4,7 +4,8 @@ class HTUser < ApplicationRecord
   self.primary_key = 'email'
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
 
-  validates :iprestrict, presence: true, unless: :mfa,
+  validates :iprestrict, presence: true, unless: :mfa
+  validates :iprestrict, allow_nil: true,
                          format: {with: /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/,
                                   message: 'requires a valid IPv4 address' }
 
@@ -40,6 +41,7 @@ class HTUser < ApplicationRecord
   end
 
   def iprestrict=(val)
+    val = nil if val.blank?
     val = '^' + val.strip.gsub('.', '\.') + '$' if val.present?
     write_attribute(:iprestrict, val)
   end
