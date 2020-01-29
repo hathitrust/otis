@@ -54,6 +54,13 @@ class ApplicationController < ActionController::Base
   end
 
   def notary
-    @notary ||= Keycard::Notary.default
+    @notary = Keycard::Notary.new(
+      attributes_factory: Keycard::Request::AttributesFactory.new(finders: []),
+      methods: [
+        Keycard::Authentication::AuthToken.bind_class_method(:User, :authenticate_by_auth_token),
+        Keycard::Authentication::SessionUserId.bind_class_method(:User, :authenticate_by_id),
+        Keycard::Authentication::UserEid.bind_class_method(:User, :authenticate_by_user_eid)
+      ]
+    )
   end
 end
