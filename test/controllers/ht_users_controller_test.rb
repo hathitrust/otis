@@ -79,10 +79,19 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'updating expiration for mfa user retains nil iprestrict' do
-    user = create(:ht_user, mfa: true, iprestrict: nil)
+    user = create(:ht_user_mfa)
     sign_in!
     patch ht_user_url user, params: {'ht_user' => {'iprestrict' => '', 'expires' => Date.today.to_s}}
     assert_redirected_to ht_user_path(user.email)
+    assert_nil HTUser.find(user.email)[:iprestrict]
+  end
+
+  test 'setting MFA unsets iprestrict' do
+    user = create(:ht_user, mfa: false, iprestrict: '33.33.33.33')
+    sign_in!
+    patch ht_user_url user, params: {'ht_user' => {'iprestrict' => '', 'mfa' => true}}
+    assert_redirected_to ht_user_path(user.email)
+    assert HTUser.find(user.email)[:mfa]
     assert_nil HTUser.find(user.email)[:iprestrict]
   end
 
@@ -122,6 +131,15 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     get edit_ht_user_url id: 'test'
     EDITABLE_FIELDS.each do |ef|
       assert_match(/name="ht_user\[#{ef}\]"/, @response.body)
+    end
+  end
+
+  test 'iprestrict disabled for MFA user' do
+    create(:ht_user_mfa, id: 'test')
+    sign_in!
+    get edit_ht_user_url id: 'test'
+    assert_select 'input#iprestrict_field' do |input|
+      assert input.attr('disabled').present?
     end
   end
 end

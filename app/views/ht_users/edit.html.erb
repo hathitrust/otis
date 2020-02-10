@@ -1,9 +1,29 @@
 <div id="maincontent" class="row">
   <h1><%= "#{@user.displayname}" %></h1>
 
+  <script>
+    var save_ip = '';
+    function check_mfa() {
+      if ($('#mfa_checkbox').prop('checked')) {
+        save_ip = $('#iprestrict_field').val();
+        $('#iprestrict_field').val('');
+        $('#iprestrict_field').attr('disabled', true);
+      }
+      else {
+        if (save_ip.length > 0) {
+          $('#iprestrict_field').val(save_ip);
+        }
+        $('#iprestrict_field').attr('disabled', false);
+      }
+    }
+    $('#edit_ht_user_form').submit(function() {
+      $('#iprestrict_field').attr('disabled', false);
+    })
+  </script>
+
   <%= render 'shared/flash_message' %>
 
-  <%= form_with(model: @user, local: true) do |form| %>
+  <%= form_with(model: @user, local: true, id: 'edit_ht_user_form') do |form| %>
 
     <% ed = @user.expiration_date
        expired_text = ed.expired? ? "Expired" : "Expires"
@@ -42,9 +62,9 @@
         </dd>
 
         <dt><%= form.label :iprestrict %></dt>
-        <dd><%= form.text_field :iprestrict, size: 40 %></dd>
+        <dd><%= form.text_field :iprestrict, size: 40, id: :iprestrict_field, disabled: @user.mfa %></dd>
         <dt>Multi-Factor?:</dt>
-        <dd><%= @user.mfa %></dd>
+        <dd><%= form.check_box :mfa, id: :mfa_checkbox, onclick: "check_mfa();" %></dd>
         <dt>Identity Provider:</dt>
         <dd><%= @user.identity_provider %></dd>
         <dt>Institution:</dt>
