@@ -87,7 +87,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'setting MFA unsets iprestrict' do
-    user = create(:ht_user, mfa: false, iprestrict: '33.33.33.33')
+    user = create(:ht_user, :inst_mfa, mfa: false, iprestrict: '33.33.33.33')
     sign_in!
     patch ht_user_url user, params: {'ht_user' => {'iprestrict' => '', 'mfa' => true}}
     assert_redirected_to ht_user_path(user.email)
@@ -141,5 +141,21 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_select 'input#iprestrict_field' do |input|
       assert input.attr('disabled').present?
     end
+  end
+
+  test 'mfa not editable for user from institution without mfa available' do
+    user = create(:ht_user)
+    sign_in!
+    patch ht_user_url user, params: {'ht_user' => {'mfa' => true}}
+    assert_response :success
+    assert_match 'Mfa', flash[:alert]
+    assert_nil HTUser.find(user.email)[:mfa]
+  end
+
+  test 'mfa checkbox not present for institituion without MFA available' do
+    create(:ht_user, id: 'test')
+    sign_in!
+    get edit_ht_user_url id: 'test'
+    assert_select 'input#mfa_checkbox', 0
   end
 end

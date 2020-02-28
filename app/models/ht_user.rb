@@ -17,6 +17,8 @@ class HTUser < ApplicationRecord
   validates :expires, presence: true
   validates :identity_provider, presence: true
 
+  validates :mfa, absence: true, unless: -> { ht_institution.shib_authncontext_class.present? }
+
   scope :active, -> { where('expires > CURRENT_TIMESTAMP') }
   scope :expired, -> { where('expires <= CURRENT_TIMESTAMP') }
 

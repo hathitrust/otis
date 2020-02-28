@@ -64,7 +64,11 @@
         <dt><%= form.label :iprestrict %></dt>
         <dd><%= form.text_field :iprestrict, size: 40, id: :iprestrict_field, disabled: @user.mfa %></dd>
         <dt>Multi-Factor?:</dt>
-        <dd><%= form.check_box :mfa, id: :mfa_checkbox, onclick: "check_mfa();" %></dd>
+        <% if @user.ht_institution.shib_authncontext_class.present? %>
+          <dd><%= form.check_box :mfa, id: :mfa_checkbox, onclick: "check_mfa();" %></dd>
+        <% else %>
+          <dd>Not Available</dd>
+        <% end %>
         <dt>Identity Provider:</dt>
         <dd><%= @user.identity_provider %></dd>
         <dt>Institution:</dt>
