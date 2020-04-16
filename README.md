@@ -29,6 +29,7 @@ bundle exec rake test
 ### 4. Trying it out
 
 ```
+echo "users: ['somebody@default.invalid']" > config/settings.local.yml
 bundle exec rails s
 ```
 
