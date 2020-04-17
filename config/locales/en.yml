@@ -30,4 +30,12 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        HTUser:
+          attributes:
+            iprestrict: "requires valid IPv4 addresess (separated by commas if multiple)"
+  ht_user:
+    edit:
+      iprestrict_prompt: "If multiple IP addresses, enter as a comma-separated list."
