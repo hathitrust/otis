@@ -15,7 +15,7 @@ require 'faker'
 # rubocop:disable Metrics/MethodLength
 def create_ht_user(expires:)
   u = HTUser.new(
-    userid: Faker::Internet.email,
+    userid: Faker::Internet.unique.email,
     displayname: Faker::Name.name,
     email: Faker::Internet.email,
     activitycontact: Faker::Internet.email,
@@ -29,14 +29,21 @@ def create_ht_user(expires:)
     mfa: [false, true].sample,
     identity_provider: HTInstitution.all.sample.entityID
   )
-  u.iprestrict = Faker::Internet.ip_v4_address unless u.mfa
+  unless u.mfa
+    # Faker::Boolean.boolean(true_ratio: 0.2) fails with "ArgumentError (comparison of Float with Hash failed)"
+    if 0.2 < rand
+      u.iprestrict = Faker::Internet.ip_v4_address
+    else
+      u.iprestrict = "#{Faker::Internet.ip_v4_address}, #{Faker::Internet.ip_v4_address}"
+    end
+  end
   u.save
 end
 # rubocop:enable Metrics/MethodLength
 
 5.times do
   HTInstitution.create(
-    inst_id: Faker::Internet.domain_word,
+    inst_id: Faker::Internet.unique.domain_word,
     name: Faker::University.name,
     entityID: Faker::Internet.url
   )
