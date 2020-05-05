@@ -4,13 +4,16 @@ require 'expiration_date'
 require 'forwardable'
 
 class HTUser < ApplicationRecord
+  # Validates IPv4 with ^, $, and . escaped.
+  def self.ip_address_regex
+    /\A\^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\$\z/
+  end
+
   self.primary_key = 'email'
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
 
   validates :iprestrict, presence: true, unless: :mfa
-  validates :iprestrict, allow_nil: true,
-                         format: {with: /\A(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/,
-                                  message: 'requires a valid IPv4 address'}
+  validate :validate_iprestrict_format
 
   validates :email, presence: true
   validates :userid, presence: true
@@ -65,17 +68,25 @@ class HTUser < ApplicationRecord
 
   # iprestrict is in the database as an escaped IPv4 regex e.g., ^127\.0\.0\.1$
   # For the UI we strip out and restore the ^/./$ characters
+  # Since multiple addresses are permitted if separated by OR (|) this value is
+  # an array.
   def iprestrict
     escaped = self[:iprestrict]
-    return escaped if escaped.nil?
+    return nil if escaped.nil?
 
-    escaped.gsub(/^\^/, '').gsub(/\$$/, '').gsub(/\\\./, '.')
+    escaped.split('|').map do |esc|
+      esc.gsub(/^\^/, '').gsub(/\$$/, '').gsub(/\\\./, '.')
+    end
   end
 
-  def iprestrict=(val)
-    val = nil if val.blank?
-    val = '^' + val.strip.gsub('.', '\.') + '$' if val.present?
-    write_attribute(:iprestrict, val)
+  def iprestrict=(vals)
+    escaped = nil
+    if vals.present?
+      escaped = vals.split(/\s*,\s*/).map do |val|
+        '^' + val.strip.gsub('.', '\.') + '$'
+      end.join('|')
+    end
+    write_attribute(:iprestrict, escaped)
   end
 
   ## Forward some stuff to @expiration_date
@@ -107,5 +118,17 @@ class HTUser < ApplicationRecord
 
   def institution
     ht_institution&.name
+  end
+
+  # Validate the fully-escaped ip address(es) as saved in the model.
+  def validate_iprestrict_format
+    return unless self[:iprestrict].present?
+
+    self[:iprestrict].split('|').each do |ip|
+      unless ip.match? HTUser.ip_address_regex
+        errors.add :iprestrict, I18n.t('activerecord.errors.models.HTUser.attributes.iprestrict')
+        break
+      end
+    end
   end
 end

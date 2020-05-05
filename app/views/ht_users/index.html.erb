@@ -37,7 +37,7 @@
             </div>
           <% end %>
         </td>
-        <td><%= u.iprestrict %></td>
+        <td><%= u.iprestrict&.join(', ') %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
         </td>
@@ -66,7 +66,7 @@
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
         <td><%= u.expires_string %></td>
-        <td><%= u.iprestrict %></td>
+        <td><%= u.iprestrict&.join(', ') %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
         </td>
