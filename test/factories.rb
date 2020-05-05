@@ -17,7 +17,12 @@ FactoryBot.define do
       expires { Faker::Time.backward }
     end
 
+    trait :inst_mfa do
+      association :ht_institution, factory: %i[ht_institution mfa]
+    end
+
     factory :ht_user_mfa do
+      inst_mfa
       mfa { true }
       iprestrict { nil }
     end
@@ -27,5 +32,9 @@ FactoryBot.define do
     sequence(:inst_id) { |n| "#{n}#{Faker::Internet.domain_word}" }
     name { Faker::University.name }
     entityID { Faker::Internet.url }
+
+    trait :mfa do
+      shib_authncontext_class { 'https://refeds.org/profile/mfa' }
+    end
   end
 end

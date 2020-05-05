@@ -34,11 +34,20 @@ def create_ht_user(expires:)
 end
 # rubocop:enable Metrics/MethodLength
 
-5.times do
+3.times do
   HTInstitution.create(
     inst_id: Faker::Internet.domain_word,
     name: Faker::University.name,
     entityID: Faker::Internet.url
+  )
+end
+
+2.times do
+  HTInstitution.create(
+    inst_id: Faker::Internet.domain_word,
+    name: Faker::University.name,
+    entityID: Faker::Internet.url,
+    shib_authncontext_class: Faker::Internet.url
   )
 end
 
