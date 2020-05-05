@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require 'active_support/time'
+
 FactoryBot.define do
-  factory :ht_user do
+  factory :ht_user, class: HTUser do
     sequence(:userid) { |n| "#{n}#{Faker::Internet.email}" }
     email { Faker::Internet.email }
+    expire_type { ExpirationDate::EXPIRES_TYPE.keys.sample.to_s }
     expires { Faker::Time.forward }
     iprestrict { Faker::Internet.ip_v4_address }
     ht_institution
