@@ -42,11 +42,21 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get show page' do
     sign_in!
-    get ht_users_url @user1
+    get ht_user_url @user1
     assert_response :success
-    assert_not_nil assigns(:users)
+    assert_equal 'show', @controller.action_name
+    assert_not_nil assigns(:user)
     assert_match @user1.email, @response.body
     assert_match @user1.institution, @response.body
+  end
+
+  test 'should get show page with no iprestrict' do
+    sign_in!
+    user = create(:ht_user_mfa)
+    assert_nil user.iprestrict
+    get ht_user_url user
+    assert_response :success
+    assert_equal 'show', @controller.action_name
   end
 
   test 'should get edit page' do
