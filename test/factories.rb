@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_support/time'
-Time.zone = Time.now.zone
+#Time.zone = Time.now.zone
 
 FactoryBot.define do
   factory :ht_user, class: HTUser do
