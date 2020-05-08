@@ -1,14 +1,28 @@
-<div>  <%= link_to "[Home]", root_path %></div>
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
-
-
-  <% if logged_in? %>
-    <span class="navbar-brand" href="#"><%= "Logged in as #{current_user.id}" %></span>
-    <% unless Rails.env.production? %>
-      <a class="navbar-brand" href="<%= logout_path %>">Log Out</a>
-    <% end %>
-  <% else %>
-    <span class="navbar-brand" href="#"><%= 'Not logged in' %></span>
-  <% end %>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+<% unless logged_in? %>
+    <p class="navbar-text">Not signed in</p>
+<% else %>
+    <p class="navbar-text"><%= "Signed in as #{current_user.id}" %></p>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <% unless Rails.env.production? %>
+        <li><%= link_to "Log Out", logout_path %></li>
+        <% end %>
+        <li><%= link_to "Home", root_path %></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+             role="button" aria-haspopup="true" aria-expanded="false">
+             Go <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#"><%= link_to 'Users', ht_users_path %></a></li>
+            <!--<li><a href="#">Something else here</a></li>-->
+            <!--<li role="separator" class="divider"></li>-->
+          </ul>
+        </li>
+      </ul>
+    </div>
+<% end %>
+  </div>
 </nav>
-
