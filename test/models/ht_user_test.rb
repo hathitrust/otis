@@ -128,3 +128,59 @@ class HTUserMultipleIprestrict < ActiveSupport::TestCase
     assert_not_empty @bogus_multi_ip_user.errors.messages[:iprestrict]
   end
 end
+
+class HTUserRoleDescription < ActiveSupport::TestCase
+  def setup
+    @user = build(:ht_user, role: 'crms')
+    @user_unknown_role = build(:ht_user, role: 'blah')
+    @user_no_role = build(:ht_user, role: nil)
+  end
+
+  test 'User with a role has a natural-language description' do
+    assert @user.role_description.length.positive?
+  end
+
+  test 'User with bogus role lacks natural-language description' do
+    assert_nil @user_unknown_role.role_description
+  end
+
+  test 'User with no role lacks natural-language description' do
+    assert_nil @user_no_role.role_description
+  end
+end
+
+class HTUserRenewal < ActiveSupport::TestCase
+  def setup
+    @expiresannually_user = build(:ht_user, expires: Time.now, expire_type: 'expiresannually')
+    @expiresbiannually_user = build(:ht_user, expires: Time.now, expire_type: 'expiresbiannually')
+    @expirescustom90_user = build(:ht_user, expires: Time.now, expire_type: 'expirescustom90')
+    @expirescustom60_user = build(:ht_user, expires: Time.now, expire_type: 'expirescustom60')
+    @unknown_user = build(:ht_user, expires: Time.now, expire_type: 'unknown')
+  end
+
+  test 'User expiresannually' do
+    @expiresannually_user.renew
+    assert_in_delta(365, @expiresannually_user.days_until_expiration, 1)
+  end
+
+  test 'User expiresbiannually' do
+    @expiresbiannually_user.renew
+    assert_in_delta(730, @expiresbiannually_user.days_until_expiration, 1)
+  end
+
+  test 'User expirescustom90' do
+    @expirescustom90_user.renew
+    assert_in_delta(90, @expirescustom90_user.days_until_expiration, 5)
+  end
+
+  test 'User expirescustom60' do
+    @expirescustom60_user.renew
+    assert_in_delta(60, @expirescustom60_user.days_until_expiration, 3)
+  end
+
+  test 'User with unknown expire_type' do
+    assert_raise StandardError do
+      @unknown_user.renew
+    end
+  end
+end

@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   private
 
   def user_not_authorized
-    logout
+    # logout
     render_forbidden
   end
 

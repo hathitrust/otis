@@ -1,0 +1,17 @@
+<div id="maincontent" class="row">
+
+  <h1>Approval Request for <%= params[:id] %>
+    <% if controller.all_sent? %>
+      <span class="label label-success">Sent</span>
+    <% else %>
+      <span class="label label-info">Not Sent</span>
+    <% end %>
+  </h1>
+
+  <%= render 'shared/flash_message' %>
+
+  <%= render 'shared/approval_request_email' %>
+  <% unless controller.all_sent? %>
+    <%= link_to 'SEND', ht_approval_request_path(send: :yes), class: 'btn btn-primary' %>
+  <% end %>
+</div>
