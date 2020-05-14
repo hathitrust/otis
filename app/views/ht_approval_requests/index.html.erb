@@ -1,0 +1,27 @@
+<div id="maincontent" class="row">
+  <h1>Approval Requests</h1>
+
+  <%= render 'shared/flash_message' %>
+
+  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-show-search-clear-button="true">
+    <thead class="thead-dark">
+    <tr>
+      <th data-sortable="true">Approver</th>
+      <th data-sortable="true">User</th>
+      <th data-sortable="true">Sent</th>
+      <th data-sortable="true">Received</th>
+    </tr>
+    </thead>
+
+    <% @reqs.each do |req| %>
+      <tr <%= raw @added.include?(req.userid) ? 'class="success"' : '' %>>
+        <td><%= link_to req.approver, ht_approval_request_path(req.approver) %></td>
+        <td><%= link_to req.userid, ht_user_path(req.userid) %></td>
+        <td><%= req.sent(short: true) %></td>
+        <td><%= req.received(short: true) %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+

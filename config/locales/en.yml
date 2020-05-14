@@ -39,3 +39,7 @@ en:
   ht_user:
     edit:
       iprestrict_prompt: "If multiple IP addresses, enter as a comma-separated list."
+    attributes:
+      ht_auth_request:
+        userid: "User"
+

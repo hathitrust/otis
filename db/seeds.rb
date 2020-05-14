@@ -26,10 +26,12 @@ def create_ht_user(expires:)
     access: %w[total normal].sample,
     expires: expires,
     expire_type: %w[expiresannually expiresbiannually expirescustom90 expirescustom60].sample,
-    mfa: [false, true].sample,
-    identity_provider: HTInstitution.all.sample.entityID
+    mfa: [false, true].sample
   )
-  unless u.mfa
+  if u.mfa
+    u.identity_provider = HTInstitution.where.not(shib_authncontext_class: nil).sample.entityID
+  else
+    u.identity_provider = HTInstitution.all.sample.entityID
     # Faker::Boolean.boolean(true_ratio: 0.2) fails with "ArgumentError (comparison of Float with Hash failed)"
     if rand > 0.2
       u.iprestrict = Faker::Internet.ip_v4_address
@@ -37,7 +39,24 @@ def create_ht_user(expires:)
       u.iprestrict = "#{Faker::Internet.ip_v4_address}, #{Faker::Internet.ip_v4_address}"
     end
   end
-  u.save
+  u.save!
+  c = HTCount.new(
+    userid: u.userid,
+    accesscount: Faker::Number.within(1..10_000),
+    last_access: Faker::Time.backward,
+    warned: [false, true].sample,
+    certified: [false, true].sample,
+    auth_requested: [false, true].sample
+  )
+  c.save
+  return unless rand < 0.1
+
+  ar = HTApprovalRequest.new(
+    approver: u.approver,
+    userid: u.email,
+    sent: Faker::Time.backward
+  )
+  ar.save!
 end
 # rubocop:enable Metrics/MethodLength
 

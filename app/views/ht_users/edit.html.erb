@@ -75,6 +75,11 @@
         <dd><%= @user.identity_provider %></dd>
         <dt>Institution:</dt>
         <dd><%= @user.institution %></dd>
+        <hr/>
+        <dt>Accesses:</dt>
+        <dd><%= @user.ht_count&.accesscount %></dd>
+        <dt>Last Access:</dt>
+        <dd><%= @user.ht_count&.last_access&.to_s(:db) %></dd>
       </dl>
     </div>
 

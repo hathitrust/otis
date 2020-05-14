@@ -37,4 +37,18 @@ FactoryBot.define do
       shib_authncontext_class { 'https://refeds.org/profile/mfa' }
     end
   end
+
+  factory :ht_count do
+    userid { Faker::Internet.email }
+    accesscount { Faker::Number.within(1..10_000) }
+    last_access { Faker::Time.backward }
+    warned { [false, true].sample }
+    certified { [false, true].sample }
+    auth_requested { [false, true].sample }
+  end
+
+  factory :ht_approval_request do
+    approver { Faker::Internet.email }
+    userid { Faker::Internet.email }
+  end
 end

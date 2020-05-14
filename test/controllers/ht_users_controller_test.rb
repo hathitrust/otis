@@ -46,8 +46,8 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal 'show', @controller.action_name
     assert_not_nil assigns(:user)
-    assert_match @user1.email, @response.body
-    assert_match @user1.institution, @response.body
+    assert_match CGI.escapeHTML(@user1.email), @response.body
+    assert_match CGI.escapeHTML(@user1.institution), @response.body
   end
 
   test 'should get show page with no iprestrict' do

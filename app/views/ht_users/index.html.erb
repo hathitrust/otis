@@ -7,16 +7,20 @@
     <%= submit_tag 'Search', name: nil %>
   <% end %>
 
+  <%= form_tag(ht_approval_requests_path, method: :get) do %>
+
   <h2>Active Users</h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
+      <th>Select</th>
       <th data-sortable="true">E-mail</th>
       <th>Name</th>
       <th data-sortable="true">Role</th>
       <th data-sortable="true">Institution</th>
       <th data-sortable="true">Expires</th>
+      <th data-sortable="true">Req?</th>
       <th>IP Restriction</th>
       <th data-sortable="true">MFA?</th>
     </tr>
@@ -24,6 +28,11 @@
 
     <% @users.active.each do |u| %>
       <tr>
+        <td>
+          <% unless u.approval_requested? %>
+            <%= check_box_tag 'ht_users[]', u.email %>
+          <% end %>
+        </td>
         <td><%= link_to u.email, ht_user_path(u) %></td>
         <td><%= u.displayname %></td>
         <td><%= u.role %></td>
@@ -37,6 +46,9 @@
             </div>
           <% end %>
         </td>
+        <td>
+          <%= raw u.approval_requested? ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
+        </td>
         <td><%= u.iprestrict&.join(', ') %></td>
         <td>
           <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
@@ -44,6 +56,8 @@
       </tr>
     <% end %>
   </table>
+  <%= submit_tag 'Generate Approval Request(s)', name: 'submit_req' %>
+  <% end # form-with %>
 
   <h2>Expired Users</h2>
   <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"

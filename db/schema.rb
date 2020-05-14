@@ -53,4 +53,21 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.text :allowed_affiliations
     t.string :shib_authncontext_class
   end
+
+  create_table :ht_counts, id: false do |t|
+    t.string :userid
+    t.integer :accesscount, default: 0
+    t.timestamp :last_access
+    t.boolean :warned, default: false
+    t.boolean :certified, default: false
+    t.boolean :auth_requested, default: false
+  end
+
+  create_table :ht_approval_requests do |t|
+    t.string :approver
+    t.string :userid
+    t.timestamp :sent
+    t.timestamp :received
+    t.text :crypt
+  end
 end

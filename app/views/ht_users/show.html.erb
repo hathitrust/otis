@@ -25,6 +25,10 @@
       <dt>Multi-Factor?:</dt> <dd><%= raw @user.mfa ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
       <dt>Identity Provider:</dt> <dd><%= @user.identity_provider %></dd>
       <dt>Institution:</dt> <dd><%= @user.institution %></dd>
+      <dt>Approval Requested?:</dt> <dd><%= @user.approval_requested? ? 'yes' : 'no' %>
+      <hr/>
+      <dt>Accesses</dt> <dd><%= @user.ht_count&.accesscount %></dd>
+      <dt>Last Access</dt> <dd><%= @user.ht_count&.last_access&.to_s(:db) %></dd>
     </dl>
 
     <%= link_to 'Edit', edit_ht_user_path %>

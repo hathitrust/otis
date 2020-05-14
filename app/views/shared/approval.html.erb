@@ -1,0 +1,15 @@
+<html>
+  <body>
+    <% if @req.nil? %>
+      <strong>No approval request found for token <%= @token %></strong>
+    <% elsif @req.expired? %>
+      <strong>Approval request for <%= @user.email %> has expired.
+              Please contact <%= mail_to ApplicationMailer.default[:from] %>.</strong>
+    <% elsif @already_used %>
+      <strong>This link is no longer valid; it may have already been used.</strong>
+    <% else %>
+      <p>Approval request found for <strong><%= @user.email %></strong> from <strong><%= @req.approver %></strong>.</p>
+      <p><strong><%= @user.email %></strong> renewed until <%= @user.expires_string %></p>
+    <% end %>
+  </body>
+</html>

@@ -3,14 +3,31 @@
 require 'expiration_date'
 require 'forwardable'
 
-class HTUser < ApplicationRecord
+class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # Validates IPv4 with ^, $, and . escaped.
   def self.ip_address_regex
     /\A\^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\$\z/
   end
 
   self.primary_key = 'email'
+
+  def self.role_map # rubocop:disable Metrics/MethodLength
+    { 'corrections' => 'Support of corrections or updates to HathiTrust volumes',
+      'cataloging' => 'Correct or add to the bibliographic records of HathiTrust volumes',
+      'crms' => 'Perform copyright review on HathiTrust volumes',
+      'superuser' => 'UM staff developer – includes roles staffdeveloper and staffsysadmin',
+      'quality' => 'Evaluate the quality of digital volumes in HathiTrust',
+      'ssd' => 'Users who have print disabilities',
+      'ssdproxy' => 'Act as a proxy for users who have print disabilities',
+      'inprintstatus' => 'Perform in-print status review of volumes in HathiTrust',
+      'replacement' => 'Create replacement copies of individual pages of volumes in HathiTrust',
+      'staffdeveloper' => 'Develop software for HathiTrust services or operations',
+      'staffsysadmin' => 'Operate or maintain HathiTrust repository infrastructure',
+      'developer' => 'Experimental search API role – do not use' }
+  end
+
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
+  has_one :ht_count, foreign_key: :userid, primary_key: :userid
 
   validates :iprestrict, presence: true, unless: :mfa
   validate :validate_iprestrict_format
@@ -130,5 +147,18 @@ class HTUser < ApplicationRecord
         break
       end
     end
+  end
+
+  def approval_requested?
+    HTApprovalRequest.where(userid: email).count.positive?
+  end
+
+  def role_description
+    self.class.role_map[self[:role]]
+  end
+
+  def renew
+    extend_by_default_period!
+    save!
   end
 end
