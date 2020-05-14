@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTApprovalRequestsController < ApplicationController
-  before_action :fetch_requests, only: %i[show edit update]
+  before_action :fetch_requests, only: %i[show update edit update]
 
   def index
     @reqs = HTApprovalRequest.order('approver')
@@ -12,18 +12,18 @@ class HTApprovalRequestsController < ApplicationController
     flash.now[:notice] = "Added #{'request'.pluralize(@added.count)} for #{@added.join ','}" if @added.count.positive?
   end
 
-  def show
-    return unless ActiveModel::Type::Boolean.new.cast params[:send]
-
+  def update # rubocop:disable Metrics/MethodLength
     begin
       ApprovalRequestMailer.with(reqs: @reqs).approval_request_email.deliver_now
       @reqs.each do |req|
         req.sent = Time.now
         req.save!
       end
+      flash[:notice] = 'Message sent'
     rescue StandardError => e
-      flash.now[:alert] = e.message
+      flash[:alert] = e.message
     end
+    redirect_to action: 'show'
   end
 
   def all_sent?

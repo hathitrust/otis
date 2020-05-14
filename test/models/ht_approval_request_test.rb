@@ -7,15 +7,15 @@ class HTApprovalRequestTest < ActiveSupport::TestCase
     assert build(:ht_approval_request).valid?
   end
 
-  test 'approver validation fails' do
+  test 'must have non-nil approver' do
     assert_not build(:ht_approval_request, approver: nil).valid?
   end
 
-  test 'user validation fails' do
+  test 'must have non-nil user' do
     assert_not build(:ht_approval_request, userid: nil).valid?
   end
 
-  test 'sent/received validation fails' do
+  test 'sent must come before received' do
     assert_not build(:ht_approval_request, sent: Time.now, received: Time.now - 1).valid?
   end
 

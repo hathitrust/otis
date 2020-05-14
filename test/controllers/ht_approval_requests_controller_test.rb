@@ -56,25 +56,29 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
 
   test 'should get show page' do
     sign_in!
-    get ht_approval_request_url @user1.approver, params: { send: false }
+    get ht_approval_request_url @user1.approver
     assert_response :success
     assert_not_nil assigns(:reqs)
     assert_equal 'show', @controller.action_name
   end
 
-  test 'should get show page and submit mail' do
+  test 'should submit mail' do
     sign_in!
-    get ht_approval_request_url @user1.approver, params: { send: true }
-    assert_response :success
+    patch ht_approval_request_url @user1.approver
+    assert_response :redirect
+    assert_equal 'update', @controller.action_name
+    follow_redirect!
     assert_not_nil assigns(:reqs)
     assert_not_nil assigns(:reqs)[0][:sent]
     assert_equal 'show', @controller.action_name
   end
 
-  test 'should get show page and fail to submit mail for non-approver' do
+  test 'should fail to submit mail for non-approver' do
     sign_in!
-    get ht_approval_request_url @user1.email, params: { send: true }
-    assert_response :success
+    patch ht_approval_request_url @user1.email
+    assert_response :redirect
+    assert_equal 'update', @controller.action_name
+    follow_redirect!
     assert_not_nil assigns(:reqs)
     assert_empty assigns(:reqs)
     assert_match 'at least one', flash[:alert]

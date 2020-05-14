@@ -13,6 +13,8 @@
   <%= render 'shared/approval_request_email' %>
 
   <% unless controller.all_sent? %>
-    <%= link_to 'SEND', ht_approval_request_path(send: :yes), class: 'btn btn-primary' %>
+    <%= form_tag ht_approval_request_path, method: :put do %>
+      <%= submit_tag 'SEND', class: 'btn btn-primary' %>
+    <% end %>
   <% end %>
 </div>
