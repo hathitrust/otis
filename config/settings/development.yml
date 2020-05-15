@@ -16,3 +16,5 @@ shibboleth:
   sp:
     url: /useradmin/Shibboleth.sso
     entity_id: https://hathitrust.org/sp
+
+smtp_host: localhost
