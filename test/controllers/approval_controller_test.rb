@@ -4,12 +4,12 @@ require 'test_helper'
 
 class ApprovalControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @user = create(:ht_user, approver: 'nobody@example.com', expire_type: 'expiresannually', expires: Time.now)
+    @user = create(:ht_user, approver: 'approver@wherever.edu', expire_type: 'expiresannually', expires: Time.now)
     @req = create(:ht_approval_request, userid: @user.email, approver: @user.approver, sent: Date.today - 1.day)
   end
 
-  test 'succeeds approval by approver' do
-    sign_in!
+  test 'succeeds approval by approver with email not known in advance' do
+    sign_in! username: Faker::Internet.email
     get approve_url @req.token
     assert_response :success
     assert_equal 'new', @controller.action_name
@@ -28,6 +28,8 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match 'no longer', @response.body
   end
+
+  #  test 'logs the approvers session'
 end
 
 class ApprovalControllerFailureTest < ActionDispatch::IntegrationTest
@@ -38,10 +40,17 @@ class ApprovalControllerFailureTest < ActionDispatch::IntegrationTest
     @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Date.today - 2.week)
   end
 
-  test 'fails approval by non-approver' do
+  test 'gets 404 with nonsense token' do
     sign_in!
-    get approve_url @req.token
-    assert_response :forbidden
+    get approve_url 'asdfghjkl'
+    assert_response :not_found
+  end
+
+  test 'gets 404 with unsent approval' do
+    unsent = create(:ht_approval_request)
+    sign_in!
+    get approve_url unsent.token
+    assert_response :not_found
   end
 
   test 'fails approval of expired request' do

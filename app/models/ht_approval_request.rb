@@ -19,9 +19,7 @@ class HTApprovalRequest < ApplicationRecord
   end
 
   def self.find_by_token(tok)
-    HTApprovalRequest.all.each do |req|
-      return req if req.equals_token?(tok)
-    end
+    HTApprovalRequest.find { |req| req if req.equals_token?(tok) }
   end
 
   # This is the bit that goes to the approver, just a gob of b64 data acting as a 'password'
@@ -74,6 +72,8 @@ class HTApprovalRequest < ApplicationRecord
   end
 
   def decrypt(text)
+    return unless text
+
     salt, data = text.split '$$'
     len = ActiveSupport::MessageEncryptor.key_len
     key = ActiveSupport::KeyGenerator.new(Rails.application.secrets.secret_key_base).generate_key salt, len
