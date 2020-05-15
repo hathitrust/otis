@@ -8,8 +8,8 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
 
-def sign_in!
-  post login_as_url, params: { username: 'nobody@example.com' }
+def sign_in!(username: 'nobody@example.com')
+  post login_as_url, params: { username: username }
 end
 
 Keycard::DB.migrate!
