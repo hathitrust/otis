@@ -8,7 +8,8 @@ class ApprovalController < ApplicationController
     @token = params[:token]
     @req = HTApprovalRequest.find_by_token(params[:token])
     if @req
-      raise NotAuthorizedError unless current_user.id == @req.approver
+      # Placeholder for verification that it is the approver visiting this link.
+      # raise NotAuthorizedError unless current_user.id == @req.approver
 
       @user = HTUser.where(email: @req.userid).first
       # detect duplicate uses of the link beforehand so shared/approval does

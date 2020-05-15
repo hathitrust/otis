@@ -38,11 +38,11 @@ class ApprovalControllerFailureTest < ActionDispatch::IntegrationTest
     @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Date.today - 2.week)
   end
 
-  test 'fails approval by non-approver' do
-    sign_in!
-    get approve_url @req.token
-    assert_response :forbidden
-  end
+  # test 'fails approval by non-approver' do
+  #  sign_in!
+  #  get approve_url @req.token
+  #  assert_response :forbidden
+  # end
 
   test 'fails approval of expired request' do
     sign_in!
