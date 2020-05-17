@@ -19,8 +19,9 @@ class HTApprovalRequestTest < ActiveSupport::TestCase
     assert_not build(:ht_approval_request, sent: Time.now, received: Time.now - 1).valid?
   end
 
-  test 'a newly-sent request is not expired' do
+  test 'a newly-sent request is not expired and not renewed' do
     assert_not build(:ht_approval_request, sent: Time.now).expired?
+    assert_not build(:ht_approval_request, sent: Time.now).renewed.present?
   end
 
   test 'an old request is expired after a week' do
@@ -30,10 +31,12 @@ end
 
 class HTApprovalRequestUniquenessTest < ActiveSupport::TestCase
   def setup
-    @existing = create(:ht_approval_request, approver: 'nobody@example.com', userid: 'user@example.com')
+    @active = create(:ht_approval_request, approver: 'nobody@example.com', userid: 'active@example.com', renewed: nil)
+    @inactive = create(:ht_approval_request, approver: 'nobody@example.com', userid: 'inactive@example.com', renewed: Faker::Time.backward)
   end
 
-  test '#active returns only active users' do
-    assert_not build(:ht_approval_request, approver: 'somebody@example.com', userid: 'user@example.com').valid?
+  test 'user can have only one active approval request' do
+    assert_not build(:ht_approval_request, userid: 'active@example.com').valid?
+    assert build(:ht_approval_request, userid: 'inactove@example.com').valid?
   end
 end

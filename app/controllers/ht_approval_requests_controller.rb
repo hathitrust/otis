@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTApprovalRequestsController < ApplicationController
-  before_action :fetch_requests, only: %i[show update edit update]
+  before_action :fetch_requests, only: %i[update edit]
 
   def index
     @reqs = HTApprovalRequest.order('approver')
@@ -10,6 +10,11 @@ class HTApprovalRequestsController < ApplicationController
 
     add_requests(params[:ht_users])
     flash.now[:notice] = "Added #{'request'.pluralize(@added.count)} for #{@added.join ','}" if @added.count.positive?
+  end
+
+  # Show requests that may require further action.
+  def show
+    @reqs = HTApprovalRequest.where(approver: params[:id], received: nil, renewed: nil)
   end
 
   def update # rubocop:disable Metrics/MethodLength
@@ -26,8 +31,15 @@ class HTApprovalRequestsController < ApplicationController
     redirect_to action: 'show'
   end
 
-  def all_sent?
-    @reqs.all? { |r| r.sent.present? }
+  def status_counts
+    counts = {unsent: 0, sent: 0, expired: 0, received: 0}
+    @reqs.each do |r|
+      counts[:unsent] += 1 if r.sent.nil?
+      counts[:sent] += 1 if r.sent.present?
+      counts[:expired] += 1 if r.expired?
+      counts[:received] += 1 if r.received.present?
+    end
+    counts
   end
 
   private

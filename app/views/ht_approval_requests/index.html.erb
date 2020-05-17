@@ -9,6 +9,7 @@
     <tr>
       <th data-sortable="true">Approver</th>
       <th data-sortable="true">User</th>
+      <th data-sortable="ttue">Status</th>
       <th data-sortable="true">Sent</th>
       <th data-sortable="true">Received</th>
     </tr>
@@ -16,8 +17,18 @@
 
     <% @reqs.each do |req| %>
       <tr <%= raw @added.include?(req.userid) ? 'class="success"' : '' %>>
-        <td><%= link_to req.approver, ht_approval_request_path(req.approver) %></td>
+        <td>
+          <% if HTApprovalRequest.where(approver: req.approver, received: nil).count.positive? %>
+            <%= link_to req.approver, ht_approval_request_path(req.approver) %>
+          <% else %>
+            <%= req.approver %>
+          <% end %>
+        </td>
         <td><%= link_to req.userid, ht_user_path(req.userid) %></td>
+        <td>
+          <% req_presenter = HTApprovalRequestPresenter.new(req) %>
+          <%= req_presenter.badge %>
+        </td>
         <td><%= req.sent(short: true) %></td>
         <td><%= req.received(short: true) %></td>
       </tr>

@@ -24,7 +24,6 @@ class ApprovalController < ApplicationController
   def approve
     @req.received = Time.now
     @req.save!
-    @user.renew
     log
   end
 

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class HTApprovalRequest < ApplicationRecord
+  scope :not_renewed, -> { where(renewed: nil) }
   validates :approver, presence: true
   validates :userid, presence: true
-  # Should really validate that user has only one outstanding request,
-  # allowing those that are complete to stay as part of an audit trail.
   validates :userid, uniqueness: {
+    constraint: -> { not_renewed },
     message: ->(_object, data) { "#{data[:value]} already has an approval request" }
   }
   validates :crypt, presence: true, if: :sent
@@ -41,14 +41,16 @@ class HTApprovalRequest < ApplicationRecord
   end
 
   def sent=(value)
-    return if self[:sent].present? || self[:crypt]
-
     self[:sent] = value
-    self[:crypt] = encrypt(token)
+    self[:crypt] = encrypt(token) unless self[:crypt].present?
   end
 
   def received(short: false)
     short ? self[:received]&.strftime('%Y-%m-%d') : self[:received]&.to_s(:db)
+  end
+
+  def renewed(short: false)
+    short ? self[:renewed]&.strftime('%Y-%m-%d') : self[:renewed]&.to_s(:db)
   end
 
   def ht_user
@@ -57,7 +59,19 @@ class HTApprovalRequest < ApplicationRecord
 
   # Approval requests are good for a week once the e-mail is sent.
   def expired?
-    self[:sent] < (Date.today - 1.week)
+    self[:sent].present? && self[:sent] < (Date.today - 1.week)
+  end
+
+  def renewal_state
+    return :renewed if self[:renewed].present?
+
+    return :approved if self[:received].present?
+
+    return :expired if expired?
+
+    return :sent if self[:sent].present?
+
+    :unsent
   end
 
   private
