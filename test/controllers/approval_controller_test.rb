@@ -4,7 +4,7 @@ require 'test_helper'
 
 class ApprovalControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @user = create(:ht_user, approver: 'nobody@example.com', expire_type: 'expiresannually', expires: Time.now)
+    @user = create(:ht_user, approver: 'nobody@example.com', expire_type: 'expiresannually', expires: Time.zone.now)
     @req = create(:ht_approval_request, userid: @user.email, approver: @user.approver, sent: Date.today - 1.day)
   end
 
@@ -17,7 +17,7 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     assert_match @req.approver, @response.body
     assert_in_delta(365, @user.reload.days_until_expiration, 1)
     assert_not_nil @req.reload.received
-    assert_equal Date.parse(@req.reload.received).to_s, Date.today.to_s
+    assert_equal Date.parse(@req.reload.received).to_s, Date.parse(Time.zone.now.to_s).to_s
   end
 
   test 'refuses to approve the same request a second time' do

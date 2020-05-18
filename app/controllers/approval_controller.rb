@@ -22,7 +22,7 @@ class ApprovalController < ApplicationController
   private
 
   def approve
-    @req.received = Time.now
+    @req.received = Time.zone.now
     @req.save!
     @user.renew
     log

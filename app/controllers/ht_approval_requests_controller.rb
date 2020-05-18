@@ -16,7 +16,7 @@ class HTApprovalRequestsController < ApplicationController
     begin
       ApprovalRequestMailer.with(reqs: @reqs).approval_request_email.deliver_now
       @reqs.each do |req|
-        req.sent = Time.now
+        req.sent = Time.zone.now
         req.save!
       end
       flash[:notice] = 'Message sent'
