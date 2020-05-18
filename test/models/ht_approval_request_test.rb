@@ -16,16 +16,16 @@ class HTApprovalRequestTest < ActiveSupport::TestCase
   end
 
   test 'sent must come before received' do
-    assert_not build(:ht_approval_request, sent: Time.now, received: Time.now - 1).valid?
+    assert_not build(:ht_approval_request, sent: Time.zone.now, received: Time.zone.now - 1).valid?
   end
 
   test 'a newly-sent request is not expired and not renewed' do
-    assert_not build(:ht_approval_request, sent: Time.now).expired?
-    assert_not build(:ht_approval_request, sent: Time.now).renewed.present?
+    assert_not build(:ht_approval_request, sent: Time.zone.now).expired?
+    assert_not build(:ht_approval_request, sent: Time.zone.now).renewed.present?
   end
 
   test 'an old request is expired after a week' do
-    assert build(:ht_approval_request, sent: (Time.now - 2.week)).expired?
+    assert build(:ht_approval_request, sent: (Time.zone.now - 2.week)).expired?
   end
 
   test 'hashed token matches token after setting sent' do

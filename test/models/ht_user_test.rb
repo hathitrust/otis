@@ -151,11 +151,11 @@ end
 
 class HTUserRenewal < ActiveSupport::TestCase
   def setup
-    @expiresannually_user = build(:ht_user, expires: Time.now, expire_type: 'expiresannually')
-    @expiresbiannually_user = build(:ht_user, expires: Time.now, expire_type: 'expiresbiannually')
-    @expirescustom90_user = build(:ht_user, expires: Time.now, expire_type: 'expirescustom90')
-    @expirescustom60_user = build(:ht_user, expires: Time.now, expire_type: 'expirescustom60')
-    @unknown_user = build(:ht_user, expires: Time.now, expire_type: 'unknown')
+    @expiresannually_user = build(:ht_user, expires: Time.zone.now, expire_type: 'expiresannually')
+    @expiresbiannually_user = build(:ht_user, expires: Time.zone.now, expire_type: 'expiresbiannually')
+    @expirescustom90_user = build(:ht_user, expires: Time.zone.now, expire_type: 'expirescustom90')
+    @expirescustom60_user = build(:ht_user, expires: Time.zone.now, expire_type: 'expirescustom60')
+    @unknown_user = build(:ht_user, expires: Time.zone.now, expire_type: 'unknown')
   end
 
   test 'User expiresannually' do

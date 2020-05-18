@@ -4,7 +4,7 @@ require 'test_helper'
 
 class ApprovalControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @user = create(:ht_user, approver: 'approver@wherever.edu', expire_type: 'expiresannually', expires: Time.now)
+    @user = create(:ht_user, approver: 'approver@wherever.edu', expire_type: 'expiresannually', expires: Time.zone.now)
     @req = create(:ht_approval_request, userid: @user.email, approver: @user.approver, sent: Date.today - 1.day)
   end
 
