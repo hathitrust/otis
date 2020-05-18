@@ -4,18 +4,22 @@
 # This controller's new/show page should be the only part of the app that
 # external users have access to.
 class ApprovalController < ApplicationController
+  # Users who cannot access the rest of the application can still use the
+  # one-time links
+  skip_before_action :authorize!
+
   def new
     @token = params[:token]
     @req = HTApprovalRequest.find_by_token(params[:token])
-    if @req
-      raise NotAuthorizedError unless current_user.id == @req.approver
 
-      @user = HTUser.where(email: @req.userid).first
-      # detect duplicate uses of the link beforehand so shared/approval does
-      # the right thing
-      @already_used = @req.received.present?
-      approve unless @req.expired? || @already_used
-    end
+    return render_not_found unless @req&.crypt
+
+    @user = HTUser.where(email: @req.userid).first
+    # detect duplicate uses of the link beforehand so shared/approval does
+    # the right thing
+    @already_used = @req.received.present?
+    approve unless @req.expired? || @already_used
+
     render 'shared/approval'
   end
 

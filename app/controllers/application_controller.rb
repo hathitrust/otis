@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   rescue_from Keycard::AuthenticationFailed, with: :authentication_failed
   rescue_from ActionController::InvalidAuthenticityToken, with: :user_not_authorized
   rescue_from NotAuthorizedError, with: :user_not_authorized
+  rescue_from ActionController::RoutingError, with: :render_not_found
 
   def authorize!
     return if current_user.nil?
@@ -39,6 +40,10 @@ class ApplicationController < ActionController::Base
     else
       render_forbidden
     end
+  end
+
+  def render_not_found
+    render file: "#{Rails.root}/public/404.html", layout: false, status: :not_found
   end
 
   def authentication_failed
