@@ -7,11 +7,13 @@ class HTUsersController < ApplicationController
 
   def index
     if params[:email]
-      @users = HTUser.joins(:ht_institution).where('email LIKE ?', "%#{params[:email]}%").order(:userid)
-      flash.now[:alert] = "No results for '#{params[:email]}'" if @users.empty?
+      users = HTUser.joins(:ht_institution).where('email LIKE ?', "%#{params[:email]}%").order(:userid)
+      flash.now[:alert] = "No results for '#{params[:email]}'" if users.empty?
     else
-      @users = HTUser.joins(:ht_institution).order('ht_institutions.name')
+      users = HTUser.joins(:ht_institution).order('ht_institutions.name')
     end
+    @users = users.active.map { |u| HTUserPresenter.new(u) }
+    @expired_users = users.expired.map { |u| HTUserPresenter.new(u) }
   end
 
   def update
@@ -28,7 +30,7 @@ class HTUsersController < ApplicationController
   private
 
   def fetch_user
-    @user = HTUser.joins(:ht_institution).find(params[:id])
+    @user = HTUserPresenter.new(HTUser.joins(:ht_institution).find(params[:id]))
   end
 
   def user_params

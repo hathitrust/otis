@@ -3,9 +3,8 @@
 require 'test_helper'
 
 class HTApprovalRequestPresenterTest < ActiveSupport::TestCase
-  test '#badge' do
+  test 'badge' do
     req = build(:ht_approval_request)
-    presenter = HTApprovalRequestPresenter.new(req)
-    assert_not_nil presenter.badge
+    assert_not_nil HTApprovalRequestPresenter.badge_for(req)
   end
 end

@@ -9,8 +9,7 @@
     <% @reqs.each do |req| %>
       <li class="list-group-item">
         <%= req.userid %></dt>
-        <% req_presenter = HTApprovalRequestPresenter.new(req) %>
-        <%= req_presenter.badge %>
+        <%= HTApprovalRequestPresenter.badge_for(req) %>
       </li>
     <% end %>
     </ul>
@@ -22,9 +21,9 @@
       </div>
     </div>
     <% counts = controller.status_counts %>
-    <% if counts[:unsent].positive? || counts[:expired].positive? %>
+    <% if counts[:unsent]&.positive? || counts[:expired]&.positive? %>
       <%= form_tag ht_approval_request_path, method: :put do %>
-        <% label = counts[:expired].positive? ? 'RESEND' : 'SEND' %>
+        <% label = counts[:expired]&.positive? ? 'RESEND' : 'SEND' %>
         <%= submit_tag label, class: 'btn btn-primary' %>
         <%= link_to 'Cancel', ht_approval_request_path(@reqs[0].approver), class: 'btn btn-primary' %>
       <% end %>

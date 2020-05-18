@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTApprovalRequestsController < ApplicationController
-  before_action :fetch_requests, only: %i[update edit]
+  before_action :fetch_requests, only: %i[show update edit]
 
   def index
     @reqs = HTApprovalRequest.order('approver')
@@ -12,15 +12,12 @@ class HTApprovalRequestsController < ApplicationController
     flash.now[:notice] = "Added #{'request'.pluralize(@added.count)} for #{@added.join ','}" if @added.count.positive?
   end
 
-  # Show requests that may require further action.
-  def show
-    @reqs = HTApprovalRequest.where(approver: params[:id], received: nil, renewed: nil)
-  end
-
   def update # rubocop:disable Metrics/MethodLength
     begin
       ApprovalRequestMailer.with(reqs: @reqs).approval_request_email.deliver_now
       @reqs.each do |req|
+        next unless req.mailable?
+
         req.sent = Time.now
         req.save!
       end
@@ -32,20 +29,13 @@ class HTApprovalRequestsController < ApplicationController
   end
 
   def status_counts
-    counts = {unsent: 0, sent: 0, expired: 0, received: 0}
-    @reqs.each do |r|
-      counts[:unsent] += 1 if r.sent.nil?
-      counts[:sent] += 1 if r.sent.present?
-      counts[:expired] += 1 if r.expired?
-      counts[:received] += 1 if r.received.present?
-    end
-    counts
+    @reqs.group_by(&:renewal_state).map { |k, v| [k, v.length] }.to_h
   end
 
   private
 
   def fetch_requests
-    @reqs = HTApprovalRequest.where(approver: params[:id])
+    @reqs = HTApprovalRequest.not_renewed_for_approver(params[:id])
   end
 
   # Add an approval request for selected users.

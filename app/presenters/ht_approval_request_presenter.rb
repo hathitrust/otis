@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 class HTApprovalRequestPresenter
-  def initialize(req)
-    @req = req
-  end
-
-  def badge
+  def self.badge_for(obj)
     @badges ||= {
       unsent: '<span class="label label-warning">Unsent</span>',
       sent: '<span class="label label-default">Sent</span>',
@@ -13,8 +9,8 @@ class HTApprovalRequestPresenter
       approved: '<span class="label label-info">Approved</span>',
       renewed: '<span class="label label-success">Renewed</span>'
     }
-    return '' if @req.nil?
+    return '' if obj.nil?
 
-    @badges[@req.renewal_state]&.html_safe
+    @badges[obj.renewal_state]&.html_safe
   end
 end

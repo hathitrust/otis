@@ -2,6 +2,10 @@
 
 class HTApprovalRequest < ApplicationRecord
   scope :not_renewed, -> { where(renewed: nil) }
+  scope :for_approver, ->(approver) { where(approver: approver).order(:sent, :received, :renewed) }
+  scope :not_renewed_for_approver, ->(approver) { where(approver: approver, renewed: nil).order(:sent, :received, :renewed) }
+  scope :for_user, ->(user) { where(userid: user) }
+  scope :not_renewed_for_user, ->(user) { where(userid: user, renewed: nil) }
   validates :approver, presence: true
   validates :userid, presence: true
   validates :userid, uniqueness: {
@@ -46,11 +50,11 @@ class HTApprovalRequest < ApplicationRecord
   end
 
   def received(short: false)
-    short ? self[:received]&.strftime('%Y-%m-%d') : self[:received]&.to_s(:db)
+    date_field(:received, short: short)
   end
 
   def renewed(short: false)
-    short ? self[:renewed]&.strftime('%Y-%m-%d') : self[:renewed]&.to_s(:db)
+    date_field(:renewed, short: short)
   end
 
   def ht_user
@@ -60,6 +64,11 @@ class HTApprovalRequest < ApplicationRecord
   # Approval requests are good for a week once the e-mail is sent.
   def expired?
     self[:sent].present? && self[:sent] < (Date.today - 1.week)
+  end
+
+  # Expired or unsent
+  def mailable?
+    %i[unsent expired].include? renewal_state
   end
 
   def renewal_state
@@ -93,5 +102,13 @@ class HTApprovalRequest < ApplicationRecord
     key = ActiveSupport::KeyGenerator.new(Rails.application.secrets.secret_key_base).generate_key salt, len
     crypt = ActiveSupport::MessageEncryptor.new key
     crypt.decrypt_and_verify data
+  end
+
+  def date_field(field, short: false)
+    if short
+      self[field]&.strftime('%Y-%m-%d')
+    else
+      self[field]&.to_s(:db)
+    end
   end
 end
