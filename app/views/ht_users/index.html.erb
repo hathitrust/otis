@@ -7,7 +7,7 @@
     <%= submit_tag 'Search', name: nil %>
   <% end %>
 
-  <%= form_tag(ht_approval_requests_path, method: :get) do %>
+  <%= form_tag(ht_approval_requests_path, method: :post) do %>
 
   <h2>Active Users</h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
