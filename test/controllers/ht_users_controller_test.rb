@@ -20,26 +20,6 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match @user2.email, @response.body
   end
 
-  test 'should get index with successful e-mail search' do
-    sign_in!
-    get ht_users_url, params: {email: @user1.email}
-    assert_response :success
-    assert_equal assigns(:users).count, 1
-    assert_equal 'index', @controller.action_name
-    assert_empty flash
-    assert_match 'Users', @response.body
-  end
-
-  test 'should get index with unsuccessful e-mail search' do
-    sign_in!
-    get ht_users_url, params: {email: 'nobody@here.edu'}
-    assert_response :success
-    assert_equal assigns(:users).count, 0
-    assert_equal 'index', @controller.action_name
-    assert_match 'nobody', flash[:alert]
-    assert_match 'Users', @response.body
-  end
-
   test 'should get show page' do
     sign_in!
     get ht_user_url @user1
@@ -167,5 +147,30 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get edit_ht_user_url id: 'test'
     assert_select 'input#mfa_checkbox', 0
+  end
+end
+
+class HTUsersControllerRenewalTest < ActionDispatch::IntegrationTest
+  def setup
+    @user1 = create(:ht_user)
+    @user2 = create(:ht_user)
+    @req1 = create(:ht_approval_request, userid: @user1.email)
+  end
+
+  test 'renewing user renews approval request' do
+    sign_in!
+    patch ht_user_url @user1, params: {'ht_user' => {'expires' => (Date.today + 365).to_s}}
+    assert_redirected_to ht_user_path(@user1.email)
+    assert_not_nil @req1.reload.renewed
+    assert_equal Date.parse(@req1.reload.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
+  end
+
+  test 'renewing user creates new renewal request with staff approver if none existing' do
+    sign_in!
+    patch ht_user_url @user2, params: {'ht_user' => {'expires' => (Date.today + 365).to_s}}
+    @req2 = HTApprovalRequest.where(userid: @user2.email).first
+    assert_not_nil @req2
+    assert_equal 'nobody@example.com', @req2.approver
+    assert_equal Date.parse(@req2.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
   end
 end

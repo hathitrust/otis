@@ -9,9 +9,13 @@ class HTUserPresenter < SimpleDelegator
     HTApprovalRequestPresenter.badge_for(approval_request)
   end
 
+  def renewed?
+    approval_request&.renewed.present?
+  end
+
   private
 
   def approval_request
-    @approval_request ||= HTApprovalRequest.not_renewed_for_user(email).first
+    @approval_request ||= HTApprovalRequest.for_user(email).first
   end
 end

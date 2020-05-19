@@ -3,18 +3,26 @@
 class HTApprovalRequestsController < ApplicationController
   before_action :fetch_requests, only: %i[show update edit]
 
-  def create
-    return unless params[:submit_req]
-
-    adds = add_requests(params[:ht_users])
-    flash[:notice] = "Added #{'request'.pluralize(adds.count)} for #{adds.join ', '}" if adds.count.positive?
+  def create # rubocop:disable Metrics/MethodLength
+    if params[:submit_requests]
+      @added_users = add_requests(params[:ht_users])
+      flash[:notice] = "Added #{'request'.pluralize(@added_users.count)} for #{@added_users.join ', '}" if @added_users.count.positive?
+      session[:added_users] = @added_users
+    end
+    if params[:submit_renewals]
+      @renewed_users = add_renewals(params[:ht_users])
+      flash[:notice] = "Renewed #{@renewed_users.join ', '}" if @renewed_users.count.positive?
+      session[:renewed_users] = @renewed_users
+    end
     redirect_to action: :index
-    session[:added_users] = adds
   end
 
   def index
     @reqs = HTApprovalRequest.order('approver')
     @added_users = session[:added_users] || []
+    @renewed_users = session[:renewed_users] || []
+    session.delete :added_users
+    session.delete :renewed_users
   end
 
   def update # rubocop:disable Metrics/MethodLength
@@ -74,5 +82,20 @@ class HTApprovalRequestsController < ApplicationController
     raise StandardError, "Unknown user '#{email}'" if u.nil?
 
     HTApprovalRequest.new(userid: u.email, approver: u.approver).save!
+  end
+
+  def add_renewals(emails) # rubocop:disable Metrics/MethodLength
+    if emails.nil? || emails.empty?
+      flash[:alert] = 'No users selected'
+      return []
+    end
+    adds = []
+    emails.each do |e|
+      helpers.add_or_update_renewal e
+      adds << e
+    rescue StandardError => e
+      flash[:alert] = e.message
+    end
+    adds
   end
 end

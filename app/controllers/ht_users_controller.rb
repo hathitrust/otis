@@ -6,19 +6,17 @@ class HTUsersController < ApplicationController
   PERMITTED_UPDATE_FIELDS = %i[userid iprestrict expires approver mfa].freeze
 
   def index
-    if params[:email]
-      users = HTUser.joins(:ht_institution).where('email LIKE ?', "%#{params[:email]}%").order(:userid)
-      flash.now[:alert] = "No results for '#{params[:email]}'" if users.empty?
-    else
-      users = HTUser.joins(:ht_institution).order('ht_institutions.name')
-    end
+    users = HTUser.joins(:ht_institution).order('ht_institutions.name')
     @users = users.active.map { |u| HTUserPresenter.new(u) }
     @expired_users = users.expired.map { |u| HTUserPresenter.new(u) }
   end
 
   def update
+    # Any extension of term counts as a renewal for our purposes.
+    renewing = user_params[:expires].present? && user_params[:expires] > @user.expires.to_date.to_s
     if @user.update(user_params)
       flash[:notice] = 'User updated'
+      helpers.add_or_update_renewal(@user.email) if renewing
       redirect_to @user
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence

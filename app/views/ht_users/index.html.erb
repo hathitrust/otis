@@ -2,14 +2,10 @@
   <h1>Users</h1>
 
   <%= render 'shared/flash_message' %>
-  <%= form_tag(ht_users_path, method: :get) do %>
-    E-mail <%= text_field_tag :email, params[:email] %>
-    <%= submit_tag 'Search', name: nil %>
-  <% end %>
 
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
 
-  <h2>Active Users</h2>
+  <h2 class="pull-left">Active Users</h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
@@ -29,7 +25,7 @@
     <% @users.each do |u| %>
       <tr>
         <td>
-          <% unless u.approval_requested? %>
+          <% unless u.renewed? %>
             <%= check_box_tag 'ht_users[]', u.email %>
           <% end %>
         </td>
@@ -55,10 +51,11 @@
     <% end %>
   </table>
   <br/>
-  <%= submit_tag 'Generate Approval Requests', name: 'submit_req', class: 'btn btn-primary' %>
+  <%= submit_tag 'Create Approval Requests', name: 'submit_requests', class: 'btn btn-primary' %>
+  <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
   <% end # form-with %>
 
-  <h2>Expired Users</h2>
+  <h2 class="pull-left">Expired Users</h2>
   <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true">
     <thead>
