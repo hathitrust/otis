@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :userid
     t.timestamp :sent
     t.timestamp :received
+    t.timestamp :renewed
     t.text :crypt
   end
 end

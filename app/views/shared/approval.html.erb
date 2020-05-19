@@ -8,8 +8,9 @@
     <% elsif @already_used %>
       <strong>This link is no longer valid; it may have already been used.</strong>
     <% else %>
-      <p>Approval request found for <strong><%= @user.email %></strong> from <strong><%= @req.approver %></strong>.</p>
-      <p><strong><%= @user.email %></strong> renewed until <%= @user.expires_string %></p>
+      <p>Thank you.</p>
+      <p>Elevated access approval recorded for <strong><%= @user.email %></strong>
+         from <strong><%= @req.approver %></strong>.</p>
     <% end %>
   </body>
 </html>

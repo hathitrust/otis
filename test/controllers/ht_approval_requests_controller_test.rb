@@ -62,14 +62,22 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
     assert_equal 'show', @controller.action_name
   end
 
+  test 'should get edit page' do
+    sign_in!
+    get edit_ht_approval_request_url @user1.approver
+    assert_response :success
+    assert_not_nil assigns(:reqs)
+    assert_equal 'edit', @controller.action_name
+  end
+
   test 'should submit mail' do
     sign_in!
     patch ht_approval_request_url @user1.approver
     assert_response :redirect
     assert_equal 'update', @controller.action_name
     follow_redirect!
-    assert_not_nil assigns(:reqs)
-    assert_not_nil assigns(:reqs)[0][:sent]
+    assert_not_nil @req.reload.sent
+    assert_not_nil @req.reload[:crypt]
     assert_equal 'show', @controller.action_name
   end
 
@@ -83,5 +91,19 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
     assert_empty assigns(:reqs)
     assert_match 'at least one', flash[:alert]
     assert_equal 'show', @controller.action_name
+  end
+end
+
+class HTApprovalRequestControllerResendTest < ActionDispatch::IntegrationTest
+  def setup
+    @user = create(:ht_user, approver: 'approver@example.com')
+    @req = create(:ht_approval_request, userid: @user.email, approver: @user.approver, sent: Time.now - 30.days)
+  end
+
+  test 'resending e-mail resets sent timestamp' do
+    sign_in!
+    patch ht_approval_request_url @user.approver
+    follow_redirect!
+    assert_equal Date.parse(@req.reload.sent).to_s, Date.today.to_s
   end
 end

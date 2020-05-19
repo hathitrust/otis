@@ -16,9 +16,20 @@
 
     <% @reqs.each do |req| %>
       <tr <%= raw @added.include?(req.userid) ? 'class="success"' : '' %>>
-        <td><%= link_to req.approver, ht_approval_request_path(req.approver) %></td>
+        <td>
+          <% if HTApprovalRequest.not_renewed_for_approver(req.approver).count.positive? %>
+            <%= link_to req.approver, ht_approval_request_path(req.approver) %>
+          <% else %>
+            <%= req.approver %>
+          <% end %>
+        </td>
         <td><%= link_to req.userid, ht_user_path(req.userid) %></td>
-        <td><%= req.sent(short: true) %></td>
+        <td>
+          <%= req.sent(short: true) %>
+          <% if req.renewal_state == :expired %>
+            <span class="label label-danger">Expired</span>
+          <% end %>
+        </td>
         <td><%= req.received(short: true) %></td>
       </tr>
     <% end %>

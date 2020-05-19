@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTApprovalRequestsController < ApplicationController
-  before_action :fetch_requests, only: %i[show update edit update]
+  before_action :fetch_requests, only: %i[show update edit]
 
   def index
     @reqs = HTApprovalRequest.order('approver')
@@ -16,6 +16,8 @@ class HTApprovalRequestsController < ApplicationController
     begin
       ApprovalRequestMailer.with(reqs: @reqs).approval_request_email.deliver_now
       @reqs.each do |req|
+        next unless req.mailable?
+
         req.sent = Time.now
         req.save!
       end
@@ -26,14 +28,14 @@ class HTApprovalRequestsController < ApplicationController
     redirect_to action: 'show'
   end
 
-  def all_sent?
-    @reqs.all? { |r| r.sent.present? }
+  def status_counts
+    @reqs.group_by(&:renewal_state).map { |k, v| [k, v.length] }.to_h
   end
 
   private
 
   def fetch_requests
-    @reqs = HTApprovalRequest.where(approver: params[:id])
+    @reqs = HTApprovalRequest.not_renewed_for_approver(params[:id])
   end
 
   # Add an approval request for selected users.

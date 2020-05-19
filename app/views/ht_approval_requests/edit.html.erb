@@ -1,20 +1,32 @@
 <div id="maincontent" class="row">
-
-  <h1>Approval Request for <%= params[:id] %>
-    <% if controller.all_sent? %>
-      <span class="label label-success">Sent</span>
-    <% else %>
-      <span class="label label-info">Not Sent</span>
-    <% end %>
-  </h1>
+  <h1>Approval Requests for <%= params[:id] %></h1>
 
   <%= render 'shared/flash_message' %>
-
-  <%= render 'shared/approval_request_email' %>
-
-  <% unless controller.all_sent? %>
-    <%= form_tag ht_approval_request_path, method: :put do %>
-      <%= submit_tag 'SEND', class: 'btn btn-primary' %>
+  <% if @reqs.count == 0 %>
+    There are no outstanding requests for this approver.
+  <% else %>
+  <ul class="list-group">
+    <% @reqs.each do |req| %>
+      <li class="list-group-item">
+        <%= req.userid %></dt>
+        <%= HTApprovalRequestPresenter.badge_for(req) %>
+      </li>
+    <% end %>
+    </ul>
+    <!-- MAIL PREVIEW -->
+    <div class="panel panel-default">
+      <div class="panel-heading">E-mail Preview</div>
+      <div class="panel-body">
+        <%= render 'shared/approval_request_email' %>
+      </div>
+    </div>
+    <% counts = controller.status_counts %>
+    <% if counts[:unsent]&.positive? || counts[:expired]&.positive? %>
+      <%= form_tag ht_approval_request_path, method: :put do %>
+        <% label = counts[:expired]&.positive? ? 'RESEND' : 'SEND' %>
+        <%= submit_tag label, class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', ht_approval_request_path(@reqs[0].approver), class: 'btn btn-primary' %>
+      <% end %>
     <% end %>
   <% end %>
 </div>

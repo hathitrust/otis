@@ -21,17 +21,17 @@
       <dt>Access:</dt> <dd><%= @user.access %></dd>
       <dt>Expire Type:</dt> <dd><%= @user.expire_type %></dd>
       <dt><%= expired_text %></dt> <dd class="<%= expires_class %>"><%= @user.expires_string %></dd>
+      <dt>Renewal Status</dt> <dd><%= @user.badge %></dd>
       <dt>IP Restriction:</dt> <dd><%= @user.iprestrict&.join(', ') %></dd>
       <dt>Multi-Factor?:</dt> <dd><%= raw @user.mfa ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
       <dt>Identity Provider:</dt> <dd><%= @user.identity_provider %></dd>
       <dt>Institution:</dt> <dd><%= @user.institution %></dd>
-      <dt>Approval Requested?:</dt> <dd><%= @user.approval_requested? ? 'yes' : 'no' %>
       <hr/>
       <dt>Accesses</dt> <dd><%= @user.ht_count&.accesscount %></dd>
       <dt>Last Access</dt> <dd><%= @user.ht_count&.last_access&.to_s(:db) %></dd>
     </dl>
 
-    <%= link_to 'Edit', edit_ht_user_path %>
+    <%= link_to 'Edit', edit_ht_user_path, class: 'btn btn-primary' %>
   </div>
 </div>
 

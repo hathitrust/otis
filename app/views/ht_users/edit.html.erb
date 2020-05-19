@@ -60,7 +60,8 @@
             <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');" %>
           <% end %>
         </dd>
-
+        <dt>Renewal Status</dt>
+        <dd><%= @user.badge %></dd>
         <dt><%= form.label :iprestrict %></dt>
         <dd><%= form.text_field :iprestrict, value: @user.iprestrict&.join(', '), size: 40, id: :iprestrict_field, disabled: @user.mfa %>
           <p class="text-muted"><%= t('ht_user.edit.iprestrict_prompt') %></p>

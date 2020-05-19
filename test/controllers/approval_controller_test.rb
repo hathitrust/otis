@@ -15,7 +15,6 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'new', @controller.action_name
     assert_match @req.userid, @response.body
     assert_match @req.approver, @response.body
-    assert_in_delta(365, @user.reload.days_until_expiration, 1)
     assert_not_nil @req.reload.received
     assert_equal Date.parse(@req.reload.received).to_s, Date.today.to_s
   end

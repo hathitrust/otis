@@ -19,7 +19,7 @@ def create_ht_user(expires:)
     displayname: Faker::Name.name,
     email: Faker::Internet.email,
     activitycontact: Faker::Internet.email,
-    approver: Faker::Internet.email,
+    approver: @approvers.sample,
     authorizer: Faker::Internet.email,
     usertype: %w[staff external student].sample,
     role: %w[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd].sample,
@@ -49,16 +49,25 @@ def create_ht_user(expires:)
     auth_requested: [false, true].sample
   )
   c.save
-  return unless rand < 0.1
-
-  ar = HTApprovalRequest.new(
-    approver: u.approver,
-    userid: u.email,
-    sent: Faker::Time.backward
-  )
-  ar.save!
+  create_ht_approval_request(u)
 end
 # rubocop:enable Metrics/MethodLength
+
+def create_ht_approval_request(user) # rubocop:disable Metrics/MethodLength
+  return unless rand < 0.1
+
+  sent = [nil, Faker::Time.backward].sample
+  received = sent.nil? ? nil : [nil, sent + Faker::Number.within(1..10).days].sample
+  renewed = received.nil? ? nil : [nil, received + Faker::Number.within(1..10).days].sample
+  ar = HTApprovalRequest.new(
+    approver: user.approver,
+    userid: user.email,
+    received: received,
+    renewed: renewed
+  )
+  ar.sent = sent if sent
+  ar.save!
+end
 
 3.times do
   HTInstitution.create(
@@ -75,6 +84,11 @@ end
     entityID: Faker::Internet.url,
     shib_authncontext_class: Faker::Internet.url
   )
+end
+
+# We should simulate the typical situation in which some approvers are shared.
+@approvers = Array.new(30) do
+  Faker::Internet.email
 end
 
 # active users
