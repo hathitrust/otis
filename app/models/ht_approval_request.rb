@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class HTApprovalRequest < ApplicationRecord
+  self.primary_key = 'id'
   scope :not_renewed, -> { where(renewed: nil) }
   scope :for_approver, ->(approver) { where(approver: approver).order(:sent, :received, :renewed) }
   scope :not_renewed_for_approver, ->(approver) { where(approver: approver, renewed: nil).order(:sent, :received, :renewed) }
