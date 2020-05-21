@@ -30,7 +30,7 @@ class HTApprovalRequest < ApplicationRecord
   # This is the bit that goes to the approver, just a gob of b64 data acting as a 'password'
   def token
     @token ||= decrypt(self[:crypt]) if self[:crypt]
-    @token ||= SecureRandom.base64 16
+    @token ||= SecureRandom.urlsafe_base64 16
   end
 
   # Does the approver alleging to have a valid token match this one?
