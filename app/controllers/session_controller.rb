@@ -7,7 +7,7 @@ class SessionController < ApplicationController
     if login
       redirect_back_or_to root_path
     else
-      default_login
+      redirect_to shib_login_url
     end
   end
 
@@ -40,11 +40,7 @@ class SessionController < ApplicationController
     head 403
   end
 
-  def default_login
-    redirect_to shib_login_url(request.base_url + (session[:return_to] || ''))
-  end
-
-  def shib_login_url(target)
+  def shib_login_url(target = request.original_url)
     URI("#{Otis.config.shibboleth.sp.url}/Login").tap do |url|
       url.query = URI.encode_www_form(
         target: target,
