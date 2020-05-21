@@ -3,13 +3,18 @@
 class HTApprovalRequestsController < ApplicationController
   before_action :fetch_requests, only: %i[show update edit]
 
-  def index
-    @reqs = HTApprovalRequest.order('approver')
-    @added = []
+  def create
     return unless params[:submit_req]
 
-    add_requests(params[:ht_users])
-    flash.now[:notice] = "Added #{'request'.pluralize(@added.count)} for #{@added.join ','}" if @added.count.positive?
+    adds = add_requests(params[:ht_users])
+    flash[:notice] = "Added #{'request'.pluralize(adds.count)} for #{adds.join ', '}" if adds.count.positive?
+    redirect_to action: :index
+    session[:added_users] = adds
+  end
+
+  def index
+    @reqs = HTApprovalRequest.order('approver')
+    @added_users = session[:added_users] || []
   end
 
   def update # rubocop:disable Metrics/MethodLength
@@ -40,21 +45,24 @@ class HTApprovalRequestsController < ApplicationController
 
   # Add an approval request for selected users.
   # If one already exists, silently skip over it.
+  # Returns an Array of ht_user emails added to requests.
   def add_requests(emails) # rubocop:disable Metrics/MethodLength
     if emails.nil? || emails.empty?
-      flash.now[:alert] = 'No users selected'
-      return
+      flash[:alert] = 'No users selected'
+      return []
     end
+    adds = []
     emails.each do |e|
       next if HTApprovalRequest.where(userid: e).count.positive?
 
       begin
         add_request e
-        @added << e
+        adds << e
       rescue StandardError => e
-        flash.now[:alert] = e.message
+        flash[:alert] = e.message
       end
     end
+    adds
   end
 
   def add_request(email)

@@ -19,17 +19,20 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
   test 'should get index after adding 2 requests' do
     sign_in!
     assert_equal 0, HTApprovalRequest.count
-    get ht_approval_requests_url, params: {ht_users: [@user1.email, @user2.email], submit_req: true}
-    assert_response :success
+    post ht_approval_requests_url, params: {ht_users: [@user1.email, @user2.email], submit_req: true}
+    assert_response :redirect
+    follow_redirect!
     assert_equal 2, HTApprovalRequest.count
+    assert_match 'Added', flash[:notice]
     assert_not_nil assigns(:reqs)
     assert_equal 'index', @controller.action_name
   end
 
   test 'should get index page and fail to submit zero-length request list' do
     sign_in!
-    get ht_approval_requests_url, params: {submit_req: true}
-    assert_response :success
+    post ht_approval_requests_url, params: {submit_req: true}
+    assert_response :redirect
+    follow_redirect!
     assert_not_nil assigns(:reqs)
     assert_empty assigns(:reqs)
     assert_match 'No users selected', flash[:alert]
@@ -38,8 +41,9 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
 
   test 'should get index page and fail to submit approval request for unknown user' do
     sign_in!
-    get ht_approval_requests_url, params: {ht_users: ['nobody@nowhere.org'], submit_req: true}
-    assert_response :success
+    post ht_approval_requests_url, params: {ht_users: ['nobody@nowhere.org'], submit_req: true}
+    assert_response :redirect
+    follow_redirect!
     assert_not_nil assigns(:reqs)
     assert_empty assigns(:reqs)
     assert_match 'Unknown user', flash[:alert]

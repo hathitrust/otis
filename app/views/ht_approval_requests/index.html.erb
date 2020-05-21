@@ -15,7 +15,7 @@
     </thead>
 
     <% @reqs.each do |req| %>
-      <tr <%= raw @added.include?(req.userid) ? 'class="success"' : '' %>>
+      <tr <%= raw @added_users&.include?(req.userid) ? 'class="success"' : '' %>>
         <td>
           <% if HTApprovalRequest.not_renewed_for_approver(req.approver).count.positive? %>
             <%= link_to req.approver, ht_approval_request_path(req.approver) %>
