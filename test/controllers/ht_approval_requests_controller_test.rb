@@ -74,6 +74,12 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
     assert_equal 'edit', @controller.action_name
   end
 
+  test 'edit page should not contain approval link' do
+    sign_in!
+    get edit_ht_approval_request_url @user1.approver
+    assert_no_match %r{/approve/}, response.body
+  end
+
   test 'should submit mail' do
     sign_in!
     patch ht_approval_request_url @user1.approver
@@ -81,7 +87,7 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
     assert_equal 'update', @controller.action_name
     follow_redirect!
     assert_not_nil @req.reload.sent
-    assert_not_nil @req.reload[:crypt]
+    assert_not_nil @req.reload[:token_hash]
     assert_equal 'show', @controller.action_name
   end
 

@@ -50,5 +50,10 @@ FactoryBot.define do
   factory :ht_approval_request do
     approver { Faker::Internet.email }
     userid { Faker::Internet.email }
+
+    trait :expired do
+      sent { Time.now - 7.days }
+      token_hash { Base64.encode64(Faker::String.random(32)) }
+    end
   end
 end

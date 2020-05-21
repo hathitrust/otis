@@ -19,7 +19,7 @@ class HTApprovalRequestsController < ApplicationController
 
   def update # rubocop:disable Metrics/MethodLength
     begin
-      ApprovalRequestMailer.with(reqs: @reqs).approval_request_email.deliver_now
+      ApprovalRequestMailer.with(reqs: @reqs, base_url: request.base_url).approval_request_email.deliver_now
       @reqs.each do |req|
         next unless req.mailable?
 
@@ -35,6 +35,10 @@ class HTApprovalRequestsController < ApplicationController
 
   def status_counts
     @reqs.group_by(&:renewal_state).map { |k, v| [k, v.length] }.to_h
+  end
+
+  def edit
+    @preview = true
   end
 
   private

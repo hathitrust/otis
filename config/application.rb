@@ -23,7 +23,6 @@ module Otis
 
     config.relative_url_root = Otis.config.relative_url_root
 
-    config.action_mailer.default_url_options = { host: 'hathitrust.org' }
     config.action_mailer.smtp_settings = { address: Otis.config.smtp_host }
 
     # Settings in config/environments/* take precedence over those specified here.

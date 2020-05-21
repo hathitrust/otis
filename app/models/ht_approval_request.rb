@@ -13,8 +13,8 @@ class HTApprovalRequest < ApplicationRecord
     constraint: -> { not_renewed },
     message: ->(_object, data) { "#{data[:value]} already has an approval request" }
   }
-  validates :crypt, presence: true, if: :sent
-  validates :sent, presence: true, if: :crypt
+  validates :token_hash, presence: true, if: :sent
+  validates :sent, presence: true, if: :token_hash
   validate :sent_before_received
 
   def sent_before_received
@@ -23,19 +23,17 @@ class HTApprovalRequest < ApplicationRecord
     errors.add(:sent, 'date sent cannot be after date received')
   end
 
+  def self.digest(tok)
+    Digest::SHA256.base64digest(Base64.decode64(tok))
+  end
+
   def self.find_by_token(tok)
-    HTApprovalRequest.find { |req| req if req.equals_token?(tok) }
+    HTApprovalRequest.find_by_token_hash(digest(tok))
   end
 
   # This is the bit that goes to the approver, just a gob of b64 data acting as a 'password'
   def token
-    @token ||= decrypt(self[:crypt]) if self[:crypt]
-    @token ||= SecureRandom.base64 16
-  end
-
-  # Does the approver alleging to have a valid token match this one?
-  def equals_token?(token)
-    decrypt(self[:crypt]) == token.to_s
+    @token ||= SecureRandom.urlsafe_base64 16
   end
 
   # Display datetime without UTC suffix or just date
@@ -45,7 +43,7 @@ class HTApprovalRequest < ApplicationRecord
 
   def sent=(value)
     self[:sent] = value
-    self[:crypt] = encrypt(token) unless self[:crypt].present?
+    self[:token_hash] = self.class.digest(token)
   end
 
   def received(short: false)
@@ -83,27 +81,6 @@ class HTApprovalRequest < ApplicationRecord
   end
 
   private
-
-  # https://dev.to/shobhitic/simple-string-encryption-in-rails-36pi
-  def encrypt(text)
-    text = text.to_s unless text.is_a? String
-    len = ActiveSupport::MessageEncryptor.key_len
-    salt = SecureRandom.hex len
-    key = ActiveSupport::KeyGenerator.new(Rails.application.secret_key_base).generate_key salt, len
-    crypt = ActiveSupport::MessageEncryptor.new key
-    encrypted_data = crypt.encrypt_and_sign text
-    "#{salt}$$#{encrypted_data}"
-  end
-
-  def decrypt(text)
-    return unless text
-
-    salt, data = text.split '$$'
-    len = ActiveSupport::MessageEncryptor.key_len
-    key = ActiveSupport::KeyGenerator.new(Rails.application.secret_key_base).generate_key salt, len
-    crypt = ActiveSupport::MessageEncryptor.new key
-    crypt.decrypt_and_verify data
-  end
 
   def date_field(field, short: false)
     if short

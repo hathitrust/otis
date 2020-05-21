@@ -44,7 +44,11 @@ or change staff with elevated access, please email
     <td style="padding: 6px;"><%= u.expiration_date.extension_period_text %></td>
     <td style="padding: 6px;"><%= u.expires_string %></td>
     <td style="padding: 6px;">
-      <%= link_to 'Approve User', approve_url(req.token), style: "font-weight: bold;" %>
+      <% if(@preview) %>
+        <b>Approve User</b>
+      <% else %>
+        <%= link_to 'Approve User', approve_url(req.token, host: @base_url), style: "font-weight: bold;" %>
+      <% end %>
     </td>
   </tr>
   <% end %>
