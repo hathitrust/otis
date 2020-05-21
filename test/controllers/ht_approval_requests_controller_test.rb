@@ -77,7 +77,7 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
     assert_equal 'update', @controller.action_name
     follow_redirect!
     assert_not_nil @req.reload.sent
-    assert_not_nil @req.reload[:crypt]
+    assert_not_nil @req.reload[:token_hash]
     assert_equal 'show', @controller.action_name
   end
 

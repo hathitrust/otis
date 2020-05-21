@@ -12,7 +12,7 @@ class ApprovalController < ApplicationController
     @token = params[:token]
     @req = HTApprovalRequest.find_by_token(params[:token])
 
-    return render_not_found unless @req&.crypt
+    return render_not_found unless @req&.token_hash
 
     @user = HTUser.where(email: @req.userid).first
     # detect duplicate uses of the link beforehand so shared/approval does
