@@ -70,6 +70,12 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
     assert_equal 'edit', @controller.action_name
   end
 
+  test 'edit page should not contain approval link' do
+    sign_in!
+    get edit_ht_approval_request_url @user1.approver
+    assert_no_match %r{/approve/}, response.body
+  end
+
   test 'should submit mail' do
     sign_in!
     patch ht_approval_request_url @user1.approver

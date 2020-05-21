@@ -12,6 +12,14 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
     @req3 = create(:ht_approval_request, userid: @user3.email, approver: @user3.approver)
   end
 
+  test 'link in email contains token' do
+    email = ApprovalRequestMailer.with(reqs: [@req1]).approval_request_email
+
+    email.parts.each do |p|
+      assert_match %r{/approve/#{@req1.token}}, p.to_s
+    end
+  end
+
   test 'send email for two users' do
     email = ApprovalRequestMailer.with(reqs: [@req1, @req2]).approval_request_email
 

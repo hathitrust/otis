@@ -27,6 +27,24 @@ class HTApprovalRequestTest < ActiveSupport::TestCase
   test 'an old request is expired after a week' do
     assert build(:ht_approval_request, sent: (Time.now - 2.week)).expired?
   end
+
+  test 'hashed token matches token after setting sent' do
+    req = build(:ht_approval_request)
+
+    token = req.token
+    req.sent = Time.now
+
+    assert_equal(HTApprovalRequest.digest(token), req.token_hash)
+  end
+
+  test 'resending expired request resets hash' do
+    req = build(:ht_approval_request, :expired)
+
+    token = req.token
+    req.sent = Time.now
+
+    assert_equal(HTApprovalRequest.digest(token), req.token_hash)
+  end
 end
 
 class HTApprovalRequestUniquenessTest < ActiveSupport::TestCase

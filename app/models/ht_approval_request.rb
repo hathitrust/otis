@@ -43,7 +43,7 @@ class HTApprovalRequest < ApplicationRecord
 
   def sent=(value)
     self[:sent] = value
-    self[:token_hash] = self.class.digest(token) unless self[:token_hash].present?
+    self[:token_hash] = self.class.digest(token)
   end
 
   def received(short: false)

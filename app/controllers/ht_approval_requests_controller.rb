@@ -32,6 +32,10 @@ class HTApprovalRequestsController < ApplicationController
     @reqs.group_by(&:renewal_state).map { |k, v| [k, v.length] }.to_h
   end
 
+  def edit
+    @preview = true
+  end
+
   private
 
   def fetch_requests
