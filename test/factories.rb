@@ -32,6 +32,7 @@ FactoryBot.define do
     sequence(:inst_id) { |n| "#{n}#{Faker::Internet.domain_word}" }
     name { Faker::University.name }
     entityID { Faker::Internet.url }
+    enabled { [0, 1].sample }
 
     trait :mfa do
       shib_authncontext_class { 'https://refeds.org/profile/mfa' }

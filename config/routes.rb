@@ -13,6 +13,10 @@ Rails.application.routes.draw do
 
   root 'ht_users#index'
 
+  scope format:false, constraints: { id: /.+/ } do
+    resources :ht_institutions
+  end
+
   get "/login", to: "session#new", as: "login"
   post "/login", to: "session#create", as: "login_as"
   unless Rails.env.production?

@@ -29,9 +29,9 @@ def create_ht_user(expires:)
     mfa: [false, true].sample
   )
   if u.mfa
-    u.identity_provider = HTInstitution.where.not(shib_authncontext_class: nil).sample.entityID
+    u.identity_provider = HTInstitution.enabled.where.not(shib_authncontext_class: nil).sample.entityID
   else
-    u.identity_provider = HTInstitution.all.sample.entityID
+    u.identity_provider = HTInstitution.enabled.sample.entityID
     # Faker::Boolean.boolean(true_ratio: 0.2) fails with "ArgumentError (comparison of Float with Hash failed)"
     if rand > 0.2
       u.iprestrict = Faker::Internet.ip_v4_address
@@ -69,20 +69,39 @@ def create_ht_approval_request(user) # rubocop:disable Metrics/MethodLength
   ar.save!
 end
 
-3.times do
+10.times do
+  inst_id = Faker::Internet.unique.domain_word
+  domain = inst_id + '.' + Faker::Internet.domain_suffix
   HTInstitution.create(
-    inst_id: Faker::Internet.unique.domain_word,
+    inst_id: inst_id,
     name: Faker::University.name,
-    entityID: Faker::Internet.url
+    authtype: ['', 'shibboleth'].sample,
+    domain: domain,
+    us: [0, 1].sample,
+    enabled: 1,
+    orph_agree: [0, 1].sample,
+    entityID: Faker::Internet.url,
+    allowed_affiliations: '^(alum|member)' + domain,
+    shib_authncontext_class: [nil, Faker::Internet.url].sample,
+    emergency_contact: Faker::Internet.email
   )
 end
 
 2.times do
+  inst_id = Faker::Internet.unique.domain_word
+  domain = inst_id + '.' + Faker::Internet.domain_suffix
   HTInstitution.create(
-    inst_id: Faker::Internet.domain_word,
+    inst_id: inst_id,
     name: Faker::University.name,
+    authtype: ['', 'shibboleth'].sample,
+    domain: domain,
+    us: [0, 1].sample,
+    enabled: 0,
+    orph_agree: [0, 1].sample,
     entityID: Faker::Internet.url,
-    shib_authncontext_class: Faker::Internet.url
+    allowed_affiliations: '^(alum|member)@' + domain,
+    shib_authncontext_class: [nil, Faker::Internet.url].sample,
+    emergency_contact: Faker::Internet.email
   )
 end
 
