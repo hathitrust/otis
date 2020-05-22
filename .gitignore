@@ -44,3 +44,5 @@ config/settings/production.local.yml
 config/settings/development.local.yml
 
 coverage
+
+db/keycard.log
