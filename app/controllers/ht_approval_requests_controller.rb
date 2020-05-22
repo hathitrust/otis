@@ -31,10 +31,11 @@ class HTApprovalRequestsController < ApplicationController
       @reqs.each do |req|
         next unless req.mailable?
 
+        UserMailer.with(req: req, base_url: request.base_url).approval_request_user_email.deliver_now
         req.sent = Time.now
         req.save!
       end
-      flash[:notice] = 'Message sent'
+      flash[:notice] = 'Messages sent'
     rescue StandardError => e
       flash[:alert] = e.message
     end
