@@ -19,7 +19,7 @@ gem 'loofah', ['~> 2.3', '>= 2.3.1']
 # ruby '2.5.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '~> 5.2.4'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
@@ -98,6 +98,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'sqlite3'
   gem 'faker'
+  gem 'rubocop-faker'
   gem 'factory_bot_rails'
   gem 'simplecov'
 end

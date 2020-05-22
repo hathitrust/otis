@@ -42,7 +42,7 @@ def create_ht_user(expires:)
   u.save!
   c = HTCount.new(
     userid: u.userid,
-    accesscount: Faker::Number.within(1..10_000),
+    accesscount: Faker::Number.within(range: 1..10_000),
     last_access: Faker::Time.backward,
     warned: [false, true].sample,
     certified: [false, true].sample,
@@ -57,8 +57,8 @@ def create_ht_approval_request(user) # rubocop:disable Metrics/MethodLength
   return unless rand < 0.1
 
   sent = [nil, Faker::Time.backward].sample
-  received = sent.nil? ? nil : [nil, sent + Faker::Number.within(1..10).days].sample
-  renewed = received.nil? ? nil : [nil, received + Faker::Number.within(1..10).days].sample
+  received = sent.nil? ? nil : [nil, sent + Faker::Number.within(range: 1..10).days].sample
+  renewed = received.nil? ? nil : [nil, received + Faker::Number.within(range: 1..10).days].sample
   ar = HTApprovalRequest.new(
     approver: user.approver,
     userid: user.email,
