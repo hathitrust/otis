@@ -157,7 +157,7 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.class.role_map[self[:role]]
   end
 
-  def renew
+  def renew!
     extend_by_default_period!
     save!
   end

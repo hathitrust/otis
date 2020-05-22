@@ -19,7 +19,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
   test 'should get index after adding 2 requests' do
     sign_in!
     assert_equal 0, HTApprovalRequest.count
-    post ht_approval_requests_url, params: {ht_users: [@user1.email, @user2.email], submit_req: true}
+    post ht_approval_requests_url, params: {ht_users: [@user1.email, @user2.email], submit_requests: true}
     assert_response :redirect
     follow_redirect!
     assert_equal 2, HTApprovalRequest.count
@@ -30,7 +30,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
 
   test 'should get index page and fail to submit zero-length request list' do
     sign_in!
-    post ht_approval_requests_url, params: {submit_req: true}
+    post ht_approval_requests_url, params: {submit_requests: true}
     assert_response :redirect
     follow_redirect!
     assert_not_nil assigns(:reqs)
@@ -41,7 +41,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
 
   test 'should get index page and fail to submit approval request for unknown user' do
     sign_in!
-    post ht_approval_requests_url, params: {ht_users: ['nobody@nowhere.org'], submit_req: true}
+    post ht_approval_requests_url, params: {ht_users: ['nobody@nowhere.org'], submit_requests: true}
     assert_response :redirect
     follow_redirect!
     assert_not_nil assigns(:reqs)
@@ -114,6 +114,58 @@ class HTApprovalRequestControllerResendTest < ActionDispatch::IntegrationTest
     sign_in!
     patch ht_approval_request_url @user.approver
     follow_redirect!
-    assert_equal Date.parse(@req.reload.sent).to_s, Date.today.to_s
+    assert_equal Date.parse(@req.reload.sent).to_s, Date.parse(Time.zone.now.to_s).to_s
+  end
+end
+
+class HTAPprovalRequestControllerBatchRenewalTest < ActionDispatch::IntegrationTest
+  def setup
+    @user1 = create(:ht_user, approver: 'approver@example.com')
+    @user2 = create(:ht_user, approver: 'approver@example.com')
+    @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver, sent: Time.now - 30.days, renewed: nil)
+    @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Time.now - 30.days, renewed: nil)
+  end
+
+  test 'should get index after renewing 2 users' do
+    sign_in!
+    assert_equal 2, HTApprovalRequest.where(renewed: nil).count
+    post ht_approval_requests_url, params: {ht_users: [@user1.email, @user2.email], submit_renewals: true}
+    assert_response :redirect
+    follow_redirect!
+    assert_match 'Renewed', flash[:notice]
+    assert_not_nil assigns(:renewed_users)
+    assert_equal 'index', @controller.action_name
+    assert @req1.reload.renewed?
+    assert @req2.reload.renewed?
+    assert_equal 0, HTApprovalRequest.where(renewed: nil).count
+    assert_match 'class="success"', @response.body
+  end
+
+  test 'should get index page and fail to submit zero-length renewal list' do
+    sign_in!
+    assert_equal 2, HTApprovalRequest.where(renewed: nil).count
+    post ht_approval_requests_url, params: {submit_renewals: true}
+    assert_response :redirect
+    follow_redirect!
+    assert_match 'No users selected', flash[:alert]
+    assert_equal 'index', @controller.action_name
+    assert_equal 2, HTApprovalRequest.where(renewed: nil).count
+  end
+
+  test 'should create new renewal request with staff approver if none existing' do
+    sign_in!
+    @user3 = create(:ht_user)
+    post ht_approval_requests_url, params: {ht_users: [@user3.email], submit_renewals: true}
+    assert_response :redirect
+    follow_redirect!
+    assert_match 'Renewed', flash[:notice]
+    assert_not_nil assigns(:renewed_users)
+    assert_equal 1, assigns(:renewed_users).count
+    assert_equal 3, HTApprovalRequest.all.count
+    @req3 = HTApprovalRequest.where(userid: @user3.email).first
+    assert_not_nil @req3
+    assert_equal 'nobody@example.com', @req3.approver
+    assert_match 'class="success"', @response.body
+    assert_equal Date.parse(@req3.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
   end
 end

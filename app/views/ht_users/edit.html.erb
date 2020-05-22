@@ -57,8 +57,10 @@
         <dt><%= form.label :expires, expired_text %></dt>
         <dd><%= form.text_field :expires, value: @user.expires_string, size: 12, id: :expires_field, class: expires_class %>
           <% unless @user.expired? %>
-            <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');" %>
+            <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');", class: 'btn btn-primary' %>
           <% end %>
+          <% new_expiration = @user.expiration_date.default_extension_date %>
+          <%= form.button "Renew Now", type: :button, onclick: "$('#expires_field').val('#{new_expiration}');", class: 'btn btn-primary' %>
         </dd>
         <dt>Renewal Status</dt>
         <dd><%= @user.badge %></dd>
@@ -83,14 +85,8 @@
         <dd><%= @user.ht_count&.last_access&.to_s(:db) %></dd>
       </dl>
     </div>
-
-
-    <div>
-      <%= form.submit 'Submit Changes' %>
-    </div>
-
+    <%= form.submit 'Submit Changes', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', ht_user_path(@user), class: 'btn btn-primary' %>
   <% end %>
-
-  <%= link_to 'Back', ht_users_path %>
 </div>
 

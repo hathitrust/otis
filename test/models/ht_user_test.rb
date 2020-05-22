@@ -159,28 +159,28 @@ class HTUserRenewal < ActiveSupport::TestCase
   end
 
   test 'User expiresannually' do
-    @expiresannually_user.renew
+    @expiresannually_user.renew!
     assert_in_delta(365, @expiresannually_user.days_until_expiration, 1)
   end
 
   test 'User expiresbiannually' do
-    @expiresbiannually_user.renew
+    @expiresbiannually_user.renew!
     assert_in_delta(730, @expiresbiannually_user.days_until_expiration, 1)
   end
 
   test 'User expirescustom90' do
-    @expirescustom90_user.renew
+    @expirescustom90_user.renew!
     assert_in_delta(90, @expirescustom90_user.days_until_expiration, 5)
   end
 
   test 'User expirescustom60' do
-    @expirescustom60_user.renew
+    @expirescustom60_user.renew!
     assert_in_delta(60, @expirescustom60_user.days_until_expiration, 3)
   end
 
   test 'User with unknown expire_type' do
     assert_raise StandardError do
-      @unknown_user.renew
+      @unknown_user.renew!
     end
   end
 end

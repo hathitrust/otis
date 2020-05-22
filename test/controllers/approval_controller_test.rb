@@ -16,7 +16,7 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     assert_match @req.userid, @response.body
     assert_match @req.approver, @response.body
     assert_not_nil @req.reload.received
-    assert_equal Date.parse(@req.reload.received).to_s, Date.today.to_s
+    assert_equal Date.parse(@req.reload.received).to_s, Date.parse(Time.zone.now.to_s).to_s
   end
 
   test 'refuses to approve the same request a second time' do
