@@ -73,4 +73,10 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.timestamp :renewed
     t.text :token_hash
   end
+
+  create_table :ht_user_logs do |t|
+    t.string :userid
+    t.timestamp :time
+    t.text :data
+  end
 end

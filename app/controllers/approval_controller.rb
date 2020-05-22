@@ -43,6 +43,7 @@ class ApprovalController < ApplicationController
       params: rails_params,
       user_agent: request.user_agent
     }.merge(ENV.select { |k, _v| k.match(/^Shib/) })
+    HTUserLog.create(ht_user: @user, data: details)
     Rails.logger.info "APPROVAL LOG: #{JSON.generate(details)}"
   end
 end

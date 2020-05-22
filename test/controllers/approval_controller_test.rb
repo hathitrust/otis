@@ -28,7 +28,24 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     assert_match 'no longer', @response.body
   end
 
-  #  test 'logs the approvers session'
+  test 'logs the approvers session' do
+    sign_in!
+    get approve_url @req.token
+
+    assert @user.ht_user_log.first
+  end
+
+  test 'logs shib environment vars' do
+    sign_in!
+    email = Faker::Internet.email
+    ENV['ShibWhatever'] = email
+    get approve_url @req.token
+
+    log_data = @user.ht_user_log.first.data
+
+    assert_equal email, log_data['ShibWhatever']
+    assert_equal request.remote_ip, log_data['ip_address']
+  end
 end
 
 class ApprovalControllerFailureTest < ActionDispatch::IntegrationTest
