@@ -35,16 +35,33 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     assert @user.ht_user_log.first
   end
 
-  test 'logs shib environment vars' do
+  test 'logs attributes from keycard' do
+    old_keycard_mode = Keycard.config.access
+    Keycard.config.access = :shibboleth
+
+    begin
+      email = Faker::Internet.email
+
+      sign_in!
+
+      process(:get, approve_url(@req.token), headers: { 'HTTP_X_SHIB_EDUPERSONPRINCIPALNAME' => email })
+
+      log_data = @user.ht_user_log.first.data
+
+      assert_equal email, log_data['eduPersonPrincipalName']
+      assert_equal request.remote_ip, log_data['ip_address']
+    ensure
+      Keycard.config.access = old_keycard_mode
+    end
+  end
+
+  test 'does not log token' do
     sign_in!
-    email = Faker::Internet.email
-    ENV['ShibWhatever'] = email
+
     get approve_url @req.token
 
     log_data = @user.ht_user_log.first.data
-
-    assert_equal email, log_data['ShibWhatever']
-    assert_equal request.remote_ip, log_data['ip_address']
+    assert_not log_data['params'].key?('token')
   end
 end
 
