@@ -98,6 +98,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'sqlite3'
   gem 'faker'
+  gem 'rubocop-faker'
   gem 'factory_bot_rails'
   gem 'simplecov'
 end

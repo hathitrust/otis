@@ -40,7 +40,7 @@ FactoryBot.define do
 
   factory :ht_count do
     userid { Faker::Internet.email }
-    accesscount { Faker::Number.within(1..10_000) }
+    accesscount { Faker::Number.within(range: 1..10_000) }
     last_access { Faker::Time.backward }
     warned { [false, true].sample }
     certified { [false, true].sample }
@@ -53,7 +53,7 @@ FactoryBot.define do
 
     trait :expired do
       sent { Time.now - 7.days }
-      token_hash { Base64.encode64(Faker::String.random(32)) }
+      token_hash { Base64.encode64(Faker::String.random(length: 32)) }
     end
   end
 end
