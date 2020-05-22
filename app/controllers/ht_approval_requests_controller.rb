@@ -42,7 +42,7 @@ class HTApprovalRequestsController < ApplicationController
   end
 
   def status_counts
-    @reqs.group_by(&:renewal_state).map { |k, v| [k, v.length] }.to_h
+    @reqs.group_by(&:renewal_state).transform_values(&:length)
   end
 
   def edit
