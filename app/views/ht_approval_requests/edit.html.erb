@@ -1,3 +1,5 @@
+<%= javascript_include_tag Ckeditor.cdn_url %>
+
 <div id="maincontent" class="row">
   <h1>Approval Requests for <%= params[:id] %></h1>
 
@@ -14,15 +16,18 @@
     <% end %>
     </ul>
     <!-- MAIL PREVIEW -->
-    <div class="panel panel-default">
-      <div class="panel-heading">E-mail Preview</div>
-      <div class="panel-body">
-        <%= render 'shared/approval_request_email' %>
-      </div>
-    </div>
     <% counts = controller.status_counts %>
     <% if counts[:unsent]&.positive? || counts[:expired]&.positive? %>
       <%= form_tag ht_approval_request_path, method: :put do %>
+        <div class="panel panel-default">
+          <div class="panel-heading">E-mail Preview</div>
+          <div class="panel-body">
+            <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px' } %>
+          </div>
+          <div class="panel-body">
+            <%= render 'shared/approval_request_user_table' %>
+          </div>
+        </div>
         <% label = counts[:expired]&.positive? ? 'RESEND' : 'SEND' %>
         <%= submit_tag label, class: 'btn btn-primary' %>
         <%= link_to 'Cancel', ht_approval_request_path(@reqs[0].approver), class: 'btn btn-primary' %>

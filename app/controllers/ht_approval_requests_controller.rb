@@ -27,7 +27,7 @@ class HTApprovalRequestsController < ApplicationController
 
   def update # rubocop:disable Metrics/MethodLength
     begin
-      ApprovalRequestMailer.with(reqs: @reqs, base_url: request.base_url).approval_request_email.deliver_now
+      ApprovalRequestMailer.with(reqs: @reqs, base_url: request.base_url, body: params[:email_body]).approval_request_email.deliver_now
       @reqs.each do |req|
         next unless req.mailable?
 
@@ -48,6 +48,7 @@ class HTApprovalRequestsController < ApplicationController
 
   def edit
     @preview = true
+    @email_body = render_to_string partial: 'shared/approval_request_body'
   end
 
   private

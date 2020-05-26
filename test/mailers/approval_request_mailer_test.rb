@@ -13,23 +13,47 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
     @req3 = create(:ht_approval_request, userid: @user3.email, approver: @user3.approver)
   end
 
-  test 'link in email contains url with token' do
-    email = ApprovalRequestMailer
-            .with(reqs: [@req1], base_url: @base_url)
-            .approval_request_email
+  def email(reqs: [@req1], base_url: @base_url, body: '')
+    ApprovalRequestMailer
+      .with(reqs: reqs, base_url: base_url, body: body)
+      .approval_request_email
+  end
 
+  test 'email contains provided body text' do
+    test_text = Faker::Lorem.paragraph
+    email(body: test_text).parts.each do |p|
+      assert_match test_text, p.to_s
+    end
+  end
+
+  test 'email contains plain-textified body text' do
+    test_html = '<p>This is a <b>test</b> <i>html</i> <tt>fragment</tt></p>'
+    plain_text = 'This is a test html fragment'
+
+    assert_match plain_text, email(body: test_html).text_part.to_s
+  end
+
+  test 'email contains unescaped html' do
+    test_html = '<p>This is a <b>test</b> <i>html</i> <tt>fragment</tt></p>'
+
+    assert_match test_html, email(body: test_html).html_part.to_s
+  end
+
+  test 'sanitizes html input' do
+    test_html = '<script>unsafe</script>'
+
+    assert_no_match test_html, email(body: test_html).html_part.to_s
+  end
+
+  test 'link in email contains url with token' do
     email.parts.each do |p|
       assert_match %r{http://default.invalid/approve/#{@req1.token}}, p.to_s
     end
   end
 
   test 'send email for two users' do
-    email = ApprovalRequestMailer
-            .with(reqs: [@req1, @req2], base_url: @base_url)
-            .approval_request_email
-
     assert_emails 1 do
-      email.deliver_now
+      email(reqs: [@req1, @req2]).deliver_now
     end
     assert_equal [ApplicationMailer.default[:from]], email.from
     assert_equal ['approver@example.com'], email.to
@@ -39,19 +63,13 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
 
   test 'fail to send email for zero users' do
     assert_raise StandardError do
-      ApprovalRequestMailer
-        .with(reqs: [], base_url: @base_url)
-        .approval_request_email
-        .deliver_now
+      email(reqs: []).deliver_now
     end
   end
 
   test 'fail to send email for users with different approvers' do
     assert_raise StandardError do
-      ApprovalRequestMailer
-        .with(reqs: [@req1, @req3], base_url: @base_url)
-        .approval_request_email
-        .deliver_now
+      emails(reqs: [@req1, @req2]).deliver_now
     end
   end
 end

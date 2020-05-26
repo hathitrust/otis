@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'action_mailer/test_helper'
 
 class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
   def setup
@@ -51,24 +52,15 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
   end
 end
 
-class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
+class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   def setup
-    @user1 = create(:ht_user, approver: 'approver@example.com')
-    @user2 = create(:ht_user, approver: 'approver@example.com')
-    @req = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver)
-  end
-
-  test 'should get show page' do
-    sign_in!
-    get ht_approval_request_url @user1.approver
-    assert_response :success
-    assert_not_nil assigns(:reqs)
-    assert_equal 'show', @controller.action_name
+    @user = create(:ht_user, approver: 'approver@example.com')
+    @req = create(:ht_approval_request, userid: @user.email, approver: @user.approver)
   end
 
   test 'should get edit page' do
     sign_in!
-    get edit_ht_approval_request_url @user1.approver
+    get edit_ht_approval_request_url @user.approver
     assert_response :success
     assert_not_nil assigns(:reqs)
     assert_equal 'edit', @controller.action_name
@@ -76,30 +68,99 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
 
   test 'edit page should not contain approval link' do
     sign_in!
-    get edit_ht_approval_request_url @user1.approver
+    get edit_ht_approval_request_url @user.approver
     assert_no_match %r{/approve/}, response.body
   end
 
-  test 'should submit mail' do
+  test 'edit page has textarea for email' do
     sign_in!
-    patch ht_approval_request_url @user1.approver
+    get edit_ht_approval_request_url @user.approver
+    assert_select 'form textarea', { name: 'email_body' }
+  end
+
+  test 'edit page textarea has default email' do
+    sign_in!
+    get edit_ht_approval_request_url @user.approver
+    assert_select 'form textarea', { name: 'email_body' } do |e|
+      assert_match 'reauthorize', e.text
+    end
+  end
+
+  test 'edit page textarea does not have user table' do
+    sign_in!
+    get edit_ht_approval_request_url @user.approver
+    assert_select 'form textarea', { name: 'email_body' } do |e|
+      assert_no_match @user.email, e.text
+    end
+  end
+
+  test 'edit page shows user table below preview' do
+    sign_in!
+    get edit_ht_approval_request_url @user.approver
+    assert_match %r{</textarea>.*#{@user.email}}m, response.body
+  end
+end
+
+class HTApprovalRequestControllerUpdateTest < ActionDispatch::IntegrationTest
+  def setup
+    @user = create(:ht_user, approver: 'approver@example.com')
+    @req = create(:ht_approval_request, userid: @user.email, approver: @user.approver)
+  end
+
+  def patch_approval_request(approver = @user.approver, params: {})
+    sign_in!
+    patch ht_approval_request_url approver, params: params
     assert_response :redirect
     assert_equal 'update', @controller.action_name
     follow_redirect!
+  end
+
+  test 'should use provided email body' do
+    test_text = Faker::Lorem.paragraph
+
+    patch_approval_request params: { email_body: test_text }
+
+    ActionMailer::Base.deliveries.first.body.parts.each do |part|
+      assert_match test_text, part.to_s
+    end
+  end
+
+  test 'should send mail' do
+    patch_approval_request
+
+    assert ActionMailer::Base.deliveries.size
+  end
+
+  test 'should update request status' do
+    patch_approval_request
+
     assert_not_nil @req.reload.sent
     assert_not_nil @req.reload[:token_hash]
     assert_equal 'show', @controller.action_name
   end
 
   test 'should fail to submit mail for non-approver' do
-    sign_in!
-    patch ht_approval_request_url @user1.email
-    assert_response :redirect
-    assert_equal 'update', @controller.action_name
-    follow_redirect!
+    patch_approval_request @user.email
+
     assert_not_nil assigns(:reqs)
+    assert_equal 0, ActionMailer::Base.deliveries.size
     assert_empty assigns(:reqs)
     assert_match 'at least one', flash[:alert]
+    assert_equal 'show', @controller.action_name
+  end
+end
+
+class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
+  def setup
+    @user = create(:ht_user, approver: 'approver@example.com')
+  end
+
+  test 'should get show page' do
+    sign_in!
+    get ht_approval_request_url @user.approver
+
+    assert_response :success
+    assert_not_nil assigns(:reqs)
     assert_equal 'show', @controller.action_name
   end
 end
@@ -118,7 +179,7 @@ class HTApprovalRequestControllerResendTest < ActionDispatch::IntegrationTest
   end
 end
 
-class HTAPprovalRequestControllerBatchRenewalTest < ActionDispatch::IntegrationTest
+class HTApprovalRequestControllerBatchRenewalTest < ActionDispatch::IntegrationTest
   def setup
     @user1 = create(:ht_user, approver: 'approver@example.com')
     @user2 = create(:ht_user, approver: 'approver@example.com')

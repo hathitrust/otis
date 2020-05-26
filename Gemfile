@@ -82,6 +82,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
 gem 'jquery-rails'
+gem 'ckeditor'
 
 gem 'ettin'
 gem 'keycard'
