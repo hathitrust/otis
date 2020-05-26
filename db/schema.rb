@@ -52,6 +52,8 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :entityID
     t.text :allowed_affiliations
     t.string :shib_authncontext_class
+    t.text :emergency_status
+    t.string :emergency_contact
   end
 
   create_table :ht_counts, id: false do |t|

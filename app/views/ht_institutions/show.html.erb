@@ -1,0 +1,24 @@
+<div id="maincontent" class="row">
+  <h1><%= @institution.name %></h1>
+
+  <%= render 'shared/flash_message' %>
+
+  <div class="col-sm-6">
+    <dl class="dl-horizontal">
+      <dt>ID:</dt> <dd><%= @institution.inst_id %></dd>
+      <dt>GRIN Instance:</dt> <dd><%= @institution.grin_instance %></dd>
+      <dt>Name:</dt> <dd><%= @institution.name %></dd>
+      <dt>US:</dt> <dd><%= raw @institution[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
+      <dt>Enabled:</dt> <dd><%= raw @institution[:enabled] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
+      <dt>Entity ID:</dt> <dd><%= @institution.entityID %></dd>
+      <dt>Affiliations:</dt> <dd><%= @institution.allowed_affiliations %></dd>
+      <dt>MFA auth context:</dt> <dd><%= @institution.shib_authncontext_class %></dd>
+      <dt>Affiliations for ETAS</dt> <dd><%= @institution.emergency_status %></dd>
+      <dt>ETAS Contact:</dt> <dd><%= @institution.emergency_contact %></dd>
+      <dt>Mapto Domain:</dt> <dd><%= @institution.mapto_domain %></dd>
+      <dt>Mapto Inst ID:</dt> <dd><%= @institution.mapto_inst_id %></dd>
+      <dt>Mapto Name:</dt> <dd><%= @institution.mapto_name %></dd>
+      <dt>Mapto Entity ID:</dt> <dd ><%= @institution.mapto_entityID %></dd>
+    </dl>
+  </div>
+</div>

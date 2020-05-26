@@ -1,0 +1,58 @@
+<div id="maincontent" class="row">
+
+  <%= render 'shared/flash_message' %>
+
+  <h2 class="pull-left">Enabled Institutions</h2>
+
+  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-show-search-clear-button="true">
+    <thead class="thead-dark">
+    <tr>
+      <th data-sortable="true">ID</th>
+      <th data-sortable="true">Name</th>
+      <th data-sortable="true">Domain</th>
+      <th data-sortable="true">US?</th>
+      <th data-sortable="true">Entity ID</th>
+    </tr>
+    </thead>
+
+    <% @institutions.enabled.each do |i| %>
+      <tr>
+        <td><%= link_to i.inst_id, ht_institution_path(i.inst_id) %></td>
+        <td><%= i.name %></td>
+        <td><%= i.domain %></td>
+        <td>
+          <%= raw i[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
+        </td>
+        <td><%= i.entityID %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <h2 class="pull-left">Other Institutions</h2>
+
+  <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true">
+    <thead>
+    <tr>
+      <th data-sortable="true">ID</th>
+      <th data-sortable="true">Name</th>
+      <th data-sortable="true">Domain</th>
+      <th data-sortable="true">US?</th>
+      <th data-sortable="true">Entity ID</th>
+    </tr>
+    </thead>
+    <% @institutions.disabled.each do |i| %>
+      <tr>
+        <td><%= link_to i.inst_id, ht_institution_path(i.inst_id) %></td>
+        <td><%= i.name %></td>
+        <td><%= i.domain %></td>
+        <td>
+          <%= raw i[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
+        </td>
+        <td><%= i.entityID %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
