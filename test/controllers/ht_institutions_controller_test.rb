@@ -26,7 +26,7 @@ class HTInstitutionsControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil assigns(:institution)
     assert_equal 'show', @controller.action_name
     assert_match @institution1.inst_id, @response.body
-    assert_match @institution1.name, @response.body
+    assert_match ERB::Util.html_escape(@institution1.name), @response.body
   end
 
   test 'enabled institutions separated from disabled ones' do
@@ -36,7 +36,7 @@ class HTInstitutionsControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get ht_institutions_url
 
-    assert_match(/Active Institutions.*#{enabled.inst_id}.*Inactive Institutions.*#{disabled.inst_id}/m, @response.body)
+    assert_match(/Enabled Institutions.*#{enabled.inst_id}.*Other Institutions.*#{disabled.inst_id}/m, @response.body)
   end
 
   test 'institutions sorted by name' do
