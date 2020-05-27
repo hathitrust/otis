@@ -36,13 +36,15 @@ class ApprovalController < ApplicationController
   # address HT-1451
   def log
     rails_action = "#{params[:controller]}##{params[:action]}"
-    rails_params = params.except(:controller, :action)
+    rails_params = params.except(:controller, :action, :token)
+
     details = {
       action: rails_action,
       ip_address: request.remote_ip,
       params: rails_params,
       user_agent: request.user_agent
-    }.merge(ENV.select { |k, _v| k.match(/^Shib/) })
+    }.merge(keycard_attributes)
+    HTUserLog.create(ht_user: @user, data: details)
     Rails.logger.info "APPROVAL LOG: #{JSON.generate(details)}"
   end
 end

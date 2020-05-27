@@ -28,6 +28,7 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
   has_one :ht_count, foreign_key: :userid, primary_key: :userid
+  has_many :ht_user_log, foreign_key: :userid, primary_key: :userid
 
   validates :iprestrict, presence: true, unless: :mfa
   validate :validate_iprestrict_format

@@ -58,9 +58,17 @@ class ApplicationController < ActionController::Base
     cookies['CSRF-TOKEN'] = form_authenticity_token
   end
 
+  def attributes_factory
+    @attributes_factory ||= Keycard::Request::AttributesFactory.new(finders: [])
+  end
+
+  def keycard_attributes
+    attributes_factory.for(request).all
+  end
+
   def notary
-    @notary = Keycard::Notary.new(
-      attributes_factory: Keycard::Request::AttributesFactory.new(finders: []),
+    @notary ||= Keycard::Notary.new(
+      attributes_factory: attributes_factory,
       methods: [
         Keycard::Authentication::AuthToken.bind_class_method(:User, :authenticate_by_auth_token),
         Keycard::Authentication::SessionUserId.bind_class_method(:User, :authenticate_by_id),
