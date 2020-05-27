@@ -4,6 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <%= render 'shared/approval_request_email' %>
+    <div>
+      <%= sanitize(@body) %>
+    </div>
+    <%= render 'shared/approval_request_user_table' %>
   </body>
 </html>

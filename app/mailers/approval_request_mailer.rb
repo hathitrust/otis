@@ -8,6 +8,7 @@ class ApprovalRequestMailer < ApplicationMailer
   def approval_request_email
     @reqs = params[:reqs]
     @base_url = params[:base_url]
+    @body = params[:body]
     raise StandardError, 'Cannot send an email without at least one approval request' unless @reqs.count.positive?
 
     approvers = @reqs.pluck(:approver).uniq

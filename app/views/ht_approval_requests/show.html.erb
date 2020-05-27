@@ -13,6 +13,9 @@
       </li>
     <% end %>
     </ul>
-    <%= link_to 'Edit', edit_ht_approval_request_path, class: 'btn btn-primary' %>
+    <% counts = controller.status_counts %>
+    <% if counts[:unsent]&.positive? || counts[:expired]&.positive? %>
+      <%= link_to 'Edit', edit_ht_approval_request_path, class: 'btn btn-primary' %>
+    <% end %>
   <% end %>
 </div>
