@@ -80,10 +80,8 @@ class HTApprovalRequestsController < ApplicationController
   end
 
   def add_request(email)
-    u = HTUser.where(email: email).first
-    raise StandardError, "Unknown user '#{email}'" if u.nil?
-
-    HTApprovalRequest.new(userid: u.email, approver: u.approver).save!
+    u = HTUser.find(email)
+    HTApprovalRequest.new(ht_user: u, approver: u.approver).save!
   end
 
   def add_renewals(emails) # rubocop:disable Metrics/MethodLength

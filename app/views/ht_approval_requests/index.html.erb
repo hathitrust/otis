@@ -26,7 +26,7 @@
           </td>
         <td>
           <% if HTApprovalRequest.for_approver(req.approver).count.positive? %>
-            <%= link_to req.approver, ht_approval_request_path(req.approver) %>
+            <%= link_to req.approver, edit_ht_approval_request_path(req.approver) %>
           <% else %>
             <%= req.approver %>
           <% end %>

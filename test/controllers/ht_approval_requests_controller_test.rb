@@ -27,6 +27,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     assert_match 'Added', flash[:notice]
     assert_not_nil assigns(:reqs)
     assert_equal 'index', @controller.action_name
+    assert_select "a[href='#{edit_ht_approval_request_path(@user1.approver)}']"
   end
 
   test 'should get index page and fail to submit zero-length request list' do
@@ -47,7 +48,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_not_nil assigns(:reqs)
     assert_empty assigns(:reqs)
-    assert_match 'Unknown user', flash[:alert]
+    assert_match "Couldn't find HTUser", flash[:alert]
     assert_equal 'index', @controller.action_name
   end
 end
