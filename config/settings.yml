@@ -15,3 +15,5 @@ shibboleth:
   sp:
     url: /Shibboleth.sso
     entity_id: https://hathitrust.org/sp
+
+manager_email: manager@default.invalid

@@ -51,14 +51,26 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
     end
   end
 
-  test 'send email for two users' do
+  test 'sends email for two users' do
     assert_emails 1 do
       email(reqs: [@req1, @req2]).deliver_now
     end
-    assert_equal [ApplicationMailer.default[:from]], email.from
+  end
+
+  test 'from comes from config' do
+    assert_equal [Otis.config.manager_email], email.from
+  end
+
+  test 'bcc comes from config' do
+    assert_equal [Otis.config.manager_email], email.bcc
+  end
+
+  test 'email is to approver' do
     assert_equal ['approver@example.com'], email.to
+  end
+
+  test 'subject is from mailer' do
     assert_equal ApprovalRequestMailer.subject, email.subject
-    # assert_equal read_fixture('approval_request').join, email.body.to_s
   end
 
   test 'fail to send email for zero users' do

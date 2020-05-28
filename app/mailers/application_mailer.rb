@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationMailer < ActionMailer::Base
-  default from: 'hathitrust-system@umich.edu'
+  default from: Otis.config.manager_email
+  default bcc: Otis.config.manager_email
   layout 'mailer'
 end
