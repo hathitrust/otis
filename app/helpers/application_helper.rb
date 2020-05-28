@@ -8,7 +8,7 @@ module ApplicationHelper
     u = HTUser.where(email: email).first
     raise StandardError, "Unknown user '#{email}'" if u.nil?
 
-    req = HTApprovalRequest.not_renewed_for_user(u.email).first
+    req = u.ht_approval_request.not_renewed.first
     req = HTApprovalRequest.new(approver: current_user.id, userid: u.email) if req.nil?
     req.renewed = Time.zone.now
     req.save!

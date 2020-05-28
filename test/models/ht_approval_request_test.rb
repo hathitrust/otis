@@ -49,12 +49,23 @@ end
 
 class HTApprovalRequestUniquenessTest < ActiveSupport::TestCase
   def setup
-    @active = create(:ht_approval_request, approver: 'nobody@example.com', userid: 'active@example.com', renewed: nil)
-    @inactive = create(:ht_approval_request, approver: 'nobody@example.com', userid: 'inactive@example.com', renewed: Faker::Time.backward)
+    @active_user = create(:ht_user)
+
+    create(:ht_approval_request,
+           approver: 'nobody@example.com',
+           renewed: nil,
+           ht_user: @active_user)
+
+    @inactive_user = create(:ht_user)
+
+    create(:ht_approval_request,
+           approver: 'nobody@example.com',
+           renewed: Faker::Time.backward,
+           ht_user: @inactive_user)
   end
 
   test 'user can have only one active approval request' do
-    assert_not build(:ht_approval_request, userid: 'active@example.com').valid?
-    assert build(:ht_approval_request, userid: 'inactove@example.com').valid?
+    assert_not build(:ht_approval_request, ht_user: @active_user).valid?
+    assert build(:ht_approval_request, ht_user: @inactive_user).valid?
   end
 end

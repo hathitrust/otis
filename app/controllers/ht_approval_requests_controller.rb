@@ -54,7 +54,7 @@ class HTApprovalRequestsController < ApplicationController
   private
 
   def fetch_requests
-    @reqs = HTApprovalRequest.not_renewed_for_approver(params[:id])
+    @reqs = HTApprovalRequest.for_approver(params[:id]).not_renewed
   end
 
   # Add an approval request for selected users.

@@ -50,7 +50,7 @@ FactoryBot.define do
 
   factory :ht_approval_request do
     approver { Faker::Internet.email }
-    userid { Faker::Internet.email }
+    ht_user
 
     trait :expired do
       sent { Time.now - 7.days }
