@@ -166,9 +166,17 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
     save!
   end
 
+  def add_or_update_renewal(approver:)
+    req = ht_approval_request.not_renewed.first
+    req ||= HTApprovalRequest.new(approver: approver, ht_user: self)
+    req.renewed = Time.zone.now
+    req.save!
+    renew!
+  end
+
   private
 
   def clean_requests
-    ht_approval_request.not_approved.destroy_all if saved_change_to_approver?
+    ht_approval_request.not_approved.not_renewed.destroy_all if saved_change_to_approver?
   end
 end

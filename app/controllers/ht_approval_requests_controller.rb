@@ -93,7 +93,7 @@ class HTApprovalRequestsController < ApplicationController
     end
     adds = []
     emails.each do |e|
-      helpers.add_or_update_renewal e
+      HTUser.find(e).add_or_update_renewal(approver: current_user.id)
       adds << e
     rescue StandardError => e
       flash[:alert] = e.message

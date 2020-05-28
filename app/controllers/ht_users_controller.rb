@@ -16,7 +16,7 @@ class HTUsersController < ApplicationController
     renewing = user_params[:expires].present? && user_params[:expires] > @user.expires.to_date.to_s
     if @user.update(user_params)
       flash[:notice] = 'User updated'
-      helpers.add_or_update_renewal(@user.email) if renewing
+      @user.add_or_update_renewal(approver: current_user.id) if renewing
       redirect_to @user
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence
