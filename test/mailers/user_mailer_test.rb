@@ -8,24 +8,33 @@ class UserMailerTest < ActionMailer::TestCase
     @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver)
   end
 
-  test 'send email for one request' do
-    email = UserMailer
-            .with(req: @req1)
-            .approval_request_user_email
+  def email(req: @req1)
+    UserMailer
+      .with(req: req)
+      .approval_request_user_email
+  end
 
+  test 'send email for one request' do
     assert_emails 1 do
       email.deliver_now
     end
-    assert_equal [ApplicationMailer.default[:from]], email.from
+  end
+
+  test 'emails user' do
     assert_equal ['user1@example.com'], email.to
+  end
+
+  test 'from comes from config' do
+    assert_equal [Otis.config.manager_email], email.from
+  end
+
+  test 'bcc comes from config' do
+    assert_equal [Otis.config.manager_email], email.bcc
   end
 
   test 'fail to send email for zero requests' do
     assert_raise StandardError do
-      UserMailer
-        .with(req: nil)
-        .approval_request_user_email
-        .deliver_now
+      email(req: nil).deliver_now
     end
   end
 end
