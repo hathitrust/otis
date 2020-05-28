@@ -6,6 +6,7 @@ class HTApprovalRequest < ApplicationRecord
   scope :for_approver, ->(approver) { where(approver: approver).order(:sent, :received, :renewed) }
   scope :for_user, ->(user) { where(userid: user) }
   scope :not_approved, -> { where(received: nil) }
+  scope :approved, -> { where.not(received: nil) }
   validates :approver, presence: true
   validates :ht_user, uniqueness: {
     conditions: -> { not_renewed },

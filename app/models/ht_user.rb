@@ -38,6 +38,7 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :userid, presence: true
   validates :expires, presence: true
   validates :identity_provider, presence: true
+  validates :approver, presence: true
 
   validates :mfa, absence: true, unless: -> { ht_institution.shib_authncontext_class.present? }
 
@@ -166,9 +167,16 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
     save!
   end
 
-  def add_or_update_renewal(approver:)
-    req = ht_approval_request.not_renewed.first
-    req ||= HTApprovalRequest.new(approver: approver, ht_user: self)
+  def add_or_update_renewal(approver:, force: false)
+    req = ht_approval_request.approved.not_renewed.first
+
+    if force
+      req ||= ht_approval_request.not_renewed.first
+      req ||= HTApprovalRequest.new(approver: approver, ht_user: self)
+    end
+
+    raise("No approved request for #{email}; must be renewed manually") unless req
+
     req.renewed = Time.zone.now
     req.save!
     renew!

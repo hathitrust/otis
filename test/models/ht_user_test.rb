@@ -210,7 +210,7 @@ class HTUserUpdateApprover < ActiveSupport::TestCase
   end
 
   test 'does not delete manual renewal when updating approver' do
-    @user.add_or_update_renewal(approver: 'staff@whatever.edu')
+    @user.add_or_update_renewal(approver: 'staff@whatever.edu', force: true)
 
     @user.reload
     @user.approver = 'somebodyelse@example.com'

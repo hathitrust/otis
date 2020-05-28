@@ -20,7 +20,7 @@
     <% @reqs.each do |req| %>
       <tr <%= raw @added_users.include?(req.userid) || @renewed_users.include?(req.userid) ? 'class="success"' : '' %>>
         <td>
-          <% unless req.renewed.present? %>
+          <% if req.received.present? %>
               <%= check_box_tag 'ht_users[]', req.userid %>
             <% end %>
           </td>

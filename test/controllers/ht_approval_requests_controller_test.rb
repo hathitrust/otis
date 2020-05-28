@@ -21,8 +21,8 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     sign_in!
     get ht_approval_requests_url
 
-    %w(Sent Approved Renewed).each do |status| 
-      assert_select "th", {text: status}
+    %w[Sent Approved Renewed].each do |status|
+      assert_select 'th', {text: status}
     end
   end
 
@@ -193,8 +193,8 @@ class HTApprovalRequestControllerBatchRenewalTest < ActionDispatch::IntegrationT
   def setup
     @user1 = create(:ht_user, approver: 'approver@example.com')
     @user2 = create(:ht_user, approver: 'approver@example.com')
-    @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver, sent: Time.now - 30.days, renewed: nil)
-    @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Time.now - 30.days, renewed: nil)
+    @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver, sent: Time.now - 30.days, received: Time.now - 1.day, renewed: nil)
+    @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Time.now - 30.days, received: Time.now - 1.day, renewed: nil)
   end
 
   test 'should get index after renewing 2 users' do
@@ -223,20 +223,16 @@ class HTApprovalRequestControllerBatchRenewalTest < ActionDispatch::IntegrationT
     assert_equal 2, HTApprovalRequest.where(renewed: nil).count
   end
 
-  test 'should create new renewal request with staff approver if none existing' do
+  test 'should not renew if no existing request' do
     sign_in!
     @user3 = create(:ht_user)
+    expires = @user3.expires
     post ht_approval_requests_url, params: {ht_users: [@user3.email], submit_renewals: true}
     assert_response :redirect
     follow_redirect!
-    assert_match 'Renewed', flash[:notice]
-    assert_not_nil assigns(:renewed_users)
-    assert_equal 1, assigns(:renewed_users).count
-    assert_equal 3, HTApprovalRequest.all.count
-    @req3 = HTApprovalRequest.where(userid: @user3.email).first
-    assert_not_nil @req3
-    assert_equal 'nobody@example.com', @req3.approver
-    assert_match 'class="success"', @response.body
-    assert_equal Date.parse(@req3.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
+
+    @user3.reload
+    assert_equal(expires, @user3.expires)
+    assert_match 'No approved request', flash[:alert]
   end
 end
