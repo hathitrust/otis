@@ -17,7 +17,16 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     assert_equal 'index', @controller.action_name
   end
 
-  test 'should get index after adding 2 requests' do
+  test 'index should have table headings matching status badges' do
+    sign_in!
+    get ht_approval_requests_url
+
+    %w(Sent Approved Renewed).each do |status| 
+      assert_select "th", {text: status}
+    end
+  end
+
+  test 'should add requests and link to approver' do
     sign_in!
     assert_equal 0, HTApprovalRequest.count
     post ht_approval_requests_url, params: {ht_users: [@user1.email, @user2.email], submit_requests: true}
@@ -76,13 +85,13 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   test 'edit page has textarea for email' do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select 'form textarea', { name: 'email_body' }
+    assert_select "form textarea[name='email_body']"
   end
 
   test 'edit page textarea has default email' do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select 'form textarea', { name: 'email_body' } do |e|
+    assert_select "form textarea[name='email_body']" do |e|
       assert_match 'reauthorize', e.text
     end
   end
@@ -90,7 +99,7 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   test 'edit page textarea does not have user table' do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select 'form textarea', { name: 'email_body' } do |e|
+    assert_select "form textarea[name='email_body']" do |e|
       assert_no_match @user.email, e.text
     end
   end
