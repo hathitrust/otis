@@ -10,11 +10,6 @@ users:
   - somebody@default.invalid
 
 shibboleth:
-  fallback_to_idp: true
-  default_idp:
-    entity_id: https://shibboleth.umich.edu/idp/shibboleth
-  sp:
-    url: /useradmin/Shibboleth.sso
-    entity_id: https://hathitrust.org/sp
+  url: /useradmin/Shibboleth.sso/Login
 
 smtp_host: localhost

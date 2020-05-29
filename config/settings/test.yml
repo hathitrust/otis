@@ -10,3 +10,6 @@ keycard:
   database:
     adapter: sqlite
     database: tmp/keycard_test.sqlite3
+
+shibboleth:
+  url: /useradmin/Shibboleth.sso/Login
