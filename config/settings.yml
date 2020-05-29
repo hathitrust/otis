@@ -7,13 +7,4 @@ users: []
 # How many days away does expiration need to be before we start to worry?
 expires_soon_in_days: 30
 
-
-shibboleth:
-  fallback_to_idp: true
-  default_idp:
-    entity_id: https://shibboleth.umich.edu/idp/shibboleth
-  sp:
-    url: /Shibboleth.sso
-    entity_id: https://hathitrust.org/sp
-
 manager_email: manager@default.invalid

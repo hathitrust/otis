@@ -41,10 +41,9 @@ class SessionController < ApplicationController
   end
 
   def shib_login_url(target = request.original_url)
-    URI("#{Otis.config.shibboleth.sp.url}/Login").tap do |url|
+    URI(Otis.config.shibboleth.url).tap do |url|
       url.query = URI.encode_www_form(
-        target: target,
-        entityID: Otis.config.shibboleth.default_idp.entity_id
+        target: target
       )
     end.to_s
   end
