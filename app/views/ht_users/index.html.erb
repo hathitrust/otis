@@ -25,7 +25,7 @@
     <% @users.each do |u| %>
       <tr>
         <td>
-          <% unless u.renewed? %>
+          <% if u.can_request? or u.can_renew? %>
             <%= check_box_tag 'ht_users[]', u.email %>
           <% end %>
         </td>

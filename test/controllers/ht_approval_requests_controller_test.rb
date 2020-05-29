@@ -17,7 +17,16 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     assert_equal 'index', @controller.action_name
   end
 
-  test 'should get index after adding 2 requests' do
+  test 'index should have table headings matching status badges' do
+    sign_in!
+    get ht_approval_requests_url
+
+    %w[Sent Approved Renewed].each do |status|
+      assert_select 'th', {text: status}
+    end
+  end
+
+  test 'should add requests and link to approver' do
     sign_in!
     assert_equal 0, HTApprovalRequest.count
     post ht_approval_requests_url, params: {ht_users: [@user1.email, @user2.email], submit_requests: true}
@@ -27,6 +36,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     assert_match 'Added', flash[:notice]
     assert_not_nil assigns(:reqs)
     assert_equal 'index', @controller.action_name
+    assert_select "a[href='#{edit_ht_approval_request_path(@user1.approver)}']"
   end
 
   test 'should get index page and fail to submit zero-length request list' do
@@ -47,7 +57,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_not_nil assigns(:reqs)
     assert_empty assigns(:reqs)
-    assert_match 'Unknown user', flash[:alert]
+    assert_match "Couldn't find HTUser", flash[:alert]
     assert_equal 'index', @controller.action_name
   end
 end
@@ -75,13 +85,13 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   test 'edit page has textarea for email' do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select 'form textarea', { name: 'email_body' }
+    assert_select "form textarea[name='email_body']"
   end
 
   test 'edit page textarea has default email' do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select 'form textarea', { name: 'email_body' } do |e|
+    assert_select "form textarea[name='email_body']" do |e|
       assert_match 'reauthorize', e.text
     end
   end
@@ -89,7 +99,7 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   test 'edit page textarea does not have user table' do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select 'form textarea', { name: 'email_body' } do |e|
+    assert_select "form textarea[name='email_body']" do |e|
       assert_no_match @user.email, e.text
     end
   end
@@ -183,8 +193,8 @@ class HTApprovalRequestControllerBatchRenewalTest < ActionDispatch::IntegrationT
   def setup
     @user1 = create(:ht_user, approver: 'approver@example.com')
     @user2 = create(:ht_user, approver: 'approver@example.com')
-    @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver, sent: Time.now - 30.days, renewed: nil)
-    @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Time.now - 30.days, renewed: nil)
+    @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver, sent: Time.now - 30.days, received: Time.now - 1.day, renewed: nil)
+    @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Time.now - 30.days, received: Time.now - 1.day, renewed: nil)
   end
 
   test 'should get index after renewing 2 users' do
@@ -213,20 +223,16 @@ class HTApprovalRequestControllerBatchRenewalTest < ActionDispatch::IntegrationT
     assert_equal 2, HTApprovalRequest.where(renewed: nil).count
   end
 
-  test 'should create new renewal request with staff approver if none existing' do
+  test 'should not renew if no existing request' do
     sign_in!
     @user3 = create(:ht_user)
+    expires = @user3.expires
     post ht_approval_requests_url, params: {ht_users: [@user3.email], submit_renewals: true}
     assert_response :redirect
     follow_redirect!
-    assert_match 'Renewed', flash[:notice]
-    assert_not_nil assigns(:renewed_users)
-    assert_equal 1, assigns(:renewed_users).count
-    assert_equal 3, HTApprovalRequest.all.count
-    @req3 = HTApprovalRequest.where(userid: @user3.email).first
-    assert_not_nil @req3
-    assert_equal 'nobody@example.com', @req3.approver
-    assert_match 'class="success"', @response.body
-    assert_equal Date.parse(@req3.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
+
+    @user3.reload
+    assert_equal(expires, @user3.expires)
+    assert_match 'No approved request', flash[:alert]
   end
 end

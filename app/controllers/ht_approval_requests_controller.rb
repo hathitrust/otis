@@ -54,7 +54,7 @@ class HTApprovalRequestsController < ApplicationController
   private
 
   def fetch_requests
-    @reqs = HTApprovalRequest.not_renewed_for_approver(params[:id])
+    @reqs = HTApprovalRequest.for_approver(params[:id]).not_renewed
   end
 
   # Add an approval request for selected users.
@@ -80,10 +80,8 @@ class HTApprovalRequestsController < ApplicationController
   end
 
   def add_request(email)
-    u = HTUser.where(email: email).first
-    raise StandardError, "Unknown user '#{email}'" if u.nil?
-
-    HTApprovalRequest.new(userid: u.email, approver: u.approver).save!
+    u = HTUser.find(email)
+    HTApprovalRequest.new(ht_user: u, approver: u.approver).save!
   end
 
   def add_renewals(emails) # rubocop:disable Metrics/MethodLength
@@ -93,7 +91,7 @@ class HTApprovalRequestsController < ApplicationController
     end
     adds = []
     emails.each do |e|
-      helpers.add_or_update_renewal e
+      HTUser.find(e).add_or_update_renewal(approver: current_user.id)
       adds << e
     rescue StandardError => e
       flash[:alert] = e.message

@@ -29,6 +29,7 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
   has_one :ht_count, foreign_key: :userid, primary_key: :userid
   has_many :ht_user_log, foreign_key: :userid, primary_key: :userid
+  has_many :ht_approval_request, foreign_key: :userid, primary_key: :email
 
   validates :iprestrict, presence: true, unless: :mfa
   validate :validate_iprestrict_format
@@ -37,11 +38,14 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :userid, presence: true
   validates :expires, presence: true
   validates :identity_provider, presence: true
+  validates :approver, presence: true
 
   validates :mfa, absence: true, unless: -> { ht_institution.shib_authncontext_class.present? }
 
   scope :active, -> { where('expires > CURRENT_TIMESTAMP') }
   scope :expired, -> { where('expires <= CURRENT_TIMESTAMP') }
+
+  after_save :clean_requests
 
   validate do
     Time.zone.parse(expires.to_s)
@@ -151,7 +155,7 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def approval_requested?
-    HTApprovalRequest.where(userid: email).count.positive?
+    ht_approval_request.count.positive?
   end
 
   def role_description
@@ -161,5 +165,26 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def renew!
     extend_by_default_period!
     save!
+  end
+
+  def add_or_update_renewal(approver:, force: false)
+    req = ht_approval_request.approved.not_renewed.first
+
+    if force
+      req ||= ht_approval_request.not_renewed.first
+      req ||= HTApprovalRequest.new(approver: approver, ht_user: self)
+    end
+
+    raise("No approved request for #{email}; must be renewed manually") unless req
+
+    req.renewed = Time.zone.now
+    req.save!
+    renew!
+  end
+
+  private
+
+  def clean_requests
+    ht_approval_request.not_approved.not_renewed.destroy_all if saved_change_to_approver?
   end
 end

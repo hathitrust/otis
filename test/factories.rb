@@ -5,6 +5,7 @@ require 'active_support/time'
 FactoryBot.define do
   factory :ht_user, class: HTUser do
     sequence(:userid) { |n| "#{n}#{Faker::Internet.email}" }
+    approver { Faker::Internet.email }
     email { Faker::Internet.email }
     expire_type { ExpirationDate::EXPIRES_TYPE.keys.sample.to_s }
     expires { Faker::Time.forward }
@@ -50,7 +51,7 @@ FactoryBot.define do
 
   factory :ht_approval_request do
     approver { Faker::Internet.email }
-    userid { Faker::Internet.email }
+    ht_user
 
     trait :expired do
       sent { Time.now - 7.days }

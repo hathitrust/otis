@@ -1,6 +1,8 @@
 <div id="maincontent" class="row">
   <h1>Approval Requests</h1>
 
+  <p>To edit and send an approval request email, click on an approver email.</p>
+
   <%= render 'shared/flash_message' %>
 
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
@@ -12,7 +14,7 @@
       <th data-sortable="true">Approver</th>
       <th data-sortable="true">User</th>
       <th data-sortable="true">Sent</th>
-      <th data-sortable="true">Received</th>
+      <th data-sortable="true">Approved</th>
       <th data-sortable="true">Renewed</th>
     </tr>
     </thead>
@@ -20,13 +22,13 @@
     <% @reqs.each do |req| %>
       <tr <%= raw @added_users.include?(req.userid) || @renewed_users.include?(req.userid) ? 'class="success"' : '' %>>
         <td>
-          <% unless req.renewed.present? %>
+          <% if req.received.present? %>
               <%= check_box_tag 'ht_users[]', req.userid %>
             <% end %>
           </td>
         <td>
           <% if HTApprovalRequest.for_approver(req.approver).count.positive? %>
-            <%= link_to req.approver, ht_approval_request_path(req.approver) %>
+            <%= link_to req.approver, edit_ht_approval_request_path(req.approver) %>
           <% else %>
             <%= req.approver %>
           <% end %>
