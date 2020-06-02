@@ -32,7 +32,7 @@ class HTApprovalRequestsController < ApplicationController
         next unless req.mailable?
 
         UserMailer.with(req: req).approval_request_user_email.deliver_now
-        req.sent = Time.now
+        req.sent = Time.zone.now
         req.save!
       end
       flash[:notice] = 'Messages sent'
