@@ -72,7 +72,8 @@ class ApplicationController < ActionController::Base
       methods: [
         Keycard::Authentication::AuthToken.bind_class_method(:User, :authenticate_by_auth_token),
         Keycard::Authentication::SessionUserId.bind_class_method(:User, :authenticate_by_id),
-        Keycard::Authentication::UserEid.bind_class_method(:User, :authenticate_by_user_eid)
+        Keycard::Authentication::UserEid.bind_class_method(:User, :authenticate_by_user_eid),
+        Otis::Authentication::UserPid.bind_class_method(:User, :authenticate_by_user_pid)
       ]
     )
   end
