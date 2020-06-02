@@ -17,6 +17,10 @@ class User
     User.new(eid)
   end
 
+  def self.authenticate_by_user_pid(pid)
+    User.new(pid)
+  end
+
   def initialize(eid)
     @id = eid
   end

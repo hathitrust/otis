@@ -21,6 +21,12 @@ class UserTest < ActiveSupport::TestCase
     assert_equal user.id, 'eid'
   end
 
+  test 'authenticate_by_user_pid returns a User' do
+    user = User.authenticate_by_user_pid('pid')
+    assert_instance_of User, user
+    assert_equal user.id, 'pid'
+  end
+
   test 'new returns a User' do
     user = User.new('id')
     assert_instance_of User, user
