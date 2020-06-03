@@ -52,6 +52,10 @@ class IPRestrictionFromStringTest < ActiveSupport::TestCase
   test 'can parse a string with whitespace' do
     assert_equal(['1.2.3.4'], IPRestriction.from_string(' 1.2.3.4 ').addrs)
   end
+
+  test 'can parse the any string' do
+    assert_instance_of(IPRestriction::Any, IPRestriction.from_string('any'))
+  end
 end
 
 class IPRestrictionFromRegexTest < ActiveSupport::TestCase
@@ -83,5 +87,9 @@ end
 class IPRestrictionAnyTest < ActiveSupport::TestCase
   test 'converts to a regex matching anything' do
     assert_equal('^.*$', IPRestriction.any.to_regex)
+  end
+
+  test 'converts to the any string' do
+    assert_equal(['any'], IPRestriction.any.addrs)
   end
 end

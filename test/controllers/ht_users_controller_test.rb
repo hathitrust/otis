@@ -68,6 +68,18 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match '1.2.3.4', @response.body
   end
 
+  test 'removing IP restriction succeeds' do
+    sign_in!
+    patch ht_user_url @user1, params: {'ht_user' => {'iprestrict' => 'any'}}
+    assert_response :redirect
+    assert_equal 'update', @controller.action_name
+    assert_not_empty flash[:notice]
+    assert_redirected_to ht_user_path(@user1.email)
+    follow_redirect!
+    assert_match 'any', @response.body
+    assert_equal '^.*$', HTUser.find(@user1.email)[:iprestrict]
+  end
+
   test 'updating expiration for mfa user retains nil iprestrict' do
     user = create(:ht_user_mfa)
     sign_in!

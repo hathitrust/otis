@@ -25,7 +25,11 @@ class IPRestriction
   end
 
   def self.from_string(addrs)
-    new(addrs.split(/\s*,\s*/).map(&:strip))
+    if addrs == 'any'
+      any
+    else
+      new(addrs.split(/\s*,\s*/).map(&:strip))
+    end
   end
 
   def self.from_regex(regex)
@@ -52,4 +56,10 @@ class IPRestriction::Any
   def to_regex
     '^.*$'
   end
+
+  def addrs
+    ['any']
+  end
+
+  def validate; end
 end
