@@ -9,7 +9,7 @@ FactoryBot.define do
     email { Faker::Internet.email }
     expire_type { ExpirationDate::EXPIRES_TYPE.keys.sample.to_s }
     expires { Faker::Time.forward }
-    iprestrict { Faker::Internet.ip_v4_address }
+    iprestrict { Faker::Internet.public_ip_v4_address }
     ht_institution
 
     trait :active
