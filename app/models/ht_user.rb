@@ -4,11 +4,6 @@ require 'expiration_date'
 require 'forwardable'
 
 class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
-  # Validates IPv4 with ^, $, and . escaped.
-  def self.ip_address_regex
-    /\A\^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\$\z/
-  end
-
   self.primary_key = 'email'
 
   def self.role_map # rubocop:disable Metrics/MethodLength
@@ -32,7 +27,7 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :ht_approval_request, foreign_key: :userid, primary_key: :email
 
   validates :iprestrict, presence: true, unless: :mfa
-  validate :validate_iprestrict_format
+  validate :validate_iprestrict
 
   validates :email, presence: true
   validates :userid, presence: true
@@ -93,22 +88,17 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # Since multiple addresses are permitted if separated by OR (|) this value is
   # an array.
   def iprestrict
-    escaped = self[:iprestrict]
-    return nil if escaped.nil?
+    return nil unless self[:iprestrict]
 
-    escaped.split('|').map do |esc|
-      esc.gsub(/^\^/, '').gsub(/\$$/, '').gsub(/\\\./, '.')
-    end
+    IPRestriction.from_regex(self[:iprestrict]).addrs
   end
 
   def iprestrict=(vals)
-    escaped = nil
-    if vals.present?
-      escaped = vals.split(/\s*,\s*/).map do |val|
-        '^' + val.strip.gsub('.', '\.') + '$'
-      end.join('|')
+    if vals
+      self[:iprestrict] = IPRestriction.from_string(vals).to_regex
+    else
+      self[:iprestrict] = nil
     end
-    write_attribute(:iprestrict, escaped)
   end
 
   ## Forward some stuff to @expiration_date
@@ -143,14 +133,13 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   # Validate the fully-escaped ip address(es) as saved in the model.
-  def validate_iprestrict_format
+  def validate_iprestrict
     return unless self[:iprestrict].present?
 
-    self[:iprestrict].split('|').each do |ip|
-      unless ip.match? HTUser.ip_address_regex
-        errors.add :iprestrict, I18n.t('activerecord.errors.models.HTUser.attributes.iprestrict')
-        break
-      end
+    begin
+      IPRestriction.from_regex(self[:iprestrict]).validate
+    rescue ArgumentError => e
+      errors.add :iprestrict, e.message
     end
   end
 

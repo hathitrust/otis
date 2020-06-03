@@ -33,10 +33,12 @@ def create_ht_user(expires:)
   else
     u.identity_provider = HTInstitution.enabled.sample.entityID
     # Faker::Boolean.boolean(true_ratio: 0.2) fails with "ArgumentError (comparison of Float with Hash failed)"
-    if rand > 0.2
-      u.iprestrict = Faker::Internet.ip_v4_address
+    if rand > 0.4
+      u.iprestrict = Faker::Internet.public_ip_v4_address
+    elsif rand > 0.2
+      u.iprestrict = 'any'
     else
-      u.iprestrict = "#{Faker::Internet.ip_v4_address}, #{Faker::Internet.ip_v4_address}"
+      u.iprestrict = "#{Faker::Internet.public_ip_v4_address}, #{Faker::Internet.public_ip_v4_address}"
     end
   end
   u.save!

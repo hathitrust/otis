@@ -12,19 +12,19 @@ class HTUserTest < ActiveSupport::TestCase
   end
 
   test 'iprestrict to English' do
-    assert_equal HTUser.human_attribute_name(:iprestrict), 'IP Restriction'
+    assert_equal 'IP Restriction', HTUser.human_attribute_name(:iprestrict)
   end
 
   test 'iprestrict escaping and unescaping' do
-    user = build(:ht_user, iprestrict: '127.0.0.1')
-    assert_equal user[:iprestrict], '^127\.0\.0\.1$'
-    assert_equal user.iprestrict, ['127.0.0.1']
+    user = build(:ht_user, iprestrict: '1.2.3.4')
+    assert_equal '^1\.2\.3\.4$', user[:iprestrict]
+    assert_equal ['1.2.3.4'], user.iprestrict
   end
 
   test 'iprestrict with whitespace' do
-    user = build(:ht_user, iprestrict: ' 127.0.0.1 ')
-    assert_equal user[:iprestrict], '^127\.0\.0\.1$'
-    assert_equal user.iprestrict, ['127.0.0.1']
+    user = build(:ht_user, iprestrict: ' 1.2.3.4 ')
+    assert_equal '^1\.2\.3\.4$', user[:iprestrict]
+    assert_equal ['1.2.3.4'], user.iprestrict
   end
 
   test 'expires validation rejects various bogative timestamps' do
@@ -103,7 +103,7 @@ class HTUserMFA < ActiveSupport::TestCase
   end
 
   test 'User with MFA and no iprestrict is valid' do
-    assert_equal(@mfa_user.mfa, true)
+    assert_equal true, @mfa_user.mfa
     assert_nil @mfa_user.iprestrict
     assert @mfa_user.valid?
   end
@@ -111,19 +111,19 @@ end
 
 class HTUserMultipleIprestrict < ActiveSupport::TestCase
   def setup
-    @multi_ip_user = build(:ht_user, mfa: false, iprestrict: '127.0.0.1, 127.0.0.2')
-    @bogus_multi_ip_user = build(:ht_user, mfa: false, iprestrict: '127.0.0.1, 127.0.0.2.0')
+    @multi_ip_user = build(:ht_user, mfa: false, iprestrict: '1.2.3.4, 5.6.7.8')
+    @bogus_multi_ip_user = build(:ht_user, mfa: false, iprestrict: '1.2.3.4, 1.2.3.4.5')
   end
 
   test 'User with multiple iprestrict is valid' do
-    assert_equal(@multi_ip_user.mfa, false)
+    assert_equal false, @multi_ip_user.mfa
     assert_instance_of Array, @multi_ip_user.iprestrict
     assert @multi_ip_user.valid?
   end
 
   test 'User with one of two IPs bogus is not valid' do
-    assert_equal @bogus_multi_ip_user [:iprestrict], '^127\.0\.0\.1$|^127\.0\.0\.2\.0$'
-    assert_equal @bogus_multi_ip_user.iprestrict, ['127.0.0.1', '127.0.0.2.0']
+    assert_equal '^1\.2\.3\.4$|^1\.2\.3\.4\.5$', @bogus_multi_ip_user [:iprestrict]
+    assert_equal ['1.2.3.4', '1.2.3.4.5'], @bogus_multi_ip_user.iprestrict
     assert_not @bogus_multi_ip_user.valid?
     assert_not_empty @bogus_multi_ip_user.errors.messages[:iprestrict]
   end
