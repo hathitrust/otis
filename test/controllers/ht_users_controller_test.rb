@@ -186,3 +186,17 @@ class HTUsersControllerRenewalTest < ActionDispatch::IntegrationTest
     assert_equal Date.parse(@req2.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
   end
 end
+
+class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
+  def setup
+    @user1 = create(:ht_user, :active)
+    @user2 = create(:ht_user, :expired)
+  end
+
+  test 'export list of all users as CSV' do
+    sign_in!
+    get ht_users_url format: :csv
+    assert_match 'userid,displayname,email,activitycontact', @response.body
+    assert_equal 3, @response.body.each_line.count
+  end
+end

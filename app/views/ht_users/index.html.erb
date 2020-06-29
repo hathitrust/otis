@@ -53,6 +53,7 @@
   <br/>
   <%= submit_tag 'Create Approval Requests', name: 'submit_requests', class: 'btn btn-primary' %>
   <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
+  <%= link_to 'Download CSV', ht_users_url(format: :csv), class: 'btn btn-info' %>
   <% end # form-with %>
 
   <h2 class="pull-left">Expired Users</h2>

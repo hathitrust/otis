@@ -9,6 +9,11 @@ class HTUsersController < ApplicationController
     users = HTUser.joins(:ht_institution).order('ht_institutions.name')
     @users = users.active.map { |u| HTUserPresenter.new(u) }
     @expired_users = users.expired.map { |u| HTUserPresenter.new(u) }
+    @all_users = users.map { |u| HTUserPresenter.new(u) }
+    respond_to do |format|
+      format.html
+      format.csv { send_data users_csv }
+    end
   end
 
   def update
@@ -33,5 +38,15 @@ class HTUsersController < ApplicationController
 
   def user_params
     params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
+  end
+
+  def users_csv
+    require 'csv'
+    CSV.generate do |csv|
+      csv << @all_users.first.attributes.keys
+      @all_users.each do |user|
+        csv << user.attributes.values
+      end
+    end
   end
 end

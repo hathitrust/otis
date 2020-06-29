@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   resources :users
 
-  scope format:false, constraints: { id: /.+/ } do
+  scope constraints: { id: /.+/ } do
     resources :ht_users
   end
 
