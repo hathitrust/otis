@@ -189,14 +189,26 @@ end
 
 class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
   def setup
-    @user1 = create(:ht_user, :active)
-    @user2 = create(:ht_user, :expired)
+    @inst1 = create(:ht_institution, entityID: 'http://example.com')
+    @user1 = HTUser.new(userid: 'a@b', displayname: 'A B', email: 'c@d',
+                        activitycontact: 'e@f', approver: 'g@h',
+                        authorizer: 'i@j', usertype: 'staff', role: 'ssd',
+                        access: 'total', expires: '2020-01-01 00:00:00',
+                        expire_type: 'expiresannually', iprestrict: 'any',
+                        mfa: false, identity_provider: 'http://example.com')
+    @user1.save!
+    @user2 = create(:ht_user, :expired, userid: 'y@z')
   end
 
   test 'export list of all users as CSV' do
     sign_in!
     get ht_users_url format: :csv
-    assert_match 'userid,displayname,email,activitycontact', @response.body
-    assert_equal 3, @response.body.each_line.count
+    assert_equal 3, @response.body.lines.count
+    assert_equal @response.body.lines[0].strip,
+                 'userid,displayname,email,activitycontact,approver,' \
+                 'authorizer,usertype,role,access,expires,expire_type,' \
+                 'iprestrict,mfa,identity_provider', @response.body
+    assert_match 'a@b,A B,c@d,e@f,g@h,i@j,staff,ssd,total,2020-01-01 00:00:00 UTC,' \
+                 'expiresannually,^.*$,false,http://example.com', @response.body
   end
 end
