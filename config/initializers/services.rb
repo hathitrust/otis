@@ -19,6 +19,12 @@ assign_db(Checkpoint::DB.config, Otis.config.checkpoint.database)
 Keycard::DB.config.readonly = true if Otis.config.keycard&.readonly
 Keycard.config.access = Otis.config.keycard&.access || :direct
 
+unless Checkpoint::DB.connected?
+  if Checkpoint::DB.conn_opts.empty?
+    Checkpoint::DB.connect!(db: Sequel.sqlite)
+    Checkpoint::DB.migrate!
+  end
+end
 Checkpoint::DB.initialize!
 
 Services = Canister.new
