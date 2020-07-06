@@ -1,7 +1,8 @@
 <div id="maincontent" class="row">
   <h1>Approval Requests</h1>
-
-  <p>To edit and send an approval request email, click on an approver email.</p>
+  <% if controller.can?(:edit, :ht_approval_requests) %>
+    <p>To edit and send an approval request email, click on an approver email.</p>
+  <% end %>
 
   <%= render 'shared/flash_message' %>
 
@@ -10,7 +11,9 @@
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
-      <th data-sortable="false">Select</th>
+      <% if controller.can?(:edit, :ht_approval_requests) %>
+        <th data-sortable="false">Select</th>
+      <% end %>
       <th data-sortable="true">Approver</th>
       <th data-sortable="true">User</th>
       <th data-sortable="true">Sent</th>
@@ -21,13 +24,16 @@
 
     <% @reqs.each do |req| %>
       <tr <%= raw @added_users.include?(req.userid) || @renewed_users.include?(req.userid) ? 'class="success"' : '' %>>
-        <td>
-          <% if req.received.present? %>
-              <%= check_box_tag 'ht_users[]', req.userid %>
-            <% end %>
+        <% if controller.can?(:edit, :ht_approval_requests) %>
+          <td>
+            <% if req.received.present? %>
+                <%= check_box_tag 'ht_users[]', req.userid %>
+              <% end %>
           </td>
+        <% end %>
         <td>
-          <% if HTApprovalRequest.for_approver(req.approver).count.positive? %>
+          <% if HTApprovalRequest.for_approver(req.approver).count.positive? &&
+                controller.can?(:edit, :ht_approval_requests) %>
             <%= link_to req.approver, edit_ht_approval_request_path(req.approver) %>
           <% else %>
             <%= req.approver %>
@@ -46,7 +52,9 @@
     <% end %>
   </table>
   <br/>
-  <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
+  <% if controller.can? :edit, :ht_users %>
+    <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
+  <% end %>
   <% end # form-tag %>
 </div>
 

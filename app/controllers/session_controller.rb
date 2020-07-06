@@ -5,7 +5,7 @@ class SessionController < ApplicationController
 
   def new
     if login
-      redirect_back_or_to root_path
+      redirect_back_or_to default_path
     else
       redirect_to shib_login_url
     end
@@ -17,15 +17,16 @@ class SessionController < ApplicationController
     user = User.new(params[:username])
     if user
       auto_login(user)
-      redirect_back_or_to root_path
+      redirect_back_or_to default_path
     else
       render_forbidden
     end
   end
 
   def destroy
+    path = default_path
     logout
-    redirect_back_or_to root_path
+    redirect_back_or_to path
   end
 
   private
@@ -34,6 +35,14 @@ class SessionController < ApplicationController
     destination = session[:return_to] || destination || root_path
     session.delete(:return_to)
     redirect_to destination
+  end
+
+  # This could be replaced by a landing page that is accessible
+  # to everyone.
+  def default_path
+    return ht_institutions_path unless can? :index, :ht_users
+
+    root_path
   end
 
   def forbidden!

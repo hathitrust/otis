@@ -10,13 +10,13 @@ class SessionControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'login succeeds for known user' do
-    post login_as_url, params: { username: 'nobody@example.com' }
+    post login_as_url, params: { username: 'admin@default.invalid' }
     assert_response :redirect
     assert_redirected_to root_path
   end
 
   test 'login fails (eventually) for unknown user' do
-    post login_as_url, params: { username: 'nobody_at_all@example.com' }
+    post login_as_url, params: { username: 'nobody_whatsoever@example.com' }
     assert_response :redirect
     follow_redirect!
     assert_response 403

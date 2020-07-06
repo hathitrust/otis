@@ -84,8 +84,10 @@ gem 'bootstrap-sass'
 gem 'jquery-rails'
 gem 'ckeditor'
 
+gem 'canister'
 gem 'ettin'
 gem 'keycard'
+gem 'checkpoint'
 
 # Use MySQL as the database for Active Record
 gem 'mysql2'

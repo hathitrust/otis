@@ -49,3 +49,25 @@ class HTInstitutionsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/AAA.*ZZZ/m, @response.body)
   end
 end
+
+class HTInstitutionsControllerRolesTest < ActionDispatch::IntegrationTest
+  def setup
+    @inst = create(:ht_institution)
+  end
+
+  test 'Staff user can see ht_institutions index and show page' do
+    sign_in! username: 'staff@default.invalid'
+    get ht_institutions_url
+    assert_response 200
+    ht_institution_url @inst.inst_id
+    assert_response 200
+  end
+
+  test 'Institutions-only user can see ht_institutions index and show page' do
+    sign_in! username: 'institution@default.invalid'
+    get ht_institutions_url
+    assert_response 200
+    ht_institution_url @inst.inst_id
+    assert_response 200
+  end
+end

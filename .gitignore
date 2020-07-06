@@ -46,3 +46,6 @@ config/settings/development.local.yml
 coverage
 
 db/keycard.log
+db/keycard.yml
+db/checkpoint.log
+db/checkpoint.yml

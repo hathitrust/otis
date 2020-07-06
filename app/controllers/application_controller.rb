@@ -23,7 +23,13 @@ class ApplicationController < ActionController::Base
   def authorize!
     return if current_user.nil?
 
-    raise NotAuthorizedError unless Otis.config.users.include? current_user.id
+    raise NotAuthorizedError unless can?(params[:action], params[:controller])
+  end
+
+  def can?(action, resource)
+    agent = Checkpoint::Agent::Token.new('user', current_user&.id)
+    res = OpenStruct.new(id: resource)
+    Checkpoint::Query::ActionPermitted.new(agent, action, res, authority: Services.checkpoint).true?
   end
 
   private

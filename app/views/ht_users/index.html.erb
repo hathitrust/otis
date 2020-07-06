@@ -51,10 +51,14 @@
     <% end %>
   </table>
   <br/>
-  <%= submit_tag 'Create Approval Requests', name: 'submit_requests', class: 'btn btn-primary' %>
-  <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
+  <% if controller.can? :create, :ht_renewal_requests %>
+    <%= submit_tag 'Create Approval Requests', name: 'submit_requests', class: 'btn btn-primary' %>
+  <% end %>
+  <% if controller.can? :edit, :ht_users %>
+    <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
+  <% end %>
   <%= link_to 'Download CSV', ht_users_url(format: :csv), class: 'btn btn-info' %>
-  <% end # form-with %>
+  <% end # form_tag %>
 
   <h2 class="pull-left">Expired Users</h2>
   <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
