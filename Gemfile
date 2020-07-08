@@ -7,9 +7,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 # SECURITY UPDATES                   #
 ######################################
 
-# https://github.com/advisories/GHSA-r74q-gxcg-73hx
-gem "simple_form", "~> 5.0"
-
 # https://github.com/advisories/GHSA-5m2v-hc64-56h6
 gem 'rubyzip', '~> 2.0'
 
@@ -109,4 +106,3 @@ end
 group :test do
   gem 'rails-controller-testing'
 end
-
