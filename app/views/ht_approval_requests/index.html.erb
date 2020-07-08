@@ -44,7 +44,7 @@
         <td>
           <%= req.sent(short: true) %>
           <% if req.renewal_state == :expired %>
-            <span class="label label-danger">Expired</span>
+            <%= HTApprovalRequestPresenter.badge_for(req) %>
           <% end %>
         </td>
         <td><%= req.received(short: true) %></td>
