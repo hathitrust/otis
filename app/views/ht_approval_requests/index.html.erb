@@ -32,7 +32,7 @@
           </td>
         <% end %>
         <td>
-          <% # First if clause is always true, right? Remove if so. %>
+          <% # FIXME: first if clause is always true, right? Remove if so. %>
           <% if HTApprovalRequest.for_approver(req.approver).count.positive? &&
                 can?(:edit, :ht_approval_requests) %>
             <%= link_to req.approver, edit_ht_approval_request_path(req.approver) %>
