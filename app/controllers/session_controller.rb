@@ -37,14 +37,6 @@ class SessionController < ApplicationController
     redirect_to destination
   end
 
-  # This could be replaced by a landing page that is accessible
-  # to everyone.
-  def default_path
-    return ht_institutions_path unless can? :index, :ht_users
-
-    root_path
-  end
-
   def forbidden!
     head 403
   end

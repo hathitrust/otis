@@ -20,6 +20,8 @@ bundle exec rake keycard:migrate RAILS_ENV=test
 bundle exec rake checkpoint:migrate RAILS_ENV=development
 bundle exec rake checkpoint:migrate RAILS_ENV=test
 bundle exec rake db:setup
+bundle exec rake otis:migrate_users RAILS_ENV=development
+bundle exec rake otis:migrate_users RAILS_ENV=test
 ```
 
 ### 3. Testing

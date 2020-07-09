@@ -19,4 +19,10 @@ class HTInstitutionTest < ActiveSupport::TestCase
   test 'disabled scope' do
     assert_equal HTInstitution.disabled.first.inst_id, @disabled.inst_id
   end
+
+  test 'correct Checkpoint resource_type and resource_id' do
+    inst = build(:ht_institution, id: 'id')
+    assert_equal inst.resource_type, :ht_institution
+    assert_equal inst.resource_id, 'id'
+  end
 end

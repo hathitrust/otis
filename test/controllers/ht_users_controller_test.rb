@@ -235,12 +235,12 @@ class HTUsersControllerRolesTest < ActionDispatch::IntegrationTest
   test 'Admin permission shows "Create Approval Requests" and "Renew Selected Users" buttons' do
     sign_in! username: 'admin@default.invalid'
     get ht_users_url
-    assert_select 'input.btn-primary', 2
+    assert_select 'button.btn-primary', 2
   end
 
   test 'Staff permission hides "Create Approval Requests" and "Renew Selected Users" buttons' do
     sign_in! username: 'staff@default.invalid'
     get ht_users_url
-    assert_select 'input.btn-primary', false
+    assert_select 'button.btn-primary', false
   end
 end

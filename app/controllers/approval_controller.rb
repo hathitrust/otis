@@ -4,10 +4,6 @@
 # This controller's new/show page should be the only part of the app that
 # external users have access to.
 class ApprovalController < ApplicationController
-  # Users who cannot access the rest of the application can still use the
-  # one-time links
-  skip_before_action :authorize!
-
   def new
     @token = params[:token]
     @req = HTApprovalRequest.find_by_token(params[:token])
@@ -22,6 +18,10 @@ class ApprovalController < ApplicationController
 
     render 'shared/approval'
   end
+
+  # Users who cannot access the rest of the application can still use the
+  # one-time links
+  def authorize!; end
 
   private
 
