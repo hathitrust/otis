@@ -30,8 +30,9 @@
       <dt>Accesses</dt> <dd><%= @user.ht_count&.accesscount %></dd>
       <dt>Last Access</dt> <dd><%= @user.ht_count&.last_access&.to_s(:db) %></dd>
     </dl>
-
-    <%= link_to 'Edit', edit_ht_user_path, class: 'btn btn-primary' %>
+    <% if can?(:edit, :ht_users) %>
+      <%= link_to 'Edit', edit_ht_user_path, class: 'btn btn-primary' %>
+    <% end %>
   </div>
 </div>
 

@@ -37,4 +37,10 @@ class UserTest < ActiveSupport::TestCase
     user = User.new('id')
     assert_equal user.identity, username: 'id'
   end
+
+  test 'correct Checkpoint agent_type and agent_id' do
+    user = User.new('id')
+    assert_equal user.agent_type, :user
+    assert_equal user.agent_id, 'id'
+  end
 end

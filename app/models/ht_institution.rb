@@ -9,4 +9,13 @@ class HTInstitution < ApplicationRecord
 
   scope :enabled, -> { where('enabled = 1') }
   scope :disabled, -> { where('enabled != 1') }
+
+  # Checkpoint
+  def resource_type
+    :ht_institution
+  end
+
+  def resource_id
+    id
+  end
 end

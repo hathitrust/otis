@@ -236,3 +236,45 @@ class HTApprovalRequestControllerBatchRenewalTest < ActionDispatch::IntegrationT
     assert_match 'No approved request', flash[:alert]
   end
 end
+
+class HTApprovalRequestsControllerRolesTest < ActionDispatch::IntegrationTest
+  def setup
+    @req = create(:ht_approval_request)
+  end
+
+  test 'Admin user can see ht_approval_requests index and edit requests' do
+    sign_in! username: 'admin@default.invalid'
+    get ht_approval_requests_url
+    assert_response 200
+    get edit_ht_approval_request_url @req.approver
+    assert_response 200
+  end
+
+  test 'Staff user can see ht_approval_requests index but not edit' do
+    sign_in! username: 'staff@default.invalid'
+    get ht_approval_requests_url
+    assert_response 200
+    get edit_ht_approval_request_url @req.approver
+    assert_response 403
+  end
+
+  test 'Institutions-only user cannot see ht_approval_requests index or edit' do
+    sign_in! username: 'institution@default.invalid'
+    get ht_approval_requests_url
+    assert_response 403
+    get edit_ht_approval_request_url @req.approver
+    assert_response 403
+  end
+
+  test 'Admin permission shows "Renew Selected Users" button' do
+    sign_in! username: 'admin@default.invalid'
+    get ht_approval_requests_url
+    assert_select 'input.btn-primary', 1
+  end
+
+  test 'Staff permission hides "Renew Selected Users" button' do
+    sign_in! username: 'staff@default.invalid'
+    get ht_approval_requests_url
+    assert_select 'input.btn-primary', false
+  end
+end

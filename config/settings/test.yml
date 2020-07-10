@@ -1,7 +1,16 @@
 allow_impersonation: true
 
+# Superuser account
 users:
-- nobody@example.com
+  - admin@default.invalid
+
+# Read-only
+staff:
+  - staff@default.invalid
+
+# Can view only institutions, not users
+institution:
+  - institution@default.invalid
 
 # relative_url_root doesn't work for tests
 relative_url_root: '/'
@@ -10,6 +19,11 @@ keycard:
   database:
     adapter: sqlite
     database: tmp/keycard_test.sqlite3
+
+checkpoint:
+  database:
+    adapter: sqlite
+    database: tmp/checkpoint_test.sqlite3
 
 shibboleth:
   url: /useradmin/Shibboleth.sso/Login

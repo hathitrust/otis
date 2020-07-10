@@ -8,7 +8,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
 
-def sign_in!(username: 'nobody@example.com')
+def sign_in!(username: 'admin@default.invalid')
   post login_as_url, params: { username: username }
 end
 

@@ -11,13 +11,17 @@ $ bundle install
 
 ### 2. Database
 
-Development mode uses sqlite3 with generated data. The keycard database also
-needs to be set up:
+Development mode uses sqlite3 with generated data. The keycard and
+checkpoint databases also need to be set up:
 
 ```
 bundle exec rake keycard:migrate RAILS_ENV=development
 bundle exec rake keycard:migrate RAILS_ENV=test
+bundle exec rake checkpoint:migrate RAILS_ENV=development
+bundle exec rake checkpoint:migrate RAILS_ENV=test
 bundle exec rake db:setup
+bundle exec rake otis:migrate_users RAILS_ENV=development
+bundle exec rake otis:migrate_users RAILS_ENV=test
 ```
 
 ### 3. Testing

@@ -56,6 +56,15 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
     HUMANIZED_ATTRIBUTES[attr.to_sym] || super
   end
 
+  # Checkpoint
+  def resource_type
+    :ht_user
+  end
+
+  def resource_id
+    email
+  end
+
   # Grab an expiration_date object. And yes, the long method name is deserved.
   # rubocop:disable
   def construct_and_set_expiration_date

@@ -28,4 +28,12 @@ class User
   def identity
     @identity ||= { username: id }.reject { |_, v| v.nil? }
   end
+
+  def agent_id
+    @id
+  end
+
+  def agent_type
+    :user
+  end
 end
