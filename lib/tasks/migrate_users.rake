@@ -15,23 +15,29 @@ namespace :otis do
     admin_role = Checkpoint::Credential::Role.new(:admin)
     view_role = Checkpoint::Credential::Role.new(:view)
     res_wildcard = Checkpoint::Resource::AllOfAnyType.new
-    res_inst = Checkpoint::Resource::AllOfType.new(:ht_institutions)
-    Otis.config.users.each do |u|
-      agent = Checkpoint::Agent::Token.new('user', u)
-      unless Services.checkpoint.permits?(agent, admin_role, res_wildcard)
-        Services.checkpoint.grant!(agent, admin_role, res_wildcard)
+    if Otis.config.users.present?
+      Otis.config.users.each do |u|
+        agent = Checkpoint::Agent::Token.new('user', u)
+        unless Services.checkpoint.permits?(agent, admin_role, res_wildcard)
+          Services.checkpoint.grant!(agent, admin_role, res_wildcard)
+        end
       end
     end
-    Otis.config.staff.each do |u|
-      agent = Checkpoint::Agent::Token.new('user', u)
-      unless Services.checkpoint.permits?(agent, view_role, res_wildcard)
-        Services.checkpoint.grant!(agent, view_role, res_wildcard)
+    if Otis.config.staff.present?
+      Otis.config.staff.each do |u|
+        agent = Checkpoint::Agent::Token.new('user', u)
+        unless Services.checkpoint.permits?(agent, view_role, res_wildcard)
+          Services.checkpoint.grant!(agent, view_role, res_wildcard)
+        end
       end
     end
-    Otis.config.institution.each do |u|
-      agent = Checkpoint::Agent::Token.new('user', u)
-      unless Services.checkpoint.permits?(agent, view_role, res_inst)
-        Services.checkpoint.grant!(agent, view_role, res_inst)
+    if Otis.config.institution.present?
+      res_inst = Checkpoint::Resource::AllOfType.new(:ht_institutions)
+      Otis.config.institution.each do |u|
+        agent = Checkpoint::Agent::Token.new('user', u)
+        unless Services.checkpoint.permits?(agent, view_role, res_inst)
+          Services.checkpoint.grant!(agent, view_role, res_inst)
+        end
       end
     end
     grants = Checkpoint::DB[:grants].map do |grant|
