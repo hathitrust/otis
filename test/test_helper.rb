@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'simplecov'
+require 'rake'
 
 SimpleCov.start 'rails'
 
@@ -13,6 +14,10 @@ def sign_in!(username: 'admin@default.invalid')
 end
 
 Keycard::DB.migrate!
+
+load File.expand_path('lib/tasks/migrate_users.rake', Rails.root)
+Rake::Task.define_task(:environment)
+Rake::Task['otis:migrate_users'].invoke
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods

@@ -8,6 +8,7 @@
 # However, Checkpoint permits? returns false with identical parameters
 # to the subsequent call to grant!
 namespace :otis do
+  desc 'Add grants to the Checkpoint DB from config entries'
   task migrate_users: :environment do
     require 'checkpoint'
     Checkpoint::DB.initialize!
