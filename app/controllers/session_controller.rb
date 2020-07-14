@@ -5,7 +5,7 @@ class SessionController < ApplicationController
 
   def new
     if login
-      redirect_back_or_to root_path
+      redirect_back_or_to default_path
     else
       redirect_to shib_login_url
     end
@@ -17,15 +17,16 @@ class SessionController < ApplicationController
     user = User.new(params[:username])
     if user
       auto_login(user)
-      redirect_back_or_to root_path
+      redirect_back_or_to default_path
     else
       render_forbidden
     end
   end
 
   def destroy
+    path = default_path
     logout
-    redirect_back_or_to root_path
+    redirect_back_or_to path
   end
 
   private

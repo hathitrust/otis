@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   include Keycard::ControllerMethods
 
-  helper_method :logged_in?, :current_user
+  helper_method :logged_in?, :current_user, :can?
 
   before_action :validate_session
   before_action :authenticate!
@@ -23,7 +23,20 @@ class ApplicationController < ActionController::Base
   def authorize!
     return if current_user.nil?
 
-    raise NotAuthorizedError unless Otis.config.users.include? current_user.id
+    raise NotAuthorizedError unless can?(params[:action], params[:controller], current_user)
+  end
+
+  def can?(action, resource, user = current_user)
+    res = Checkpoint::Resource::AllOfType.new(resource)
+    Checkpoint::Query::ActionPermitted.new(user, action, res, authority: Services.checkpoint).true?
+  end
+
+  # This could be replaced by a landing page that is accessible
+  # to everyone.
+  def default_path
+    return ht_institutions_path unless can?(:index, :ht_users)
+
+    root_path
   end
 
   private

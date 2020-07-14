@@ -182,7 +182,7 @@ class HTUsersControllerRenewalTest < ActionDispatch::IntegrationTest
     patch ht_user_url @user2, params: {'ht_user' => {'expires' => (Date.today + 365).to_s}}
     @req2 = HTApprovalRequest.where(userid: @user2.email).first
     assert_not_nil @req2
-    assert_equal 'nobody@example.com', @req2.approver
+    assert_equal 'admin@default.invalid', @req2.approver
     assert_equal Date.parse(@req2.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
   end
 end
@@ -210,5 +210,37 @@ class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
                  'iprestrict,mfa,identity_provider', @response.body
     assert_match 'a@b,A B,c@d,e@f,g@h,i@j,staff,ssd,total,2020-01-01 00:00:00 UTC,' \
                  'expiresannually,^.*$,false,http://example.com', @response.body
+  end
+end
+
+class HTUsersControllerRolesTest < ActionDispatch::IntegrationTest
+  test 'Admin user can see ht_users index' do
+    sign_in! username: 'staff@default.invalid'
+    get ht_users_url
+    assert_response 200
+  end
+
+  test 'Staff user can see ht_users indexe' do
+    sign_in! username: 'staff@default.invalid'
+    get ht_users_url
+    assert_response 200
+  end
+
+  test 'Institutions-only user can only see ht_institutions index' do
+    sign_in! username: 'institution@default.invalid'
+    get ht_users_url
+    assert_response 403
+  end
+
+  test 'Admin permission shows "Create Approval Requests" and "Renew Selected Users" buttons' do
+    sign_in! username: 'admin@default.invalid'
+    get ht_users_url
+    assert_select 'button.btn-primary', 2
+  end
+
+  test 'Staff permission hides "Create Approval Requests" and "Renew Selected Users" buttons' do
+    sign_in! username: 'staff@default.invalid'
+    get ht_users_url
+    assert_select 'button.btn-primary', false
   end
 end

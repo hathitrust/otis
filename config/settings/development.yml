@@ -6,8 +6,22 @@ keycard:
     adapter: sqlite
     database: tmp/keycard_dev.sqlite3
 
+checkpoint:
+  database:
+    adapter: sqlite
+    database: tmp/checkpoint_dev.sqlite3
+
+# Superuser account
 users:
-  - somebody@default.invalid
+  - admin@default.invalid
+
+# Read-only
+staff:
+  - staff@default.invalid
+
+# Can view only institutions, not users
+institution:
+  - institution@default.invalid
 
 shibboleth:
   url: /useradmin/Shibboleth.sso/Login
