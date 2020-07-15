@@ -36,10 +36,16 @@ en:
         HTUser:
           attributes:
             iprestrict: "requires valid IPv4 addresess (separated by commas if multiple)"
+  ht_approval_request:
+    badges:
+      approved: "Approved"
+      expired: "Request Expired"
+      renewed: "Renewed"
+      sent: "Sent"
+      unsent: "Unsent"
   ht_user:
     edit:
       iprestrict_prompt: "If multiple IP addresses, enter as a comma-separated list."
     attributes:
       ht_auth_request:
         userid: "User"
-
