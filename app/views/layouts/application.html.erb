@@ -16,6 +16,8 @@
     <% # - Prevent index pages with forms (row checkboxes) from submitting when %>
     <% #   the user types return (13).                                          %>
     <% # - Clear the field on escape key (27).                                  %>
+    <% # event.stopPropagation() should not be needed, but if there are issues  %>
+    <% # it should be revisited.                                                %>
     <script>
       $(document).keypress(
         function(event) {
