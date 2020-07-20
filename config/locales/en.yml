@@ -43,6 +43,12 @@ en:
       renewed: "Renewed"
       sent: "Sent"
       unsent: "Unsent"
+  ht_institution:
+    badges:
+      disabled: "Disabled"
+      enabled: "Enabled"
+      private: "Private"
+      social: "Social Login"
   ht_user:
     edit:
       iprestrict_prompt: "If multiple IP addresses, enter as a comma-separated list."

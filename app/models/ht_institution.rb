@@ -8,7 +8,7 @@ class HTInstitution < ApplicationRecord
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
 
   scope :enabled, -> { where('enabled = 1') }
-  scope :disabled, -> { where('enabled != 1') }
+  scope :other, -> { where('enabled != 1') }
 
   # Checkpoint
   def resource_type

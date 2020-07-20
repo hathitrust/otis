@@ -9,11 +9,11 @@
       <dt>GRIN Instance:</dt> <dd><%= @institution.grin_instance %></dd>
       <dt>Name:</dt> <dd><%= @institution.name %></dd>
       <dt>US:</dt> <dd><%= raw @institution[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
-      <dt>Enabled:</dt> <dd><%= raw @institution[:enabled] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
+      <dt>Enabled:</dt> <dd><%= HTInstitutionPresenter.badge_for(@institution) %></dd>
       <dt>Entity ID:</dt> <dd><%= @institution.entityID %></dd>
       <dt>Affiliations:</dt> <dd><%= @institution.allowed_affiliations %></dd>
       <dt>MFA auth context:</dt> <dd><%= @institution.shib_authncontext_class %></dd>
-      <dt>Affiliations for ETAS</dt> <dd><%= @institution.emergency_status %></dd>
+      <dt>Affiliations for ETAS:</dt> <dd><%= @institution.emergency_status %></dd>
       <dt>ETAS Contact:</dt> <dd><%= @institution.emergency_contact %></dd>
       <dt>Mapto Domain:</dt> <dd><%= @institution.mapto_domain %></dd>
       <dt>Mapto Inst ID:</dt> <dd><%= @institution.mapto_inst_id %></dd>
