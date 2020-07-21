@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :mapto_inst_id
     t.string :mapto_name
     t.string :mapto_entityID
-    t.boolean :enabled
+    t.integer :enabled
     t.boolean :orph_agree
     t.string :entityID
     t.text :allowed_affiliations

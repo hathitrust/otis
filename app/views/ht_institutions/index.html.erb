@@ -39,10 +39,11 @@
       <th data-sortable="true">Name</th>
       <th data-sortable="true">Domain</th>
       <th data-sortable="true">US?</th>
+      <th data-sortable="true">Enabled?</th>
       <th data-sortable="true">Entity ID</th>
     </tr>
     </thead>
-    <% @institutions.disabled.each do |i| %>
+    <% @institutions.other.each do |i| %>
       <tr>
         <td><%= link_to i.inst_id, ht_institution_path(i.inst_id) %></td>
         <td><%= i.name %></td>
@@ -50,6 +51,7 @@
         <td>
           <%= raw i[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
         </td>
+        <td><%= HTInstitutionPresenter.badge_for(i) %></td>
         <td><%= i.entityID %></td>
       </tr>
     <% end %>

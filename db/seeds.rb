@@ -32,7 +32,6 @@ def create_ht_user(expires:)
     u.identity_provider = HTInstitution.enabled.where.not(shib_authncontext_class: nil).sample.entityID
   else
     u.identity_provider = HTInstitution.enabled.sample.entityID
-    # Faker::Boolean.boolean(true_ratio: 0.2) fails with "ArgumentError (comparison of Float with Hash failed)"
     if rand > 0.4
       u.iprestrict = Faker::Internet.public_ip_v4_address
     elsif rand > 0.2
@@ -71,7 +70,7 @@ def create_ht_approval_request(user) # rubocop:disable Metrics/MethodLength
   ar.save!
 end
 
-10.times do
+def create_ht_institution(enabled) # rubocop:disable Metrics/MethodLength
   inst_id = Faker::Internet.unique.domain_word
   domain = inst_id + '.' + Faker::Internet.domain_suffix
   HTInstitution.create(
@@ -80,7 +79,7 @@ end
     authtype: ['', 'shibboleth'].sample,
     domain: domain,
     us: [0, 1].sample,
-    enabled: 1,
+    enabled: enabled,
     orph_agree: [0, 1].sample,
     entityID: Faker::Internet.url,
     allowed_affiliations: '^(alum|member)' + domain,
@@ -89,22 +88,20 @@ end
   )
 end
 
+10.times do
+  create_ht_institution(1)
+end
+
 2.times do
-  inst_id = Faker::Internet.unique.domain_word
-  domain = inst_id + '.' + Faker::Internet.domain_suffix
-  HTInstitution.create(
-    inst_id: inst_id,
-    name: Faker::University.name,
-    authtype: ['', 'shibboleth'].sample,
-    domain: domain,
-    us: [0, 1].sample,
-    enabled: 0,
-    orph_agree: [0, 1].sample,
-    entityID: Faker::Internet.url,
-    allowed_affiliations: '^(alum|member)@' + domain,
-    shib_authncontext_class: [nil, Faker::Internet.url].sample,
-    emergency_contact: Faker::Internet.email
-  )
+  create_ht_institution(0)
+end
+
+2.times do
+  create_ht_institution(2)
+end
+
+2.times do
+  create_ht_institution(3)
 end
 
 # We should simulate the typical situation in which some approvers are shared.
