@@ -38,6 +38,22 @@ FactoryBot.define do
     trait :mfa do
       shib_authncontext_class { 'https://refeds.org/profile/mfa' }
     end
+
+    trait :disabled do
+      enabled { 0 }
+    end
+
+    trait :enabled do
+      enabled { 1 }
+    end
+
+    trait :private do
+      enabled { 2 }
+    end
+
+    trait :social do
+      enabled { 3 }
+    end
   end
 
   factory :ht_count do

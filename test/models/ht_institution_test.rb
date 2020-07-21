@@ -16,8 +16,8 @@ class HTInstitutionTest < ActiveSupport::TestCase
     assert_equal HTInstitution.enabled.first.inst_id, @enabled.inst_id
   end
 
-  test 'disabled scope' do
-    assert_equal HTInstitution.disabled.first.inst_id, @disabled.inst_id
+  test 'other scope' do
+    assert_equal HTInstitution.other.first.inst_id, @disabled.inst_id
   end
 
   test 'correct Checkpoint resource_type and resource_id' do

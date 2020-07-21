@@ -7,8 +7,11 @@ class HTInstitution < ApplicationRecord
   self.primary_key = 'inst_id'
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
 
+  # https://stackoverflow.com/a/57485464
+  attribute :enabled, ActiveRecord::Type::Integer.new
+
   scope :enabled, -> { where('enabled = 1') }
-  scope :disabled, -> { where('enabled != 1') }
+  scope :other, -> { where('enabled != 1') }
 
   # Checkpoint
   def resource_type
