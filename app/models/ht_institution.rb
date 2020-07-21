@@ -7,6 +7,8 @@ class HTInstitution < ApplicationRecord
   self.primary_key = 'inst_id'
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
 
+  attribute :enabled, ActiveRecord::Type::Integer.new
+
   scope :enabled, -> { where('enabled = 1') }
   scope :other, -> { where('enabled != 1') }
 
