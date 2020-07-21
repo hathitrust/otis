@@ -37,7 +37,9 @@ bundle exec rake test
 bundle exec rails s
 ```
 
-Go to http://localhost:3000/useradmin and log in as `somebody@default.invalid`
+Go to http://localhost:3000/useradmin and log in as one of
+`{admin,staff,institution}@default.invalid`,
+in decreasing order of administrative power.
 
 ### 5. Staged version
 
