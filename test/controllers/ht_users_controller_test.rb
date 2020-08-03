@@ -20,6 +20,12 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match @user2.email, @response.body
   end
 
+  test 'shows nav menu' do
+    sign_in!
+    get ht_users_url
+    assert_match('Approval Requests', @response.body)
+  end
+
   test 'should get show page' do
     sign_in!
     get ht_user_url @user1

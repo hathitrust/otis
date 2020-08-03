@@ -3,39 +3,29 @@
   <% unless logged_in? %>
       <p class="navbar-text">Not signed in</p>
   <% else %>
-
-    <% # Links menu will be empty when an external approver comes in.%>
-    <% # In that case we don't display any of the navigation bits. %>
-    <% nav_menu = [] %>
-    <% [['Users', 'users'],
-        ['Approval Requests', 'approval_requests'],
-        ['Institutions', 'institutions']].each do |item| %>
-      <% if can?(:index, "ht_#{item[1]}".to_sym) %>
-        <% nav_menu << [item[0], self.send("ht_#{item[1]}_path")] %>
-      <% end %>
-    <% end %>
-
     <p class="navbar-text"><%= "Signed in as #{current_user.id}" %></p>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
         <% unless Rails.env.production? %>
         <li><%= link_to "Log Out", logout_path %></li>
         <% end %>
-        <% if nav_menu.count.positive? %>
-          <li><%= link_to "Home", controller.default_path %></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-               role="button" aria-haspopup="true" aria-expanded="false">
-               Go <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-              <% nav_menu.each do |item| %>
-                <li><a href="#"><%= link_to item[0], item[1] %></a></li>
-              <% end %>
-              <!--<li role="separator" class="divider"></li>-->
-            </ul>
-          </li>
-         <% end %>
+        <% nav_menu.tap do |nav| %>
+          <% if nav.any? %>
+            <li><%= link_to "Home", controller.default_path %></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                 role="button" aria-haspopup="true" aria-expanded="false">
+                 Go <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <% nav.each do |item| %>
+                  <li><a href="#"><%= link_to item[0], item[1] %></a></li>
+                <% end %>
+                <!--<li role="separator" class="divider"></li>-->
+              </ul>
+            </li>
+           <% end %>
+        <% end %>
       </ul>
     </div>
   <% end %>

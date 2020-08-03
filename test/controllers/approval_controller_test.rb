@@ -19,6 +19,13 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     assert_equal Date.parse(@req.reload.received).to_s, Date.parse(Time.zone.now.to_s).to_s
   end
 
+  test 'does not show nav menu for approval with email not known in advance' do
+    sign_in! username: Faker::Internet.email
+    get approve_url @req.token
+    assert_response :success
+    assert_no_match 'Home', @response.body
+  end
+
   test 'refuses to approve the same request a second time' do
     sign_in!
     get approve_url @req.token
