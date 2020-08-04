@@ -54,7 +54,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
   test 'edit IP address succeeds' do
     sign_in!
-    patch ht_user_url @user1, params: {'ht_user' => {'iprestrict' => '33.33.33.33'}}
+    patch ht_user_url @user1, params: {'ht_user' => {'iprestrict' => '33.33.33.33', 'mfa' => '0'}}
     assert_response :redirect
     assert_equal 'update', @controller.action_name
     assert_not_empty flash[:notice]
@@ -89,7 +89,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   test 'updating expiration for mfa user retains nil iprestrict' do
     user = create(:ht_user_mfa)
     sign_in!
-    patch ht_user_url user, params: {'ht_user' => {'iprestrict' => '', 'expires' => Date.today.to_s}}
+    patch ht_user_url user, params: {'ht_user' => {'expires' => Date.today.to_s}}
     assert_redirected_to ht_user_path(user.email)
     assert_nil HTUser.find(user.email)[:iprestrict]
   end
@@ -97,7 +97,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   test 'setting MFA unsets iprestrict' do
     user = create(:ht_user, :inst_mfa, mfa: false, iprestrict: '33.33.33.33')
     sign_in!
-    patch ht_user_url user, params: {'ht_user' => {'iprestrict' => '', 'mfa' => true}}
+    patch ht_user_url user, params: {'ht_user' => {'mfa' => '1'}}
     assert_redirected_to ht_user_path(user.email)
     assert HTUser.find(user.email)[:mfa]
     assert_nil HTUser.find(user.email)[:iprestrict]
