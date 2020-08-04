@@ -1,33 +1,33 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
-<% unless logged_in? %>
-    <p class="navbar-text">Not signed in</p>
-<% else %>
+  <% unless logged_in? %>
+      <p class="navbar-text">Not signed in</p>
+  <% else %>
     <p class="navbar-text"><%= "Signed in as #{current_user.id}" %></p>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
         <% unless Rails.env.production? %>
         <li><%= link_to "Log Out", logout_path %></li>
         <% end %>
-        <li><%= link_to "Home", controller.default_path %></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-             role="button" aria-haspopup="true" aria-expanded="false">
-             Go <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <% [['Users', 'users'],
-                ['Approval Requests', 'approval_requests'],
-                ['Institutions', 'institutions']].each do |item| %>
-              <% if can?(:index, "ht_#{item[1]}".to_sym) %>
-                <li><a href="#"><%= link_to item[0], self.send("ht_#{item[1]}_path") %></a></li>
-              <% end %>
-            <% end %>
-            <!--<li role="separator" class="divider"></li>-->
-          </ul>
-        </li>
+        <% nav_menu.tap do |nav| %>
+          <% if nav.any? %>
+            <li><%= link_to "Home", controller.default_path %></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                 role="button" aria-haspopup="true" aria-expanded="false">
+                 Go <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <% nav.each do |item| %>
+                  <li><a href="#"><%= link_to item[0], item[1] %></a></li>
+                <% end %>
+                <!--<li role="separator" class="divider"></li>-->
+              </ul>
+            </li>
+           <% end %>
+        <% end %>
       </ul>
     </div>
-<% end %>
+  <% end %>
   </div>
 </nav>
