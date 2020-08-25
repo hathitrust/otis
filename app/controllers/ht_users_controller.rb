@@ -20,13 +20,7 @@ class HTUsersController < ApplicationController
     # Any extension of term counts as a renewal for our purposes.
     renewing = user_params[:expires].present? && user_params[:expires] > @user.expires.to_date.to_s
 
-    params = user_params
-
-    if user_params[:mfa] and !user_params[:iprestrict]
-      params = user_params.merge(iprestrict: nil)
-    end
-
-    if @user.update(params)
+    if @user.update(user_params)
       flash[:notice] = 'User updated'
       @user.add_or_update_renewal(approver: current_user.id, force: true) if renewing
       redirect_to @user
@@ -44,7 +38,10 @@ class HTUsersController < ApplicationController
   end
 
   def user_params
-    params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
+    @user_params ||= begin
+      p = params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
+      p[:mfa] == '1' ? p.merge({iprestrict: nil}) : p
+    end
   end
 
   def users_csv
