@@ -15,9 +15,16 @@ end
 
 assign_db(Keycard::DB.config, Otis.config.keycard.database)
 assign_db(Checkpoint::DB.config, Otis.config.checkpoint.database)
-
 Keycard::DB.config.readonly = true if Otis.config.keycard&.readonly
 Keycard.config.access = Otis.config.keycard&.access || :direct
+if ENV['ASSET_PRECOMPILE'].blank?
+  keycard_DB = Keycard::DB.initialize!
+  keycard_DB.extension(:connection_validator)
+  keycard_DB.pool.connection_validation_timeout = 300
+  checkpoint_DB = Checkpoint::DB.initialize!
+  checkpoint_DB.extension(:connection_validator)
+  checkpoint_DB.pool.connection_validation_timeout = 300
+end
 
 Services = Canister.new
 
