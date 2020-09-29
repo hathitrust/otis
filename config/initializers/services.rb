@@ -18,16 +18,14 @@ assign_db(Checkpoint::DB.config, Otis.config.checkpoint.database)
 Keycard::DB.config.readonly = true if Otis.config.keycard&.readonly
 Keycard.config.access = Otis.config.keycard&.access || :direct
 
-unless Keycard::DB.blank?
-  keycard_DB = Keycard::DB.initialize!
-  keycard_DB.extension(:connection_validator)
-  keycard_DB.pool.connection_validation_timeout = 300
-end
-
-unless Checkpoint::DB.blank?
-  checkpoint_DB = Checkpoint::DB.initialize!
-  checkpoint_DB.extension(:connection_validator)
-  checkpoint_DB.pool.connection_validation_timeout = 300
+Rails.application.config.after_initialize do
+  # https://stackoverflow.com/a/44013695
+  if defined?(::Rails::Server)
+    Keycard::DB.db.extension(:connection_validator)
+    Keycard::DB.db.pool.connection_validation_timeout = 300
+    Checkpoint::DB.db.extension(:connection_validator)
+    Checkpoint::DB.db.pool.connection_validation_timeout = 300
+  end
 end
 
 Services = Canister.new
