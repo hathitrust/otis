@@ -1,0 +1,31 @@
+name: Run CI
+
+on:
+  push:
+    branches:
+      - $default-branch
+
+  pull_request:
+
+jobs:
+  # Run tests
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up tests
+        run: |
+          docker-compose build
+          docker-compose run web bundle install
+          docker-compose run web bundle exec rake keycard:migrate RAILS_ENV=test
+          docker-compose run web bundle exec rake checkpoint:migrate RAILS_ENV=test
+          docker-compose run -e RAILS_ENV=test web bundle exec rails db:setup
+
+      - name: Run rubocop
+        run: docker-compose run web bundle exec rubocop
+
+      - name: Run tests
+        run: docker-compose run web bundle exec rails test
+
