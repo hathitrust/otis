@@ -38,6 +38,14 @@ class HTInstitutionsIndexTest < ActionDispatch::IntegrationTest
 
     assert_match(/AAA.*ZZZ/m, @response.body)
   end
+
+  test 'as admin, shows link for new institution' do
+    sign_in! username: 'admin@default.invalid'
+    get ht_institutions_url
+    assert_match 'institutions/new', @response.body
+
+  end
+
 end
 
 class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
@@ -73,6 +81,7 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
     get ht_institution_url @mfa_inst
     assert_match(%r{authnContextClassRef=https://refeds.org/profile/mfa}m, @response.body)
   end
+
 end
 
 class HTInstitutionsControllerRolesTest < ActionDispatch::IntegrationTest
@@ -103,6 +112,19 @@ class HTInstitutionsControllerRolesTest < ActionDispatch::IntegrationTest
     assert_equal 'edit', @controller.action_name
   end
 
+  test 'Admin user can create new' do
+    sign_in! username: 'admin@default.invalid'
+    get new_ht_institution_url
+    assert_response :success
+    assert_equal 'new', @controller.action_name
+  end
+
+  test 'Staff user cannot create new' do
+    sign_in! username: 'staff@default.invalid'
+    get new_ht_institution_url
+    assert_response :forbidden
+  end
+
   test 'Staff user cannot edit' do
     sign_in! username: 'staff@default.invalid'
     get edit_ht_institution_url @inst
@@ -117,6 +139,40 @@ class HTInstitutionsControllerRolesTest < ActionDispatch::IntegrationTest
 
     inst.reload
     assert_nil HTInstitution.find(inst.inst_id).emergency_status
+  end
+
+  test 'Staff user cannot create' do
+    inst_params = attributes_for(:ht_institution)
+    sign_in! username: 'staff@default.invalid'
+    post ht_institutions_url, params: {ht_institution: inst_params}
+
+    assert_response :forbidden
+  end
+end
+
+class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
+  test 'inst id is editable for new institution' do
+    sign_in! username: 'admin@default.invalid'
+    get new_ht_institution_url
+    assert_select 'input[name="ht_institution[inst_id]"]'
+  end
+
+  test 'us is selectable' do
+    sign_in! username: 'admin@default.invalid'
+    get new_ht_institution_url
+    assert_select 'input[name="ht_institution[us]"]'
+  end
+
+  test 'Can create' do
+    inst_params = attributes_for(:ht_institution)
+    inst_id = inst_params[:inst_id]
+    sign_in! username: 'admin@default.invalid'
+    post ht_institutions_url, params: {ht_institution: inst_params}
+
+    assert_redirected_to ht_institution_url(inst_id)
+
+    assert_not_nil(HTInstitution.find(inst_id))
+
   end
 
 end

@@ -31,7 +31,7 @@ end
 
 Services = Canister.new
 
-role_map = {admin: [:index, :show, :save, :edit, :create, :update],
+role_map = {admin: [:index, :show, :save, :edit, :new, :create, :update],
             view: [:index, :show]}
 
 Services.register(:checkpoint) do

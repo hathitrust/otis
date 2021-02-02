@@ -1,23 +1,48 @@
 # frozen_string_literal: true
 
+class HTInstitutionBadge
+
+  def initialize(tag, css_class)
+    @css_class= css_class
+    @tag = tag
+  end
+
+  def label_text
+    I18n.t("ht_institution.badges.#{tag}")
+  end
+
+  def label_span
+    "<span class='label #{css_class}'>#{label_text}</span>".html_safe
+  end
+
+  private
+
+  attr_reader :css_class, :tag
+
+end
+
 class HTInstitutionPresenter < SimpleDelegator
 
   include ActionView::Helpers::UrlHelper
   include Rails.application.routes.url_helpers
+
+  BADGES = {
+    0 => HTInstitutionBadge.new('disabled','label-danger'),
+    1 => HTInstitutionBadge.new('enabled','label-success'),
+    2 => HTInstitutionBadge.new('private','label-warning'),
+    3 => HTInstitutionBadge.new('social','label-primary')
+  }
 
   def init(institution,controller)
     @institution = institution
   end
 
   def badge
-    @badges ||= {
-      0 => "<span class='label label-danger'>#{I18n.t('ht_institution.badges.disabled')}</span>",
-      1 => "<span class='label label-success'>#{I18n.t('ht_institution.badges.enabled')}</span>",
-      2 => "<span class='label label-warning'>#{I18n.t('ht_institution.badges.private')}</span>",
-      3 => "<span class='label label-primary'>#{I18n.t('ht_institution.badges.social')}</span>"
-    }
+    BADGES[enabled]&.label_span
+  end
 
-    @badges[enabled]&.html_safe
+  def badge_options
+    BADGES.map { |k,v| [v.label_text,k] }
   end
 
   def us_icon
@@ -58,6 +83,26 @@ class HTInstitutionPresenter < SimpleDelegator
 
   def grin_link
     link_to grin_instance, "#{google_books_base}/libraries/#{grin_instance}" if grin_instance
+  end
+
+  def cancel_button
+    button 'Cancel', inst_id ? ht_institution_path(inst_id) : ht_institutions_path
+  end
+
+  def form_inst_id(form)
+    if persisted?
+      inst_id
+    else
+      form.text_field :inst_id
+    end
+  end
+
+  def form_us(form)
+    if(us)
+      us_icon
+    else
+      form.check_box :us
+    end
   end
 
   private

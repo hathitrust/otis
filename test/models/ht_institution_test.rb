@@ -25,4 +25,52 @@ class HTInstitutionTest < ActiveSupport::TestCase
     assert_equal inst.resource_type, :ht_institution
     assert_equal inst.resource_id, 'id'
   end
+
+  test 'must have an inst id' do
+    assert_not build(:ht_institution, inst_id: nil).valid?
+  end
+
+  test 'must have a name' do
+    assert_not build(:ht_institution, name: nil).valid?
+  end
+
+  test 'must have an enabled value' do
+    assert_not build(:ht_institution, enabled: nil).valid?
+  end
+
+  test 'defaults sdrinst to inst_id' do
+    inst = build(:ht_institution, sdrinst: nil)
+    inst.save
+
+    assert_equal(inst.inst_id, inst.sdrinst)
+  end
+
+  test 'defaults mapto_instid to inst_id' do
+    inst = build(:ht_institution, mapto_inst_id: nil)
+    inst.save
+
+    assert_equal(inst.inst_id, inst.mapto_inst_id)
+  end
+
+  test 'sets template on save if entityid is set' do
+    inst = build(:ht_institution, entityID: 'urn:something')
+    inst.save
+
+    assert_equal("https://___HOST___/Shibboleth.sso/Login?entityID=urn:something&target=___TARGET___",
+                 inst.template)
+  end
+
+  test 'sets authtype on save if entityid is set' do
+    inst = build(:ht_institution, entityID: 'urn:something')
+    inst.save
+
+    assert_equal(inst.authtype, 'shibboleth')
+  end
+
+  test 'defaults orph_agree to false' do
+    inst = build(:ht_institution, orph_agree: nil)
+    inst.save
+
+    assert_equal(inst.orph_agree, false)
+  end
 end
