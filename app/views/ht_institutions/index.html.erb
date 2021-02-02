@@ -13,18 +13,18 @@
       <th data-sortable="true">Domain</th>
       <th data-sortable="true">US?</th>
       <th data-sortable="true">Entity ID</th>
+      <th data-sortable="true">ETAS?</th>
     </tr>
     </thead>
 
-    <% @institutions.enabled.each do |i| %>
+    <% @enabled_institutions.each do |i| %>
       <tr>
         <td><%= link_to i.inst_id, ht_institution_path(i.inst_id) %></td>
         <td><%= i.name %></td>
         <td><%= i.domain %></td>
-        <td>
-          <%= raw i[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
-        </td>
-        <td><%= i.entityID %></td>
+        <td><%= i.us_icon %></td>
+        <td><%= i.metadata_link %></td>
+        <td><%= i.etas_active_icon %></td>
       </tr>
     <% end %>
   </table>
@@ -43,7 +43,7 @@
       <th data-sortable="true">Entity ID</th>
     </tr>
     </thead>
-    <% @institutions.other.each do |i| %>
+    <% @other_institutions.each do |i| %>
       <tr>
         <td><%= link_to i.inst_id, ht_institution_path(i.inst_id) %></td>
         <td><%= i.name %></td>
@@ -51,8 +51,8 @@
         <td>
           <%= raw i[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
         </td>
-        <td><%= HTInstitutionPresenter.badge_for(i) %></td>
-        <td><%= i.entityID %></td>
+        <td><%= i.badge %></td>
+        <td><%= i.metadata_link %></td>
       </tr>
     <% end %>
   </table>

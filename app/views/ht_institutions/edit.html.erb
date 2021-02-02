@@ -1,0 +1,47 @@
+<div id="maincontent" class="row">
+  <h1><%= @institution.name %></h1>
+
+  <%= render 'shared/flash_message' %>
+
+  <%= form_with(model: @institution, local: true, id: 'edit_ht_institution_form') do |form| %>
+    <div class="col-sm-6">
+      <dl class="dl-horizontal">
+        <dt>Institution ID:</dt> <dd><%= @institution.inst_id %></dd>
+        <dt>Name:</dt>
+        <dd><%= form.text_field :name, size: 80 %></dd>
+        <dt>Mapped Name:</dt>
+        <dd><%= form.text_field :mapto_name, size: 80 %></dd>
+        <dt>Entity ID</dt>
+        <dd><%= form.text_field :entityID, size: 80 %></dd>
+
+        <dt>Holdings Institution ID:</dt>
+        <dd><%= form.text_field :mapto_inst_id %></dd>
+
+        <dt>US:</dt> <dd><%= raw @institution[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
+
+        <dt>GRIN Instance:</dt> <dd>
+        <%= form.text_field :grin_instance %></dd>
+
+        <dt>MFA auth context:</dt>
+        <dd><%= form.text_field :shib_authncontext_class, size: 80 %></dd>
+
+        <dt>Affiliations:</dt>
+        <dd><%= form.text_field :allowed_affiliations, size: 40 %></dd>
+        <dt>Affiliations for ETAS:</dt>
+        <dd><%= form.text_field :emergency_status, size: 40 %></dd>
+        <dt>ETAS Contact:</dt>
+        <dd><%= form.text_field :emergency_contact, size: 40 %></dd>
+
+        <dt>Enabled:</dt> <dd>
+        <%= select_tag :enabled, options_for_select([[0,'Disabled'],[1,'Enabled'],[2,'Private'],[3,'Social Login']]) %>
+        </dd>
+        <!-- TODO: selection dropdown -->
+
+      </dl>
+
+      <%= form.submit 'Submit Changes', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', ht_institution_path(@institution), class: 'btn btn-primary' %>
+    </div>
+
+  <% end %>
+</div>

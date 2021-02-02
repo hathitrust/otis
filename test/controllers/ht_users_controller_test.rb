@@ -64,7 +64,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal '^33\.33\.33\.33$', HTUser.find(@user1.email)[:iprestrict]
   end
 
-  test 'edit IP address fails' do
+  test 'with malformed IP address, edit IP address fails' do
     user = create(:ht_user, iprestrict: '1.2.3.4')
     sign_in!
     patch ht_user_url user, params: {'ht_user' => {'iprestrict' => '33.33.33.blah'}}
