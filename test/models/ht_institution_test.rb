@@ -30,6 +30,11 @@ class HTInstitutionTest < ActiveSupport::TestCase
     assert_not build(:ht_institution, inst_id: nil).valid?
   end
 
+  test 'must have a unique inst id' do
+    inst = create(:ht_institution)
+    assert_not build(:ht_institution, inst_id: inst.inst_id).valid?
+  end
+
   test 'must have a name' do
     assert_not build(:ht_institution, name: nil).valid?
   end

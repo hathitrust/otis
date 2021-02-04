@@ -20,6 +20,11 @@ class HTInstitutionsController < ApplicationController
 
   def new
     @institution = HTInstitutionPresenter.new(HTInstitution.new)
+
+    if(params[:entityID])
+      @institution.set_defaults_for_entity(params[:entityID])
+    end
+
   end
 
   def index

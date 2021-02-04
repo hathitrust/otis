@@ -7,7 +7,7 @@ class HTInstitution < ApplicationRecord
   self.primary_key = 'inst_id'
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
 
-  validates :inst_id, presence: true
+  validates :inst_id, presence: true, uniqueness: true
   validates :name, presence: true
   validates :enabled, presence: true
 
@@ -39,31 +39,12 @@ class HTInstitution < ApplicationRecord
     end
   end
 
-  # defaults_from_metadata
-  #
-  #   @name = metadata.entity_info(@eid)[:name]
-  #
-  #     /\b(?<base>[a-z\-]+)\.(?<ext>edu|gov|com|org|net|ac\.uk)/ =~ eid
-  #     if(base and ext)
-  #       domain_base = base
-  #       domain = "#{base}.#{ext}"
-  #     end
-  #
-  #   {
-  #    sdrinst: domain_base,
-  #    inst_id: domain_base,
-  #    mapto_inst_id: domain_base,
-  #    grin_instance: nil,
-  #    name: name,
-  #    template: "https://___HOST___/Shibboleth.sso/Login?entityID=#{eid}&target=___TARGET___",
-  #    authtype: "shibboleth",
-  #    domain: domain,
-  #    us: true,
-  #    enabled: false,
-  #    orph_agree: false,
-  #    entityID: eid,
-  #    allowed_affiliations: "^(alum|member|faculty|staff|student)@#{domain}",
-  #    emergency_status: nil,
-  #    emergency_contact: nil
-  #  }
+  def set_defaults_for_entity(entityID,metadata=SAMLMetadata.new(entityID))
+    self.entityID = entityID
+    self.name = metadata.name
+    self.domain = metadata.domain
+    self.inst_id = metadata.domain_base
+    self.mapto_inst_id = metadata.domain_base
+    self.allowed_affiliations = "^(member|alum)@(#{metadata.scopes.join('|')})"
+  end
 end

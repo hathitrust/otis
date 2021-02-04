@@ -59,6 +59,28 @@
 
   <br />
 
-  <%= link_to 'Add New Instititution', new_ht_institution_url, class: 'btn btn-primary' %>
+  <h2> Add New Institution </h2>
+
+  <div data-turbolinks="false">
+
+    <p> <a target="_blank" href="https://met.refeds.org">Search REFEDS Metadata Explorer (opens in new tab)</a> for a SAML
+    entity ID and enter it here to pre-populate the institution data:
+
+    <%= form_with url: new_ht_institution_path, method: :get, local: true do |form| %>
+      <%= form.label :entityID, "Entity ID:" %>
+      <%= form.text_field :entityID, size: 40 %>
+      <%= form.submit "Load Metadata", class: 'btn btn-primary' %>
+    <% end %>
+
+    </p>
+
+    <p> Or, manually provide the information:
+
+    <%= link_to 'Add New Instititution', new_ht_institution_path, class: 'btn btn-primary' %>
+
+    </p>
+
+  </div>
+
 </div>
 
