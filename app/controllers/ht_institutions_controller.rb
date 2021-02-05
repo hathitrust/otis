@@ -14,9 +14,10 @@ class HTInstitutionsController < ApplicationController
     emergency_status
     mapto_inst_id
     mapto_name
+    us
   ].freeze
 
-  PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[inst_id us]
+  PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[inst_id]
 
   def new
     @institution = HTInstitutionPresenter.new(HTInstitution.new)

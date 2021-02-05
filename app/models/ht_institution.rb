@@ -45,6 +45,6 @@ class HTInstitution < ApplicationRecord
     self.domain = metadata.domain
     self.inst_id = metadata.domain_base
     self.mapto_inst_id = metadata.domain_base
-    self.allowed_affiliations = "^(member|alum)@(#{metadata.scopes.join('|')})"
+    self.allowed_affiliations = "^(member|alum|faculty|staff|student)@(#{metadata.scopes.join('|')})"
   end
 end

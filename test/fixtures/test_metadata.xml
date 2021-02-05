@@ -1,0 +1,30 @@
+<md:EntityDescriptor xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:remd="http://refeds.org/metadata" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xrd="http://docs.oasis-open.org/ns/xri/xrd-1.0" entityID="https://east.westland.test/idp/shibboleth">
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:Extensions>
+      <shibmd:Scope regexp="false">westland.test</shibmd:Scope>
+      <shibmd:Scope regexp="false">east.westland.test</shibmd:Scope>
+      <mdui:UIInfo>
+        <mdui:DisplayName xml:lang="en">University of East Westland</mdui:DisplayName>
+        <mdui:Description xml:lang="en">The University of East Westland</mdui:Description>
+        <mdui:InformationURL xml:lang="en">http://east.westland.test/</mdui:InformationURL>
+      </mdui:UIInfo>
+    </md:Extensions>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://westland.test/idp/profile/SAML2/POST/SSO"/>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://westland.test/idp/profile/SAML2/Redirect/SSO"/>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://westland.test/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://westland.test/idp/profile/SAML2/SOAP/ECP"/>
+  </md:IDPSSODescriptor>
+  <md:Organization>
+    <md:OrganizationName xml:lang="en">University of East Westland</md:OrganizationName>
+    <md:OrganizationDisplayName xml:lang="en">University of East Westland</md:OrganizationDisplayName>
+    <md:OrganizationURL xml:lang="en">http://east.westland.test/</md:OrganizationURL>
+  </md:Organization>
+  <md:ContactPerson contactType="support">
+    <md:GivenName>Westland Support</md:GivenName>
+    <md:EmailAddress>mailto:help@westland.test</md:EmailAddress>
+  </md:ContactPerson>
+  <md:ContactPerson contactType="technical">
+    <md:GivenName>Westland Identity &amp; Access Management</md:GivenName>
+    <md:EmailAddress>mailto:iam@westland.test</md:EmailAddress>
+  </md:ContactPerson>
+</md:EntityDescriptor>

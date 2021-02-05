@@ -36,7 +36,7 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
 
   test 'login link' do
     inst = build(:ht_institution, entityID: 'urn:something')
-    assert_match('Shibboleth.sso/Login?entityID=urn:something', presenter(inst).login_test_link)
+    assert_match(%r{Shibboleth.sso/Login.*entityID=urn:something}, presenter(inst).login_test_link)
   end
 
   test 'mapped inst link' do

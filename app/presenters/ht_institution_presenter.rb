@@ -71,7 +71,7 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def metadata_link
-    link_to entityID, metadata_url(entityID) if entityID
+    link_to entityID, "#{Otis.config.met_entity_endpoint}/#{entityID}" if entityID
   end
 
   def mfa_test_link
@@ -79,7 +79,7 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def grin_link
-    link_to grin_instance, "#{google_books_base}/libraries/#{grin_instance}" if grin_instance
+    link_to grin_instance, "#{Otis.config.books_library_endpoint}/#{grin_instance}" if grin_instance
   end
 
   def cancel_button
@@ -94,14 +94,6 @@ class HTInstitutionPresenter < SimpleDelegator
     end
   end
 
-  def form_us(form)
-    if us
-      us_icon
-    else
-      form.check_box :us
-    end
-  end
-
   private
 
   def controller
@@ -112,29 +104,11 @@ class HTInstitutionPresenter < SimpleDelegator
     link_to title, url, class: 'btn btn-default'
   end
 
-  # TODO: get from config
-
-  def met_base
-    'https://met.refeds.org'
+  def login_test_url
+    "#{Otis.config.ht_login_test_endpoint}&entityID=#{entityID}"
   end
 
-  def ht_base
-    'https://babel.hathitrust.org'
-  end
-
-  def google_books_base
-    'https://books.google.com'
-  end
-
-  def login_test_url(eid = entityID)
-    "#{ht_base}/Shibboleth.sso/Login?entityID=#{eid}&target=#{ht_base}/cgi/whoami"
-  end
-
-  def mfa_test_url(eid = entityID)
-    "#{ht_base}/Shibboleth.sso/Login?entityID=#{eid}&authnContextClassRef=#{shib_authncontext_class}&target=#{ht_base}/cgi/whoami"
-  end
-
-  def metadata_url(eid = entityID)
-    "#{met_base}/met/entity/#{eid}"
+  def mfa_test_url
+    "#{login_test_url}&authnContextClassRef=#{shib_authncontext_class}"
   end
 end
