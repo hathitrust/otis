@@ -21,10 +21,7 @@ class HTInstitutionsController < ApplicationController
   def new
     @institution = HTInstitutionPresenter.new(HTInstitution.new)
 
-    if(params[:entityID])
-      @institution.set_defaults_for_entity(params[:entityID])
-    end
-
+    @institution.set_defaults_for_entity(params[:entityID]) if params[:entityID]
   end
 
   def index
@@ -46,7 +43,7 @@ class HTInstitutionsController < ApplicationController
   def create
     @institution = HTInstitutionPresenter.new(HTInstitution.new(inst_params(PERMITTED_CREATE_FIELDS)))
 
-    if(@institution.save)
+    if @institution.save
       redirect_to @institution, note: 'Institution was successfully created'
     else
       flash.now[:alert] = @institution.errors.full_messages.to_sentence
@@ -58,8 +55,8 @@ class HTInstitutionsController < ApplicationController
 
   def inst_params(permitted_fields)
     @inst_params ||= params.require(:ht_institution)
-      .permit(*permitted_fields)
-      .transform_values!{|v| v.present? ? v : nil }
+                           .permit(*permitted_fields)
+                           .transform_values! { |v| v.present? ? v : nil }
   end
 
   def fetch_institution

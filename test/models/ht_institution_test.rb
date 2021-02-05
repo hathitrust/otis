@@ -61,7 +61,7 @@ class HTInstitutionTest < ActiveSupport::TestCase
     inst = build(:ht_institution, entityID: 'urn:something')
     inst.save
 
-    assert_equal("https://___HOST___/Shibboleth.sso/Login?entityID=urn:something&target=___TARGET___",
+    assert_equal('https://___HOST___/Shibboleth.sso/Login?entityID=urn:something&target=___TARGET___',
                  inst.template)
   end
 

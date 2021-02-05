@@ -43,15 +43,13 @@ class HTInstitutionsIndexTest < ActionDispatch::IntegrationTest
     sign_in! username: 'admin@default.invalid'
     get ht_institutions_url
     assert_match 'institutions/new', @response.body
-
   end
-
 end
 
 class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
   def setup
     @inst = create(:ht_institution)
-    @mfa_inst = create(:ht_institution, name: 'MFA University', enabled: true, 
+    @mfa_inst = create(:ht_institution, name: 'MFA University', enabled: true,
            shib_authncontext_class: 'https://refeds.org/profile/mfa')
   end
 
@@ -81,7 +79,6 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
     get ht_institution_url @mfa_inst
     assert_match(%r{authnContextClassRef=https://refeds.org/profile/mfa}m, @response.body)
   end
-
 end
 
 class HTInstitutionsControllerRolesTest < ActionDispatch::IntegrationTest
@@ -172,13 +169,10 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_redirected_to ht_institution_url(inst_id)
 
     assert_not_nil(HTInstitution.find(inst_id))
-
   end
-
 end
 
 class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
-
   test 'Editable fields present' do
     EDITABLE_FIELDS = %w[emergency_status emergency_contact].freeze
     inst = create(:ht_institution)
@@ -218,5 +212,4 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
 
     assert_nil HTInstitution.find(inst.inst_id).emergency_status
   end
-
 end

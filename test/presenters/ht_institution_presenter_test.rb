@@ -9,24 +9,24 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
 
   test 'us icon' do
     inst = build(:ht_institution, us: true)
-    assert_match('glyphicon',presenter(inst).us_icon)
+    assert_match('glyphicon', presenter(inst).us_icon)
   end
 
   test 'no us icon' do
     inst = build(:ht_institution, us: false)
-    assert_equal('',presenter(inst).us_icon)
+    assert_equal('', presenter(inst).us_icon)
   end
 
   test 'etas active' do
     inst = build(:ht_institution, emergency_status: '^(member)@default.invalid')
-    assert_match('glyphicon',presenter(inst).etas_active_icon)
-    assert_match('member',presenter(inst).etas_affiliations)
+    assert_match('glyphicon', presenter(inst).etas_active_icon)
+    assert_match('member', presenter(inst).etas_affiliations)
   end
 
   test 'etas inactive' do
     inst = build(:ht_institution, emergency_status: nil)
-    assert_equal('',presenter(inst).etas_active_icon)
-    assert_match('not enabled',presenter(inst).etas_affiliations)
+    assert_equal('', presenter(inst).etas_active_icon)
+    assert_match('not enabled', presenter(inst).etas_affiliations)
   end
 
   test 'emergency contact link' do
@@ -56,7 +56,7 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
 
   test 'mfa test link' do
     inst = build(:ht_institution, shib_authncontext_class: 'https://refeds.org/profile/mfa')
-    assert_match('authnContextClassRef=https://refeds.org/profile/mfa',presenter(inst).mfa_test_link)
+    assert_match('authnContextClassRef=https://refeds.org/profile/mfa', presenter(inst).mfa_test_link)
   end
 
   test 'grin link absent' do
@@ -66,9 +66,8 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
 
   test 'grin link' do
     inst = build(:ht_institution, grin_instance: 'TEST')
-    assert_match('/libraries/TEST',presenter(inst).grin_link)
+    assert_match('/libraries/TEST', presenter(inst).grin_link)
   end
-
 end
 
 class HTInstitutionPresenterBadgeTest < ActiveSupport::TestCase

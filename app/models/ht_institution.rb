@@ -33,14 +33,14 @@ class HTInstitution < ApplicationRecord
     self.mapto_inst_id ||= inst_id
     self.orph_agree ||= false
 
-    if entityID
-      self.template ||= "https://___HOST___/Shibboleth.sso/Login?entityID=#{entityID}&target=___TARGET___"
-      self.authtype ||= "shibboleth"
-    end
+    return unless entityID
+
+    self.template ||= "https://___HOST___/Shibboleth.sso/Login?entityID=#{entityID}&target=___TARGET___"
+    self.authtype ||= 'shibboleth'
   end
 
-  def set_defaults_for_entity(entityID,metadata=SAMLMetadata.new(entityID))
-    self.entityID = entityID
+  def set_defaults_for_entity(entity_id, metadata = SAMLMetadata.new(entity_id))
+    self.entityID = entity_id
     self.name = metadata.name
     self.domain = metadata.domain
     self.inst_id = metadata.domain_base
