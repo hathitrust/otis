@@ -52,10 +52,10 @@
   </table>
   <br/>
   <% if can?(:create, :ht_renewal_requests)  %>
-    <%= button_tag 'Create Approval Requests', type: 'button', name: 'submit_requests', class: 'btn btn-primary' %>
+    <%= button_tag 'Create Approval Requests', type: 'submit', name: 'submit_requests', class: 'btn btn-primary' %>
   <% end %>
   <% if can?(:edit, :ht_users) %>
-    <%= button_tag 'Renew Selected Users', type: 'button', name: 'submit_renewals', class: 'btn btn-primary' %>
+    <%= button_tag 'Renew Selected Users', type: 'submit', name: 'submit_renewals', class: 'btn btn-primary' %>
   <% end %>
   <%= link_to 'Download CSV', ht_users_url(format: :csv), class: 'btn btn-info' %>
   <% end # form_tag %>
