@@ -4,6 +4,12 @@ require 'nokogiri'
 require 'open-uri'
 
 class SAMLMetadata
+  SAML_NAMESPACES = {
+    shibmd: 'urn:mace:shibboleth:metadata:1.0',
+    mdui: 'urn:oasis:names:tc:SAML:metadata:ui',
+    md: 'urn:oasis:names:tc:SAML:2.0:metadata'
+  }.freeze
+
   def self.metadata_for(entity_id)
     # make sure this is a parseable URI, then URI escape it to avoid path
     # traversal / query injection
@@ -17,11 +23,11 @@ class SAMLMetadata
   end
 
   def name
-    @doc.xpath('//mdui:DisplayName|//md:organizationDisplayName|//md:OrganizationName').first.text
+    @doc.xpath('//mdui:DisplayName|//md:organizationDisplayName|//md:OrganizationName', SAML_NAMESPACES).first.text
   end
 
   def scopes
-    @doc.xpath('//md:IDPSSODescriptor/md:Extensions/shibmd:Scope').map(&:text)
+    @doc.xpath('//md:IDPSSODescriptor/md:Extensions/shibmd:Scope', SAML_NAMESPACES).map(&:text)
   end
 
   def domain

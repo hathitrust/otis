@@ -1,9 +1,9 @@
-<md:EntityDescriptor xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:remd="http://refeds.org/metadata" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xrd="http://docs.oasis-open.org/ns/xri/xrd-1.0" entityID="https://east.westland.test/idp/shibboleth">
+<md:EntityDescriptor xmlns:remd="http://refeds.org/metadata" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xrd="http://docs.oasis-open.org/ns/xri/xrd-1.0" entityID="https://east.westland.test/idp/shibboleth">
   <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
     <md:Extensions>
-      <shibmd:Scope regexp="false">westland.test</shibmd:Scope>
-      <shibmd:Scope regexp="false">east.westland.test</shibmd:Scope>
-      <mdui:UIInfo>
+      <shibmd:Scope xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" regexp="false">westland.test</shibmd:Scope>
+      <testns:Scope xmlns:testns="urn:mace:shibboleth:metadata:1.0" regexp="false">east.westland.test</testns:Scope>
+      <mdui:UIInfo xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" >
         <mdui:DisplayName xml:lang="en">University of East Westland</mdui:DisplayName>
         <mdui:Description xml:lang="en">The University of East Westland</mdui:Description>
         <mdui:InformationURL xml:lang="en">http://east.westland.test/</mdui:InformationURL>
