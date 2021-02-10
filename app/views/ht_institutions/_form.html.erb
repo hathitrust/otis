@@ -1,0 +1,55 @@
+<div id="maincontent" class="row">
+  <h1><%= @institution.name %></h1>
+
+  <%= render 'shared/flash_message' %>
+
+  <%= form_with(model: @institution, local: true, id: 'edit_ht_institution_form') do |form| %>
+    <div class="col-sm-6">
+      <dl class="dl-horizontal">
+        <dt>Institution ID:</dt> <dd><%= @institution.form_inst_id(form) %></dd>
+
+        <dt>Name:</dt>
+        <dd><%= form.text_field :name, size: 80 %></dd>
+
+        <dt>Domain:</dt> 
+        <dd> <%= form.text_field :domain, size: 40 %> </dd>
+
+        <dt>Mapped Name:</dt>
+        <dd><%= form.text_field :mapto_name, size: 80 %></dd>
+
+        <dt>Entity ID</dt>
+        <dd><%= form.text_field :entityID, size: 80 %></dd>
+
+        <dt>Holdings Institution ID:</dt>
+        <dd><%= form.text_field :mapto_inst_id %></dd>
+
+        <dt>US:</dt>
+        <dd><%= form.check_box :us %></dd>
+
+        <dt>GRIN Instance:</dt> <dd>
+        <%= form.text_field :grin_instance %></dd>
+
+        <dt>MFA auth context:</dt>
+        <dd><%= form.text_field :shib_authncontext_class, size: 80 %></dd>
+
+        <dt>Affiliations:</dt>
+        <dd><%= form.text_field :allowed_affiliations, size: 40 %></dd>
+
+        <dt>Affiliations for ETAS:</dt>
+        <dd><%= form.text_field :emergency_status, size: 40 %></dd>
+
+        <dt>ETAS Contact:</dt>
+        <dd><%= form.text_field :emergency_contact, size: 40 %></dd>
+
+        <dt>Enabled:</dt> <dd>
+        <%= form.select :enabled, @institution.badge_options %>
+        </dd>
+
+      </dl>
+
+      <%= form.submit 'Submit Changes', class: 'btn btn-primary' %>
+      <%= @institution.cancel_button %>
+    </div>
+
+  <% end %>
+</div>

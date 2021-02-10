@@ -1,10 +1,14 @@
 # Allow users to impersonate (login as) anyone -- useful for development
 allow_impersonation: false
 
-# By default don't allow any users to log in
+# By default don"t allow any users to log in
 users: []
 
 # How many days away does expiration need to be before we start to worry?
 expires_soon_in_days: 30
 
 manager_email: manager@default.invalid
+
+met_entity_endpoint: "https://met.refeds.org/met/entity"
+books_library_endpoint: "https://books.google.com/libraries"
+ht_login_test_endpoint: "https://babel.hathitrust.org/Shibboleth.sso/Login?target=https://babel.hathitrust.org/cgi/whoami"

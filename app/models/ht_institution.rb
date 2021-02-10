@@ -7,6 +7,12 @@ class HTInstitution < ApplicationRecord
   self.primary_key = 'inst_id'
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
 
+  validates :inst_id, presence: true, uniqueness: true
+  validates :name, presence: true
+  validates :enabled, presence: true
+
+  before_save :set_defaults
+
   # https://stackoverflow.com/a/57485464
   attribute :enabled, ActiveRecord::Type::Integer.new
 
@@ -20,5 +26,25 @@ class HTInstitution < ApplicationRecord
 
   def resource_id
     id
+  end
+
+  def set_defaults
+    self.sdrinst ||= inst_id
+    self.mapto_inst_id ||= inst_id
+    self.orph_agree ||= false
+
+    return unless entityID
+
+    self.template ||= "https://___HOST___/Shibboleth.sso/Login?entityID=#{entityID}&target=___TARGET___"
+    self.authtype ||= 'shibboleth'
+  end
+
+  def set_defaults_for_entity(entity_id, metadata = SAMLMetadata.new(entity_id))
+    self.entityID = entity_id
+    self.name = metadata.name
+    self.domain = metadata.domain
+    self.inst_id = metadata.domain_base
+    self.mapto_inst_id = metadata.domain_base
+    self.allowed_affiliations = "^(member|alum|faculty|staff|student)@(#{metadata.scopes.join('|')})"
   end
 end

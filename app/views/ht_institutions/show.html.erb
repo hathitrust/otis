@@ -5,20 +5,34 @@
 
   <div class="col-sm-6">
     <dl class="dl-horizontal">
-      <dt>ID:</dt> <dd><%= @institution.inst_id %></dd>
-      <dt>GRIN Instance:</dt> <dd><%= @institution.grin_instance %></dd>
+      <dt>Institution ID:</dt> <dd><%= @institution.inst_id %></dd>
+      <dt>Domain:</dt> <dd> <%= @institution.domain %> </dd>
       <dt>Name:</dt> <dd><%= @institution.name %></dd>
+      <dt>Mapped Name:</dt> <dd>
+      <%= @institution.formatted_mapto_name %>
+      <!--      <p><small>Used when displaying the name of a logged-in user's institution, for example in the footer. This is typically used with university system members where individual campuses have separate log-in but the member is the university system as a whole.</small></p> -->
+      <dt>Entity ID:</dt> <dd> <%= @institution.metadata_link %> </dd>
+      <dt>Holdings Institution ID:</dt> 
+      <dd><%= @institution.mapped_inst_link %>
+    <!--    <p><small>The ID of the institution submitting holdings including this partner. In most cases it is the same as the institution itself. For university systems with separate login for each campus but combined holdings, this should be the ID of the system.</small></p> -->
+      </dd>
       <dt>US:</dt> <dd><%= raw @institution[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
-      <dt>Enabled:</dt> <dd><%= HTInstitutionPresenter.badge_for(@institution) %></dd>
-      <dt>Entity ID:</dt> <dd><%= @institution.entityID %></dd>
+      <dt>GRIN Instance:</dt> <dd><%= @institution.grin_link %></dd>
+      <dt>MFA auth context:</dt> <dd> <%= @institution.shib_authncontext_class %> </dd>
       <dt>Affiliations:</dt> <dd><%= @institution.allowed_affiliations %></dd>
-      <dt>MFA auth context:</dt> <dd><%= @institution.shib_authncontext_class %></dd>
-      <dt>Affiliations for ETAS:</dt> <dd><%= @institution.emergency_status %></dd>
-      <dt>ETAS Contact:</dt> <dd><%= @institution.emergency_contact %></dd>
-      <dt>Mapto Domain:</dt> <dd><%= @institution.mapto_domain %></dd>
-      <dt>Mapto Inst ID:</dt> <dd><%= @institution.mapto_inst_id %></dd>
-      <dt>Mapto Name:</dt> <dd><%= @institution.mapto_name %></dd>
-      <dt>Mapto Entity ID:</dt> <dd ><%= @institution.mapto_entityID %></dd>
+      <dt>Affiliations for ETAS:</dt> <dd><%= @institution.etas_affiliations %></dd>
+      <dt>ETAS Contact:</dt> <dd><%= @institution.emergency_contact_link %></dd>
+      <dt>Enabled:</dt> <dd><%= @institution.badge %></dd>
     </dl>
+
+   <br />
+
+    <% if can?(:edit, :ht_institutions) %>
+      <%= link_to 'Edit', edit_ht_institution_path, class: 'btn btn-primary' %>
+    <% end %>
+
+    <%= @institution.login_test_link %>
+    <%= @institution.mfa_test_link %>
+
   </div>
 </div>
