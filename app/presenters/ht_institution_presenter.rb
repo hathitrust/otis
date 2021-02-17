@@ -83,7 +83,7 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def cancel_button
-    button 'Cancel', inst_id ? ht_institution_path(inst_id) : ht_institutions_path
+    button 'Cancel', persisted? ? ht_institution_path(inst_id) : ht_institutions_path
   end
 
   def form_inst_id(form)
