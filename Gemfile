@@ -84,6 +84,7 @@ gem 'ckeditor'
 gem 'canister'
 gem 'ettin'
 gem 'keycard'
+gem 'kcv'
 gem 'checkpoint'
 
 # Use MySQL as the database for Active Record

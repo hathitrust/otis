@@ -1,0 +1,126 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "rubygems"
+require "bundler/setup"
+
+require "canister"
+require "ettin"
+require "keycard"
+require "kcv"
+
+$LOAD_PATH.unshift(File.dirname(__FILE__) + "/../lib")
+
+module Otis
+  class << self
+    def config
+      @config ||= Ettin.for(Ettin.settings_files("config", ENV["RAILS_ENV"] || "development"))
+    end
+  end
+
+  # eager load
+  config
+end
+
+require_relative "../config/initializers/services.rb"
+
+Checkpoint::DB.initialize!
+
+# should get this from the resolvers
+ROLES = ["admin", "viewer"].freeze
+RESOURCE_TYPES = ["ht_users","ht_institutions"].freeze
+
+def grant
+  (username, role, content_type) = ARGV
+  check_usage(username, role, content_type)
+
+  Services.checkpoint.grant!(agent_for(username),
+    credential_for(role),
+    resource_for(content_type))
+end
+
+def revoke
+  (username, role, content_type) = ARGV
+  check_usage(username, role, content_type)
+
+  Services.checkpoint.revoke!(agent_for(username),
+    credential_for(role),
+    resource_for(content_type))
+end
+
+def agent_for(username)
+  Checkpoint::Agent::Token.new("user", username)
+end
+
+def credential_for(role)
+  Checkpoint::Credential::Role.new(role)
+end
+
+def resource_for(content_type)
+  if CONTENT_TYPES.include?(content_type)
+    Checkpoint::Resource::AllOfType.new(content_type)
+  elsif content_type == "all"
+    Checkpoint::Resource::AllOfAnyType.new
+  else
+    usage("Unknown content type #{content_type}")
+  end
+end
+
+def list
+  grants = Checkpoint::DB[:grants].map do |grant|
+    "#{grant[:agent_token]}\t#{grant[:credential_token]}\t#{grant[:resource_token]}"
+  end
+
+  puts grants.join("\n")
+end
+
+def check_username(username)
+  usage("Username must be alphanumeric") unless username =~ /^\w+$/
+end
+
+def check_role(role)
+  usage("Unknown role #{role}") unless ROLES.include?(role)
+end
+
+def check_content_type(content_type)
+  usage("Unknown content type #{content_type}") unless CONTENT_TYPES.include?(content_type) || content_type == "all"
+end
+
+def check_usage(username, role, content_type)
+  usage unless username && role && content_type
+  check_username(username)
+  check_role(role)
+  check_content_type(content_type)
+end
+
+def usage(message = nil)
+  if message
+    puts message, "\n"
+  end
+  puts "Manipulate grants for otis"
+  puts "Usage: #{$PROGRAM_NAME} list | grant user role resource_type | revoke user role resource_type"
+  puts
+  puts "Roles: #{ROLES.join(" ")}"
+  puts "Content types: #{ROLES.join(" ")} all"
+
+  exit 1
+end
+
+def main
+  action = ARGV.shift
+
+  case action
+  when "list"
+    list
+  when "grant"
+    grant
+  when "revoke"
+    revoke
+  when "help"
+    usage
+  else
+    usage("Unknown action #{action}")
+  end
+end
+
+main
