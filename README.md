@@ -1,48 +1,32 @@
-# Otis Elevated Access Tool
+# Otis Administrative Tools
 
 ## Initial setup
-### 1. Getting a local copy, bundle install gems, and execute setup script
+### 1. Set up development
 
 ```
 $ git clone https://github.com/hathitrust/otis.git
 $ cd otis
-$ bundle install
+$ docker-compose build
+$ docker-compose run web bundle install
 ```
 
-### 2. Database
-
-Development mode uses sqlite3 with generated data. The keycard and
-checkpoint databases also need to be set up. The `otis:migrate_users` task
-sets up three dummy users with different levels of access (this is done
-automatically for the `test` environment by the test script).
+### 2. Trying it out
 
 ```
-bundle exec rake keycard:migrate RAILS_ENV=development
-bundle exec rake keycard:migrate RAILS_ENV=test
-bundle exec rake checkpoint:migrate RAILS_ENV=development
-bundle exec rake checkpoint:migrate RAILS_ENV=test
-bundle exec rake db:setup
-bundle exec rake otis:migrate_users RAILS_ENV=development
+docker-compose up -d web
 ```
 
-### 3. Testing
+Development mode uses mysql via Docker with generated data from the `db:seed`
+task and three dummy users with different levels of access via the
+`otis:migrate_users` task. Starting the web container automatically runs these
+tasks via `bin/init_dev_db.sh`.
+
+To try the application, go to http://localhost:3000/useradmin and log in as one
+of `{admin,staff,institution}@default.invalid`, in decreasing order of
+administrative power.
+
+### 3. Running tests
 
 ```
-bundle exec rake test
+docker-compose run test
 ```
-
-### 4. Trying it out
-
-```
-bundle exec rails s
-```
-
-Go to http://localhost:3000/useradmin and log in as one of
-`{admin,staff,institution}@default.invalid`,
-in decreasing order of administrative power.
-
-### 5. Staged version
-
-* Living at https://moseshll.babel.hathitrust.org/useradmin-staging
-* Deploy via moku with ssh deployhost-001 deploy useradmin-staging the-name-of-your-branch
-

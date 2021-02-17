@@ -9,7 +9,39 @@ services:
     volumes:
       - .:/usr/src/app
       - gem_cache:/gems
+    depends_on:
+      - mariadb-dev
+    command: bash -c "bin/init_dev_db.sh && bundle exec rails s -b 0.0.0.0"
 
+  test:
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - gem_cache:/gems
+    depends_on:
+      - mariadb-test
+    command: bash -c "bin/wait-for mariadb-test:3306 && bundle exec rake test"
+    deploy:
+      restart_policy:
+        condition: none
+
+  mariadb-dev:
+    image: hathitrust/db-image
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlroot
+      MYSQL_DATABASE: ht
+      MYSQL_USER: otis
+      MYSQL_PASSWORD: otis
+
+  mariadb-test:
+    image: hathitrust/db-image
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlroot
+      MYSQL_DATABASE: ht
+      MYSQL_USER: otis
+      MYSQL_PASSWORD: otis
 
 volumes:
   gem_cache:

@@ -14,6 +14,7 @@ def sign_in!(username: 'admin@default.invalid')
 end
 
 Keycard::DB.migrate!
+Checkpoint::DB.migrate!
 
 load File.expand_path('lib/tasks/migrate_users.rake', Rails.root)
 Rake::Task.define_task(:environment)
