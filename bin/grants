@@ -75,7 +75,7 @@ def list
 end
 
 def check_username(username)
-  usage("Username must be alphanumeric") unless username =~ /^\w+$/
+  usage("Username must be a umich uniqname") unless username =~ /^\w+@umich.edu$/
 end
 
 def check_role(role)
