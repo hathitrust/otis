@@ -17,12 +17,21 @@ class HTInstitutionsController < ApplicationController
     us
   ].freeze
 
+  PERMITTED_BILLING_FIELDS = %i[
+    weight
+    oclc_sym
+    marc21_sym
+    country_code
+    status
+  ].freeze
+
   PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[inst_id]
 
   def new
     @institution = HTInstitutionPresenter.new(HTInstitution.new)
 
     @institution.set_defaults_for_entity(params[:entityID]) if params[:entityID]
+    @institution.ht_billing_member = HTBillingMember.new
   end
 
   def index
@@ -56,7 +65,7 @@ class HTInstitutionsController < ApplicationController
 
   def inst_params(permitted_fields)
     @inst_params ||= params.require(:ht_institution)
-                           .permit(*permitted_fields)
+                           .permit(*permitted_fields, ht_billing_member_attributes: PERMITTED_BILLING_FIELDS)
                            .transform_values! { |v| v.present? ? v : nil }
   end
 

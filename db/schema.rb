@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :shib_authncontext_class
     t.text :emergency_status
     t.string :emergency_contact
+    t.timestamp :last_updated
   end
 
   create_table :ht_counts, id: false do |t|
@@ -78,5 +79,15 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :userid
     t.timestamp :time
     t.text :data
+  end
+
+  create_table :ht_billing_members, id: false do |t|
+    t.string :inst_id, primary_key: true
+
+    t.column :weight, :decimal, precision: 4, scale: 2
+    t.string :oclc_sym
+    t.string :marc21_sym
+    t.string :country_code
+    t.boolean :status
   end
 end

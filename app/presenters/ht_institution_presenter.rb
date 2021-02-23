@@ -43,11 +43,15 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def us_icon
-    raw us ? '<i class="glyphicon glyphicon-ok"></i>' : ''
+    checkmark_icon(us)
   end
 
   def etas_active_icon
-    raw emergency_status ? '<i class="glyphicon glyphicon-ok"></i>' : ''
+    checkmark_icon(emergency_status)
+  end
+
+  def billing_enabled_icon
+    checkmark_icon(ht_billing_member&.status)
   end
 
   def formatted_mapto_name
@@ -95,6 +99,10 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   private
+
+  def checkmark_icon(field)
+    raw field ? '<i class="glyphicon glyphicon-ok"></i>' : ''
+  end
 
   def controller
     # required for url helpers to work

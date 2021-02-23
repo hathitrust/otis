@@ -16,13 +16,21 @@
       <dd><%= @institution.mapped_inst_link %>
     <!--    <p><small>The ID of the institution submitting holdings including this partner. In most cases it is the same as the institution itself. For university systems with separate login for each campus but combined holdings, this should be the ID of the system.</small></p> -->
       </dd>
-      <dt>US:</dt> <dd><%= raw @institution[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
+      <dt>US:</dt> <dd><%= @institution.us_icon %></dd>
       <dt>GRIN Instance:</dt> <dd><%= @institution.grin_link %></dd>
       <dt>MFA auth context:</dt> <dd> <%= @institution.shib_authncontext_class %> </dd>
       <dt>Affiliations:</dt> <dd><%= @institution.allowed_affiliations %></dd>
       <dt>Affiliations for ETAS:</dt> <dd><%= @institution.etas_affiliations %></dd>
       <dt>ETAS Contact:</dt> <dd><%= @institution.emergency_contact_link %></dd>
-      <dt>Enabled:</dt> <dd><%= @institution.badge %></dd>
+      <dt>Enabled for Login:</dt> <dd><%= @institution.badge %></dd>
+
+      <% if(@institution.ht_billing_member) %>
+        <dt>Weight:</dt> <dd><%= @institution.ht_billing_member.weight %></dd>
+        <dt>OCLC Symbol:</dt> <dd><%= @institution.ht_billing_member.oclc_sym %></dd>
+        <dt>MARC Code:</dt> <dd><%= @institution.ht_billing_member.marc21_sym %></dd>
+        <dt>Country Code:</dt> <dd><%= @institution.ht_billing_member.country_code %></dd>
+        <dt>Enabled for Billing:</dt> <dd><%= @institution.billing_enabled_icon %></dd>
+      <% end %>
     </dl>
 
    <br />

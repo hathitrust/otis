@@ -29,6 +29,16 @@ FactoryBot.define do
     end
   end
 
+  factory :ht_billing_member do
+    sequence(:inst_id) { |n| "#{n}#{Faker::Internet.domain_word}" }
+
+    weight { [0.66, 1.00, 1.33].sample }
+    oclc_sym { Faker::Alphanumeric.alpha(number: 3).upcase }
+    marc21_sym { Faker::Alphanumeric.alpha(number: 4).downcase }
+    country_code { Faker::Address.country_code }
+    status { [true, false].sample }
+  end
+
   factory :ht_institution do
     sequence(:inst_id) { |n| "#{n}#{Faker::Internet.domain_word}" }
     name { Faker::University.name }
