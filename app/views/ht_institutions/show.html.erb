@@ -23,6 +23,7 @@
       <dt>Affiliations for ETAS:</dt> <dd><%= @institution.etas_affiliations %></dd>
       <dt>ETAS Contact:</dt> <dd><%= @institution.emergency_contact_link %></dd>
       <dt>Enabled for Login:</dt> <dd><%= @institution.badge %></dd>
+      <dt>Last Updated:</dt> <dd><%= @institution.last_update %></dd>
 
       <% if(@institution.ht_billing_member) %>
         <dt>Weight:</dt> <dd><%= @institution.ht_billing_member.weight %></dd>
