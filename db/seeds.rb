@@ -61,6 +61,7 @@ def create_ht_approval_request(user) # rubocop:disable Metrics/MethodLength
   received = sent.nil? ? nil : [nil, sent + Faker::Number.within(range: 1..10).days].sample
   renewed = received.nil? ? nil : [nil, received + Faker::Number.within(range: 1..10).days].sample
   ar = HTApprovalRequest.new(
+    id: Faker::Number.unique.number(digits: 9),
     approver: user.approver,
     userid: user.email,
     received: received,
@@ -86,10 +87,23 @@ def create_ht_institution(enabled) # rubocop:disable Metrics/MethodLength
     shib_authncontext_class: [nil, Faker::Internet.url].sample,
     emergency_contact: Faker::Internet.email
   )
+  inst_id
+end
+
+def create_ht_billing_member(inst_id)
+  HTBillingMember.create(
+    inst_id: inst_id,
+    weight: Faker::Number.within(range: 0.0..1.0),
+    oclc_sym: Faker::Alphanumeric.alpha(number: Faker::Number.between(from: 3, to: 5)),
+    marc21_sym: Faker::Alphanumeric.alpha(number: 3).upcase,
+    country_code: Faker::Address.country_code,
+    status: 1
+  )
 end
 
 10.times do
-  create_ht_institution(1)
+  inst_id = create_ht_institution(1)
+  create_ht_billing_member(inst_id) if [0, 1].sample.zero?
 end
 
 2.times do
