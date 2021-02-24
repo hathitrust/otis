@@ -203,6 +203,13 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_redirected_to ht_institution_url(inst_id)
     assert_equal(HTInstitution.find(inst_id).ht_billing_member.marc21_sym, billing_params[:marc21_sym])
   end
+
+  test 'logs creation' do
+    inst_params = attributes_for(:ht_institution)
+    inst_id = inst_params[:inst_id]
+    post ht_institutions_url, params: { ht_institution: inst_params }
+    assert_equal(inst_id, HTInstitution.find(inst_id).ht_institution_log.first.data['params']['inst_id'])
+  end
 end
 
 class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
@@ -245,5 +252,16 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
     follow_redirect!
 
     assert_nil HTInstitution.find(inst.inst_id).emergency_status
+  end
+
+  test 'logs ETAS enabling with affiliation and time' do
+    new_status = '^(member)@university.invalid'
+    inst = create(:ht_institution, emergency_status: nil)
+    patch ht_institution_url inst, params: {'ht_institution' => {'emergency_status' => new_status}}
+
+    log = HTInstitution.find(inst.inst_id).ht_institution_log.first
+
+    assert_not_nil(log.time)
+    assert_equal(new_status, log.data['params']['emergency_status'])
   end
 end

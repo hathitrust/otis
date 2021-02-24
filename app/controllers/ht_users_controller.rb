@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTUsersController < ApplicationController
-  before_action :fetch_user, only: %i[show edit update]
+  before_action :fetch_user, only: %i[show edit]
 
   PERMITTED_UPDATE_FIELDS = %i[userid iprestrict expires approver mfa].freeze
 
@@ -17,21 +17,32 @@ class HTUsersController < ApplicationController
   end
 
   def update
+    @user = HTUser.find(params[:id])
+
     # Any extension of term counts as a renewal for our purposes.
     renewing = user_params[:expires].present? && user_params[:expires] > @user.expires.to_date.to_s
 
     if @user.update(user_params)
-      flash[:notice] = 'User updated'
       @user.add_or_update_renewal(approver: current_user.id, force: true) if renewing
-      redirect_to @user
+      log_action(HTUserLog.new(ht_user: @user), user_params)
+      update_user_success
     else
-      flash.now[:alert] = @user.errors.full_messages.to_sentence
-      fetch_user
-      render 'edit'
+      update_user_failure
     end
   end
 
   private
+
+  def update_user_failure
+    flash.now[:alert] = @user.errors.full_messages.to_sentence
+    fetch_user
+    render 'edit'
+  end
+
+  def update_user_success
+    flash[:notice] = 'User updated'
+    redirect_to @user
+  end
 
   def fetch_user
     @user = HTUserPresenter.new(HTUser.joins(:ht_institution).find(params[:id]))

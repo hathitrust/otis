@@ -28,23 +28,8 @@ class ApprovalController < ApplicationController
   def approve
     @req.received = Time.zone.now
     @req.save!
-    log
-  end
-
-  # Adapted from https://gist.github.com/redrick/2c23988368fb525c7e75
-  # there is more there, including GeoIP which we may use as when we
-  # address HT-1451
-  def log
-    rails_action = "#{params[:controller]}##{params[:action]}"
-    rails_params = params.except(:controller, :action, :token)
-
-    details = {
-      action: rails_action,
-      ip_address: request.remote_ip,
-      params: rails_params,
-      user_agent: request.user_agent
-    }.merge(keycard_attributes)
-    HTUserLog.create(ht_user: @user, data: details)
-    Rails.logger.info "APPROVAL LOG: #{JSON.generate(details)}"
+    # Currently, there are no parameters for the controller other than the
+    # token, which we do not wish to log.
+    log_action(HTUserLog.new(ht_user: @user), params.permit)
   end
 end

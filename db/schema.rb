@@ -81,6 +81,12 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.text :data
   end
 
+  create_table :ht_institution_logs do |t|
+    t.string :inst_id
+    t.timestamp :time
+    t.text :data
+  end
+
   create_table :ht_billing_members, id: false do |t|
     t.string :inst_id, primary_key: true
 
