@@ -64,6 +64,25 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal '^33\.33\.33\.33$', HTUser.find(@user1.email)[:iprestrict]
   end
 
+  test 'edit user is logged' do
+    sign_in!
+    patch ht_user_url @user1, params: {'ht_user' => {'iprestrict' => '33.33.33.33'}}
+    assert_equal('33.33.33.33', @user1.ht_user_log.first.data['params']['iprestrict'])
+  end
+
+  test 'edit user does not log extraneous params' do
+    sign_in!
+    patch ht_user_url @user1, params: {'ht_user' => {'iprestrict' => '33.33.33.33',
+                                                     'nonsense' => 'should not be logged'}}
+    assert_nil(@user1.ht_user_log.first.data['params']['nonsense'])
+  end
+
+  test 'failed edit is not logged' do
+    sign_in!
+    patch ht_user_url @user1, params: {'ht_user' => {'iprestrict' => 'invalid'}}
+    assert_nil(@user1.ht_user_log.first)
+  end
+
   test 'with malformed IP address, edit IP address fails' do
     user = create(:ht_user, iprestrict: '1.2.3.4')
     sign_in!

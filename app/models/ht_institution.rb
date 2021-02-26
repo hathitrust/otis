@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-# We're not really interested in editing or viewing this table,
-# but we want to allow HTUser access to a human-readable version of
-# the institution.
 class HTInstitution < ApplicationRecord
+  has_one :ht_billing_member, foreign_key: 'inst_id'
+  accepts_nested_attributes_for :ht_billing_member
+
   self.primary_key = 'inst_id'
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
+  has_many :ht_institution_log, foreign_key: :inst_id, primary_key: :inst_id
 
   validates :inst_id, presence: true, uniqueness: true
   validates :name, presence: true

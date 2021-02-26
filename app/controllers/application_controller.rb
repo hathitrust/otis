@@ -90,4 +90,22 @@ class ApplicationController < ActionController::Base
       ]
     )
   end
+
+  # Adapted from https://gist.github.com/redrick/2c23988368fb525c7e75
+  # there is more there, including GeoIP which we may use as when we
+  # address HT-1451
+  def log_action(log_entry, permitted_params)
+    raise UnfilteredParameters unless permitted_params.permitted?
+
+    rails_action = "#{params[:controller]}##{params[:action]}"
+
+    log_entry.data = {
+      action: rails_action,
+      ip_address: request.remote_ip,
+      params: permitted_params,
+      user_agent: request.user_agent
+    }.merge(keycard_attributes)
+    log_entry.save
+    Rails.logger.info "AUDIT LOG: #{JSON.generate(log_entry.data)}"
+  end
 end

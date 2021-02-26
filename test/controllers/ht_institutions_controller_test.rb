@@ -51,10 +51,11 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
     @inst = create(:ht_institution)
     @mfa_inst = create(:ht_institution, name: 'MFA University', enabled: true,
            shib_authncontext_class: 'https://refeds.org/profile/mfa')
+
+    sign_in!
   end
 
   test 'should get show page' do
-    sign_in!
     get ht_institution_url @inst
     assert_response :success
     assert_not_nil assigns(:institution)
@@ -62,22 +63,27 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
   end
 
   test 'shows institution name and id' do
-    sign_in!
     get ht_institution_url @inst
     assert_match @inst.inst_id, @response.body
     assert_match ERB::Util.html_escape(@inst.name), @response.body
   end
 
   test 'Shows whoami link' do
-    sign_in!
     get ht_institution_url @inst
     assert_match(%r{/cgi/whoami}m, @response.body)
   end
 
   test 'With MFA auth context, shows whoami link with step-up MFA' do
-    sign_in!
     get ht_institution_url @mfa_inst
     assert_match(%r{authnContextClassRef=https://refeds.org/profile/mfa}m, @response.body)
+  end
+
+  test 'shows billing member info' do
+    billing_member = create(:ht_billing_member, inst_id: @inst.inst_id)
+
+    get ht_institution_url @inst
+    assert_match(/#{billing_member.oclc_sym}/, @response.body)
+    assert_match(/#{billing_member.marc21_sym}/, @response.body)
   end
 end
 
@@ -148,14 +154,16 @@ class HTInstitutionsControllerRolesTest < ActionDispatch::IntegrationTest
 end
 
 class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
-  test 'inst id is editable for new institution' do
+  setup do
     sign_in! username: 'admin@default.invalid'
+  end
+
+  test 'inst id is editable for new institution' do
     get new_ht_institution_url
     assert_select 'input[name="ht_institution[inst_id]"]'
   end
 
   test 'us is selectable' do
-    sign_in! username: 'admin@default.invalid'
     get new_ht_institution_url
     assert_select 'input[name="ht_institution[us]"]'
   end
@@ -163,20 +171,55 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
   test 'Can create' do
     inst_params = attributes_for(:ht_institution)
     inst_id = inst_params[:inst_id]
-    sign_in! username: 'admin@default.invalid'
     post ht_institutions_url, params: {ht_institution: inst_params}
 
     assert_redirected_to ht_institution_url(inst_id)
 
     assert_not_nil(HTInstitution.find(inst_id))
   end
+
+  test 'marc org code editable for new institution' do
+    get new_ht_institution_url
+    assert_select 'input[name="ht_institution[ht_billing_member_attributes][marc21_sym]"]'
+  end
+
+  test 'saves marc code for new institution' do
+    inst_params = attributes_for(:ht_institution)
+    inst_id = inst_params[:inst_id]
+    billing_params = attributes_for(:ht_billing_member)
+
+    post ht_institutions_url, params: {
+      ht_institution: {
+        inst_id: inst_params[:inst_id],
+        name: inst_params[:name],
+        enabled: inst_params[:enabled],
+        ht_billing_member_attributes: {
+          marc21_sym: billing_params[:marc21_sym],
+          status: false
+        }
+      }
+    }
+
+    assert_redirected_to ht_institution_url(inst_id)
+    assert_equal(HTInstitution.find(inst_id).ht_billing_member.marc21_sym, billing_params[:marc21_sym])
+  end
+
+  test 'logs creation' do
+    inst_params = attributes_for(:ht_institution)
+    inst_id = inst_params[:inst_id]
+    post ht_institutions_url, params: { ht_institution: inst_params }
+    assert_equal(inst_id, HTInstitution.find(inst_id).ht_institution_log.first.data['params']['inst_id'])
+  end
 end
 
 class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
+  setup do
+    sign_in! username: 'admin@default.invalid'
+  end
+
   test 'Editable fields present' do
     EDITABLE_FIELDS = %w[emergency_status emergency_contact].freeze
     inst = create(:ht_institution)
-    sign_in! username: 'admin@default.invalid'
     get edit_ht_institution_url(inst)
     EDITABLE_FIELDS.each do |ef|
       assert_match(/name="ht_institution\[#{ef}\]"/, @response.body)
@@ -186,7 +229,6 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
   test 'Can update emergency status' do
     new_status = '^(member)@university.invalid'
     inst = create(:ht_institution, emergency_status: nil)
-    sign_in! username: 'admin@default.invalid'
     patch ht_institution_url inst, params: {'ht_institution' => {'emergency_status' => new_status}}
 
     assert_response :redirect
@@ -201,7 +243,6 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
 
   test 'Blank emergency status sets null' do
     inst = create(:ht_institution, emergency_status: '^(member)@university.invalid')
-    sign_in! username: 'admin@default.invalid'
     patch ht_institution_url inst, params: {'ht_institution' => {'emergency_status' => ''}}
 
     assert_response :redirect
@@ -211,5 +252,16 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
     follow_redirect!
 
     assert_nil HTInstitution.find(inst.inst_id).emergency_status
+  end
+
+  test 'logs ETAS enabling with affiliation and time' do
+    new_status = '^(member)@university.invalid'
+    inst = create(:ht_institution, emergency_status: nil)
+    patch ht_institution_url inst, params: {'ht_institution' => {'emergency_status' => new_status}}
+
+    log = HTInstitution.find(inst.inst_id).ht_institution_log.first
+
+    assert_not_nil(log.time)
+    assert_equal(new_status, log.data['params']['emergency_status'])
   end
 end

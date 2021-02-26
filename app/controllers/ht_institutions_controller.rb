@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTInstitutionsController < ApplicationController
-  before_action :fetch_institution, only: %i[show edit update]
+  before_action :fetch_institution, only: %i[show edit]
 
   PERMITTED_UPDATE_FIELDS = %i[
     grin_instance
@@ -17,12 +17,21 @@ class HTInstitutionsController < ApplicationController
     us
   ].freeze
 
+  PERMITTED_BILLING_FIELDS = %i[
+    weight
+    oclc_sym
+    marc21_sym
+    country_code
+    status
+  ].freeze
+
   PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[inst_id]
 
   def new
     @institution = HTInstitutionPresenter.new(HTInstitution.new)
 
     @institution.set_defaults_for_entity(params[:entityID]) if params[:entityID]
+    @institution.ht_billing_member = HTBillingMember.new
   end
 
   def index
@@ -31,7 +40,10 @@ class HTInstitutionsController < ApplicationController
   end
 
   def update
+    @institution = HTInstitution.find(params[:id])
+
     if @institution.update(inst_params(PERMITTED_UPDATE_FIELDS))
+      log
       flash[:notice] = 'Institution updated'
       redirect_to @institution
     else
@@ -42,9 +54,10 @@ class HTInstitutionsController < ApplicationController
   end
 
   def create
-    @institution = HTInstitutionPresenter.new(HTInstitution.new(inst_params(PERMITTED_CREATE_FIELDS)))
+    @institution = HTInstitution.new(inst_params(PERMITTED_CREATE_FIELDS))
 
     if @institution.save
+      log
       redirect_to @institution, note: 'Institution was successfully created'
     else
       flash.now[:alert] = @institution.errors.full_messages.to_sentence
@@ -54,9 +67,13 @@ class HTInstitutionsController < ApplicationController
 
   private
 
+  def log
+    log_action(HTInstitutionLog.new(ht_institution: @institution), @inst_params)
+  end
+
   def inst_params(permitted_fields)
     @inst_params ||= params.require(:ht_institution)
-                           .permit(*permitted_fields)
+                           .permit(*permitted_fields, ht_billing_member_attributes: PERMITTED_BILLING_FIELDS)
                            .transform_values! { |v| v.present? ? v : nil }
   end
 

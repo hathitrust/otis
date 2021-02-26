@@ -3,13 +3,19 @@ relative_url_root: '/useradmin'
 
 keycard:
   database:
-    adapter: sqlite
-    database: tmp/keycard_dev.sqlite3
+    adapter: mysql2
+    database: ht
+    username: otis
+    password: otis
+    host: mariadb-dev
 
 checkpoint:
   database:
-    adapter: sqlite
-    database: tmp/checkpoint_dev.sqlite3
+    adapter: mysql2
+    database: ht
+    username: otis
+    password: otis
+    host: mariadb-dev
 
 # Superuser account
 users:

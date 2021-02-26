@@ -41,9 +41,22 @@
         <dt>ETAS Contact:</dt>
         <dd><%= form.text_field :emergency_contact, size: 40 %></dd>
 
-        <dt>Enabled:</dt> <dd>
+        <dt>Enabled for Login:</dt> <dd>
         <%= form.select :enabled, @institution.badge_options %>
         </dd>
+
+        <%= form.fields_for :ht_billing_member do |billing_form| %>
+        <dt>Weight:</dt>
+        <dd><%= billing_form.text_field :weight, size:8 %>
+        <dt>OCLC Symbol:</dt>
+        <dd><%= billing_form.text_field :oclc_sym, size:8 %> (<a target="_new" href="https://www.oclc.org/en/contacts/libraries.html">Lookup</a>)
+        <dt>MARC Code:</dt>
+        <dd><%= billing_form.text_field :marc21_sym, size:8 %> (<a target="_new" href="https://www.loc.gov/marc/organizations/">Lookup</a>)
+        <dt>Country Code:</dt>
+        <dd><%= billing_form.text_field :country_code, size:8 %> (<a target="_new" href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">Lookup</a>)
+        <dt>Enabled for Billing:</dt>
+        <dd><%= billing_form.check_box :status %></dd>
+        <% end %>
 
       </dl>
 
