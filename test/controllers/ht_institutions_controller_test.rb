@@ -79,9 +79,8 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
   end
 
   test 'shows billing member info' do
-    billing_member = create(:ht_billing_member, inst_id: @inst.inst_id)
-
     get ht_institution_url @inst
+    billing_member = @inst.ht_billing_member
     assert_match(/#{billing_member.oclc_sym}/, @response.body)
     assert_match(/#{billing_member.marc21_sym}/, @response.body)
   end

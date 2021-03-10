@@ -19,7 +19,7 @@ class HTBillingMemberTest < ActiveSupport::TestCase
 
   test 'can get the institution information' do
     inst = create(:ht_institution)
-    billing_inst = create(:ht_billing_member, inst_id: inst.inst_id)
+    billing_inst = inst.ht_billing_member
 
     assert_equal(inst.name, billing_inst.ht_institution.name)
   end

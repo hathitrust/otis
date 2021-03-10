@@ -77,7 +77,6 @@ def create_ht_institution(enabled) # rubocop:disable Metrics/MethodLength
   HTInstitution.create(
     inst_id: inst_id,
     name: Faker::University.name,
-    authtype: ['', 'shibboleth'].sample,
     domain: domain,
     us: [0, 1].sample,
     enabled: enabled,
