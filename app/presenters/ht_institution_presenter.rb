@@ -90,6 +90,10 @@ class HTInstitutionPresenter < SimpleDelegator
     button 'Cancel', persisted? ? ht_institution_path(inst_id) : ht_institutions_path
   end
 
+  def show_create_billing_member?
+    !persisted? || !ht_billing_member&.persisted?
+  end
+
   def form_inst_id(form)
     if persisted?
       inst_id

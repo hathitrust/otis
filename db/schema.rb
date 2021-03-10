@@ -87,6 +87,6 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :oclc_sym
     t.string :marc21_sym
     t.string :country_code, default: 'us'
-    t.boolean :status, default: false 
+    t.boolean :status, default: false
   end
 end

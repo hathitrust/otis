@@ -80,7 +80,6 @@ def create_ht_institution(enabled) # rubocop:disable Metrics/MethodLength
     domain: domain,
     us: [0, 1].sample,
     enabled: enabled,
-    orph_agree: [0, 1].sample,
     entityID: Faker::Internet.url,
     allowed_affiliations: '^(alum|member)' + domain,
     shib_authncontext_class: [nil, Faker::Internet.url].sample,
