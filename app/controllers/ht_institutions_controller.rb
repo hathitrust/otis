@@ -61,6 +61,7 @@ class HTInstitutionsController < ApplicationController
       redirect_to @institution, note: 'Institution was successfully created'
     else
       flash.now[:alert] = @institution.errors.full_messages.to_sentence
+      @institution = HTInstitutionPresenter.new(@institution)
       render :new
     end
   end
@@ -73,8 +74,24 @@ class HTInstitutionsController < ApplicationController
 
   def inst_params(permitted_fields)
     @inst_params ||= params.require(:ht_institution)
-                           .permit(*permitted_fields, ht_billing_member_attributes: PERMITTED_BILLING_FIELDS)
+                           .permit(*permitted_fields)
+                           .merge(billing_member_params)
                            .transform_values! { |v| v.present? ? v : nil }
+  end
+
+  def billing_member_params
+    return unless use_billing_params && params[:ht_institution][:ht_billing_member_attributes]
+
+    { ht_billing_member_attributes:
+      params
+        .require(:ht_institution)
+        .require(:ht_billing_member_attributes)
+        .permit(PERMITTED_BILLING_FIELDS)
+        .transform_values! { |v| v.present? ? v : nil }}
+  end
+
+  def use_billing_params
+    params[:create_billing_member] || @institution&.ht_billing_member
   end
 
   def fetch_institution

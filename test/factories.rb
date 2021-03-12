@@ -45,6 +45,8 @@ FactoryBot.define do
     entityID { Faker::Internet.url }
     enabled { [0, 1].sample }
 
+    association :ht_billing_member
+
     trait :mfa do
       shib_authncontext_class { 'https://refeds.org/profile/mfa' }
     end

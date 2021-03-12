@@ -34,21 +34,15 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
   end
 
   create_table :ht_institutions, id: false do |t|
-    t.string :sdrinst # deprecated
     t.string :inst_id, primary_key: true
     t.string :grin_instance
     t.string :name
     t.string :template
-    t.string :authtype
     t.string :domain
     t.boolean :us
-    t.string :mapto_domain
-    t.string :mapto_sdrinst
     t.string :mapto_inst_id
     t.string :mapto_name
-    t.string :mapto_entityID
     t.integer :enabled
-    t.boolean :orph_agree
     t.string :entityID
     t.text :allowed_affiliations
     t.string :shib_authncontext_class
@@ -89,11 +83,10 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
 
   create_table :ht_billing_members, id: false do |t|
     t.string :inst_id, primary_key: true
-
-    t.column :weight, :decimal, precision: 4, scale: 2
+    t.column :weight, :decimal, precision: 4, scale: 2, default: 0.00
     t.string :oclc_sym
     t.string :marc21_sym
-    t.string :country_code
-    t.boolean :status
+    t.string :country_code, default: 'us'
+    t.boolean :status, default: false
   end
 end

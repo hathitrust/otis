@@ -79,9 +79,8 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
   end
 
   test 'shows billing member info' do
-    billing_member = create(:ht_billing_member, inst_id: @inst.inst_id)
-
     get ht_institution_url @inst
+    billing_member = @inst.ht_billing_member
     assert_match(/#{billing_member.oclc_sym}/, @response.body)
     assert_match(/#{billing_member.marc21_sym}/, @response.body)
   end
@@ -183,7 +182,7 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_select 'input[name="ht_institution[ht_billing_member_attributes][marc21_sym]"]'
   end
 
-  test 'saves marc code for new institution' do
+  test 'can create billing member and save marc code for new institution' do
     inst_params = attributes_for(:ht_institution)
     inst_id = inst_params[:inst_id]
     billing_params = attributes_for(:ht_billing_member)
@@ -197,11 +196,33 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
           marc21_sym: billing_params[:marc21_sym],
           status: false
         }
-      }
+      },
+      create_billing_member: true
     }
 
     assert_redirected_to ht_institution_url(inst_id)
     assert_equal(HTInstitution.find(inst_id).ht_billing_member.marc21_sym, billing_params[:marc21_sym])
+  end
+
+  test 'by default does not create billing member' do
+    inst_params = attributes_for(:ht_institution)
+    inst_id = inst_params[:inst_id]
+
+    post ht_institutions_url, params: {
+      ht_institution: {
+        inst_id: inst_params[:inst_id],
+        name: inst_params[:name],
+        enabled: inst_params[:enabled],
+        ht_billing_member_attributes: {
+          country_code: 'us',
+          weight: 0.0,
+          status: false
+        }
+      }
+    }
+
+    assert_redirected_to ht_institution_url(inst_id)
+    assert_nil(HTInstitution.find(inst_id).ht_billing_member)
   end
 
   test 'logs creation' do
@@ -224,6 +245,12 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
     EDITABLE_FIELDS.each do |ef|
       assert_match(/name="ht_institution\[#{ef}\]"/, @response.body)
     end
+  end
+
+  test 'Billing member fields present for inst with no billing member' do
+    inst = create(:ht_institution, ht_billing_member: nil)
+    get edit_ht_institution_url(inst)
+    assert_match(/name="ht_institution\[ht_billing_member_attributes\]\[marc21_sym\]"/, @response.body)
   end
 
   test 'Can update emergency status' do
@@ -263,5 +290,49 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
 
     assert_not_nil(log.time)
     assert_equal(new_status, log.data['params']['emergency_status'])
+  end
+
+  test 'can add billing member for institution without one' do
+    inst = create(:ht_institution, ht_billing_member: nil)
+    billing_member_params = attributes_for(:ht_billing_member)
+
+    patch ht_institution_url inst, params: {
+      ht_institution: {
+        inst_id: inst.inst_id,
+        ht_billing_member_attributes: billing_member_params
+      },
+      create_billing_member: true
+    }
+
+    assert_equal billing_member_params[:marc21_sym], HTInstitution.find(inst.inst_id).ht_billing_member.marc21_sym
+  end
+
+  test 'by default does not add billing member for institution without one' do
+    inst = create(:ht_institution, ht_billing_member: nil)
+    billing_member_params = attributes_for(:ht_billing_member)
+
+    patch ht_institution_url inst, params: {
+      ht_institution: {
+        inst_id: inst.inst_id,
+        ht_billing_member_attributes: billing_member_params
+      }
+    }
+
+    assert_nil HTInstitution.find(inst.inst_id).ht_billing_member
+  end
+
+  test 'can edit billing fields' do
+    inst = create(:ht_institution)
+
+    patch ht_institution_url inst, params: {
+      ht_institution: {
+        inst_id: inst.inst_id,
+        ht_billing_member_attributes: {
+          country_code: 'xx'
+        }
+      }
+    }
+
+    assert_equal 'xx', HTInstitution.find(inst.inst_id).ht_billing_member.country_code
   end
 end

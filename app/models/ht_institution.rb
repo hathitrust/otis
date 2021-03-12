@@ -2,7 +2,7 @@
 
 class HTInstitution < ApplicationRecord
   has_one :ht_billing_member, foreign_key: 'inst_id'
-  accepts_nested_attributes_for :ht_billing_member
+  accepts_nested_attributes_for :ht_billing_member, update_only: true
 
   self.primary_key = 'inst_id'
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
@@ -30,14 +30,10 @@ class HTInstitution < ApplicationRecord
   end
 
   def set_defaults
-    self.sdrinst ||= inst_id
     self.mapto_inst_id ||= inst_id
-    self.orph_agree ||= false
-
     return unless entityID
 
     self.template ||= "https://___HOST___/Shibboleth.sso/Login?entityID=#{entityID}&target=___TARGET___"
-    self.authtype ||= 'shibboleth'
   end
 
   def set_defaults_for_entity(entity_id, metadata = SAMLMetadata.new(entity_id))

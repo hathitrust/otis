@@ -17,6 +17,16 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
     assert_equal('', presenter(inst).us_icon)
   end
 
+  test 'billing enabled' do
+    inst = build(:ht_institution, ht_billing_member: build(:ht_billing_member, status: true))
+    assert_match('glyphicon', presenter(inst).billing_enabled_icon)
+  end
+
+  test 'billing disabled' do
+    inst = build(:ht_institution, ht_billing_member: build(:ht_billing_member, status: false))
+    assert_match('', presenter(inst).billing_enabled_icon)
+  end
+
   test 'etas active' do
     inst = build(:ht_institution, emergency_status: '^(member)@default.invalid')
     assert_match('glyphicon', presenter(inst).etas_active_icon)
