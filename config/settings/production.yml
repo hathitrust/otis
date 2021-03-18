@@ -1,0 +1,7 @@
+keycard:
+  database:
+    url: # set in production.local.yml
+
+checkpoint:
+  database:
+    url: # set in production.local.yml
