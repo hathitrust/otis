@@ -6,7 +6,7 @@
         host: 'production.otis.kubernetes.hathitrust.org'
       },
     }
-  }
+  },
 
   _images+:: {
     otis: {

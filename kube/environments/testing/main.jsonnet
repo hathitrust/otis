@@ -3,7 +3,8 @@
   _config+:: {
     otis+: {
       web+: {
-        host: 'testing.otis.kubernetes.hathitrust.org'
+        host: 'testing.otis.kubernetes.hathitrust.org',
+        relative_url_root: '/otis-testing'
       },
     }
   }
