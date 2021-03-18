@@ -2,9 +2,9 @@
   _config+:: {
     otis: {
       web: {
-        name: 'otis',
-        port: 80,
-        host: 'otis.macc.kubernetes.hathitrust.org',
+        name: 'web',
+        port: 3000,
+        host: 'otis.kubernetes.hathitrust.org',
         relative_url_root: '/otis',
         app_config: {
           configmap: 'production-config',

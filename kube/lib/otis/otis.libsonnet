@@ -35,7 +35,7 @@
 
       service: $.util.serviceFor(self.deployment) + $.core.v1.service.mixin.spec.withPorts($.core.v1.service.mixin.spec.portsType.newNamed(
         name=config.web.name,
-        port=config.web.port,
+        port=80,
         targetPort=config.web.port,
       )),
 
