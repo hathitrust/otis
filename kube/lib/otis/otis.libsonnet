@@ -8,6 +8,7 @@
   local port = $.core.v1.containerPort,
   local volumeMount = $.core.v1.volumeMount,
   local volume = $.core.v1.volume,
+  local service_mixin = $.core.v1.service.mixin.spec,
 
   local config = $._config.otis,
   local images = $._images.otis,
@@ -33,10 +34,9 @@
         ]
       ).withVolumes([volume.fromConfigMap(name=app_config.configmap,configMapName=app_config.configmap)]),
 
-      service: $.util.serviceFor(self.deployment) + $.core.v1.service.mixin.spec.withPorts($.core.v1.service.mixin.spec.portsType.newNamed(
-        name=config.web.name,
-        port=80,
-        targetPort=config.web.port,
+      service: $.util.serviceFor(self.deployment) + service_mixin.withPorts(
+          service_mixin.portsType.newNamed( name=config.web.name, port=80,
+           targetPort=config.web.port,
       )),
 
     },
