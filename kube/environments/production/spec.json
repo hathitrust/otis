@@ -6,7 +6,7 @@
   },
   "spec": {
     "apiServer": "https://macc.kubernetes.hathitrust.org",
-    "namespace": "otis-production",
+    "namespace": "otis",
     "resourceDefaults": {},
     "expectVersions": {}
   }
