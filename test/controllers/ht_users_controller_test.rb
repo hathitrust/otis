@@ -18,6 +18,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match 'Users', @response.body
     assert_match @user1.email, @response.body
     assert_match @user2.email, @response.body
+    assert_match "/ht_institutions/#{@user1.ht_institution.inst_id}", @response.body
   end
 
   test 'shows nav menu' do
@@ -34,6 +35,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil assigns(:user)
     assert_match CGI.escapeHTML(@user1.email), @response.body
     assert_match CGI.escapeHTML(@user1.institution), @response.body
+    assert_match "/ht_institutions/#{@user1.ht_institution.inst_id}", @response.body
   end
 
   test 'should get show page with no iprestrict' do
