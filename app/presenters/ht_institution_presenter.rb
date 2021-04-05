@@ -102,6 +102,14 @@ class HTInstitutionPresenter < SimpleDelegator
     end
   end
 
+  def user_count
+    HTUser.where(identity_provider: entityID).count
+  end
+
+  def active_user_count
+    HTUser.active.where(identity_provider: entityID).count
+  end
+
   private
 
   def checkmark_icon(field)
