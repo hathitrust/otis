@@ -109,3 +109,23 @@ class HTInstitutionPresenterBadgeTest < ActiveSupport::TestCase
     assert_match 'Social', badge(inst)
   end
 end
+
+class HTInstitutionPresenterUserCountTest < ActiveSupport::TestCase
+  def presenter(inst)
+    HTInstitutionPresenter.new(inst)
+  end
+
+  test 'user count' do
+    inst = build(:ht_institution)
+    create(:ht_user, ht_institution: inst)
+    create(:ht_user, :expired, ht_institution: inst)
+    assert_equal 2, presenter(inst).user_count
+  end
+
+  test 'active user count' do
+    inst = build(:ht_institution)
+    create(:ht_user, ht_institution: inst)
+    create(:ht_user, :expired, ht_institution: inst)
+    assert_equal 1, presenter(inst).active_user_count
+  end
+end
