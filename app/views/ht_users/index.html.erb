@@ -10,8 +10,7 @@
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
-      <th>Select</th>
-      <th data-sortable="true">E-mail</th>
+      <th data-sortable="true">E-mail (Select for Action)</th>
       <th>Name</th>
       <th data-sortable="true">Role</th>
       <th data-sortable="true">Institution</th>
@@ -26,13 +25,12 @@
       <tr>
         <td>
           <% if u.can_request? or u.can_renew? %>
-            <%= check_box_tag 'ht_users[]', u.email %>
+            <%= check_box_tag 'ht_users[]', u.email, false, id: "ht_users_#{u.email}" %>
           <% end %>
+          <%= label_tag u.email, link_to(u.email, ht_user_path(u)), for: "ht_users_#{u.email}" %>
         </td>
-        <td><%= link_to u.email, ht_user_path(u) %></td>
         <td><%= u.displayname %></td>
         <td><%= u.role %></td>
-        <td><%= u.institution %></td>
         <td><%= link_to u.institution, ht_institution_path(u.ht_institution.inst_id) %></td>
         <td class="text-nowrap <%= u.expiring_soon? ? "bg-danger" : '' %>">
           <%= u.expires_string %>

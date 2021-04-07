@@ -32,7 +32,9 @@
         <dt>Country Code:</dt> <dd><%= @institution.ht_billing_member.country_code %></dd>
         <dt>Enabled for Billing:</dt> <dd><%= @institution.billing_enabled_icon %></dd>
       <% end %>
-      <hr/>
+    </dl>
+    <hr/>
+    <dl class="dl-horizontal">
       <dt>Active Users:</dt> <dd><%= @institution.active_user_count %></dd>
       <dt>All Users</dt> <dd><%= @institution.user_count %></dd>
     </dl>

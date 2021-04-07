@@ -1,0 +1,63 @@
+// https://infoguides.wtamu.edu/bootstrap/accessibility
+.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a {
+  color: #666666
+}
+
+.navbar .navbar-text {
+  color: #666666
+}
+
+a {
+  //color: #3344dd
+  color: #265A87
+}
+
+/*a:hover, a:active, a:focus {
+  color: #bb1122
+}
+
+a:visited {
+  color: #884488
+}*/
+
+.text-muted {
+  color:#757575
+}
+
+.bg-primary {
+  background-color:#265A87
+}
+
+.label-default {
+  background-color:#757575
+}
+
+.label-info {
+  background-color:#20809D
+}
+
+.label-success,.btn-success {
+  background-color:#3A833A
+}
+
+.label-warning {
+  background-color:#A4660E
+}
+
+.label-danger, .btn-danger {
+  background-color:#D4403A
+}
+
+.btn-info {
+  background-color:#20809d
+}
+
+.btn-warning {
+  background-color:#f0ad4e
+}
+
+label a {
+  font-weight:400
+}
+
+

@@ -26,7 +26,9 @@
       <dt>Multi-Factor?:</dt> <dd><%= raw @user.mfa ? '<i class="glyphicon glyphicon-ok"></i>' : '' %></dd>
       <dt>Identity Provider:</dt> <dd><%= @user.identity_provider %></dd>
       <dt>Institution:</dt> <dd><%= link_to @user.institution, ht_institution_path(@user.ht_institution.inst_id) %></dd>
-      <hr/>
+    </dl>
+    <hr/>
+    <dl class="dl-horizontal">
       <dt>Accesses</dt> <dd><%= @user.ht_count&.accesscount %></dd>
       <dt>Last Access</dt> <dd><%= @user.ht_count&.last_access&.to_s(:db) %></dd>
     </dl>
