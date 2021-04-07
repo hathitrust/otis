@@ -268,6 +268,22 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
     assert_equal new_status, HTInstitution.find(inst.inst_id).emergency_status
   end
 
+  test 'Can update emergency contact' do
+    new_contact = 'another@default.invalid'
+    inst = create(:ht_institution, emergency_contact: 'somebody@default.invalid')
+
+    patch ht_institution_url inst, params: {'ht_institution' => {'emergency_contact' => new_contact}}
+
+    assert_response :redirect
+    assert_equal 'update', @controller.action_name
+    assert_not_empty flash[:notice]
+    assert_redirected_to ht_institution_path(inst)
+    follow_redirect!
+
+    assert_match new_contact, @response.body
+    assert_equal new_contact, HTInstitution.find(inst.inst_id).emergency_contact
+  end
+
   test 'Blank emergency status sets null' do
     inst = create(:ht_institution, emergency_status: '^(member)@university.invalid')
     patch ht_institution_url inst, params: {'ht_institution' => {'emergency_status' => ''}}
