@@ -8,6 +8,7 @@ users: []
 expires_soon_in_days: 30
 
 manager_email: manager@default.invalid
+reply_to_email: reply_to@default.invalid
 
 met_entity_endpoint: "https://met.refeds.org/met/entity"
 books_library_endpoint: "https://books.google.com/libraries"

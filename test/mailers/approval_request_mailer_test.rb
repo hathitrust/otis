@@ -65,6 +65,10 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
     assert_equal [Otis.config.manager_email], email.bcc
   end
 
+  test 'reply-to comes from config' do
+    assert_equal [Otis.config.reply_to_email], email.reply_to
+  end
+
   test 'email is to approver' do
     assert_equal ['approver@example.com'], email.to
   end
