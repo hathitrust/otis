@@ -43,15 +43,13 @@
         <dt>Enabled for Login:</dt> <dd>
         <%= form.select :enabled, @institution.badge_options %>
         </dd>
-
-        <% if @institution.show_create_billing_member? %>
-          <dt>Add billing info?:</dt> <dd>
-          <%= check_box_tag :create_billing_member %>
-          </dd>
-        <% end %>
       </dl>
       <%= form.fields_for :ht_billing_member, @institution.ht_billing_member || HTBillingMember.new do |billing_form| %>
       <dl class="dl-horizontal">
+        <% if @institution.show_create_billing_member? %>
+          <dt>Add billing info?:</dt>
+          <dd><%= check_box_tag :create_billing_member %></dd>
+        <% end %>
         <dt>Weight:</dt>
         <dd><%= billing_form.text_field :weight, size:8 %></dd>
         <dt>OCLC Symbol:</dt>
