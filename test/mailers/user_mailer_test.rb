@@ -32,6 +32,10 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal [Otis.config.manager_email], email.bcc
   end
 
+  test 'reply-to comes from config' do
+    assert_equal [Otis.config.reply_to_email], email.reply_to
+  end
+
   test 'fail to send email for zero requests' do
     assert_raise StandardError do
       email(req: nil).deliver_now
