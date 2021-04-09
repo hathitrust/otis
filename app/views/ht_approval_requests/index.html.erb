@@ -11,9 +11,7 @@
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
-      <% if can?(:edit, :ht_approval_requests) %>
-        <th data-sortable="false">Select</th>
-      <% end %>
+      <th data-sortable="false">Select</th>
       <th data-sortable="true">Approver</th>
       <th data-sortable="true">User</th>
       <th data-sortable="true">Sent</th>
@@ -24,27 +22,25 @@
 
     <% @reqs.each do |req| %>
       <tr <%= raw @added_users.include?(req.userid) || @renewed_users.include?(req.userid) ? 'class="success"' : '' %>>
-        <% if can?(:edit, :ht_approval_requests) %>
-          <td>
-            <% if req.received.present? %>
-                <%= check_box_tag 'ht_users[]', req.userid %>
-              <% end %>
-          </td>
-        <% end %>
         <td>
-          <% # FIXME: first if clause is always true, right? Remove if so. %>
-          <% if HTApprovalRequest.for_approver(req.approver).count.positive? &&
-                can?(:edit, :ht_approval_requests) %>
-            <%= link_to req.approver, edit_ht_approval_request_path(req.approver) %>
+          <% if can?(:edit, :ht_approval_requests) %>
+            <%= req.select_for_renewal_checkbox %>
+          <% end %>
+        </td>
+        <td>
+          <% if can?(:edit, :ht_approval_requests) %>
+            <%= req.approver_link %>
           <% else %>
             <%= req.approver %>
           <% end %>
         </td>
-        <td><%= link_to req.userid, ht_user_path(req.userid) %></td>
         <td>
+          <%= req.userid_link(label: can?(:edit, :ht_approval_requests)) %>
+        </td>
+        <td class="text-nowrap">
           <%= req.sent(short: true) %>
           <% if req.renewal_state == :expired %>
-            <%= HTApprovalRequestPresenter.badge_for(req) %>
+            <%= req.badge %>
           <% end %>
         </td>
         <td><%= req.received(short: true) %></td>

@@ -81,9 +81,30 @@ FactoryBot.define do
     approver { Faker::Internet.email }
     ht_user
 
-    trait :expired do
-      sent { Time.now - 7.days }
+    trait :renewed do
+      sent { Time.now - 10.days }
       token_hash { Base64.encode64(Faker::String.random(length: 32)) }
+      renewed { Time.now }
+    end
+
+    trait :approved do
+      sent { Time.now - 10.days }
+      token_hash { Base64.encode64(Faker::String.random(length: 32)) }
+      received { Time.now }
+    end
+
+    trait :expired do
+      sent { Time.now - 10.days }
+      token_hash { Base64.encode64(Faker::String.random(length: 32)) }
+    end
+
+    trait :sent do
+      sent { Time.now }
+      token_hash { Base64.encode64(Faker::String.random(length: 32)) }
+    end
+
+    trait :unsent do
+      sent { nil }
     end
   end
 end

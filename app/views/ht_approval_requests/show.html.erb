@@ -8,8 +8,8 @@
     <ul class="list-group">
     <% @reqs.each do |req| %>
       <li class="list-group-item">
-        <%= req.userid %></dt>
-        <%= HTApprovalRequestPresenter.badge_for(req) %>
+        <%= req.userid %>
+        <%= req.badge %>
       </li>
     <% end %>
     </ul>

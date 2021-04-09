@@ -24,7 +24,7 @@
   <%= render 'shared/flash_message' %>
 
   <%= form_with(model: @user, local: true, id: 'edit_ht_user_form') do |form| %>
-
+    <%= form.hidden_field :userid %>
     <% ed = @user.expiration_date
        expired_text = ed.expired? ? "Expired" : "Expires"
        expires_class = ed.expiring_soon? ? "expiring-soon" : ""
@@ -32,8 +32,6 @@
 
     <div class="col-2">
       <dl class="dl-horizontal">
-        <%= form.hidden_field :userid %>
-
         <dt>E-mail:</dt>
         <dd><%= @user.email %></dd>
         <dt>Display Name:</dt>
@@ -54,7 +52,7 @@
         <dd><%= @user.access %></dd>
         <dt>Expire Type:</dt>
         <dd><%= @user.expire_type %></dd>
-        <dt><%= form.label :expires, expired_text %></dt>
+        <dt><%= form.label :expires, expired_text, for: :expires_field %></dt>
         <dd><%= form.text_field :expires, value: @user.expires_string, size: 12, id: :expires_field, class: expires_class %>
           <% unless @user.expired? %>
             <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');", class: 'btn btn-primary' %>
@@ -64,21 +62,19 @@
         </dd>
         <dt>Renewal Status</dt>
         <dd><%= @user.badge %></dd>
-        <dt><%= form.label :iprestrict %></dt>
+        <dt><%= form.label :iprestrict, for: :iprestrict_field %></dt>
         <dd><%= form.text_field :iprestrict, value: @user.iprestrict&.join(', '), size: 40, id: :iprestrict_field, disabled: @user.mfa %>
           <p class="text-muted"><%= t('ht_user.edit.iprestrict_prompt') %></p>
         </dd>
-        <dt>Multi-Factor?:</dt>
-        <% if @user.ht_institution.shib_authncontext_class.present? %>
-          <dd><%= form.check_box :mfa, id: :mfa_checkbox, onclick: "check_mfa();" %></dd>
-        <% else %>
-          <dd>Not Available</dd>
-        <% end %>
+        <dt><%= @user.mfa_label %></dt>
+        <dd><%= @user.mfa_checkbox %></dd>
         <dt>Identity Provider:</dt>
         <dd><%= @user.identity_provider %></dd>
         <dt>Institution:</dt>
         <dd><%= @user.institution %></dd>
-        <hr/>
+      </dl>
+      <hr/>
+      <dl class="dl-horizontal">
         <dt>Accesses:</dt>
         <dd><%= @user.ht_count&.accesscount %></dd>
         <dt>Last Access:</dt>

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'w3c_validators'
 
 class HTInstitutionsIndexTest < ActionDispatch::IntegrationTest
   def setup
@@ -17,6 +18,15 @@ class HTInstitutionsIndexTest < ActionDispatch::IntegrationTest
     assert_match 'Institutions', @response.body
     assert_match @institution1.inst_id, @response.body
     assert_match @institution2.inst_id, @response.body
+  end
+
+  test 'index is well-formed HTML' do
+    sign_in!
+    get ht_institutions_url
+    validator = W3CValidators::NuValidator.new
+    w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
+    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
   test 'enabled institutions separated from disabled ones' do
@@ -60,6 +70,15 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_nil assigns(:institution)
     assert_equal 'show', @controller.action_name
+  end
+
+  test 'show page is well-formed HTML' do
+    sign_in!
+    get ht_institution_url @inst
+    validator = W3CValidators::NuValidator.new
+    w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
+    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
   test 'shows institution name and id' do
@@ -236,6 +255,15 @@ end
 class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
   setup do
     sign_in! username: 'admin@default.invalid'
+  end
+
+  test 'edit page is well-formed HTML' do
+    inst = create(:ht_institution)
+    get edit_ht_institution_url inst
+    validator = W3CValidators::NuValidator.new
+    w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
+    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
   test 'Editable fields present' do

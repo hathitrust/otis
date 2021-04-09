@@ -1,16 +1,78 @@
 # frozen_string_literal: true
 
-class HTApprovalRequestPresenter
-  def self.badge_for(obj)
-    @badges ||= {
-      approved: "<span class='label label-info'>#{I18n.t('ht_approval_request.badges.approved')}</span>",
-      expired: "<span class='label label-danger'>#{I18n.t('ht_approval_request.badges.expired')}</span>",
-      renewed: "<span class='label label-success'>#{I18n.t('ht_approval_request.badges.renewed')}</span>",
-      sent: "<span class='label label-default'>#{I18n.t('ht_approval_request.badges.sent')}</span>",
-      unsent: "<span class='label label-warning'>#{I18n.t('ht_approval_request.badges.unsent')}</span>"
-    }
-    return '' if obj.nil?
+class HTApprovalRequestBadge
+  def initialize(tag, css_class)
+    @css_class = css_class
+    @tag = tag
+  end
 
-    @badges[obj.renewal_state]&.html_safe
+  def label_text
+    I18n.t("ht_approval_request.badges.#{tag}")
+  end
+
+  def label_span
+    "<span class='label #{css_class}'>#{label_text}</span>".html_safe
+  end
+
+  private
+
+  attr_reader :css_class, :tag
+end
+
+class HTApprovalRequestPresenter < SimpleDelegator
+  include ActionView::Helpers::FormTagHelper
+  include Rails.application.routes.url_helpers
+  BADGES = {
+    approved: HTApprovalRequestBadge.new('approved', 'label-info'),
+    expired: HTApprovalRequestBadge.new('expired', 'label-danger'),
+    renewed: HTApprovalRequestBadge.new('renewed', 'label-success'),
+    sent: HTApprovalRequestBadge.new('sent', 'label-default'),
+    unsent: HTApprovalRequestBadge.new('unsent', 'label-warning')
+  }.freeze
+
+  def init(request)
+    @request = request
+  end
+
+  def badge
+    BADGES[renewal_state]&.label_span
+  end
+
+  def select_for_renewal_checkbox
+    if show_index_checkbox?
+      check_box_tag 'ht_users[]', userid, false, id: select_for_renewal_checkbox_id
+    else
+      ''
+    end
+  end
+
+  def userid_link(label: false)
+    if label && show_index_checkbox?
+      label_tag approver, simple_userid_link, for: select_for_renewal_checkbox_id
+    else
+      simple_userid_link
+    end
+  end
+
+  def approver_link
+    link_to approver, edit_ht_approval_request_path(approver)
+  end
+
+  private
+
+  def show_index_checkbox?
+    received.present? && renewed.nil?
+  end
+
+  def select_for_renewal_checkbox_id
+    "req_#{userid}_#{approver}"
+  end
+
+  def simple_userid_link
+    link_to userid, ht_user_path(userid)
+  end
+
+  def controller
+    # required for url helpers to work
   end
 end

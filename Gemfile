@@ -106,4 +106,5 @@ end
 
 group :test do
   gem 'rails-controller-testing'
+  gem 'w3c_validators'
 end

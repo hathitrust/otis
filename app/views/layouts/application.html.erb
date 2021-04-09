@@ -38,13 +38,23 @@
     </script>
   </head>
 
-  <%= render 'shared/header' %>
-
   <body>
+    <%= render 'shared/header' %>
     <div id="main-container" class="container">
       <%= yield %>
     </div>
-    <%# Uses bootstrap-table  %>
+    <% # Uses bootstrap-table  %>
     <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+
+    <script>
+       // Add aria-label to bootstrap-table search box.
+       // Doesn't silence warnings about lack of visible label, however.
+       $(document).ready(function() {
+         $('.search-input').each(function (index) {
+           $(this).attr('aria-label', 'Search');
+         });
+       });
+     </script>
+
   </body>
 </html>
