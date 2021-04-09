@@ -23,6 +23,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     get ht_approval_requests_url
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
@@ -90,6 +91,7 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
     get edit_ht_approval_request_url @user.approver
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
@@ -196,6 +198,7 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
     get ht_approval_request_url @user.approver
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 end

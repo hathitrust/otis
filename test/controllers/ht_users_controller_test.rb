@@ -27,6 +27,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     get ht_users_url
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
@@ -52,6 +53,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     get ht_user_url @user1
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
@@ -76,6 +78,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     get edit_ht_user_url @user1
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
@@ -85,6 +88,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     get edit_ht_user_url user3
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 

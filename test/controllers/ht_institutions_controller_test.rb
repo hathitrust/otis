@@ -25,6 +25,7 @@ class HTInstitutionsIndexTest < ActionDispatch::IntegrationTest
     get ht_institutions_url
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
@@ -76,6 +77,7 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
     get ht_institution_url @inst
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
@@ -260,6 +262,7 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
     get edit_ht_institution_url inst
     validator = W3CValidators::NuValidator.new
     w3c_errs = validator.validate_text(@response.body).errors
+    sleep 1
     assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
   end
 
