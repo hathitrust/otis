@@ -18,7 +18,8 @@ class HTApprovalRequestsController < ApplicationController
   end
 
   def index
-    @reqs = HTApprovalRequest.order('approver')
+    reqs = HTApprovalRequest.order('approver')
+    @reqs = reqs.map { |r| HTApprovalRequestPresenter.new(r) }
     @added_users = session[:added_users] || []
     @renewed_users = session[:renewed_users] || []
     session.delete :added_users
@@ -54,7 +55,9 @@ class HTApprovalRequestsController < ApplicationController
   private
 
   def fetch_requests
-    @reqs = HTApprovalRequest.for_approver(params[:id]).not_renewed
+    @reqs = HTApprovalRequest.for_approver(params[:id]).not_renewed.map do |r|
+      HTApprovalRequestPresenter.new(r)
+    end
   end
 
   # Add an approval request for selected users.

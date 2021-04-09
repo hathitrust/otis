@@ -10,7 +10,8 @@
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
-      <th data-sortable="true">E-mail (Select for Action)</th>
+      <th data-sortable="true">Select</th>
+      <th data-sortable="true">E-mail</th>
       <th>Name</th>
       <th data-sortable="true">Role</th>
       <th data-sortable="true">Institution</th>
@@ -23,12 +24,8 @@
 
     <% @users.each do |u| %>
       <tr>
-        <td>
-          <% if u.can_request? or u.can_renew? %>
-            <%= check_box_tag 'ht_users[]', u.email, false, id: "ht_users_#{u.email}" %>
-          <% end %>
-          <%= label_tag u.email, link_to(u.email, ht_user_path(u)), for: "ht_users_#{u.email}" %>
-        </td>
+        <td><%= u.select_for_renewal_checkbox %></td>
+        <td><%= u.email_link %></td>
         <td><%= u.displayname %></td>
         <td><%= u.role %></td>
         <td><%= link_to u.institution, ht_institution_path(u.ht_institution.inst_id) %></td>
@@ -43,9 +40,7 @@
         </td>
         <td><%= u.badge %></td>
         <td><%= u.iprestrict&.join(', ') %></td>
-        <td>
-          <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
-        </td>
+        <td><%= u.mfa_icon %></td>
       </tr>
     <% end %>
   </table>
@@ -75,15 +70,13 @@
     </thead>
     <% @expired_users.each do |u| %>
       <tr>
-        <td><%= link_to u.email, ht_user_path(u) %></td>
+        <td><%= u.email_link %></td>
         <td><%= u.displayname %></td>
         <td><%= u.role %></td>
         <td><%= u.institution %></td>
         <td><%= u.expires_string %></td>
         <td><%= u.iprestrict&.join(', ') %></td>
-        <td>
-          <%= raw u[:mfa] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
-        </td>
+        <td><%= u.mfa_icon %></td>
       </tr>
     <% end %>
   </table>

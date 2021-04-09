@@ -9,7 +9,7 @@
     <% @reqs.each do |req| %>
       <li class="list-group-item">
         <%= req.userid %>
-        <%= HTApprovalRequestPresenter.badge_for(req) %>
+        <%= req.badge %>
       </li>
     <% end %>
     </ul>
