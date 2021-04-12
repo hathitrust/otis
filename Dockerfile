@@ -16,6 +16,4 @@ RUN gem install bundler
 #
 # COPY . /usr/src/app
 
-CMD ["bin/rails","s","-b","0.0.0.0"]
-
-
+CMD ["sh", "-c", "bin/rails assets:precompile && bin/rails s -b 0.0.0.0"]

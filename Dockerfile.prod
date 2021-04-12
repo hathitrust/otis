@@ -19,6 +19,5 @@ ENV RAILS_ENV production
 ENV BUNDLE_PATH /gems
 RUN bundle install
 COPY --chown=$UID:$GID . /usr/src/app
-RUN bin/rails assets:precompile SECRET_KEY_BASE=1
 
-CMD ["bin/rails", "s"]
+CMD ["sh", "-c", "bin/rails assets:precompile && bin/rails s"]
