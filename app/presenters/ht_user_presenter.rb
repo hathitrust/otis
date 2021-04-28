@@ -75,7 +75,7 @@ class HTUserPresenter < SimpleDelegator
   end
 
   def approval_request
-    @approval_request ||= HTApprovalRequest.for_user(email).first
+    @approval_request ||= HTApprovalRequest.most_recent(email).first
   end
 
   def checkmark_icon(field)

@@ -21,7 +21,7 @@
     </tr>
     </thead>
 
-    <% @active_reqs.each do |req| %>
+    <% @incomplete_reqs.each do |req| %>
       <%= tag(:tr, class: @added_users.include?(req.userid) ? :success : nil) %>
         <td>
           <% if can?(:edit, :ht_approval_requests) %>
@@ -67,7 +67,7 @@
     </tr>
     </thead>
 
-    <% @inactive_reqs.each do |req| %>
+    <% @complete_reqs.each do |req| %>
       <%= tag(:tr, class: @renewed_users.include?(req.userid) ? :success : nil) %>
         <td><%= req.approver %></td>
         <td><%= link_to req.userid, ht_user_path(req.userid) %></td>

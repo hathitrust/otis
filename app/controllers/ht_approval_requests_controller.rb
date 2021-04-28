@@ -19,8 +19,8 @@ class HTApprovalRequestsController < ApplicationController
 
   def index
     requests = HTApprovalRequest.order('approver')
-    @active_reqs = requests.not_renewed.map { |r| HTApprovalRequestPresenter.new(r) }
-    @inactive_reqs = requests.renewed.map { |r| HTApprovalRequestPresenter.new(r) }
+    @incomplete_reqs = requests.not_renewed.map { |r| HTApprovalRequestPresenter.new(r) }
+    @complete_reqs = requests.renewed.map { |r| HTApprovalRequestPresenter.new(r) }
     @added_users = session[:added_users] || []
     @renewed_users = session[:renewed_users] || []
     session.delete :added_users

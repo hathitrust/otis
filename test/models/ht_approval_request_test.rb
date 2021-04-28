@@ -52,13 +52,13 @@ class HTApprovalRequestTest < ActiveSupport::TestCase
     assert_equal req.id, req.resource_id
   end
 
-  test 'for_user finds most recent or most incomplete' do
+  test 'most_recent finds most recent or most incomplete' do
     long_ago = Faker::Time.backward
     @active_user = create(:ht_user)
     create(:ht_approval_request, ht_user: @active_user, sent: long_ago, received: long_ago, renewed: long_ago)
     create(:ht_approval_request, ht_user: @active_user, sent: long_ago, received: long_ago, renewed: long_ago)
     req = create(:ht_approval_request, ht_user: @active_user, sent: nil, token_hash: nil)
-    latest = HTApprovalRequest.for_user(@active_user).first
+    latest = HTApprovalRequest.most_recent(@active_user).first
     assert_equal(req, latest)
   end
 end
