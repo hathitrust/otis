@@ -52,25 +52,37 @@ class HTUserPresenterTest < ActiveSupport::TestCase
     assert_match 'checkbox', user.mfa_checkbox
   end
 
-  test 'select for renewal checkbox' do
+  test 'select checkbox by default' do
     user = HTUserPresenter.new(create(:ht_user))
     assert_match('checkbox', user.select_for_renewal_checkbox)
   end
 
-  test 'no select for renewal checkbox' do
+  test 'select checkbox if request is not renewed' do
     user = HTUserPresenter.new(create(:ht_user))
-    create(:ht_approval_request, :renewed, userid: user.email)
-    assert_equal('', user.select_for_renewal_checkbox)
+    create(:ht_approval_request, renewed: nil, userid: user.email)
+    assert_no_match('checkbox', user.select_for_renewal_checkbox)
   end
 
-  test 'email link has label' do
+  test 'select checkbox if user is renewed' do
+    user = HTUserPresenter.new(create(:ht_user))
+    create(:ht_approval_request, :renewed, userid: user.email)
+    assert_match('checkbox', user.select_for_renewal_checkbox)
+  end
+
+  test 'email link has label by default' do
     user = HTUserPresenter.new(create(:ht_user))
     assert_match('label', user.email_link)
   end
 
-  test 'email link has no label' do
+  test 'email link has no label if request is not renewed' do
+    user = HTUserPresenter.new(create(:ht_user))
+    create(:ht_approval_request, renewed: nil, userid: user.email)
+    assert_no_match('label', user.email_link)
+  end
+
+  test 'email link has label if request is renewed' do
     user = HTUserPresenter.new(create(:ht_user))
     create(:ht_approval_request, :renewed, userid: user.email)
-    assert_no_match('label', user.email_link)
+    assert_match('label', user.email_link)
   end
 end

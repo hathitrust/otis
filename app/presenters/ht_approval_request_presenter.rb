@@ -22,6 +22,7 @@ end
 class HTApprovalRequestPresenter < SimpleDelegator
   include ActionView::Helpers::FormTagHelper
   include Rails.application.routes.url_helpers
+
   BADGES = {
     approved: HTApprovalRequestBadge.new('approved', 'label-info'),
     expired: HTApprovalRequestBadge.new('expired', 'label-danger'),

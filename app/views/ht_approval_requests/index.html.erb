@@ -7,6 +7,7 @@
   <%= render 'shared/flash_message' %>
 
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
+  <h2 class="pull-left">Active Requests</h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
@@ -20,8 +21,8 @@
     </tr>
     </thead>
 
-    <% @reqs.each do |req| %>
-      <tr <%= raw @added_users.include?(req.userid) || @renewed_users.include?(req.userid) ? 'class="success"' : '' %>>
+    <% @active_reqs.each do |req| %>
+      <%= tag(:tr, class: @added_users.include?(req.userid) ? :success : nil) %>
         <td>
           <% if can?(:edit, :ht_approval_requests) %>
             <%= req.select_for_renewal_checkbox %>
@@ -53,5 +54,28 @@
     <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
   <% end %>
   <% end # form-tag %>
+  <h2 class="pull-left">Inactive Requests</h2>
+  <table id="inactive_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-show-search-clear-button="true">
+    <thead class="thead-dark">
+    <tr>
+      <th data-sortable="true">Approver</th>
+      <th data-sortable="true">User</th>
+      <th data-sortable="true">Sent</th>
+      <th data-sortable="true">Approved</th>
+      <th data-sortable="true">Renewed</th>
+    </tr>
+    </thead>
+
+    <% @inactive_reqs.each do |req| %>
+      <%= tag(:tr, class: @renewed_users.include?(req.userid) ? :success : nil) %>
+        <td><%= req.approver %></td>
+        <td><%= link_to req.userid, ht_user_path(req.userid) %></td>
+        <td><%= req.sent(short: true) %></td>
+        <td><%= req.received(short: true) %></td>
+        <td><%= req.renewed(short: true) %></td>
+      </tr>
+    <% end %>
+  </table>
 </div>
 

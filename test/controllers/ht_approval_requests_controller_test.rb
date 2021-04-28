@@ -14,7 +14,8 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     sign_in!
     get ht_approval_requests_url
     assert_response :success
-    assert_not_nil assigns(:reqs)
+    assert_not_nil assigns(:active_reqs)
+    assert_not_nil assigns(:inactive_reqs)
     assert_equal 'index', @controller.action_name
   end
 
@@ -44,7 +45,8 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_equal 2, HTApprovalRequest.count
     assert_match 'Added', flash[:notice]
-    assert_not_nil assigns(:reqs)
+    assert_not_nil assigns(:active_reqs)
+    assert_not_nil assigns(:inactive_reqs)
     assert_equal 'index', @controller.action_name
     assert_select "a[href='#{edit_ht_approval_request_path(@user1.approver)}']"
   end
@@ -54,8 +56,8 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     post ht_approval_requests_url, params: {submit_requests: true}
     assert_response :redirect
     follow_redirect!
-    assert_not_nil assigns(:reqs)
-    assert_empty assigns(:reqs)
+    assert_not_nil assigns(:active_reqs)
+    assert_empty assigns(:active_reqs)
     assert_match 'No users selected', flash[:alert]
     assert_equal 'index', @controller.action_name
   end
@@ -65,8 +67,8 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     post ht_approval_requests_url, params: {ht_users: ['nobody@nowhere.org'], submit_requests: true}
     assert_response :redirect
     follow_redirect!
-    assert_not_nil assigns(:reqs)
-    assert_empty assigns(:reqs)
+    assert_not_nil assigns(:active_reqs)
+    assert_empty assigns(:active_reqs)
     assert_match "Couldn't find HTUser", flash[:alert]
     assert_equal 'index', @controller.action_name
   end

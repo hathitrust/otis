@@ -20,7 +20,7 @@ class HTUserPresenter < SimpleDelegator
   end
 
   def can_request?
-    approval_request.nil?
+    approval_request.nil? || approval_request.renewed.present?
   end
 
   def select_for_renewal_checkbox

@@ -2,9 +2,17 @@
 
 class HTApprovalRequest < ApplicationRecord
   self.primary_key = 'id'
+  # "Active" requests that may be subject to further action
   scope :not_renewed, -> { where(renewed: nil) }
+  # "Inactive" requests that are only of historical interest
+  scope :renewed, -> { where.not(renewed: nil) }
   scope :for_approver, ->(approver) { where(approver: approver).order(:sent, :received, :renewed) }
-  scope :for_user, ->(user) { where(userid: user) }
+  # Make sure that the most recent and most "incomplete" request comes first when fetching request for user
+  # If we had created/updated timestamps we could use those.
+  for_user_order = { Arel.sql('sent IS NULL') => :desc, :sent => :desc,
+                     Arel.sql('received IS NULL') => :desc, :received => :desc,
+                     Arel.sql('renewed IS NULL') => :desc, :renewed => :desc }
+  scope :for_user, ->(user) { where(userid: user).order(for_user_order) }
   scope :not_approved, -> { where(received: nil) }
   scope :approved, -> { where.not(received: nil) }
   validates :approver, presence: true
