@@ -18,8 +18,9 @@ class HTApprovalRequestsController < ApplicationController
   end
 
   def index
-    reqs = HTApprovalRequest.order('approver')
-    @reqs = reqs.map { |r| HTApprovalRequestPresenter.new(r) }
+    requests = HTApprovalRequest.order('approver')
+    @incomplete_reqs = requests.not_renewed.map { |r| HTApprovalRequestPresenter.new(r) }
+    @complete_reqs = requests.renewed.map { |r| HTApprovalRequestPresenter.new(r) }
     @added_users = session[:added_users] || []
     @renewed_users = session[:renewed_users] || []
     session.delete :added_users
@@ -61,7 +62,7 @@ class HTApprovalRequestsController < ApplicationController
   end
 
   # Add an approval request for selected users.
-  # If one already exists, silently skip over it.
+  # If unrenewed one already exists, silently skip over it.
   # Returns an Array of ht_user emails added to requests.
   def add_requests(emails) # rubocop:disable Metrics/MethodLength
     if emails.nil? || emails.empty?
@@ -70,7 +71,7 @@ class HTApprovalRequestsController < ApplicationController
     end
     adds = []
     emails.each do |e|
-      next if HTApprovalRequest.where(userid: e).count.positive?
+      next if HTApprovalRequest.where(userid: e, renewed: nil).count.positive?
 
       begin
         add_request e
