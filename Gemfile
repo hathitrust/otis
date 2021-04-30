@@ -13,6 +13,9 @@ gem 'rubyzip', '~> 2.0'
 # https://github.com/advisories/GHSA-c3gv-9cxf-6f57
 gem 'loofah', ['~> 2.3', '>= 2.3.1']
 
+# https://github.com/advisories/GHSA-8cr8-4vfw-mr7h
+gem 'rexml', '>= 3.2.5'
+
 # ruby '2.5.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
