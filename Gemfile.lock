@@ -284,7 +284,6 @@ DEPENDENCIES
   puma (~> 3.12)
   rails (~> 5.2.4)
   rails-controller-testing
-  rexml (>= 3.2.5)
   rubocop
   rubocop-faker
   rubyzip (~> 2.0)
