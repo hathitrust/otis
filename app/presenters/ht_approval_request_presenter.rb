@@ -24,11 +24,11 @@ class HTApprovalRequestPresenter < SimpleDelegator
   include Rails.application.routes.url_helpers
 
   BADGES = {
-    approved: HTApprovalRequestBadge.new('approved', 'label-info'),
-    expired: HTApprovalRequestBadge.new('expired', 'label-danger'),
-    renewed: HTApprovalRequestBadge.new('renewed', 'label-success'),
-    sent: HTApprovalRequestBadge.new('sent', 'label-default'),
-    unsent: HTApprovalRequestBadge.new('unsent', 'label-warning')
+    approved: HTApprovalRequestBadge.new("approved", "label-info"),
+    expired: HTApprovalRequestBadge.new("expired", "label-danger"),
+    renewed: HTApprovalRequestBadge.new("renewed", "label-success"),
+    sent: HTApprovalRequestBadge.new("sent", "label-default"),
+    unsent: HTApprovalRequestBadge.new("unsent", "label-warning")
   }.freeze
 
   def init(request)
@@ -41,9 +41,9 @@ class HTApprovalRequestPresenter < SimpleDelegator
 
   def select_for_renewal_checkbox
     if show_index_checkbox?
-      check_box_tag 'ht_users[]', userid, false, id: select_for_renewal_checkbox_id
+      check_box_tag "ht_users[]", userid, false, id: select_for_renewal_checkbox_id
     else
-      ''
+      ""
     end
   end
 

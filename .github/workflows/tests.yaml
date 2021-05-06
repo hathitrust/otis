@@ -20,8 +20,8 @@ jobs:
           docker-compose build
           docker-compose run test bundle install
 
-      - name: Run rubocop
-        run: docker-compose run test bundle exec rubocop
+      - name: Run standardrb
+        run: docker-compose run test bundle exec standardrb
 
       - name: Run tests
         run: docker-compose run test

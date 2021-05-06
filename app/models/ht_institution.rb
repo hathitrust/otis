@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class HTInstitution < ApplicationRecord
-  has_one :ht_billing_member, foreign_key: 'inst_id'
+  has_one :ht_billing_member, foreign_key: "inst_id"
   accepts_nested_attributes_for :ht_billing_member, update_only: true
 
-  self.primary_key = 'inst_id'
+  self.primary_key = "inst_id"
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
   has_many :ht_institution_log, foreign_key: :inst_id, primary_key: :inst_id
 
@@ -17,8 +17,8 @@ class HTInstitution < ApplicationRecord
   # https://stackoverflow.com/a/57485464
   attribute :enabled, ActiveRecord::Type::Integer.new
 
-  scope :enabled, -> { where('enabled = 1') }
-  scope :other, -> { where('enabled != 1') }
+  scope :enabled, -> { where("enabled = 1") }
+  scope :other, -> { where("enabled != 1") }
 
   # Checkpoint
   def resource_type
@@ -42,6 +42,6 @@ class HTInstitution < ApplicationRecord
     self.domain = metadata.domain
     self.inst_id = metadata.domain_base
     self.mapto_inst_id = metadata.domain_base
-    self.allowed_affiliations = "^(member|alum|faculty|staff|student)@(#{metadata.scopes.join('|')})"
+    self.allowed_affiliations = "^(member|alum|faculty|staff|student)@(#{metadata.scopes.join("|")})"
   end
 end

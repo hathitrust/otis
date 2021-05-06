@@ -10,7 +10,7 @@ class HTUserPresenter < SimpleDelegator
   end
 
   def badge
-    return '' if approval_request.nil?
+    return "" if approval_request.nil?
 
     HTApprovalRequestPresenter.new(approval_request)&.badge
   end
@@ -25,9 +25,9 @@ class HTUserPresenter < SimpleDelegator
 
   def select_for_renewal_checkbox
     if (can_request? || can_renew?) && !expired?
-      check_box_tag 'ht_users[]', email, false, id: select_for_renewal_checkbox_id
+      check_box_tag "ht_users[]", email, false, id: select_for_renewal_checkbox_id
     else
-      ''
+      ""
     end
   end
 
@@ -48,19 +48,19 @@ class HTUserPresenter < SimpleDelegator
   # ActionView::Helpers::FormHelper form, alas it complicates testing.
   def mfa_label
     if ht_institution.shib_authncontext_class.present?
-      label_tag :mfa_checkbox, 'Multi-Factor?:'
+      label_tag :mfa_checkbox, "Multi-Factor?:"
     else
-      'Multi-Factor?:'
+      "Multi-Factor?:"
     end
   end
 
   def mfa_checkbox
     if ht_institution.shib_authncontext_class.present?
-      raw [hidden_field_tag('ht_user[mfa]', 0),
-           check_box_tag('ht_user[mfa]', 1, mfa.present?, id: :mfa_checkbox,
-                         onclick: 'check_mfa();')].join "\n"
+      raw [hidden_field_tag("ht_user[mfa]", 0),
+        check_box_tag("ht_user[mfa]", 1, mfa.present?, id: :mfa_checkbox,
+                                                       onclick: "check_mfa();")].join "\n"
     else
-      'Not Available'
+      "Not Available"
     end
   end
 
@@ -79,7 +79,7 @@ class HTUserPresenter < SimpleDelegator
   end
 
   def checkmark_icon(field)
-    raw field ? '<i class="glyphicon glyphicon-ok"></i>' : ''
+    raw field ? '<i class="glyphicon glyphicon-ok"></i>' : ""
   end
 
   def controller

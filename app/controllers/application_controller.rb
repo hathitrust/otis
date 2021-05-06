@@ -64,11 +64,11 @@ class ApplicationController < ActionController::Base
   end
 
   def render_forbidden(_exception = nil)
-    render 'forbidden', status: :forbidden
+    render "forbidden", status: :forbidden
   end
 
   def set_csrf_cookie
-    cookies['CSRF-TOKEN'] = form_authenticity_token
+    cookies["CSRF-TOKEN"] = form_authenticity_token
   end
 
   def attributes_factory

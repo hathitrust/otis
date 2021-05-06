@@ -36,8 +36,8 @@ class HTInstitutionsController < ApplicationController
   end
 
   def index
-    @enabled_institutions = HTInstitution.enabled.order('name').map { |i| HTInstitutionPresenter.new(i) }
-    @other_institutions = HTInstitution.other.order('name').map { |i| HTInstitutionPresenter.new(i) }
+    @enabled_institutions = HTInstitution.enabled.order("name").map { |i| HTInstitutionPresenter.new(i) }
+    @other_institutions = HTInstitution.other.order("name").map { |i| HTInstitutionPresenter.new(i) }
   end
 
   def update
@@ -45,7 +45,7 @@ class HTInstitutionsController < ApplicationController
 
     if @institution.update(inst_params(PERMITTED_UPDATE_FIELDS))
       log
-      flash[:notice] = 'Institution updated'
+      flash[:notice] = "Institution updated"
       redirect_to @institution
     else
       flash.now[:alert] = @institution.errors.full_messages.to_sentence
@@ -59,7 +59,7 @@ class HTInstitutionsController < ApplicationController
 
     if @institution.save
       log
-      redirect_to @institution, note: 'Institution was successfully created'
+      redirect_to @institution, note: "Institution was successfully created"
     else
       flash.now[:alert] = @institution.errors.full_messages.to_sentence
       @institution = HTInstitutionPresenter.new(@institution)
@@ -75,15 +75,15 @@ class HTInstitutionsController < ApplicationController
 
   def inst_params(permitted_fields)
     @inst_params ||= params.require(:ht_institution)
-                           .permit(*permitted_fields)
-                           .merge(billing_member_params)
-                           .transform_values! { |v| v.present? ? v : nil }
+      .permit(*permitted_fields)
+      .merge(billing_member_params)
+      .transform_values! { |v| v.present? ? v : nil }
   end
 
   def billing_member_params
     return unless use_billing_params && params[:ht_institution][:ht_billing_member_attributes]
 
-    { ht_billing_member_attributes:
+    {ht_billing_member_attributes:
       params
         .require(:ht_institution)
         .require(:ht_billing_member_attributes)

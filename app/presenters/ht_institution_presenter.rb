@@ -24,10 +24,10 @@ class HTInstitutionPresenter < SimpleDelegator
   include Rails.application.routes.url_helpers
 
   BADGES = {
-    0 => HTInstitutionBadge.new('disabled', 'label-danger'),
-    1 => HTInstitutionBadge.new('enabled', 'label-success'),
-    2 => HTInstitutionBadge.new('private', 'label-warning'),
-    3 => HTInstitutionBadge.new('social', 'label-primary')
+    0 => HTInstitutionBadge.new("disabled", "label-danger"),
+    1 => HTInstitutionBadge.new("enabled", "label-success"),
+    2 => HTInstitutionBadge.new("private", "label-warning"),
+    3 => HTInstitutionBadge.new("social", "label-primary")
   }.freeze
 
   def init(institution, _controller)
@@ -55,23 +55,23 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def formatted_mapto_name
-    mapto_name || '(None)'
+    mapto_name || "(None)"
   end
 
   def emergency_contact_link
-    (link_to emergency_contact, "mailto:#{emergency_contact}" if emergency_contact) || '(None)'
+    (link_to emergency_contact, "mailto:#{emergency_contact}" if emergency_contact) || "(None)"
   end
 
   def etas_affiliations
-    emergency_status || '(ETAS not enabled)'
+    emergency_status || "(ETAS not enabled)"
   end
 
   def login_test_link
-    button 'Test Login', login_test_url
+    button "Test Login", login_test_url
   end
 
   def mapped_inst_link
-    (link_to mapto_inst_id, ht_institution_path(mapto_inst_id) if mapto_inst_id) || '(None)'
+    (link_to mapto_inst_id, ht_institution_path(mapto_inst_id) if mapto_inst_id) || "(None)"
   end
 
   def metadata_link
@@ -79,7 +79,7 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def mfa_test_link
-    button 'Test Login with MFA', mfa_test_url if entityID && shib_authncontext_class
+    button "Test Login with MFA", mfa_test_url if entityID && shib_authncontext_class
   end
 
   def grin_link
@@ -87,7 +87,7 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def cancel_button
-    button 'Cancel', persisted? ? ht_institution_path(inst_id) : ht_institutions_path
+    button "Cancel", persisted? ? ht_institution_path(inst_id) : ht_institutions_path
   end
 
   def show_create_billing_member?
@@ -113,7 +113,7 @@ class HTInstitutionPresenter < SimpleDelegator
   private
 
   def checkmark_icon(field)
-    raw field ? '<i class="glyphicon glyphicon-ok"></i>' : ''
+    raw field ? '<i class="glyphicon glyphicon-ok"></i>' : ""
   end
 
   def controller
@@ -121,7 +121,7 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def button(title, url)
-    link_to title, url, class: 'btn btn-default'
+    link_to title, url, class: "btn btn-default"
   end
 
   def login_test_url

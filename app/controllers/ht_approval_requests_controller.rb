@@ -3,22 +3,22 @@
 class HTApprovalRequestsController < ApplicationController
   before_action :fetch_requests, only: %i[show update edit]
 
-  def create # rubocop:disable Metrics/MethodLength
+  def create
     if params[:submit_requests]
       @added_users = add_requests(params[:ht_users])
-      flash[:notice] = "Added #{'request'.pluralize(@added_users.count)} for #{@added_users.join ', '}" if @added_users.count.positive?
+      flash[:notice] = "Added #{"request".pluralize(@added_users.count)} for #{@added_users.join ", "}" if @added_users.count.positive?
       session[:added_users] = @added_users
     end
     if params[:submit_renewals]
       @renewed_users = add_renewals(params[:ht_users])
-      flash[:notice] = "Renewed #{@renewed_users.join ', '}" if @renewed_users.count.positive?
+      flash[:notice] = "Renewed #{@renewed_users.join ", "}" if @renewed_users.count.positive?
       session[:renewed_users] = @renewed_users
     end
     redirect_to action: :index
   end
 
   def index
-    requests = HTApprovalRequest.order('approver')
+    requests = HTApprovalRequest.order("approver")
     @incomplete_reqs = requests.not_renewed.map { |r| HTApprovalRequestPresenter.new(r) }
     @complete_reqs = requests.renewed.map { |r| HTApprovalRequestPresenter.new(r) }
     @added_users = session[:added_users] || []
@@ -27,7 +27,7 @@ class HTApprovalRequestsController < ApplicationController
     session.delete :renewed_users
   end
 
-  def update # rubocop:disable Metrics/MethodLength
+  def update
     begin
       ApprovalRequestMailer.with(reqs: @reqs, base_url: request.base_url, body: params[:email_body]).approval_request_email.deliver_now
       @reqs.each do |req|
@@ -37,11 +37,11 @@ class HTApprovalRequestsController < ApplicationController
         req.sent = Time.zone.now
         req.save!
       end
-      flash[:notice] = 'Messages sent'
-    rescue StandardError => e
+      flash[:notice] = "Messages sent"
+    rescue => e
       flash[:alert] = e.message
     end
-    redirect_to action: 'show'
+    redirect_to action: "show"
   end
 
   def status_counts
@@ -50,7 +50,7 @@ class HTApprovalRequestsController < ApplicationController
 
   def edit
     @preview = true
-    @email_body = render_to_string partial: 'shared/approval_request_body'
+    @email_body = render_to_string partial: "shared/approval_request_body"
   end
 
   private
@@ -64,9 +64,9 @@ class HTApprovalRequestsController < ApplicationController
   # Add an approval request for selected users.
   # If unrenewed one already exists, silently skip over it.
   # Returns an Array of ht_user emails added to requests.
-  def add_requests(emails) # rubocop:disable Metrics/MethodLength
+  def add_requests(emails)
     if emails.nil? || emails.empty?
-      flash[:alert] = 'No users selected'
+      flash[:alert] = "No users selected"
       return []
     end
     adds = []
@@ -76,7 +76,7 @@ class HTApprovalRequestsController < ApplicationController
       begin
         add_request e
         adds << e
-      rescue StandardError => e
+      rescue => e
         flash[:alert] = e.message
       end
     end
@@ -88,16 +88,16 @@ class HTApprovalRequestsController < ApplicationController
     HTApprovalRequest.new(ht_user: u, approver: u.approver).save!
   end
 
-  def add_renewals(emails) # rubocop:disable Metrics/MethodLength
+  def add_renewals(emails)
     if emails.nil? || emails.empty?
-      flash[:alert] = 'No users selected'
+      flash[:alert] = "No users selected"
       return []
     end
     adds = []
     emails.each do |e|
       HTUser.find(e).add_or_update_renewal(approver: current_user.id)
       adds << e
-    rescue StandardError => e
+    rescue => e
       flash[:alert] = e.message
     end
     adds

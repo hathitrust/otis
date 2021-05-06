@@ -6,7 +6,7 @@ class HTUsersController < ApplicationController
   PERMITTED_UPDATE_FIELDS = %i[userid iprestrict expires approver mfa].freeze
 
   def index
-    users = HTUser.joins(:ht_institution).order('ht_institutions.name')
+    users = HTUser.joins(:ht_institution).order("ht_institutions.name")
     @users = users.active.map { |u| HTUserPresenter.new(u) }
     @expired_users = users.expired.map { |u| HTUserPresenter.new(u) }
     @all_users = users.map { |u| HTUserPresenter.new(u) }
@@ -36,11 +36,11 @@ class HTUsersController < ApplicationController
   def update_user_failure
     flash.now[:alert] = @user.errors.full_messages.to_sentence
     fetch_user
-    render 'edit'
+    render "edit"
   end
 
   def update_user_success
-    flash[:notice] = 'User updated'
+    flash[:notice] = "User updated"
     redirect_to @user
   end
 
@@ -51,12 +51,12 @@ class HTUsersController < ApplicationController
   def user_params
     @user_params ||= begin
       p = params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
-      p[:mfa] == '1' ? p.merge({iprestrict: nil}) : p
+      p[:mfa] == "1" ? p.merge({iprestrict: nil}) : p
     end
   end
 
   def users_csv
-    require 'csv'
+    require "csv"
     CSV.generate do |csv|
       csv << @all_users.first.attributes.keys
       @all_users.each do |user|

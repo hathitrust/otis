@@ -198,9 +198,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.5.0)
       parser (>= 3.0.1.1)
-    rubocop-faker (1.1.0)
-      faker (>= 2.12.0)
-      rubocop (>= 0.82.0)
+    rubocop-performance (1.11.2)
+      rubocop (>= 1.7.0, < 2.0)
+      rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.11.0)
     ruby_dep (1.5.0)
     rubyzip (2.3.0)
@@ -235,6 +235,9 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     sqlite3 (1.4.2)
+    standard (1.1.1)
+      rubocop (= 1.14.0)
+      rubocop-performance (= 1.11.2)
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -291,13 +294,12 @@ DEPENDENCIES
   puma (~> 3.12)
   rails (~> 5.2.6)
   rails-controller-testing
-  rubocop
-  rubocop-faker
   rubyzip (~> 2.0)
   sass-rails (~> 5.0)
   selenium-webdriver
   simplecov
   sqlite3
+  standard
   turbolinks (~> 5)
   tzinfo-data
   uglifier (>= 1.3.0)

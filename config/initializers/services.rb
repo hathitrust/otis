@@ -14,7 +14,6 @@ def assign_db(lhs, rhs)
   end
 end
 
-
 assign_db(Keycard::DB.config, Otis.config.keycard.database)
 assign_db(Checkpoint::DB.config, Otis.config.checkpoint.database)
 

@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
-require 'expiration_date'
-require 'forwardable'
+require "expiration_date"
+require "forwardable"
 
-class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
-  self.primary_key = 'email'
+class HTUser < ApplicationRecord
+  self.primary_key = "email"
 
-  def self.role_map # rubocop:disable Metrics/MethodLength
-    { 'corrections' => 'Support of corrections or updates to HathiTrust volumes',
-      'cataloging' => 'Correct or add to the bibliographic records of HathiTrust volumes',
-      'crms' => 'Perform copyright review on HathiTrust volumes',
-      'superuser' => 'UM staff developer – includes roles staffdeveloper and staffsysadmin',
-      'quality' => 'Evaluate the quality of digital volumes in HathiTrust',
-      'ssd' => 'Users who have print disabilities',
-      'ssdproxy' => 'Act as a proxy for users who have print disabilities',
-      'inprintstatus' => 'Perform in-print status review of volumes in HathiTrust',
-      'replacement' => 'Create replacement copies of individual pages of volumes in HathiTrust',
-      'staffdeveloper' => 'Develop software for HathiTrust services or operations',
-      'staffsysadmin' => 'Operate or maintain HathiTrust repository infrastructure',
-      'developer' => 'Experimental search API role – do not use' }
+  def self.role_map
+    {"corrections" => "Support of corrections or updates to HathiTrust volumes",
+     "cataloging" => "Correct or add to the bibliographic records of HathiTrust volumes",
+     "crms" => "Perform copyright review on HathiTrust volumes",
+     "superuser" => "UM staff developer – includes roles staffdeveloper and staffsysadmin",
+     "quality" => "Evaluate the quality of digital volumes in HathiTrust",
+     "ssd" => "Users who have print disabilities",
+     "ssdproxy" => "Act as a proxy for users who have print disabilities",
+     "inprintstatus" => "Perform in-print status review of volumes in HathiTrust",
+     "replacement" => "Create replacement copies of individual pages of volumes in HathiTrust",
+     "staffdeveloper" => "Develop software for HathiTrust services or operations",
+     "staffsysadmin" => "Operate or maintain HathiTrust repository infrastructure",
+     "developer" => "Experimental search API role – do not use"}
   end
 
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
@@ -37,19 +37,19 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   validates :mfa, absence: true, unless: -> { ht_institution.shib_authncontext_class.present? }
 
-  scope :active, -> { where('expires > CURRENT_TIMESTAMP') }
-  scope :expired, -> { where('expires <= CURRENT_TIMESTAMP') }
+  scope :active, -> { where("expires > CURRENT_TIMESTAMP") }
+  scope :expired, -> { where("expires <= CURRENT_TIMESTAMP") }
 
   after_save :clean_requests
 
   validate do
     Time.zone.parse(expires.to_s)
-  rescue StandardError
+  rescue
     errors[:expires] << "must be a valid timestamp, not #{expires}"
   end
 
   HUMANIZED_ATTRIBUTES = {
-    iprestrict: 'IP Restriction'
+    iprestrict: "IP Restriction"
   }.freeze
 
   def self.human_attribute_name(attr, options = {})
@@ -66,11 +66,9 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   # Grab an expiration_date object. And yes, the long method name is deserved.
-  # rubocop:disable
   def construct_and_set_expiration_date
     @expiration_date = ExpirationDate.new(self[:expires], self[:expire_type])
   end
-  # rubocop:enable
 
   # Update expiration_date only if it already exists, because factorybot updates
   # stuff in order and we might not have the expire_type yet
@@ -85,8 +83,8 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def expiration_date(force_update = false)
     if force_update || @expiration_date.nil?
-      type                = expire_type
-      date                = expires
+      type = expire_type
+      date = expires
       @expiration_date = ExpirationDate.new(date, type.to_s)
     end
     @expiration_date
@@ -103,10 +101,8 @@ class HTUser < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def iprestrict=(vals)
-    if vals
-      self[:iprestrict] = IPRestriction.from_string(vals).to_regex
-    else
-      self[:iprestrict] = nil
+    self[:iprestrict] = if vals
+      IPRestriction.from_string(vals).to_regex
     end
   end
 

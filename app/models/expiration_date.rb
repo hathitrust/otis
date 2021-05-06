@@ -10,7 +10,7 @@ class ExpirationDate
 
     def initialize(label, duration)
       @duration = duration
-      @label    = label
+      @label = label
     end
 
     def to_s
@@ -19,10 +19,10 @@ class ExpirationDate
   end
 
   EXPIRES_TYPE = {
-    expiresannually:   ExpiresTypeData.new('1 year', 1.year).freeze,
-    expiresbiannually: ExpiresTypeData.new('2 years', 2.years).freeze,
-    expirescustom60:   ExpiresTypeData.new('60 days', 60.days).freeze,
-    expirescustom90:   ExpiresTypeData.new('90 days', 90.days).freeze
+    expiresannually: ExpiresTypeData.new("1 year", 1.year).freeze,
+    expiresbiannually: ExpiresTypeData.new("2 years", 2.years).freeze,
+    expirescustom60: ExpiresTypeData.new("60 days", 60.days).freeze,
+    expirescustom90: ExpiresTypeData.new("90 days", 90.days).freeze
   }.freeze
 
   # An expiration date is an actually two things:
@@ -34,11 +34,11 @@ class ExpirationDate
   #   This is always truncated to just the date (see  https://hathitrust.slack.com/archives/DKV93G37T/p1576770049002400)
   # @param [String,Symbol] type The expires_type to use
   def initialize(date, type = :expiresannually)
-    @date         = if date.respond_to? :to_date
-                      date.to_date
-                    else
-                      Time.zone.parse(date.to_s).to_date
-                    end.freeze
+    @date = if date.respond_to? :to_date
+      date.to_date
+    else
+      Time.zone.parse(date.to_s).to_date
+    end.freeze
     @expires_type = type.to_sym
   end
 
@@ -58,10 +58,10 @@ class ExpirationDate
   # Short version of the date string
   # @return [String] YYYY-MM-DD
   def short_string
-    @date.strftime '%Y-%m-%d'
+    @date.strftime "%Y-%m-%d"
   end
 
-  alias to_s short_string
+  alias_method :to_s, :short_string
 
   # How many days until expiration?
   # @return [Number] days until expiration
@@ -100,10 +100,10 @@ class ExpirationDate
   #  or a string that can be parsed by Time.zone.parse
   # @return [Integer] Normal <=> return indicating (in)equality of the dates only
   def <=>(other)
-    if other.respond_to?(:to_date)
-      to_date <=> other.to_date
+    to_date <=> if other.respond_to?(:to_date)
+      other.to_date
     else
-      to_date <=> Time.zone.parse(other.to_s).to_date
+      Time.zone.parse(other.to_s).to_date
     end
   end
 end
