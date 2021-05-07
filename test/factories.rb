@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'active_support/time'
+require "active_support/time"
 
 FactoryBot.define do
   factory :ht_user, class: HTUser do
@@ -48,7 +48,7 @@ FactoryBot.define do
     association :ht_billing_member
 
     trait :mfa do
-      shib_authncontext_class { 'https://refeds.org/profile/mfa' }
+      shib_authncontext_class { "https://refeds.org/profile/mfa" }
     end
 
     trait :disabled do

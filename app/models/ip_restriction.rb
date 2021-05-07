@@ -21,11 +21,11 @@ class IPRestriction
   end
 
   def self.unescape(regex)
-    regex.gsub(/^\^/, '').gsub(/\$$/, '').gsub(/\\\./, '.')
+    regex.gsub(/^\^/, "").gsub(/\$$/, "").gsub(/\\\./, ".")
   end
 
   def self.from_string(addrs)
-    if addrs == 'any'
+    if addrs == "any"
       any
     else
       new(addrs.split(/\s*,\s*/).map(&:strip))
@@ -36,10 +36,10 @@ class IPRestriction
     case regex
     when nil
       nil
-    when '^.*$'
+    when "^.*$"
       any
     else
-      new(regex.split('|').map { |escaped| unescape(escaped) })
+      new(regex.split("|").map { |escaped| unescape(escaped) })
     end
   end
 
@@ -47,19 +47,20 @@ class IPRestriction
     return unless addrs.any?
 
     addrs.map do |addr|
-      '^' + Regexp.escape(addr) + '$'
-    end.join('|')
+      "^" + Regexp.escape(addr) + "$"
+    end.join("|")
   end
 end
 
 class IPRestriction::Any
   def to_regex
-    '^.*$'
+    "^.*$"
   end
 
   def addrs
-    ['any']
+    ["any"]
   end
 
-  def validate; end
+  def validate
+  end
 end

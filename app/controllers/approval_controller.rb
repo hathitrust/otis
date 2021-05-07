@@ -16,12 +16,13 @@ class ApprovalController < ApplicationController
     @already_used = @req.received.present?
     approve unless @req.expired? || @already_used
 
-    render 'shared/approval'
+    render "shared/approval"
   end
 
   # Users who cannot access the rest of the application can still use the
   # one-time links
-  def authorize!; end
+  def authorize!
+  end
 
   private
 

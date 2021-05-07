@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ######################################
@@ -8,32 +8,32 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ######################################
 
 # https://github.com/advisories/GHSA-5m2v-hc64-56h6
-gem 'rubyzip', '~> 2.0'
+gem "rubyzip", "~> 2.0"
 
 # https://github.com/advisories/GHSA-c3gv-9cxf-6f57
-gem 'loofah', ['~> 2.3', '>= 2.3.1']
+gem "loofah", ["~> 2.3", ">= 2.3.1"]
 
 # ruby '2.5.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.6'
+gem "rails", "~> 5.2.6"
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
-gem 'puma', '~> 3.12'
+gem "puma", "~> 3.12"
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem "sass-rails", "~> 5.0"
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem "uglifier", ">= 1.3.0"
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
 
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
+gem "coffee-rails", "~> 4.2"
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
+gem "turbolinks", "~> 5"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem "jbuilder", "~> 2.5"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
@@ -46,7 +46,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem "bootsnap", ">= 1.1.0", require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -55,56 +55,53 @@ end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
-  gem 'listen', '< 3.2', '>= 3.0.5'
+  gem "web-console", ">= 3.3.0"
+  gem "listen", "< 3.2", ">= 3.0.5"
 end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15', '< 4.0'
-  gem 'selenium-webdriver'
+  gem "capybara", ">= 2.15", "< 4.0"
+  gem "selenium-webdriver"
   # Easy installation and use of chromedriver to run system tests with Chrome
   # gem 'chromedriver-helper'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
+gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 ##############################################################################
 #
 # Otis
 #
 ##############################################################################
-gem 'autoprefixer-rails'
-gem 'bootstrap-sass'
-gem 'jquery-rails'
-gem 'ckeditor'
+gem "autoprefixer-rails"
+gem "bootstrap-sass"
+gem "jquery-rails"
+gem "ckeditor"
 
-gem 'canister'
-gem 'ettin'
-gem 'keycard'
-gem 'kcv'
-gem 'checkpoint'
+gem "canister"
+gem "ettin"
+gem "keycard"
+gem "kcv"
+gem "checkpoint"
 
 # Use MySQL as the database for Active Record
-gem 'mysql2'
-gem 'dotenv-rails'
-
+gem "mysql2"
+gem "dotenv-rails"
 
 group :development, :test do
-  gem 'byebug'
-  gem 'rubocop'
-  gem 'pry'
-  gem 'pry-byebug'
-  gem 'sqlite3'
-  gem 'faker'
-  gem 'rubocop-faker'
-  gem 'factory_bot_rails'
-  gem 'simplecov'
+  gem "byebug"
+  gem "standard"
+  gem "pry"
+  gem "pry-byebug"
+  gem "sqlite3"
+  gem "faker"
+  gem "factory_bot_rails"
+  gem "simplecov"
 end
 
 group :test do
-  gem 'rails-controller-testing'
-  gem 'w3c_validators'
+  gem "rails-controller-testing"
+  gem "w3c_validators"
 end

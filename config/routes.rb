@@ -3,17 +3,17 @@
 Rails.application.routes.draw do
   resources :users
 
-  scope constraints: { id: /.+/ } do
+  scope constraints: {id: /.+/} do
     resources :ht_users
   end
 
-  scope format:false, constraints: { id: /.+/ } do
+  scope format: false, constraints: {id: /.+/} do
     resources :ht_approval_requests
   end
 
-  root 'ht_users#index'
+  root "ht_users#index"
 
-  scope format:false, constraints: { id: /.+/ } do
+  scope format: false, constraints: {id: /.+/} do
     resources :ht_institutions
   end
 
@@ -23,9 +23,9 @@ Rails.application.routes.draw do
     match "/logout", to: "session#destroy", as: "logout", via: [:get, :post]
   end
 
-  get '/approve/:token', to: 'approval#new', as: :approve
+  get "/approve/:token", to: "approval#new", as: :approve
 
   unless Rails.env.production?
-    get 'Shibboleth.sso/Login', controller: :fake_shib, as: :fake_shib, action: :new
+    get "Shibboleth.sso/Login", controller: :fake_shib, as: :fake_shib, action: :new
   end
 end

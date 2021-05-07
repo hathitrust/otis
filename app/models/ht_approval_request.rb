@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTApprovalRequest < ApplicationRecord
-  self.primary_key = 'id'
+  self.primary_key = "id"
   # "Active" requests that may be subject to further action
   scope :not_renewed, -> { where(renewed: nil) }
   # "Inactive" requests that are only of historical interest
@@ -10,9 +10,9 @@ class HTApprovalRequest < ApplicationRecord
   scope :for_user, ->(user) { where(userid: user).order(:sent, :received, :renewed) }
   # Make sure that the most recent and most "incomplete" request comes first when fetching request for user
   # If we had created/updated timestamps we could use those.
-  most_recent_order = { Arel.sql('sent IS NULL') => :desc, :sent => :desc,
-                        Arel.sql('received IS NULL') => :desc, :received => :desc,
-                        Arel.sql('renewed IS NULL') => :desc, :renewed => :desc }
+  most_recent_order = {Arel.sql("sent IS NULL") => :desc, :sent => :desc,
+                       Arel.sql("received IS NULL") => :desc, :received => :desc,
+                       Arel.sql("renewed IS NULL") => :desc, :renewed => :desc}
   scope :most_recent, ->(user) { for_user(user).order(most_recent_order) }
   scope :not_approved, -> { where(received: nil) }
   scope :approved, -> { where.not(received: nil) }
@@ -29,7 +29,7 @@ class HTApprovalRequest < ApplicationRecord
   def sent_before_received
     return unless self[:sent].present? && self[:received].present? && self[:sent] > self[:received]
 
-    errors.add(:sent, 'date sent cannot be after date received')
+    errors.add(:sent, "date sent cannot be after date received")
   end
 
   def self.digest(tok)
@@ -56,7 +56,7 @@ class HTApprovalRequest < ApplicationRecord
 
   # Display datetime without UTC suffix or just date
   def sent(short: false)
-    short ? self[:sent]&.strftime('%Y-%m-%d') : self[:sent]&.to_s(:db)
+    short ? self[:sent]&.strftime("%Y-%m-%d") : self[:sent]&.to_s(:db)
   end
 
   def sent=(value)
@@ -98,7 +98,7 @@ class HTApprovalRequest < ApplicationRecord
 
   def date_field(field, short: false)
     if short
-      self[field]&.strftime('%Y-%m-%d')
+      self[field]&.strftime("%Y-%m-%d")
     else
       self[field]&.to_s(:db)
     end

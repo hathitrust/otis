@@ -16,6 +16,6 @@
 # end
 
 ActiveSupport::Inflector.inflections do |inflect|
-  inflect.acronym 'HTML'
-  inflect.acronym 'HT'
+  inflect.acronym "HTML"
+  inflect.acronym "HT"
 end

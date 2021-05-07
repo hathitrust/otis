@@ -8,11 +8,10 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-raise StandardError, 'Not for production use' if Rails.env.production?
+raise StandardError, "Not for production use" if Rails.env.production?
 
-require 'faker'
+require "faker"
 
-# rubocop:disable Metrics/MethodLength
 def create_ht_user(expires:)
   u = HTUser.new(
     userid: Faker::Internet.unique.email,
@@ -32,12 +31,12 @@ def create_ht_user(expires:)
     u.identity_provider = HTInstitution.enabled.where.not(shib_authncontext_class: nil).sample.entityID
   else
     u.identity_provider = HTInstitution.enabled.sample.entityID
-    if rand > 0.4
-      u.iprestrict = Faker::Internet.public_ip_v4_address
+    u.iprestrict = if rand > 0.4
+      Faker::Internet.public_ip_v4_address
     elsif rand > 0.2
-      u.iprestrict = 'any'
+      "any"
     else
-      u.iprestrict = "#{Faker::Internet.public_ip_v4_address}, #{Faker::Internet.public_ip_v4_address}"
+      "#{Faker::Internet.public_ip_v4_address}, #{Faker::Internet.public_ip_v4_address}"
     end
   end
   u.save!
@@ -52,9 +51,8 @@ def create_ht_user(expires:)
   c.save
   create_ht_approval_request(u)
 end
-# rubocop:enable Metrics/MethodLength
 
-def create_ht_approval_request(user) # rubocop:disable Metrics/MethodLength
+def create_ht_approval_request(user)
   return unless rand < 0.1
 
   sent = [nil, Faker::Time.backward].sample
@@ -71,9 +69,9 @@ def create_ht_approval_request(user) # rubocop:disable Metrics/MethodLength
   ar.save!
 end
 
-def create_ht_institution(enabled) # rubocop:disable Metrics/MethodLength
+def create_ht_institution(enabled)
   inst_id = Faker::Internet.unique.domain_word
-  domain = inst_id + '.' + Faker::Internet.domain_suffix
+  domain = inst_id + "." + Faker::Internet.domain_suffix
   HTInstitution.create(
     inst_id: inst_id,
     name: Faker::University.name,
@@ -81,7 +79,7 @@ def create_ht_institution(enabled) # rubocop:disable Metrics/MethodLength
     us: [0, 1].sample,
     enabled: enabled,
     entityID: Faker::Internet.url,
-    allowed_affiliations: '^(alum|member)' + domain,
+    allowed_affiliations: "^(alum|member)" + domain,
     shib_authncontext_class: [nil, Faker::Internet.url].sample,
     emergency_contact: Faker::Internet.email
   )

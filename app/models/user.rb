@@ -26,7 +26,7 @@ class User
   end
 
   def identity
-    @identity ||= { username: id }.reject { |_, v| v.nil? }
+    @identity ||= {username: id}.reject { |_, v| v.nil? }
   end
 
   def agent_id
