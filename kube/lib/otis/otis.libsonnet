@@ -25,6 +25,7 @@
                    .withEnv([
                      env.fromSecretRef("RAILS_MASTER_KEY","rails-master-key","rails-master-key"),
                      env.fromSecretRef("DB_URL","db-url","db-url"),
+                     env.new("RAILS_LOG_LEVEL",config.web.log_level),
                      env.new("RAILS_RELATIVE_URL_ROOT",config.web.relative_url_root)])
                    .withVolumeMounts([
                      volumeMount.new(name=app_config.configmap,

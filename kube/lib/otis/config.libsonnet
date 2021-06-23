@@ -5,6 +5,7 @@
         name: 'web',
         port: 3000,
         host: 'otis.kubernetes.hathitrust.org',
+        log_level: 'info',
         relative_url_root: '/otis',
         app_config: {
           configmap: 'production-config',

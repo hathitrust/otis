@@ -3,7 +3,8 @@
   _config+:: {
     otis+: {
       web+: {
-        host: 'staging.otis.kubernetes.hathitrust.org'
+        host: 'staging.otis.kubernetes.hathitrust.org',
+        log_level: 'debug'
       },
     }
   },
