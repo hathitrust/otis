@@ -219,3 +219,28 @@ class HTUserUpdateApprover < ActiveSupport::TestCase
     end
   end
 end
+
+class HTUserManualExpire < ActiveSupport::TestCase
+  def setup
+    @user = create(:ht_user, approver: "somebody@example.com")
+  end
+
+  test "deletes non-approved request when manually expiring user" do
+    create(:ht_approval_request, ht_user: @user, sent: Faker::Time.backward)
+    @user.reload
+    @user.expires = Time.zone.now
+    assert_difference -> { HTApprovalRequest.count }, -1 do
+      @user.save
+    end
+  end
+
+  test "does not delete approved request when manually expiring user" do
+    create(:ht_approval_request, ht_user: @user, received: Faker::Time.backward)
+
+    @user.reload
+    @user.expires = Time.zone.now
+    assert_no_difference -> { HTApprovalRequest.count } do
+      @user.save
+    end
+  end
+end

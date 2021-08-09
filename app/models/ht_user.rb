@@ -179,6 +179,9 @@ class HTUser < ApplicationRecord
   private
 
   def clean_requests
-    ht_approval_request.not_approved.not_renewed.destroy_all if saved_change_to_approver?
+    if saved_change_to_approver? || (saved_change_to_expires? &&
+                                     expiration_date(true).days_until_expiration < 1)
+      ht_approval_request.not_approved.not_renewed.destroy_all
+    end
   end
 end
