@@ -97,9 +97,30 @@ def create_ht_billing_member(inst_id)
   )
 end
 
+def create_ht_contact(inst_id)
+  HTContact.create(
+    inst_id: inst_id,
+    contact_type: HTContactType.all.sample.id,
+    email: Faker::Internet.email
+  )
+end
+
+def create_ht_contact_type
+  HTContactType.create(name: Faker::Job.position,
+                       description: Faker::Lorem.sentence(word_count: 10))
+end
+
+HTContactType.create(name: "ETAS",
+                     description: "Emergency Temporary Access Service")
+
+5.times do
+  create_ht_contact_type
+end
+
 10.times do
   inst_id = create_ht_institution(1)
   create_ht_billing_member(inst_id) if [0, 1].sample.zero?
+  create_ht_contact(inst_id) if [0, 1].sample.zero?
 end
 
 2.times do
