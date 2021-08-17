@@ -1,0 +1,35 @@
+<div id="maincontent" class="row">
+
+  <%= render 'shared/flash_message' %>
+
+  <h2 class="pull-left">Contacts</h2>
+
+  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-show-search-clear-button="true">
+    <thead class="thead-dark">
+    <tr>
+      <th data-sortable="true">ID</th>
+      <th data-sortable="true">Institution</th>
+      <th data-sortable="true">Type</th>
+      <th data-sortable="true">Email</th>
+    </tr>
+    </thead>
+
+    <% @contacts.each do |c| %>
+      <tr>
+        <td><%= c.id %></td>
+        <td><%= c.inst_link %></td>
+        <td><%= c.contact_type_display %></td>
+        <td><%= c.email_display %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <br />
+
+  <% if can?(:create, :ht_contacts) %>
+    <%= link_to 'Add New Contact', new_ht_contact_path, class: 'btn btn-primary' %>
+  <% end %>
+
+</div>
+

@@ -12,7 +12,6 @@ class HTInstitutionsController < ApplicationController
     allowed_affiliations
     shib_authncontext_class
     emergency_status
-    emergency_contact
     mapto_inst_id
     mapto_name
     us

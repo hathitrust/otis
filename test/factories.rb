@@ -107,4 +107,17 @@ FactoryBot.define do
       sent { nil }
     end
   end
+
+  factory :ht_contact_type do
+    sequence(:id) { |n| n.to_s }
+    name { Faker::Lorem.unique.characters(number: 10) }
+    description { Faker::Lorem.sentence(word_count: 10) }
+  end
+
+  factory :ht_contact do
+    sequence(:id) { |n| n.to_s }
+    email { Faker::Internet.email }
+    association :ht_institution, strategy: :create
+    association :ht_contact_type, strategy: :create
+  end
 end

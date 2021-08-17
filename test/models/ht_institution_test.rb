@@ -22,8 +22,8 @@ class HTInstitutionTest < ActiveSupport::TestCase
 
   test "correct Checkpoint resource_type and resource_id" do
     inst = build(:ht_institution, id: "id")
-    assert_equal inst.resource_type, :ht_institution
-    assert_equal inst.resource_id, "id"
+    assert_equal :ht_institution, inst.resource_type
+    assert_equal "id", inst.resource_id
   end
 
   test "must have an inst id" do

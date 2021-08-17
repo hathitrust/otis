@@ -12,6 +12,10 @@ staff:
 institution:
   - institution@default.invalid
 
+# Can administer only institution contacts
+contact:
+  - contact@default.invalid
+
 # relative_url_root doesn't work for tests
 relative_url_root: '/'
 

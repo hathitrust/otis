@@ -58,10 +58,6 @@ class HTInstitutionPresenter < SimpleDelegator
     mapto_name || "(None)"
   end
 
-  def emergency_contact_link
-    (link_to emergency_contact, "mailto:#{emergency_contact}" if emergency_contact) || "(None)"
-  end
-
   def etas_affiliations
     emergency_status || "(ETAS not enabled)"
   end
@@ -108,6 +104,10 @@ class HTInstitutionPresenter < SimpleDelegator
 
   def active_user_count
     HTUser.active.where(identity_provider: entityID).count
+  end
+
+  def contacts
+    HTContact.for_institution(id).map { |c| HTContactPresenter.new c }
   end
 
   private
