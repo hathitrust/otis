@@ -29,6 +29,10 @@ staff:
 institution:
   - institution@default.invalid
 
+# Can administer only institution contacts
+contact:
+  - contact@default.invalid
+
 shibboleth:
   url: /useradmin/Shibboleth.sso/Login
 

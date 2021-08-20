@@ -89,4 +89,15 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :country_code, default: 'us'
     t.boolean :status, default: false
   end
+
+  create_table :ht_contacts do |t|
+    t.string :inst_id
+    t.integer :contact_type
+    t.string :email
+  end
+
+  create_table :ht_contact_types do |t|
+    t.string :name
+    t.text :description
+  end
 end

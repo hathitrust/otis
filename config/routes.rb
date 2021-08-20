@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     resources :ht_institutions
   end
 
+  scope format: false, constraints: {id: /.+/} do
+    resources :ht_contacts
+  end
+
+  scope format: false, constraints: {id: /.+/} do
+    resources :ht_contact_types
+  end
+
   get "/login", to: "session#new", as: "login"
   post "/login", to: "session#create", as: "login_as"
   unless Rails.env.production?

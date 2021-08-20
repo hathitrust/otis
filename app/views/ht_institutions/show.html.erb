@@ -21,7 +21,6 @@
       <dt>MFA auth context:</dt> <dd> <%= @institution.shib_authncontext_class %> </dd>
       <dt>Affiliations:</dt> <dd><%= @institution.allowed_affiliations %></dd>
       <dt>Affiliations for ETAS:</dt> <dd><%= @institution.etas_affiliations %></dd>
-      <dt>ETAS Contact:</dt> <dd><%= @institution.emergency_contact_link %></dd>
       <dt>Enabled for Login:</dt> <dd><%= @institution.badge %></dd>
       <dt>Last Updated:</dt> <dd><%= @institution.last_update %></dd>
 
@@ -34,10 +33,22 @@
       <% end %>
     </dl>
     <hr/>
+    <h2>Users</h2>
     <dl class="dl-horizontal">
       <dt>Active Users:</dt> <dd><%= @institution.active_user_count %></dd>
-      <dt>All Users</dt> <dd><%= @institution.user_count %></dd>
+      <dt>All Users:</dt> <dd><%= @institution.user_count %></dd>
     </dl>
+
+    <% contacts = @institution.contacts %>
+    <% if contacts.any? %>
+      <hr/>
+      <h2>Contacts</h2>
+      <dl class="dl-horizontal">
+        <% contacts.each do |contact| %>
+          <dt><%= "#{contact.contact_type_display}:" %></dt> <dd><%= contact.email_display %></dd>
+        <% end %>
+      </dl>
+    <% end %>
 
    <br />
 

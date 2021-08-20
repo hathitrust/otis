@@ -1,0 +1,25 @@
+<div id="maincontent" class="row">
+  <h1><%= @contact.email %></h1>
+
+  <%= render 'shared/flash_message' %>
+
+  <div class="col-sm-6">
+    <dl class="dl-horizontal">
+      <dt>ID:</dt> <dd><%= @contact.id%></dd>
+      <dt>Institution:</dt> <dd><%= @contact.institution_display %></dd>
+      <dt>Type:</dt> <dd> <%= @contact.contact_type_display %> </dd>
+      <dt>Email:</dt> <dd><%= @contact.email_display %></dd>
+    </dl>
+
+   <br />
+
+    <% if can?(:edit, :ht_contacts) %>
+      <%= link_to 'Edit', edit_ht_contact_path, class: 'btn btn-primary' %>
+    <% end %>
+
+    <% if can?(:destroy, :ht_contacts) %>
+      <%= link_to 'Delete Contact', ht_contact_path, method: :delete, class: 'btn btn-primary',
+                  data: { confirm: "Please confirm deletion of contact \"#{@contact.email}\"" } %>
+    <% end %>
+  </div>
+</div>

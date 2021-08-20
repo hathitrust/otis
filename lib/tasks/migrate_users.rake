@@ -16,6 +16,8 @@ namespace :otis do
     admin_role = Checkpoint::Credential::Role.new(:admin)
     view_role = Checkpoint::Credential::Role.new(:view)
     res_wildcard = Checkpoint::Resource::AllOfAnyType.new
+    res_contact = Checkpoint::Resource::AllOfType.new(:ht_contacts)
+    res_contact_type = Checkpoint::Resource::AllOfType.new(:ht_contact_types)
     if Otis.config.users.present?
       Otis.config.users.each do |u|
         agent = Checkpoint::Agent::Token.new("user", u)
@@ -38,6 +40,26 @@ namespace :otis do
         agent = Checkpoint::Agent::Token.new("user", u)
         unless Services.checkpoint.permits?(agent, view_role, res_inst)
           Services.checkpoint.grant!(agent, view_role, res_inst)
+        end
+        unless Services.checkpoint.permits?(agent, view_role, res_contact)
+          Services.checkpoint.grant!(agent, view_role, res_contact)
+        end
+        unless Services.checkpoint.permits?(agent, view_role, res_contact_type)
+          Services.checkpoint.grant!(agent, view_role, res_contact_type)
+        end
+      end
+    end
+    if Otis.config.contact.present?
+      Otis.config.contact.each do |u|
+        agent = Checkpoint::Agent::Token.new("user", u)
+        unless Services.checkpoint.permits?(agent, view_role, res_wildcard)
+          Services.checkpoint.grant!(agent, view_role, res_wildcard)
+        end
+        unless Services.checkpoint.permits?(agent, admin_role, res_contact)
+          Services.checkpoint.grant!(agent, admin_role, res_contact)
+        end
+        unless Services.checkpoint.permits?(agent, admin_role, res_contact_type)
+          Services.checkpoint.grant!(agent, admin_role, res_contact_type)
         end
       end
     end

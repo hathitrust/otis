@@ -3,7 +3,7 @@
 require "test_helper"
 require "w3c_validators"
 
-class HTInstitutionsIndexTest < ActionDispatch::IntegrationTest
+class HTInstitutionsControllerIndexTest < ActionDispatch::IntegrationTest
   def setup
     @institution1 = create(:ht_institution)
     @institution2 = create(:ht_institution)
@@ -56,7 +56,7 @@ class HTInstitutionsIndexTest < ActionDispatch::IntegrationTest
   end
 end
 
-class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
+class HTInstitutionsControllerShowTest < ActionDispatch::IntegrationTest
   def setup
     @inst = create(:ht_institution)
     @mfa_inst = create(:ht_institution, name: "MFA University", enabled: true,
@@ -102,6 +102,14 @@ class HTInstitutionsShowTest < ActionDispatch::IntegrationTest
     billing_member = @inst.ht_billing_member
     assert_match(/#{billing_member.oclc_sym}/, @response.body)
     assert_match(/#{billing_member.marc21_sym}/, @response.body)
+  end
+
+  test "shows contacts" do
+    contact1 = create(:ht_contact, inst_id: @inst.id)
+    contact2 = create(:ht_contact, inst_id: @inst.id)
+    get ht_institution_url @inst
+    assert_match(contact1.email, @response.body)
+    assert_match(contact2.email, @response.body)
   end
 end
 
@@ -270,7 +278,9 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
     inst = create(:ht_institution)
     get edit_ht_institution_url(inst)
 
-    editable_fields = %w[emergency_status emergency_contact]
+    editable_fields = %w[name domain entityID mapto_inst_id grin_instance
+      shib_authncontext_class allowed_affiliations
+      emergency_status]
     editable_fields.each do |ef|
       assert_match(/name="ht_institution\[#{ef}\]"/, @response.body)
     end
@@ -295,22 +305,6 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
 
     assert_match new_status, @response.body
     assert_equal new_status, HTInstitution.find(inst.inst_id).emergency_status
-  end
-
-  test "Can update emergency contact" do
-    new_contact = "another@default.invalid"
-    inst = create(:ht_institution, emergency_contact: "somebody@default.invalid")
-
-    patch ht_institution_url inst, params: {"ht_institution" => {"emergency_contact" => new_contact}}
-
-    assert_response :redirect
-    assert_equal "update", @controller.action_name
-    assert_not_empty flash[:notice]
-    assert_redirected_to ht_institution_path(inst)
-    follow_redirect!
-
-    assert_match new_contact, @response.body
-    assert_equal new_contact, HTInstitution.find(inst.inst_id).emergency_contact
   end
 
   test "Blank emergency status sets null" do

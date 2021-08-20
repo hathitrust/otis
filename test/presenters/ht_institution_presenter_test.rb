@@ -39,11 +39,6 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
     assert_match("not enabled", presenter(inst).etas_affiliations)
   end
 
-  test "emergency contact link" do
-    inst = build(:ht_institution, emergency_contact: "somebody@default.invalid")
-    assert_match('a href="mailto:somebody@default.invalid"', presenter(inst).emergency_contact_link)
-  end
-
   test "login link" do
     inst = build(:ht_institution, entityID: "urn:something")
     assert_match(%r{Shibboleth.sso/Login.*entityID=urn:something}, presenter(inst).login_test_link)
