@@ -58,6 +58,8 @@
   </table>
 
   <br />
+  <%= link_to 'Download CSV', ht_institutions_url(format: :csv), class: 'btn btn-info' %>
+  <br />
 
   <% if can?(:create, :ht_institutions) %>
     <h2> Add New Institution </h2>
