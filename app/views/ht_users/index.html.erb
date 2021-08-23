@@ -10,7 +10,9 @@
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
-      <th data-sortable="true">Select</th>
+      <% if can?(:create, :ht_renewal_requests) || can?(:edit, :ht_users) %>
+        <th data-sortable="true">Select</th>
+      <% end %>
       <th data-sortable="true">E-mail</th>
       <th>Name</th>
       <th data-sortable="true">Role</th>
@@ -24,7 +26,9 @@
 
     <% @users.each do |u| %>
       <tr>
-        <td><%= u.select_for_renewal_checkbox %></td>
+        <% if can?(:create, :ht_renewal_requests) || can?(:edit, :ht_users) %>
+          <td><%= u.select_for_renewal_checkbox %></td>
+        <% end %>
         <td><%= u.email_link %></td>
         <td><%= u.displayname %></td>
         <td><%= u.role %></td>
@@ -45,6 +49,7 @@
     <% end %>
   </table>
   <br/>
+
   <% if can?(:create, :ht_renewal_requests)  %>
     <%= button_tag 'Create Approval Requests', type: 'submit', name: 'submit_requests', class: 'btn btn-primary' %>
   <% end %>
