@@ -28,7 +28,7 @@ Checkpoint::DB.initialize!
 
 # should get this from the resolvers
 ROLES = ["admin", "view"].freeze
-RESOURCE_TYPES = ["ht_users","ht_institutions"].freeze
+RESOURCE_TYPES = ["ht_users","ht_institutions","ht_contact_types","ht_contacts"].freeze
 
 def grant
   (username, role, content_type) = ARGV
