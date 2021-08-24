@@ -7,6 +7,8 @@ class HTContactType < ApplicationRecord
 
   before_destroy :check_contacts, prepend: true
 
+  self.primary_key = "id"
+
   # Checkpoint
   def resource_type
     :ht_contact_type

@@ -10,6 +10,8 @@ class HTContact < ApplicationRecord
   validates :contact_type, presence: true
   validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
 
+  self.primary_key = "id"
+
   # Checkpoint
   def resource_type
     :ht_contact
