@@ -37,6 +37,10 @@ class HTInstitutionsController < ApplicationController
   def index
     @enabled_institutions = HTInstitution.enabled.order("name").map { |i| HTInstitutionPresenter.new(i) }
     @other_institutions = HTInstitution.other.order("name").map { |i| HTInstitutionPresenter.new(i) }
+    respond_to do |format|
+      format.html
+      format.csv { send_data institutions_csv }
+    end
   end
 
   def update
@@ -96,5 +100,18 @@ class HTInstitutionsController < ApplicationController
 
   def fetch_institution
     @institution = HTInstitutionPresenter.new(HTInstitution.find(params[:id]))
+  end
+
+  def institutions_csv
+    require "csv"
+    CSV.generate do |csv|
+      csv << HTInstitution.column_names +
+        HTBillingMember.column_names.map { |name| "billing_#{name}" }
+      HTInstitution.order(:inst_id).each do |institution|
+        billing_fields = institution&.ht_billing_member&.attributes&.values ||
+          Array.new(HTBillingMember.column_names.count)
+        csv << institution.attributes.values + billing_fields
+      end
+    end
   end
 end
