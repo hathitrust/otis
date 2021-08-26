@@ -37,6 +37,18 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match("Approval Requests", @response.body)
   end
 
+  test "shows renewal/request checkboxes for admin" do
+    sign_in!
+    get ht_users_url
+    assert_select("input[type='checkbox'][name='ht_users[]']")
+  end
+
+  test "hides renewal/request checkboxes for non-admin" do
+    sign_in! username: "staff@default.invalid"
+    get ht_users_url
+    assert_select("input[type='checkbox'][name='ht_users[]']", 0)
+  end
+
   test "should get show page" do
     sign_in!
     get ht_user_url @user1
