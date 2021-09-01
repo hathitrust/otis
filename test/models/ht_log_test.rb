@@ -2,14 +2,14 @@
 
 require "test_helper"
 
-class HTUserLogTest < ActiveSupport::TestCase
+class HTLogTest < ActiveSupport::TestCase
   def setup
-    @user = create(:ht_user)
+    @inst = create(:ht_institution)
     @log_data = {"foo" => "bar", "baz" => "quux"}
-    @log_entry = HTUserLog.new(ht_user: @user, data: @log_data)
+    @log_entry = HTLog.new(objid: @inst.inst_id, model: :HTInstitution, data: @log_data)
   end
 
-  test "can construct a log entry for a user" do
+  test "can construct a log entry for a institution" do
     assert(@log_entry)
   end
 
@@ -17,13 +17,13 @@ class HTUserLogTest < ActiveSupport::TestCase
     assert_equal @log_data, @log_entry.data
   end
 
-  test "can access persisted log data via user" do
+  test "can access persisted log data via institution" do
     @log_entry.save
-    assert_equal @log_data, @user.ht_user_log.first.data
+    assert_equal @log_data, @inst.ht_logs.first.data
   end
 
   test "is not valid without data" do
-    log_entry = HTUserLog.new(ht_user: @user)
+    log_entry = HTLog.new(objid: @inst.inst_id, model: :HTInstitution)
     assert_not log_entry.valid?
   end
 

@@ -17,7 +17,6 @@ class HTContactsController < ApplicationController
 
   def update
     @contact = HTContact.find(params[:id])
-
     if @contact.update(contact_params(PERMITTED_UPDATE_FIELDS))
       log
       flash[:notice] = "Contact updated"
@@ -31,7 +30,6 @@ class HTContactsController < ApplicationController
 
   def create
     @contact = HTContact.new(contact_params(PERMITTED_CREATE_FIELDS))
-
     if @contact.save
       log
       redirect_to @contact, note: "Contact #{@contact.email} created"
@@ -43,6 +41,8 @@ class HTContactsController < ApplicationController
   end
 
   def destroy
+    # Log here, because after #destroy the object becomes invalid
+    log params.permit!
     if @contact.destroy
       flash[:notice] = "contact removed"
       redirect_to ht_contacts_url
@@ -54,9 +54,8 @@ class HTContactsController < ApplicationController
 
   private
 
-  def log
-    log_action(HTInstitutionLog.new(ht_institution: @contact.institution),
-      @contact_params)
+  def log(params = @contact_params)
+    log_action(@contact, params)
   end
 
   def contact_params(permitted_fields)

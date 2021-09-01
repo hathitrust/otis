@@ -69,14 +69,9 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.text :token_hash
   end
 
-  create_table :ht_user_logs do |t|
-    t.string :userid
-    t.timestamp :time
-    t.text :data
-  end
-
-  create_table :ht_institution_logs do |t|
-    t.string :inst_id
+  create_table :ht_logs do |t|
+    t.string :objid
+    t.string :model
     t.timestamp :time
     t.text :data
   end

@@ -5,6 +5,8 @@ class HTContactType < ApplicationRecord
   validates :name, presence: true, uniqueness: true, allow_blank: false
   validates :description, presence: true, allow_blank: false
 
+  has_many :ht_logs, -> { HTLog.ht_contact_type }, foreign_key: :objid, primary_key: :id
+
   before_destroy :check_contacts, prepend: true
 
   self.primary_key = "id"

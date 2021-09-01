@@ -23,7 +23,7 @@ class HTUser < ApplicationRecord
 
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
   has_one :ht_count, foreign_key: :userid, primary_key: :userid
-  has_many :ht_user_log, foreign_key: :userid, primary_key: :userid
+  has_many :ht_logs, -> { HTLog.ht_user }, foreign_key: :objid, primary_key: :email
   has_many :ht_approval_request, foreign_key: :userid, primary_key: :email
 
   validates :iprestrict, presence: true, unless: :mfa

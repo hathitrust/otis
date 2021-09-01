@@ -24,7 +24,7 @@ class HTUsersController < ApplicationController
 
     if @user.update(user_params)
       @user.add_or_update_renewal(approver: current_user.id, force: true) if renewing
-      log_action(HTUserLog.new(ht_user: @user), user_params)
+      log_action(@user, user_params)
       update_user_success
     else
       update_user_failure

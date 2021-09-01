@@ -73,7 +73,7 @@ class HTInstitutionsController < ApplicationController
   private
 
   def log
-    log_action(HTInstitutionLog.new(ht_institution: @institution), @inst_params)
+    log_action(@institution, @inst_params)
   end
 
   def inst_params(permitted_fields)

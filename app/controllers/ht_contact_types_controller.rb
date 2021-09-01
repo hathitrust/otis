@@ -18,6 +18,7 @@ class HTContactTypesController < ApplicationController
   def update
     @contact_type = HTContactType.find(params[:id])
     if @contact_type.update(contact_type_params(PERMITTED_UPDATE_FIELDS))
+      log
       flash[:notice] = "Contact type updated"
       redirect_to @contact_type
     else
@@ -30,6 +31,7 @@ class HTContactTypesController < ApplicationController
   def create
     @contact_type = HTContactType.new(contact_type_params(PERMITTED_CREATE_FIELDS))
     if @contact_type.save
+      log
       redirect_to @contact_type, note: "Contact type successfully created"
     else
       flash.now[:alert] = @contact_type.errors.full_messages.to_sentence
@@ -39,6 +41,8 @@ class HTContactTypesController < ApplicationController
   end
 
   def destroy
+    # Log here, because after #destroy the object becomes invalid
+    log params.permit!
     if @contact_type.destroy
       flash[:notice] = "Contact type removed"
       redirect_to ht_contact_types_url
@@ -49,6 +53,10 @@ class HTContactTypesController < ApplicationController
   end
 
   private
+
+  def log(params = @contact_type_params)
+    log_action(@contact_type, params)
+  end
 
   def contact_type_params(permitted_fields)
     @contact_type_params ||= params.require(:ht_contact_type)
