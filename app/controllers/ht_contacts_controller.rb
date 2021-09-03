@@ -11,8 +11,20 @@ class HTContactsController < ApplicationController
   end
 
   def index
-    contacts = HTContact.includes(:ht_institution).order("ht_institutions.name")
+    contacts = if params[:contact_type].blank?
+      HTContact.includes(:ht_institution).order("ht_institutions.name")
+    else
+      HTContact.where(contact_type: params[:contact_type])
+    end
     @contacts = contacts.map { |c| HTContactPresenter.new(c) }
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data contacts_csv,
+          type: "text/csv; charset=utf-8; header=present",
+          disposition: "attachment; filename=ht_contacts.csv"
+      end
+    end
   end
 
   def update
@@ -67,5 +79,16 @@ class HTContactsController < ApplicationController
 
   def fetch_contact
     @contact = HTContactPresenter.new(HTContact.find(params[:id]))
+  end
+
+  def contacts_csv
+    require "csv"
+    CSV.generate do |csv|
+      csv << %i[ID Institution Type E-mail]
+      @contacts.each do |contact|
+        csv << [contact.id, contact.ht_institution.name,
+          contact.ht_contact_type.name, contact.email]
+      end
+    end
   end
 end

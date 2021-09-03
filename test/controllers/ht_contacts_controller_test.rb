@@ -45,10 +45,59 @@ class HTContactsControllerIndexTest < ActionDispatch::IntegrationTest
     assert_match "contacts/new", @response.body
   end
 
-  test "as non-admin, shows link for new contact" do
+  test "as non-admin, hides link for new contact" do
     sign_in! username: "staff@default.invalid"
     get ht_contacts_url
     assert_no_match "contacts/new", @response.body
+  end
+end
+
+class HTContactsControllerSearchTest < ActionDispatch::IntegrationTest
+  def setup
+    @type1 = create(:ht_contact_type)
+    @type2 = create(:ht_contact_type)
+    @inst = create(:ht_institution)
+    @contact1 = create(:ht_contact, inst_id: @inst.inst_id, contact_type: @type1.id)
+    @contact2 = create(:ht_contact, inst_id: @inst.inst_id, contact_type: @type2.id)
+  end
+
+  test "should get index for specific contact type only" do
+    sign_in!
+    get ht_contacts_url(contact_type: @type1.id)
+    assert_response :success
+    assert_not_nil assigns(:contacts)
+    assert_equal "index", @controller.action_name
+    assert_match "Contacts", @response.body
+    assert_match @contact1.email, @response.body
+    assert_no_match @contact2.email, @response.body
+  end
+end
+
+class HTContactsControllerCSVTest < ActionDispatch::IntegrationTest
+  def setup
+    @inst = create(:ht_institution, entityID: "http://example.com", inst_id: "I")
+    @type1 = create(:ht_contact_type, name: "T1")
+    @type2 = create(:ht_contact_type, name: "T2")
+    @contact1 = HTContact.new(inst_id: @inst.inst_id, contact_type: @type1.id, email: "a@b")
+    @contact1.save!
+    @contact2 = HTContact.new(inst_id: @inst.inst_id, contact_type: @type2.id, email: "c@d")
+    @contact2.save!
+  end
+
+  test "export list of all contacts as CSV" do
+    sign_in!
+    get ht_contacts_url format: :csv
+    assert_equal 3, @response.body.lines.count
+    assert_match "#{@contact1.id},#{@inst.name},T1,a@b", @response.body
+    assert_match "#{@contact2.id},#{@inst.name},T2,c@d", @response.body
+  end
+
+  test "export list of one contact type as CSV" do
+    sign_in!
+    get ht_contacts_url format: :csv, contact_type: @type1.id
+    assert_equal 2, @response.body.lines.count
+    assert_match "#{@contact1.id},#{@inst.name},T1,a@b", @response.body
+    assert_no_match "#{@contact2.id},#{@inst.name},T2,c@d", @response.body
   end
 end
 
