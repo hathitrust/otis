@@ -39,7 +39,7 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get approve_url @req.token
 
-    assert @user.ht_user_log.first
+    assert @user.ht_logs.first
   end
 
   test "logs attributes from keycard" do
@@ -53,7 +53,7 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
 
       process(:get, approve_url(@req.token), headers: {"HTTP_X_SHIB_EDUPERSONPRINCIPALNAME" => email})
 
-      log_data = @user.ht_user_log.first.data
+      log_data = @user.ht_logs.first.data
 
       assert_equal email, log_data["eduPersonPrincipalName"]
       assert_equal request.remote_ip, log_data["ip_address"]
@@ -67,7 +67,7 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
 
     get approve_url @req.token
 
-    log_data = @user.ht_user_log.first.data
+    log_data = @user.ht_logs.first.data
     assert_not log_data["params"].key?("token")
   end
 end

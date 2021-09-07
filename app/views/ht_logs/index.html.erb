@@ -1,0 +1,33 @@
+<div id="maincontent" class="row">
+
+  <%= render 'shared/flash_message' %>
+
+  <h2 class="pull-left">Logs</h2>
+
+  <table id="log_entries" class="table table-striped" data-toggle="table" data-height="460"
+         data-virtual-scroll="true" data-search="true" data-show-search-clear-button="true">
+    <thead class="thead-dark">
+    <tr>
+      <th data-sortable="true">Model</th>
+      <th data-sortable="true">ID</th>
+      <th data-sortable="true">Time</th>
+      <th data-sortable="true">Data</th>
+      
+    </tr>
+    </thead>
+
+    <% @logs.each do |log| %>
+      <tr>
+        <td><%= log.model %></td>
+        <td><%= log.objid %></td>
+        <td><%= log.time %></td>
+        <td><%= log.data_display %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <br />
+  <%= link_to 'Download JSON', ht_logs_url(format: :json), class: 'btn btn-info' %>
+
+</div>
+

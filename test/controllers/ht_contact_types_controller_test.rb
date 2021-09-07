@@ -153,9 +153,17 @@ class HTContactTypesControllerCreateTest < ActionDispatch::IntegrationTest
     type_params = attributes_for(:ht_contact_type)
     type_id = type_params[:id]
     post ht_contact_types_url, params: {ht_contact_type: type_params}
-
     assert_redirected_to ht_contact_type_url(type_id)
     assert_not_nil(HTContactType.find(type_id))
+  end
+
+  test "logs create" do
+    type_params = attributes_for(:ht_contact_type)
+    type_id = type_params[:id]
+    post ht_contact_types_url, params: {ht_contact_type: type_params}
+    log = HTContactType.find(type_id).ht_logs.first
+    assert_equal(type_id.to_s, log.data["params"]["id"])
+    assert_not_nil(log.time)
   end
 end
 
@@ -246,5 +254,14 @@ class HTContactTypesControllerDeleteTest < ActionDispatch::IntegrationTest
     assert_equal "destroy", @controller.action_name
     assert_not_empty flash[:alert]
     assert_not_nil HTContactType.find type_id
+  end
+
+  test "logs destroy" do
+    @type = create(:ht_contact_type)
+    type_id = @type.id
+    delete ht_contact_type_url @type
+    log = HTLog.where(objid: type_id, model: :HTContactType).order(:time).last
+    assert_equal(type_id.to_s, log.data["params"]["id"])
+    assert_not_nil(log.time)
   end
 end

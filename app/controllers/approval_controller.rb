@@ -31,6 +31,6 @@ class ApprovalController < ApplicationController
     @req.save!
     # Currently, there are no parameters for the controller other than the
     # token, which we do not wish to log.
-    log_action(HTUserLog.new(ht_user: @user), params.permit)
+    log_action(@user, params.permit)
   end
 end

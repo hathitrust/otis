@@ -94,11 +94,12 @@ class ApplicationController < ActionController::Base
   # Adapted from https://gist.github.com/redrick/2c23988368fb525c7e75
   # there is more there, including GeoIP which we may use as when we
   # address HT-1451
-  def log_action(log_entry, permitted_params)
+  def log_action(obj, permitted_params)
     raise UnfilteredParameters unless permitted_params.permitted?
 
+    raise "Unable to extract object id from #{obj.inspect}" if obj.id.blank?
     rails_action = "#{params[:controller]}##{params[:action]}"
-
+    log_entry = HTLog.new(model: obj.resource_type.to_s.camelize, objid: obj.id)
     log_entry.data = {
       action: rails_action,
       ip_address: request.remote_ip,
@@ -106,6 +107,6 @@ class ApplicationController < ActionController::Base
       user_agent: request.user_agent
     }.merge(keycard_attributes)
     log_entry.save
-    Rails.logger.info "AUDIT LOG: #{JSON.generate(log_entry.data)}"
+    Rails.logger.info "AUDIT LOG: #{obj.resource_type.to_s.camelize}, #{obj.id}, #{JSON.generate(log_entry.data)}"
   end
 end

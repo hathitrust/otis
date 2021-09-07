@@ -238,7 +238,7 @@ class HTContactsControllerCreateTest < ActionDispatch::IntegrationTest
     contact_params = FactoryBot.build(:ht_contact).attributes.except("created_at", "updated_at").symbolize_keys
     contact_id = contact_params[:id]
     post ht_contacts_url, params: {ht_contact: contact_params}
-    log = HTInstitution.find(contact_params[:inst_id]).ht_institution_log.first
+    log = HTContact.find(contact_id).ht_logs.first
     assert_equal(contact_id.to_s, log.data["params"]["id"])
     assert_not_nil(log.time)
   end
@@ -320,5 +320,14 @@ class HTContactsControllerDeleteTest < ActionDispatch::IntegrationTest
     assert_raises ActiveRecord::RecordNotFound do
       HTContact.find contact_id
     end
+  end
+
+  test "logs destroy" do
+    @contact = create(:ht_contact)
+    contact_id = @contact.id
+    delete ht_contact_url @contact
+    log = HTLog.where(objid: contact_id, model: :HTContact).order(:time).last
+    assert_equal(contact_id.to_s, log.data["params"]["id"])
+    assert_not_nil(log.time)
   end
 end
