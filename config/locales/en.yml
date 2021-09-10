@@ -40,7 +40,6 @@ en:
     badges:
       approved: "Approved"
       expired: "Request Expired"
-      renewed: "Renewed"
       sent: "Sent"
       unsent: "Unsent"
   ht_institution:

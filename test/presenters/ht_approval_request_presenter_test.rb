@@ -62,13 +62,6 @@ class HTApprovalRequestPresenterBadgeTest < ActiveSupport::TestCase
     assert_match "Expired", badge(req)
   end
 
-  test "renewed badge" do
-    req = build(:ht_approval_request, :renewed)
-    assert_equal(:renewed, req.renewal_state)
-    assert_not_nil badge(req)
-    assert_match "Renewed", badge(req)
-  end
-
   test "sent badge" do
     req = build(:ht_approval_request, :sent)
     assert_equal(:sent, req.renewal_state)
