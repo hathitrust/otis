@@ -24,9 +24,8 @@ class HTApprovalRequestPresenter < SimpleDelegator
   include Rails.application.routes.url_helpers
 
   BADGES = {
-    approved: HTApprovalRequestBadge.new("approved", "label-info"),
+    approved: HTApprovalRequestBadge.new("approved", "label-success"),
     expired: HTApprovalRequestBadge.new("expired", "label-danger"),
-    renewed: HTApprovalRequestBadge.new("renewed", "label-success"),
     sent: HTApprovalRequestBadge.new("sent", "label-default"),
     unsent: HTApprovalRequestBadge.new("unsent", "label-warning")
   }.freeze
