@@ -308,3 +308,31 @@ class HTApprovalRequestsControllerRolesTest < ActionDispatch::IntegrationTest
     assert_select "input.btn-primary", false
   end
 end
+
+class HTApprovalRequestsControllerDeleteExpiredTest < ActionDispatch::IntegrationTest
+  def setup
+    @user1 = create(:ht_user, approver: "approver@example.com")
+    @user2 = create(:ht_user, approver: "approver@example.com")
+    @user3 = create(:ht_user, approver: "approver@example.com")
+    @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver, sent: Time.now, received: nil, renewed: nil)
+    @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Time.now - 30.days, received: nil, renewed: nil)
+    @req3 = create(:ht_approval_request, userid: @user3.email, approver: @user2.approver, sent: Time.now - 30.days, received: Time.now - 2.days, renewed: nil)
+  end
+
+  test "should delete only one expired request" do
+    sign_in!
+    assert_equal 3, HTApprovalRequest.count
+    assert_equal 1, HTApprovalRequest.expired.count
+    post ht_approval_requests_url, params: {delete_expired: true}
+    assert_response :redirect
+    follow_redirect!
+    assert_match "Removed", flash[:notice]
+    assert_equal "index", @controller.action_name
+    assert @req1.reload
+    assert_raises ActiveRecord::RecordNotFound do
+      HTApprovalRequest.find @user2.email
+    end
+    assert_equal 2, HTApprovalRequest.count
+    assert_equal 0, HTApprovalRequest.expired.count
+  end
+end

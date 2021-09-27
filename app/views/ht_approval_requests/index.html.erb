@@ -53,6 +53,10 @@
   <% if can?(:edit, :ht_users) %>
     <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
   <% end %>
+  <% if can?(:destroy, :ht_approval_requests) && HTApprovalRequest.expired.any? %>
+    <%= submit_tag 'Delete Expired Requests', name: 'delete_expired', class: 'btn btn-danger',
+                   data: { confirm: "Please confirm deletion of #{HTApprovalRequestPresenter.expired_requests}." } %>
+  <% end %>
   <% end # form-tag %>
   <h2 class="pull-left">Inactive Requests</h2>
   <table id="inactive_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"

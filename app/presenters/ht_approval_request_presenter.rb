@@ -30,6 +30,11 @@ class HTApprovalRequestPresenter < SimpleDelegator
     unsent: HTApprovalRequestBadge.new("unsent", "label-warning")
   }.freeze
 
+  def self.expired_requests
+    expired = HTApprovalRequest.expired
+    "#{expired.count} expired #{"request".pluralize(expired.count)}"
+  end
+
   def init(request)
     @request = request
   end
