@@ -14,6 +14,10 @@ class HTApprovalRequestsController < ApplicationController
       flash[:notice] = "Renewed #{@renewed_users.join ", "}" if @renewed_users.count.positive?
       session[:renewed_users] = @renewed_users
     end
+    if params[:delete_expired]
+      deleted = delete_expired
+      flash[:notice] = "Removed #{deleted} #{"request".pluralize(deleted)}"
+    end
     redirect_to action: :index
   end
 
@@ -101,5 +105,9 @@ class HTApprovalRequestsController < ApplicationController
       flash[:alert] = e.message
     end
     adds
+  end
+
+  def delete_expired
+    HTApprovalRequest.expired.destroy_all.count
   end
 end

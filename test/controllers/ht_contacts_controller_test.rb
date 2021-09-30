@@ -276,7 +276,7 @@ class HTContactsControllerEditTest < ActionDispatch::IntegrationTest
     assert_redirected_to ht_contact_path(@contact)
     follow_redirect!
 
-    assert_match other_inst.name, @response.body
+    assert_match CGI.escapeHTML(other_inst.name), @response.body
     assert_equal other_inst.inst_id, HTContact.find(@contact.id).inst_id
   end
 

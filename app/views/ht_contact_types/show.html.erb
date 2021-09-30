@@ -16,7 +16,7 @@
     <% end %>
     
     <% if can?(:destroy, :ht_contact_types) %>
-      <%= link_to 'Delete Contact Type', ht_contact_type_path, method: :delete, class: 'btn btn-primary',
+      <%= link_to 'Delete Contact Type', ht_contact_type_path, method: :delete, class: 'btn btn-danger',
                   data: { confirm: "Please confirm deletion of contact type \"#{@contact_type.name}\"" } %>
     <% end %>
   </div>
