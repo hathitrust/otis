@@ -31,7 +31,7 @@
         <% end %>
         <td><%= u.email_link %></td>
         <td><%= u.displayname %></td>
-        <td><%= u.role %></td>
+        <td><%= u.role_name %></td>
         <td><%= link_to u.institution, ht_institution_path(u.ht_institution.inst_id) %></td>
         <td class="text-nowrap <%= u.expiring_soon? ? "bg-danger" : '' %>">
           <%= u.expires_string %>
@@ -77,7 +77,7 @@
       <tr>
         <td><%= u.email_link %></td>
         <td><%= u.displayname %></td>
-        <td><%= u.role %></td>
+        <td><%= u.role_name %></td>
         <td><%= u.institution %></td>
         <td><%= u.expires_string %></td>
         <td><%= u.iprestrict&.join(', ') %></td>

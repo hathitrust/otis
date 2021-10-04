@@ -6,21 +6,6 @@ require "forwardable"
 class HTUser < ApplicationRecord
   self.primary_key = "email"
 
-  def self.role_map
-    {"corrections" => "Support of corrections or updates to HathiTrust volumes",
-     "cataloging" => "Correct or add to the bibliographic records of HathiTrust volumes",
-     "crms" => "Perform copyright review on HathiTrust volumes",
-     "superuser" => "UM staff developer – includes roles staffdeveloper and staffsysadmin",
-     "quality" => "Evaluate the quality of digital volumes in HathiTrust",
-     "ssd" => "Users who have print disabilities",
-     "ssdproxy" => "Act as a proxy for users who have print disabilities",
-     "inprintstatus" => "Perform in-print status review of volumes in HathiTrust",
-     "replacement" => "Create replacement copies of individual pages of volumes in HathiTrust",
-     "staffdeveloper" => "Develop software for HathiTrust services or operations",
-     "staffsysadmin" => "Operate or maintain HathiTrust repository infrastructure",
-     "developer" => "Experimental search API role – do not use"}
-  end
-
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
   has_one :ht_count, foreign_key: :userid, primary_key: :userid
   has_many :ht_logs, -> { HTLog.ht_user }, foreign_key: :objid, primary_key: :email
@@ -150,10 +135,6 @@ class HTUser < ApplicationRecord
 
   def approval_requested?
     ht_approval_request.count.positive?
-  end
-
-  def role_description
-    self.class.role_map[self[:role]]
   end
 
   def renew!

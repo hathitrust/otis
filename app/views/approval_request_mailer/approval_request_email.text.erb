@@ -3,14 +3,13 @@
 Name  E-mail  Activity  Term  Expires
   <% role_stars = {} %>
   <% @reqs.each do |req| %>
-    <% u = req.ht_user %>
+    <% u = HTUserPresenter.new(req.ht_user) %>
     <% unless role_stars[u.role] %>
       <% role_stars[u.role] = role_stars.count + 1 %>
     <% end %>
-<%= u.displayname %>  <%= u.email %>  <%= u.role %><%= '*' * role_stars[u.role] %>  <%= u.expiration_date.extension_period_text %>  <%= u.expires_string %>  <%= approve_url(req.token, host: @base_url) %>
+<%= u.displayname %>  <%= u.email %>  <%= u.role_name %><%= '*' * role_stars[u.role] %>  <%= u.expiration_date.extension_period_text %>  <%= u.expires_string %>  <%= approve_url(req.token, host: @base_url) %>
   <% end %>
 
 <% role_stars.each do |k,v| %>
-<%= "#{'*' * v} #{HTUser.role_map[k]}" %>
+  <%= "#{'*' * v}" "#{HTUserPresenter.role_description k}" %>
 <% end %>
-

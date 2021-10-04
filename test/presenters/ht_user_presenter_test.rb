@@ -86,3 +86,26 @@ class HTUserPresenterTest < ActiveSupport::TestCase
     assert_match("label", user.email_link)
   end
 end
+
+class HTUserPresenterRoleDisplay < ActiveSupport::TestCase
+  def setup
+    @user = HTUserPresenter.new(build(:ht_user, role: "crms"))
+    @user_unknown_role = HTUserPresenter.new(build(:ht_user, role: "blah"))
+    @user_no_role = HTUserPresenter.new(build(:ht_user, role: nil))
+  end
+
+  test "User with a role has a natural-language name and description" do
+    assert @user.role_name.length.positive?
+    assert @user.role_description.length.positive?
+  end
+
+  test "User with bogus role lacks natural-language name and description" do
+    assert_nil @user_unknown_role.role_name
+    assert_nil @user_unknown_role.role_description
+  end
+
+  test "User with no role lacks natural-language name and description" do
+    assert_nil @user_no_role.role_name
+    assert_nil @user_no_role.role_description
+  end
+end

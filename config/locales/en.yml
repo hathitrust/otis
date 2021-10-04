@@ -49,6 +49,32 @@ en:
       private: "Private"
       social: "Social Login"
   ht_user:
+    role_names:
+      corrections: "Corrections Support"
+      cataloging: "Cataloging Support"
+      crms: "Copyright Reviewer"
+      superuser: "UM Staff Developer"
+      quality: "Quality Reviewer"
+      ssd: "Accessible Text Request Service Patron"
+      ssdproxy: "Accessible Text Request Service Provider"
+      inprintstatus: "In-print Status Reviewer"
+      replacement: "Page Replacement Support"
+      staffdeveloper: "Staff Developer"
+      staffsysadmin: "Staff Systems Administrator"
+      developer: "Experimental search API role – do not use"
+    role_descriptions:
+      corrections: "Support of corrections or updates to HathiTrust volumes"
+      cataloging: "Correct or add to the bibliographic records of HathiTrust volumes"
+      crms: "Perform copyright review on HathiTrust volumes"
+      superuser: "UM staff developer – includes roles staffdeveloper and staffsysadmin"
+      quality: "Evaluate the quality of digital volumes in HathiTrust"
+      ssd: "Users who have print disabilities"
+      ssdproxy: "Act as a proxy for users who have print disabilities"
+      inprintstatus: "Perform in-print status review of volumes in HathiTrust"
+      replacement: "Create replacement copies of individual pages of volumes in HathiTrust"
+      staffdeveloper: "Develop software for HathiTrust services or operations"
+      staffsysadmin: "Operate or maintain HathiTrust repository infrastructure"
+      developer: "Experimental search API role – do not use"
     edit:
       iprestrict_prompt: "If multiple IP addresses, enter as a comma-separated list."
     attributes:
