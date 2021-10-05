@@ -5,6 +5,14 @@ class HTUserPresenter < SimpleDelegator
   include ActionView::Helpers::UrlHelper
   include Rails.application.routes.url_helpers
 
+  def self.role_name(role)
+    I18n.t role, scope: "ht_user.role_names", default: nil
+  end
+
+  def self.role_description(role)
+    I18n.t role, scope: "ht_user.role_descriptions", default: nil
+  end
+
   def init(user)
     @user = user
   end
@@ -38,6 +46,14 @@ class HTUserPresenter < SimpleDelegator
     else
       simple_email_link
     end
+  end
+
+  def role_name
+    HTUserPresenter.role_name role
+  end
+
+  def role_description
+    HTUserPresenter.role_description role
   end
 
   def mfa_icon

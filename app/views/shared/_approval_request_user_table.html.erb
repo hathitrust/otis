@@ -10,14 +10,14 @@
   <% role_stars = {} %>
   <% @reqs.each do |req| %>
     <% next unless req.mailable? %>
-    <% u = req.ht_user %>
+    <% u = HTUserPresenter.new(req.ht_user) %>
     <% unless role_stars[u.role] %>
       <% role_stars[u.role] = role_stars.count + 1 %>
     <% end %>
     <tr>
     <td style="padding: 6px;"><%= u.displayname %></td>
     <td style="padding: 6px;"><%= u.email %></td>
-    <td style="padding: 6px;"><%= u.role %><%= '*' * role_stars[u.role] %></td>
+    <td style="padding: 6px;"><%= u.role_name %><%= '*' * role_stars[u.role] %></td>
     <td style="padding: 6px;"><%= u.expiration_date.extension_period_text %></td>
     <td style="padding: 6px;"><%= u.expires_string %></td>
     <td style="padding: 6px;">
@@ -32,6 +32,6 @@
 </table>
 <br/>
 <% role_stars.each do |k,v| %>
-  <span><%= "#{'*' * v} #{HTUser.role_map[k]}" %></span><br/>
+  <span><%= "#{'*' * v}" "#{HTUserPresenter.role_description k}" %></span><br/>
 <% end %>
 

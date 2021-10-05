@@ -129,26 +129,6 @@ class HTUserMultipleIprestrict < ActiveSupport::TestCase
   end
 end
 
-class HTUserRoleDescription < ActiveSupport::TestCase
-  def setup
-    @user = build(:ht_user, role: "crms")
-    @user_unknown_role = build(:ht_user, role: "blah")
-    @user_no_role = build(:ht_user, role: nil)
-  end
-
-  test "User with a role has a natural-language description" do
-    assert @user.role_description.length.positive?
-  end
-
-  test "User with bogus role lacks natural-language description" do
-    assert_nil @user_unknown_role.role_description
-  end
-
-  test "User with no role lacks natural-language description" do
-    assert_nil @user_no_role.role_description
-  end
-end
-
 class HTUserRenewal < ActiveSupport::TestCase
   def setup
     @expiresannually_user = build(:ht_user, expires: Time.zone.now, expire_type: "expiresannually")
