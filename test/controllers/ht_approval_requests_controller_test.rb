@@ -2,7 +2,6 @@
 
 require "test_helper"
 require "action_mailer/test_helper"
-require "w3c_validators"
 
 class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
   def setup
@@ -22,10 +21,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
   test "index is well-formed HTML" do
     sign_in!
     get ht_approval_requests_url
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "index should have table headings matching status badges" do
@@ -91,10 +87,7 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   test "edit page is well-formed HTML" do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "edit page should not contain approval link" do
@@ -198,10 +191,7 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
   test "show page is well-formed HTML" do
     sign_in!
     get ht_approval_request_url @user.approver
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 end
 

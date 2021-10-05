@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "w3c_validators"
 
 class HTUsersControllerTest < ActionDispatch::IntegrationTest
   def setup
@@ -25,10 +24,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   test "index is well-formed HTML" do
     sign_in!
     get ht_users_url
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "shows nav menu" do
@@ -63,10 +59,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   test "show page is well-formed HTML" do
     sign_in!
     get ht_user_url @user1
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "should get show page with no iprestrict" do
@@ -88,20 +81,14 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   test "edit page is well-formed HTML" do
     sign_in!
     get edit_ht_user_url @user1
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "edit page is well-formed HTML for MFA user" do
     sign_in!
     user3 = create(:ht_user_mfa)
     get edit_ht_user_url user3
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "edit IP address succeeds" do

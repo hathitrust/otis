@@ -30,3 +30,10 @@ administrative power.
 ```
 docker-compose run test
 ```
+
+To enable W3C HTML validation of OTIS pages, use the following.
+These tests are not run by default since they rely on an external service.
+
+```
+docker-compose run -e W3C_VALIDATION=1 test
+```
