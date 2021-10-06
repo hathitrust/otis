@@ -1,0 +1,45 @@
+  <%= form_with(model: @registration, local: true, id: 'edit_ht_registration_form') do |form| %>
+    <div class="col-sm-6">
+      <dl class="dl-horizontal">
+        <dt>Name:</dt>
+        <dd><%= form.text_field :name, size: 30 %></dd>
+
+	<dt>Institution:</dt>
+        <dd><%= form.text_field :inst_id, size: 30 %></dd>
+
+	<dt>JIRA Ticket:</dt>
+        <dd><%= form.text_field :jira_ticket, size: 30 %></dd>
+
+	<dt>Contact Info:</dt>
+        <dd><%= form.text_field :contact_info, size: 30 %></dd>
+
+	<dt>Auth Rep Name:</dt>
+        <dd><%= form.text_field :auth_rep_name, size: 30 %></dd>
+
+	<dt>Auth Rep Email:</dt>
+        <dd><%= form.text_field :auth_rep_email, size: 30 %></dd>
+
+	<dt>Auth Rep Date:</dt>
+        <dd><%= form.text_field :auth_rep_date, size: 30 %></dd>
+
+	<dt>DSP Name:</dt>
+        <dd><%= form.text_field :dsp_name, size: 30 %></dd>
+
+	<dt>DSP Email:</dt>
+        <dd><%= form.text_field :dsp_email, size: 30 %></dd>
+
+	<dt>DSP Date:</dt>
+        <dd><%= form.text_field :dsp_date, size: 30 %></dd>
+
+	<dt>MFA Addendum:</dt>
+        <dd>
+	  <%= form.radio_button :mfa_addendum, "yes" %> Yes
+	  <%= form.radio_button :mfa_addendum,  "no" %> No
+	</dd>
+      </dl>
+    </div>
+
+    <hr/>
+    
+    <%= form.submit 'Submit Registration', class: 'btn btn-primary' %>
+  <% end %>

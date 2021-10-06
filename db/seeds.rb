@@ -110,6 +110,27 @@ def create_ht_contact_type
                        description: Faker::Lorem.sentence(word_count: 10))
 end
 
+def create_ht_registration(inst_id)
+  ticket_no = Faker::Number.between(from: 1000, to: 9999)
+
+  HTRegistration.create(
+    inst_id: inst_id,
+    jira_ticket: "HT-#{ticket_no}",
+    name: Faker::Name.name,
+    contact_info: Faker::Lorem.sentence(word_count: 6),
+
+    auth_rep_name:  Faker::Name.name, 
+    auth_rep_email: Faker::Internet.email,
+    auth_rep_date:  Faker::Date.backward(days: 180), 
+
+    dsp_name:  Faker::Name.name, 
+    dsp_email: Faker::Internet.email,
+    dsp_date:  Faker::Date.backward(days: 180), 
+
+    mfa_addendum: ["yes", "no"].sample
+  )
+end
+
 HTContactType.create(name: "ETAS",
                      description: "Emergency Temporary Access Service")
 
@@ -121,6 +142,8 @@ end
   inst_id = create_ht_institution(1)
   create_ht_billing_member(inst_id) if [0, 1].sample.zero?
   create_ht_contact(inst_id) if [0, 1].sample.zero?
+  # TODO: uncomment when working
+  create_ht_registration(inst_id)
 end
 
 2.times do
