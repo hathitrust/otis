@@ -5,7 +5,7 @@ class HTRegistration < ApplicationRecord
 
   # belongs_to :ht_institution, foreign_key: "inst_id", primary_key: :entityID, required: true
   validates :inst_id, presence: true
-  
+
   validates :jira_ticket, presence: true
   validates :name, presence: true
   validates :contact_info, presence: true
@@ -27,5 +27,4 @@ class HTRegistration < ApplicationRecord
   def jira_link
     "https://tools.lib.umich.edu/jira/browse/#{self[:jira_ticket]}"
   end
-
 end

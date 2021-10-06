@@ -38,7 +38,7 @@ FactoryBot.define do
     country_code { Faker::Address.country_code }
     status { [true, false].sample }
   end
-  
+
   factory :ht_institution do
     sequence(:inst_id) { |n| "#{n}#{Faker::Internet.domain_word}" }
     name { Faker::University.name }
@@ -128,16 +128,15 @@ FactoryBot.define do
     name { Faker::Lorem.unique.characters(number: 3) }
     contact_info { Faker::Lorem.unique.characters(number: 3) }
 
-    auth_rep_name  { Faker::Lorem.unique.characters(number: 3) }
+    auth_rep_name { Faker::Lorem.unique.characters(number: 3) }
     auth_rep_email { Faker::Internet.email }
-    auth_rep_date  { Faker::Lorem.unique.characters(number: 2) }
+    auth_rep_date { Faker::Lorem.unique.characters(number: 2) }
 
-    dsp_name  { Faker::Lorem.unique.characters(number: 3) }
+    dsp_name { Faker::Lorem.unique.characters(number: 3) }
     dsp_email { Faker::Internet.email }
-    dsp_date  { Faker::Lorem.unique.characters(number: 2) }
+    dsp_date { Faker::Lorem.unique.characters(number: 2) }
 
     mfa_addendum { [true, false].sample }
     association :ht_institution, strategy: :create
   end
-  
 end

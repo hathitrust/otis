@@ -119,13 +119,13 @@ def create_ht_registration(inst_id)
     name: Faker::Name.name,
     contact_info: Faker::Lorem.sentence(word_count: 6),
 
-    auth_rep_name:  Faker::Name.name, 
+    auth_rep_name: Faker::Name.name,
     auth_rep_email: Faker::Internet.email,
-    auth_rep_date:  Faker::Date.backward(days: 180), 
+    auth_rep_date: Faker::Date.backward(days: 180),
 
-    dsp_name:  Faker::Name.name, 
+    dsp_name: Faker::Name.name,
     dsp_email: Faker::Internet.email,
-    dsp_date:  Faker::Date.backward(days: 180), 
+    dsp_date: Faker::Date.backward(days: 180),
 
     mfa_addendum: ["yes", "no"].sample
   )

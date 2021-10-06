@@ -18,7 +18,7 @@ class HTRegistrationsController < ApplicationController
   def new
     @registration = HTRegistration.new
   end
-  
+
   def create
     @registration = HTRegistration.new(reg_params)
     if @registration.save
@@ -27,7 +27,7 @@ class HTRegistrationsController < ApplicationController
       redirect_to action: :error, msg: @registration.errors
     end
   end
-  
+
   def index
     @all_registrations = HTRegistration.all
   end

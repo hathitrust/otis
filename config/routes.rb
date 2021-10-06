@@ -32,7 +32,7 @@ Rails.application.routes.draw do
   scope format: false, constraints: {id: /.+/} do
     resources :ht_registrations
   end
-  
+
   get "/login", to: "session#new", as: "login"
   post "/login", to: "session#create", as: "login_as"
   unless Rails.env.production?
