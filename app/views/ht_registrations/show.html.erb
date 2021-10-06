@@ -1,0 +1,9 @@
+<div id="maincontent" class="row">
+  <h1>View/Edit Registration</h1>
+  <%= render 'form' %>
+  
+  <div style="clear:both; padding-left:15px; padding-top:5px;">
+    <%= link_to 'Delete Registration', ht_registration_path, method: :delete, class: 'btn btn-primary', data: { confirm: "Please confirm deletion of registration for #{@registration.name}" } %>
+    </div>
+</div>
+
