@@ -12,12 +12,12 @@ class HTRegistration < ApplicationRecord
 
   # auth_rep = authorized representative
   validates :auth_rep_name, presence: true
-  validates :auth_rep_email, presence: true
+  validates :auth_rep_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :auth_rep_date, presence: true
 
   # dsp = disability service provider
   validates :dsp_name, presence: true
-  validates :dsp_email, presence: true
+  validates :dsp_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :dsp_date, presence: true
 
   # mfa = multi factor authentication

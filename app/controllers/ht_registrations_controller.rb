@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTRegistrationsController < ApplicationController
-  PERMITTED_CREATE_FIELDS = %i[
+  PERMITTED_FIELDS = %i[
     inst_id
     name
     jira_ticket
@@ -14,29 +14,54 @@ class HTRegistrationsController < ApplicationController
     dsp_date
     mfa_addendum
   ].freeze
-
+  
   def new
     @registration = HTRegistration.new
-  end
-
-  def create
-    @registration = HTRegistration.new(reg_params)
-    if @registration.save
-      redirect_to action: :index
-    else
-      redirect_to action: :error, msg: @registration.errors
-    end
   end
 
   def index
     @all_registrations = HTRegistration.all
   end
+    
+  def create
+    @registration = HTRegistration.new(reg_params)
+    if @registration.save
+      flash.now[:alert] = "Registration created."
+      redirect_to action: :index
+    else
+      flash.now[:alert] = @registration.errors.full_messages.to_sentence
+      redirect_to action: :create
+    end
+  end
 
+  def show
+    @registration = HTRegistration.find(params[:id])
+  end
+
+  def update
+    @registration = HTRegistration.find(params[:id])
+
+    if @registration.update(reg_params)
+      flash[:notice] = "Registration updated"
+      redirect_to action: :index
+    else
+      flash.now[:alert] = @registration.errors.full_messages.to_sentence
+      redirect_to action: :update
+    end
+  end
+
+  def destroy
+    @registration = HTRegistration.find(params[:id])
+    @registration.destroy
+    flash[:notice] = "Registration deleted"
+    redirect_to action: :index
+  end
+  
   private
 
   def reg_params
     params.require(:ht_registration)
-      .permit(*PERMITTED_CREATE_FIELDS)
+      .permit(*PERMITTED_FIELDS)
       .transform_values! { |v| v.present? ? v : nil }
   end
 end

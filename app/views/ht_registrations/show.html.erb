@@ -1,0 +1,7 @@
+<div id="maincontent" class="row">
+  <h1>View/Edit Registration</h1>
+  <%= render 'form' %>
+</div>
+
+<%= link_to 'Delete Registration', ht_registration_path, method: :delete, class: 'btn btn-primary',
+    data: { confirm: "For real though?" } %>

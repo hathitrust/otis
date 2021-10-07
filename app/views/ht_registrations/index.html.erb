@@ -1,27 +1,25 @@
-<h1>Registrations</h1>
-
-<%= link_to 'New Registration', new_ht_registration_path, class: 'btn btn-primary' %>
-
-<br />
-<br />
-
 <div id="maincontent" class="row">
-  <h2 class="pull-left">Current Registrations</h2>
-</div>
 
-<table class="table table-striped" data-toggle="table">
-  <tr>
-    <th>Name</th>
-    <th>Institution</th>
-    <th>Ticket</th>
-    <th>Contact Info</th>
-    <th>Auth Rep</th>
-    <th>DSP</th>
-    <th>MFA?</th>
-  </tr>
-  <% @all_registrations.each do |reg| %>
+  <%= render 'shared/flash_message' %>
+
+  <%= link_to 'New Registration', new_ht_registration_path, class: 'btn btn-primary' %>
+  <br />
+  
+  <h2 class="pull-left">Current Registrations</h2>
+
+  <table class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true" data-search="true" data-show-search-clear-button="true">
     <tr>
-      <td><%= reg.name %></td>
+      <th data-sortable="true">Name</th>
+      <th data-sortable="true">Institution</th>
+      <th data-sortable="true">Ticket</th>
+      <th data-sortable="true">Contact Info</th>
+      <th data-sortable="true">Auth Rep</th>
+      <th data-sortable="true">DSP</th>
+      <th data-sortable="true">MFA?</th>
+    </tr>
+    <% @all_registrations.each do |reg| %>
+    <tr>
+      <td><%= link_to reg.name, ht_registration_path(reg.id) %></td>
       <td><%= reg.inst_id %></td>
       <td><%= reg.jira_ticket %></td>
       <td><%= reg.contact_info %></td>
@@ -39,5 +37,6 @@
       </td>
       <td><%= reg.mfa_addendum %></td>
     </tr>
-  <% end %>
-</table>
+    <% end %>
+  </table>
+</div>
