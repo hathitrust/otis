@@ -17,6 +17,7 @@ class HTRegistrationsController < ApplicationController
   
   def new
     @registration = HTRegistration.new
+    @institutions = HTInstitution.all.sort
   end
 
   def index
@@ -25,6 +26,7 @@ class HTRegistrationsController < ApplicationController
     
   def create
     @registration = HTRegistration.new(reg_params)
+    @institutions = HTInstitution.all.sort
     if @registration.save
       flash.now[:alert] = "Registration created."
       redirect_to action: :index
@@ -36,6 +38,7 @@ class HTRegistrationsController < ApplicationController
 
   def show
     @registration = HTRegistration.find(params[:id])
+    @institutions = HTInstitution.all.sort
   end
 
   def update
@@ -55,6 +58,11 @@ class HTRegistrationsController < ApplicationController
     @registration.destroy
     flash[:notice] = "Registration deleted"
     redirect_to action: :index
+  end
+
+  # Maybe move to presenter?
+  def jira_link(ticket)
+    "https://tools.lib.umich.edu/jira/browse/#{ticket}"
   end
   
   private

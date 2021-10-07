@@ -7,7 +7,9 @@
     <dt>Name:</dt>
     <dd><%= form.text_field :name, size: 30 %></dd>
     <dt>Institution:</dt>
-    <dd><%= form.text_field :inst_id, size: 30 %></dd>
+    <dd>
+      <%= form.collection_select(:inst_id, @institutions, :inst_id, :name) %>
+    </dd>
     <dt>JIRA Ticket:</dt>
     <dd><%= form.text_field :jira_ticket, size: 30 %></dd>
     <dt>Contact Info:</dt>

@@ -23,8 +23,4 @@ class HTRegistration < ApplicationRecord
   # mfa = multi factor authentication
   validates :mfa_addendum, presence: true
 
-  # Maybe move to presenter?
-  def jira_link
-    "https://tools.lib.umich.edu/jira/browse/#{self[:jira_ticket]}"
-  end
 end
