@@ -14,21 +14,24 @@ class HTRegistrationsController < ApplicationController
     dsp_date
     mfa_addendum
   ].freeze
-  
+
   def new
-    @registration = HTRegistration.new
+    @registration = HTRegistrationPresenter.new(HTRegistration.new)
     @institutions = HTInstitution.all.sort
   end
 
   def index
-    @all_registrations = HTRegistration.all
+    @all_registrations = HTRegistration.all.map{|r|
+      HTRegistrationPresenter.new(r)
+    }
   end
-    
+
   def create
-    @registration = HTRegistration.new(reg_params)
+    @registration = HTRegistrationPresenter.new(HTRegistration.new(reg_params))
     @institutions = HTInstitution.all.sort
+
     if @registration.save
-      flash.now[:alert] = "Registration created."
+      flash.now[:alert] = "Registration created for #{@registration.name}."
       redirect_to action: :index
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -37,15 +40,16 @@ class HTRegistrationsController < ApplicationController
   end
 
   def show
-    @registration = HTRegistration.find(params[:id])
+    @registration = HTRegistrationPresenter.new(HTRegistration.find(params[:id]))
     @institutions = HTInstitution.all.sort
   end
 
   def update
-    @registration = HTRegistration.find(params[:id])
+    @registration = HTRegistrationPresenter.new(HTRegistration.find(params[:id]))
+    @institutions = HTInstitution.all.sort
 
     if @registration.update(reg_params)
-      flash[:notice] = "Registration updated"
+      flash[:notice] = "Registration updated for #{@registration.name}"
       redirect_to action: :index
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -60,11 +64,6 @@ class HTRegistrationsController < ApplicationController
     redirect_to action: :index
   end
 
-  # Maybe move to presenter?
-  def jira_link(ticket)
-    "https://tools.lib.umich.edu/jira/browse/#{ticket}"
-  end
-  
   private
 
   def reg_params

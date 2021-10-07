@@ -22,5 +22,4 @@ class HTRegistration < ApplicationRecord
 
   # mfa = multi factor authentication
   validates :mfa_addendum, presence: true
-
 end

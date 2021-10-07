@@ -5,36 +5,34 @@
 <div class="col-sm-6">
   <dl class="dl-horizontal">
     <dt>Name:</dt>
-    <dd><%= form.text_field :name, size: 30 %></dd>
+    <dd><%= form.text_field :name, size: 45 %></dd>
     <dt>Institution:</dt>
     <dd>
-      <%= form.collection_select(:inst_id, @institutions, :inst_id, :name) %>
+      <%= form.collection_select(:inst_id, @institutions, :inst_id, :name, {include_blank: true }) %>
     </dd>
     <dt>JIRA Ticket:</dt>
-    <dd><%= form.text_field :jira_ticket, size: 30 %></dd>
+    <dd><%= form.text_field :jira_ticket, size: 45 %></dd>
     <dt>Contact Info:</dt>
-    <dd><%= form.text_field :contact_info, size: 30 %></dd>
+    <dd><%= form.text_field :contact_info, size: 45 %></dd>
     <dt>Auth Rep Name:</dt>
-    <dd><%= form.text_field :auth_rep_name, size: 30 %></dd>
+    <dd><%= form.text_field :auth_rep_name, size: 45 %></dd>
     <dt>Auth Rep Email:</dt>
-    <dd><%= form.text_field :auth_rep_email, size: 30 %></dd>
+    <dd><%= form.text_field :auth_rep_email, size: 45 %></dd>
     <dt>Auth Rep Date:</dt>
-    <dd><%= form.text_field :auth_rep_date, size: 30 %></dd>
+    <dd><%= form.text_field :auth_rep_date, size: 45 %></dd>
     <dt>DSP Name:</dt>
-    <dd><%= form.text_field :dsp_name, size: 30 %></dd>
+    <dd><%= form.text_field :dsp_name, size: 45 %></dd>
     <dt>DSP Email:</dt>
-    <dd><%= form.text_field :dsp_email, size: 30 %></dd>
+    <dd><%= form.text_field :dsp_email, size: 45 %></dd>
     <dt>DSP Date:</dt>
-    <dd><%= form.text_field :dsp_date, size: 30 %></dd>
+    <dd><%= form.text_field :dsp_date, size: 45 %></dd>
     <dt>MFA Addendum:</dt>
     <dd>
       <%= form.radio_button :mfa_addendum, "yes", :checked => true %> Yes
       <%= form.radio_button :mfa_addendum,  "no" %> No
     </dd>
   </dl>
-</div>
-
-<div>
   <%= form.submit 'Submit Registration', class: 'btn btn-primary' %>
 </div>
+
 <% end %>

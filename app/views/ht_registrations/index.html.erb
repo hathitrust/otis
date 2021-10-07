@@ -1,9 +1,8 @@
 <div id="maincontent" class="row">
-
   <%= render 'shared/flash_message' %>
 
   <%= link_to 'New Registration', new_ht_registration_path, class: 'btn btn-primary' %>
-  <br />
+  <br/>
   
   <h2 class="pull-left">Current Registrations</h2>
 
@@ -19,24 +18,23 @@
     </tr>
     <% @all_registrations.each do |reg| %>
     <tr>
-      <td><%= link_to reg.name, ht_registration_path(reg.id) %></td>
-      <td><%= reg.inst_id %></td>
-      <td><%= reg.jira_ticket %></td>
+      <td><%= reg.edit_link %></td>
+      <td><%= reg.inst_link %></td>
+      <td><%= reg.jira_link %></td>
       <td><%= reg.contact_info %></td>
       <td>
-	<%= reg.auth_rep_name %>
-	<br/>
-	<%= reg.auth_rep_email %>
-	(<%= reg.auth_rep_date %>)
+	<%== reg.auth_contact %>
       </td>
       <td>
-	<%= reg.dsp_name %>
-	<br/>
-	<%= reg.dsp_email %>
-	(<%= reg.dsp_date %>)
+	<%== reg.dsp_contact %>
       </td>
       <td><%= reg.mfa_addendum %></td>
     </tr>
     <% end %>
   </table>
+
+  <% if @all_registrations.size > 10 %>
+  <br/>
+  <%= link_to 'New Registration', new_ht_registration_path, class: 'btn btn-primary' %>
+  <% end %>
 </div>
