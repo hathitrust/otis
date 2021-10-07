@@ -30,7 +30,7 @@ class HTRegistrationsController < ApplicationController
       redirect_to action: :index
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
-      redirect_to action: :create
+      render "new"
     end
   end
 
@@ -46,7 +46,7 @@ class HTRegistrationsController < ApplicationController
       redirect_to action: :index
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
-      redirect_to action: :update
+      render "show"
     end
   end
 
