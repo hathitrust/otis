@@ -29,7 +29,7 @@ class HTRegistrationPresenter < SimpleDelegator
   def contact(name, email, date)
     [name, link_to(email, "mailto:#{email}"), date].join("<br>")
   end
-  
+
   def auth_contact
     contact(auth_rep_name, auth_rep_email, auth_rep_date)
   end

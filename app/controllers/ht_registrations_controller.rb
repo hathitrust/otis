@@ -21,7 +21,7 @@ class HTRegistrationsController < ApplicationController
   end
 
   def index
-    @all_registrations = HTRegistration.all.map{|r|
+    @all_registrations = HTRegistration.all.map { |r|
       HTRegistrationPresenter.new(r)
     }
   end
