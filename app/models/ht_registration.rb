@@ -3,7 +3,7 @@
 class HTRegistration < ApplicationRecord
   self.primary_key = "id"
 
-  # belongs_to :ht_institution, foreign_key: "inst_id", primary_key: :entityID, required: true
+  belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id, required: true
   validates :inst_id, presence: true
 
   validates :jira_ticket, presence: true

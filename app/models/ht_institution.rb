@@ -7,6 +7,7 @@ class HTInstitution < ApplicationRecord
   self.primary_key = "inst_id"
   has_many :ht_users, foreign_key: :identity_provider, primary_key: :entityID
   has_many :ht_contacts, foreign_key: :inst_id, primary_key: :inst_id
+  has_many :ht_registrations, foreign_key: :inst_id, primary_key: :inst_id
   has_many :ht_logs, -> { HTLog.ht_institution }, foreign_key: :objid, primary_key: :inst_id
 
   validates :inst_id, presence: true, uniqueness: true

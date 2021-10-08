@@ -115,8 +115,10 @@ class HTInstitutionsControllerCSVTest < ActionDispatch::IntegrationTest
                                shib_authncontext_class: "j", emergency_status: "k",
                                emergency_contact: "l@m", last_update: "2020-01-01 00:00:00")
     @inst1.save!
-    @billing_member = HTBillingMember.new(inst_id: "a", weight: 1.0, oclc_sym: "B",
-                                          marc21_sym: "C", country_code: "DE", status: true)
+    @billing_member = HTBillingMember.new(inst_id: "a", parent_inst_id: "p",
+                                          weight: 1.0, oclc_sym: "B",
+                                          marc21_sym: "C", country_code: "DE",
+                                          status: true)
     @billing_member.save!
     @inst2 = create(:ht_institution, inst_id: "z")
   end
@@ -130,10 +132,10 @@ class HTInstitutionsControllerCSVTest < ActionDispatch::IntegrationTest
       "us,mapto_inst_id,mapto_name,enabled,entityID," \
       "allowed_affiliations,shib_authncontext_class," \
       "emergency_status,emergency_contact,last_update," \
-      "billing_inst_id,billing_weight,billing_oclc_sym,billing_marc21_sym," \
-      "billing_country_code,billing_status"
+      "billing_inst_id,billing_parent_inst_id,billing_weight," \
+      "billing_oclc_sym,billing_marc21_sym,billing_country_code,billing_status"
     assert_match "a,b,C,d,example.com,true,f,g,1,h,i,j,k,l@m," \
-                 "2020-01-01 00:00:00 UTC,a,1.0,B,C,DE,true", @response.body
+                 "2020-01-01 00:00:00 UTC,a,p,1.0,B,C,DE,true", @response.body
   end
 end
 
@@ -242,6 +244,9 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
       ht_institution: {
         inst_id: inst_params[:inst_id],
         name: inst_params[:name],
+        entityID: inst_params[:inst_id],
+        domain: inst_params[:domain],
+        us: inst_params[:us],
         enabled: inst_params[:enabled],
         ht_billing_member_attributes: {
           marc21_sym: billing_params[:marc21_sym],
@@ -263,6 +268,9 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
       ht_institution: {
         inst_id: inst_params[:inst_id],
         name: inst_params[:name],
+        entityID: inst_params[:inst_id],
+        domain: inst_params[:domain],
+        us: inst_params[:us],
         enabled: inst_params[:enabled],
         ht_billing_member_attributes: {
           country_code: "us",

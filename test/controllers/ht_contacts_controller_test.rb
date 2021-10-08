@@ -266,7 +266,7 @@ class HTContactsControllerEditTest < ActionDispatch::IntegrationTest
     assert_redirected_to ht_contact_path(@contact)
     follow_redirect!
 
-    assert_match CGI.escapeHTML(other_inst.name), @response.body
+    assert_match ERB::Util.html_escape(other_inst.name), @response.body
     assert_equal other_inst.inst_id, HTContact.find(@contact.id).inst_id
   end
 
@@ -280,7 +280,7 @@ class HTContactsControllerEditTest < ActionDispatch::IntegrationTest
     assert_redirected_to ht_contact_path(@contact)
     follow_redirect!
 
-    assert_match other_type.name, @response.body
+    assert_match ERB::Util.html_escape(other_type.name), @response.body
     assert_equal other_type.id, HTContact.find(@contact.id).contact_type.to_i
   end
 
