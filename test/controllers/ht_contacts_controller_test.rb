@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "w3c_validators"
 
 class HTContactsControllerIndexTest < ActionDispatch::IntegrationTest
   def setup
@@ -22,10 +21,7 @@ class HTContactsControllerIndexTest < ActionDispatch::IntegrationTest
   test "index is well-formed HTML" do
     sign_in!
     get ht_institutions_url
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "contacts sorted by institution name" do
@@ -118,10 +114,7 @@ class HTContactsControllerShowTest < ActionDispatch::IntegrationTest
 
   test "show page is well-formed HTML" do
     get ht_contact_url @contact
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "shows contact institution name, type, email" do
@@ -254,10 +247,7 @@ class HTContactsControllerEditTest < ActionDispatch::IntegrationTest
 
   test "edit page is well-formed HTML" do
     get edit_ht_contact_url @contact
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "Institution and type menus present" do

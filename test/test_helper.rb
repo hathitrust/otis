@@ -2,6 +2,7 @@
 
 require "simplecov"
 require "rake"
+require "w3c_validators"
 
 SimpleCov.start "rails"
 
@@ -11,6 +12,13 @@ require "rails/test_help"
 
 def sign_in!(username: "admin@default.invalid")
   post login_as_url, params: {username: username}
+end
+
+def w3c_errs(html)
+  skip "Skipping W3C test" unless ENV["W3C_VALIDATION"]
+
+  sleep 1
+  W3CValidators::NuValidator.new.validate_text(html).errors
 end
 
 Keycard::DB.migrate!

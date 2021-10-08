@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "w3c_validators"
 
 class HTContactTypesIndexTest < ActionDispatch::IntegrationTest
   def setup
@@ -23,10 +22,7 @@ class HTContactTypesIndexTest < ActionDispatch::IntegrationTest
   test "index is well-formed HTML" do
     sign_in!
     get ht_contact_types_url
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "contact types sorted by name" do
@@ -58,10 +54,7 @@ class HTContactTypesShowTest < ActionDispatch::IntegrationTest
 
   test "show page is well-formed HTML" do
     get ht_contact_type_url @type
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "shows id, name, and description" do
@@ -175,10 +168,7 @@ class HTContactTypesControllerEditTest < ActionDispatch::IntegrationTest
 
   test "edit page is well-formed HTML" do
     get edit_ht_contact_type_url @type
-    validator = W3CValidators::NuValidator.new
-    w3c_errs = validator.validate_text(@response.body).errors
-    sleep 1
-    assert_equal 0, w3c_errs.length, w3c_errs.join("\n")
+    assert_equal 0, w3c_errs(@response.body).length
   end
 
   test "Editable name and description fields present" do
