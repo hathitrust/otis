@@ -58,9 +58,9 @@ class HTUsersController < ApplicationController
   def users_csv
     require "csv"
     CSV.generate do |csv|
-      csv << @all_users.first.attributes.keys
+      csv << @all_users.first.csv_cols
       @all_users.each do |user|
-        csv << user.attributes.values
+        csv << user.csv_vals
       end
     end
   end
