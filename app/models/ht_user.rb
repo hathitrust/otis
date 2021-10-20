@@ -157,6 +157,16 @@ class HTUser < ApplicationRecord
     renew!
   end
 
+  def csv_cols
+    extra_cols = ["inst_id", "inst_name"]
+    attributes.keys + extra_cols
+  end
+
+  def csv_vals
+    extra_vals = [ht_institution.inst_id, institution]
+    attributes.values + extra_vals
+  end
+
   private
 
   def clean_requests
