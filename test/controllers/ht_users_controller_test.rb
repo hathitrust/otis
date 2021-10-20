@@ -254,7 +254,7 @@ end
 
 class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
   def setup
-    @inst1 = create(:ht_institution, entityID: "http://example.com")
+    @inst1 = create(:ht_institution, entityID: "http://example.com", inst_id: "X", name: "Y")
     @user1 = HTUser.new(userid: "a@b", displayname: "A B", email: "c@d",
                         activitycontact: "e@f", approver: "g@h",
                         authorizer: "i@j", usertype: "staff", role: "ssd",
@@ -274,7 +274,7 @@ class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
       "authorizer,usertype,role,access,expires,expire_type," \
       "iprestrict,mfa,identity_provider,inst_id,inst_name", @response.body
     assert_match "a@b,A B,c@d,e@f,g@h,i@j,staff,ssd,total,2020-01-01 00:00:00 UTC," \
-                 "expiresannually,^.*$,false,http://example.com", @response.body
+                 "expiresannually,^.*$,false,http://example.com,X,Y", @response.body
   end
 end
 
