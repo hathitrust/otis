@@ -16,6 +16,38 @@
 raise StandardError, 'Not for production use' if Rails.env.production?
 
 ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
+  # Tables only used by otis
+
+  create_table :ht_approval_requests do |t|
+    t.string :approver
+    t.string :userid
+    t.timestamp :sent
+    t.timestamp :received
+    t.timestamp :renewed
+    t.text :token_hash
+  end
+
+  create_table :ht_logs do |t|
+    t.string :objid
+    t.string :model
+    t.timestamp :time
+    t.text :data
+  end
+
+  create_table :ht_contacts do |t|
+    t.string :inst_id
+    t.integer :contact_type
+    t.string :email
+  end
+
+  create_table :ht_contact_types do |t|
+    t.string :name
+    t.text :description
+  end
+
+  # Tables also used by other applications; must be kept in sync with
+  # https://github.com/hathitrust/db-image
+
   create_table :ht_users, id: false do |t|
     t.string :userid, primary_key: true
     t.string :displayname
@@ -60,39 +92,13 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.boolean :auth_requested, default: false
   end
 
-  create_table :ht_approval_requests do |t|
-    t.string :approver
-    t.string :userid
-    t.timestamp :sent
-    t.timestamp :received
-    t.timestamp :renewed
-    t.text :token_hash
-  end
-
-  create_table :ht_logs do |t|
-    t.string :objid
-    t.string :model
-    t.timestamp :time
-    t.text :data
-  end
-
   create_table :ht_billing_members, id: false do |t|
     t.string :inst_id, primary_key: true
+    t.string :parent_inst_id
     t.column :weight, :decimal, precision: 4, scale: 2, default: 0.00
     t.string :oclc_sym
     t.string :marc21_sym
     t.string :country_code, default: 'us'
     t.boolean :status, default: false
-  end
-
-  create_table :ht_contacts do |t|
-    t.string :inst_id
-    t.integer :contact_type
-    t.string :email
-  end
-
-  create_table :ht_contact_types do |t|
-    t.string :name
-    t.text :description
   end
 end

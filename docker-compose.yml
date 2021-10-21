@@ -11,6 +11,7 @@ services:
       - gem_cache:/gems
     depends_on:
       - mariadb-dev
+      - mariadb-test
     command: bash -c "bin/init_dev_db.sh && bundle exec rails s -b 0.0.0.0"
 
   test:
@@ -26,7 +27,7 @@ services:
         condition: none
 
   mariadb-dev:
-    image: hathitrust/db-image
+    image: mariadb
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysqlroot
@@ -35,7 +36,7 @@ services:
       MYSQL_PASSWORD: otis
 
   mariadb-test:
-    image: hathitrust/db-image
+    image: mariadb
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysqlroot
