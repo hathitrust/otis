@@ -16,85 +16,27 @@
 raise StandardError, 'Not for production use' if Rails.env.production?
 
 ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
-  # create_table :ht_users, id: false do |t|
-  #   t.string :userid, primary_key: true
-  #   t.string :displayname
-  #   t.string :email
-  #   t.string :activitycontact
-  #   t.string :approver
-  #   t.string :authorizer
-  #   t.string :usertype
-  #   t.string :role
-  #   t.string :access
-  #   t.timestamp :expires
-  #   t.string :expire_type
-  #   t.string :iprestrict
-  #   t.boolean :mfa
-  #   t.string :identity_provider
-  # end
+  # Tables only used by otis
 
-  # create_table :ht_institutions, id: false do |t|
-  #   t.string :inst_id, primary_key: true
-  #   t.string :grin_instance
-  #   t.string :name
-  #   t.string :template
-  #   t.string :domain
-  #   t.boolean :us
-  #   t.string :mapto_inst_id
-  #   t.string :mapto_name
-  #   t.integer :enabled
-  #   t.string :entityID
-  #   t.text :allowed_affiliations
-  #   t.string :shib_authncontext_class
-  #   t.text :emergency_status
-  #   t.string :emergency_contact
-  #   t.timestamp :last_update
-  # end
+  create_table :ht_approval_requests do |t|
+    t.string :approver
+    t.string :userid
+    t.timestamp :sent
+    t.timestamp :received
+    t.timestamp :renewed
+    t.text :token_hash
+  end
 
-  # create_table :ht_counts, id: false do |t|
-  #   t.string :userid
-  #   t.integer :accesscount, default: 0
-  #   t.timestamp :last_access
-  #   t.boolean :warned, default: false
-  #   t.boolean :certified, default: false
-  #   t.boolean :auth_requested, default: false
-  # end
+  create_table :ht_contacts do |t|
+    t.string :inst_id
+    t.integer :contact_type
+    t.string :email
+  end
 
-  # create_table :ht_approval_requests do |t|
-  #   t.string :approver
-  #   t.string :userid
-  #   t.timestamp :sent
-  #   t.timestamp :received
-  #   t.timestamp :renewed
-  #   t.text :token_hash
-  # end
-
-  # create_table :ht_logs do |t|
-  #   t.string :objid
-  #   t.string :model
-  #   t.timestamp :time
-  #   t.text :data
-  # end
-
-  # create_table :ht_billing_members, id: false do |t|
-  #   t.string :inst_id, primary_key: true
-  #   t.column :weight, :decimal, precision: 4, scale: 2, default: 0.00
-  #   t.string :oclc_sym
-  #   t.string :marc21_sym
-  #   t.string :country_code, default: 'us'
-  #   t.boolean :status, default: false
-  # end
-
-  # create_table :ht_contacts do |t|
-  #   t.string :inst_id
-  #   t.integer :contact_type
-  #   t.string :email
-  # end
-
-  # create_table :ht_contact_types do |t|
-  #   t.string :name
-  #   t.text :description
-  # end
+  create_table :ht_contact_types do |t|
+    t.string :name
+    t.text :description
+  end
 
   create_table :ht_registrations do |t|
     t.string :inst_id
@@ -108,5 +50,69 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :dsp_email
     t.string :dsp_date
     t.string :mfa_addendum
+  end
+
+  # Tables also used by other applications; must be kept in sync with
+  # https://github.com/hathitrust/db-image
+
+  create_table :ht_users, id: false do |t|
+    t.string :userid, primary_key: true
+    t.string :displayname
+    t.string :email
+    t.string :activitycontact
+    t.string :approver
+    t.string :authorizer
+    t.string :usertype
+    t.string :role
+    t.string :access
+    t.timestamp :expires
+    t.string :expire_type
+    t.string :iprestrict
+    t.boolean :mfa
+    t.string :identity_provider
+  end
+
+  create_table :ht_institutions, id: false do |t|
+    t.string :inst_id, primary_key: true
+    t.string :grin_instance
+    t.string :name
+    t.string :template
+    t.string :domain
+    t.boolean :us
+    t.string :mapto_inst_id
+    t.string :mapto_name
+    t.integer :enabled
+    t.string :entityID
+    t.text :allowed_affiliations
+    t.string :shib_authncontext_class
+    t.text :emergency_status
+    t.string :emergency_contact
+    t.timestamp :last_update
+  end
+
+  create_table :ht_counts, id: false do |t|
+    t.string :userid
+    t.integer :accesscount, default: 0
+    t.timestamp :last_access
+    t.boolean :warned, default: false
+    t.boolean :certified, default: false
+    t.boolean :auth_requested, default: false
+  end
+
+  create_table :ht_logs do |t|
+    t.string :objid
+    t.string :model
+    t.timestamp :time
+    t.text :data
+  end
+
+  create_table :ht_billing_members, id: false do |t|
+    t.string :inst_id, primary_key: true
+    t.string :parent_inst_id
+    t.column :weight, :decimal, precision: 4, scale: 2, default: 0.00
+    t.string :oclc_sym
+    t.string :marc21_sym
+    t.string :country_code, default: 'us'
+    t.boolean :status, default: false
   end
 end

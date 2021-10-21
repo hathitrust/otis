@@ -1,8 +1,12 @@
 #!/bin/bash
 
-bin/wait-for mariadb-dev:3306
-bundle exec rake keycard:migrate RAILS_ENV=development
-bundle exec rake checkpoint:migrate RAILS_ENV=development
+export RAILS_ENV=development
+bin/wait-for mariadb-dev:3306 mariadb-test:3306
+# Break up db:reset to add the keycard & checkpoint schema at the right time
+bundle exec rake db:drop
+bundle exec rake db:create
+bundle exec rake keycard:migrate
+bundle exec rake checkpoint:migrate
 bundle exec rake db:schema:load
 bundle exec rake db:seed
-bundle exec rake otis:migrate_users RAILS_ENV=development
+bundle exec rake otis:migrate_users
