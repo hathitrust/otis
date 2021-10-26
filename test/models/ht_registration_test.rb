@@ -3,7 +3,7 @@
 require "test_helper"
 
 class HTRegistrationTest < ActiveSupport::TestCase
-  test "validation passes" do
+  test "factory builds a valid ht_registration" do
     assert build(:ht_registration).valid?
   end
 end
