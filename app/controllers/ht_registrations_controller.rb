@@ -31,6 +31,7 @@ class HTRegistrationsController < ApplicationController
     @institutions = HTInstitution.all.sort
 
     if @registration.save
+      log
       flash.now[:alert] = "Registration created for #{@registration.name}."
       redirect_to action: :index
     else
@@ -49,6 +50,7 @@ class HTRegistrationsController < ApplicationController
     @institutions = HTInstitution.all.sort
 
     if @registration.update(reg_params)
+      log
       flash[:notice] = "Registration updated for #{@registration.name}"
       redirect_to action: :index
     else
@@ -59,6 +61,7 @@ class HTRegistrationsController < ApplicationController
 
   def destroy
     @registration = HTRegistration.find(params[:id])
+    log params.permit!
     @registration.destroy
     flash[:notice] = "Registration deleted"
     redirect_to action: :index
@@ -70,5 +73,9 @@ class HTRegistrationsController < ApplicationController
     params.require(:ht_registration)
       .permit(*PERMITTED_FIELDS)
       .transform_values! { |v| v.present? ? v : nil }
+  end
+
+  def log(params = reg_params)
+    log_action(@registration, params)
   end
 end
