@@ -142,7 +142,6 @@ end
   inst_id = create_ht_institution(1)
   create_ht_billing_member(inst_id) if [0, 1].sample.zero?
   create_ht_contact(inst_id) if [0, 1].sample.zero?
-  # TODO: uncomment when working
   create_ht_registration(inst_id)
 end
 
