@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class HTRegistrationsController < ApplicationController
+  before_action :fetch_institutions
+
   PERMITTED_FIELDS = %i[
     inst_id
     name
@@ -17,7 +19,6 @@ class HTRegistrationsController < ApplicationController
 
   def new
     @registration = HTRegistrationPresenter.new(HTRegistration.new)
-    @institutions = HTInstitution.all.sort
   end
 
   def index
@@ -28,8 +29,6 @@ class HTRegistrationsController < ApplicationController
 
   def create
     @registration = HTRegistrationPresenter.new(HTRegistration.new(reg_params))
-    @institutions = HTInstitution.all.sort
-
     if @registration.save
       log
       flash.now[:alert] = "Registration created for #{@registration.name}."
@@ -41,13 +40,15 @@ class HTRegistrationsController < ApplicationController
   end
 
   def show
-    @registration = HTRegistrationPresenter.new(HTRegistration.find(params[:id]))
-    @institutions = HTInstitution.all.sort
+    fetch_presenter
+  end
+
+  def edit
+    fetch_presenter
   end
 
   def update
-    @registration = HTRegistrationPresenter.new(HTRegistration.find(params[:id]))
-    @institutions = HTInstitution.all.sort
+    fetch_presenter
 
     if @registration.update(reg_params)
       log
@@ -73,6 +74,18 @@ class HTRegistrationsController < ApplicationController
     params.require(:ht_registration)
       .permit(*PERMITTED_FIELDS)
       .transform_values! { |v| v.present? ? v : nil }
+  end
+
+  def fetch_registration
+    @registration = HTRegistration.find(params[:id])
+  end
+
+  def fetch_presenter
+    @registration = HTRegistrationPresenter.new(fetch_registration)
+  end
+
+  def fetch_institutions
+    @institutions = HTInstitution.all.sort
   end
 
   def log(params = reg_params)
