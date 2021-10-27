@@ -55,7 +55,7 @@ class HTRegistrationsController < ApplicationController
       redirect_to action: :index
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
-      render "show"
+      render "edit"
     end
   end
 
