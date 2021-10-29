@@ -108,32 +108,18 @@ end
 
 class HTInstitutionsControllerCSVTest < ActionDispatch::IntegrationTest
   def setup
-    @inst1 = HTInstitution.new(inst_id: "a", grin_instance: "b", name: "C",
-                               template: "d", domain: "example.com",
-                               us: "1", mapto_inst_id: "f", mapto_name: "g",
-                               enabled: "1", entityID: "h", allowed_affiliations: "i",
-                               shib_authncontext_class: "j", emergency_status: "k",
-                               emergency_contact: "l@m", last_update: "2020-01-01 00:00:00")
+    @inst1 = HTInstitution.new(inst_id: "testinst", grin_instance: "b", name: "University of Testland",
+                               entityID: "https://testinst.edu/idp", enabled: 1)
     @inst1.save!
-    @billing_member = HTBillingMember.new(inst_id: "a", weight: 1.0, oclc_sym: "B",
-                                          marc21_sym: "C", country_code: "DE", status: true)
-    @billing_member.save!
     @inst2 = create(:ht_institution, inst_id: "z")
   end
 
   test "export list of all institutions as CSV" do
     sign_in!
     get ht_institutions_url format: :csv
-    assert_equal 3, @response.body.lines.count
-    assert_equal @response.body.lines[0].strip,
-      "inst_id,grin_instance,name,template,domain," \
-      "us,mapto_inst_id,mapto_name,enabled,entityID," \
-      "allowed_affiliations,shib_authncontext_class," \
-      "emergency_status,emergency_contact,last_update," \
-      "billing_inst_id,billing_weight,billing_oclc_sym,billing_marc21_sym," \
-      "billing_country_code,billing_status"
-    assert_match "a,b,C,d,example.com,true,f,g,1,h,i,j,k,l@m," \
-                 "2020-01-01 00:00:00 UTC,a,1.0,B,C,DE,true", @response.body
+    assert_operator @response.body.lines.count, :>, 1
+    assert_match(/^inst_id.*,name,.*,entityID/, @response.body.lines[0].strip)
+    assert_match %r{^testinst,.*University of Testland.*https://testinst.edu/idp}, @response.body
   end
 end
 
