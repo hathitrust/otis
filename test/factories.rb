@@ -41,9 +41,11 @@ FactoryBot.define do
 
   factory :ht_institution do
     sequence(:inst_id) { |n| "#{n}#{Faker::Internet.domain_word}" }
+    domain { Faker::Internet.domain_name }
     name { Faker::University.name }
     entityID { Faker::Internet.url }
     enabled { [0, 1].sample }
+    us { [0, 1].sample }
 
     association :ht_billing_member
 
