@@ -228,6 +228,9 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
       ht_institution: {
         inst_id: inst_params[:inst_id],
         name: inst_params[:name],
+        entityID: inst_params[:inst_id],
+        domain: inst_params[:domain],
+        us: inst_params[:us],
         enabled: inst_params[:enabled],
         ht_billing_member_attributes: {
           marc21_sym: billing_params[:marc21_sym],
@@ -249,6 +252,9 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
       ht_institution: {
         inst_id: inst_params[:inst_id],
         name: inst_params[:name],
+        entityID: inst_params[:inst_id],
+        domain: inst_params[:domain],
+        us: inst_params[:us],
         enabled: inst_params[:enabled],
         ht_billing_member_attributes: {
           country_code: "us",
