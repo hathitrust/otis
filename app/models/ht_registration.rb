@@ -2,9 +2,10 @@
 
 class HTRegistration < ApplicationRecord
   self.primary_key = "id"
-
   belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id, required: true
   validates :inst_id, presence: true
+
+  has_many :ht_logs, -> { HTLog.ht_registration }, foreign_key: :objid, primary_key: :id
 
   validates :jira_ticket, presence: true
   validates :name, presence: true
@@ -22,6 +23,10 @@ class HTRegistration < ApplicationRecord
 
   # mfa = multi factor authentication
   validates :mfa_addendum, presence: true
+
+  def resource_id
+    id
+  end
 
   def resource_type
     :ht_registration
