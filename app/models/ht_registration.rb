@@ -2,6 +2,8 @@
 
 class HTRegistration < ApplicationRecord
   self.primary_key = "id"
+  validates :id, uniqueness: true
+
   belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id, required: true
   validates :inst_id, presence: true
 
