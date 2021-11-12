@@ -19,7 +19,7 @@ class HTRegistrationTest < ActiveSupport::TestCase
 
   test "validates email fields" do
     good_email = Faker::Internet.email
-    bad_email  = "bad@bad@bad.bad.bad"
+    bad_email = "bad@bad@bad.bad.bad"
     assert build(:ht_registration, auth_rep_email: good_email).valid?
     assert build(:ht_registration, dsp_email: good_email).valid?
     assert_not build(:ht_registration, auth_rep_email: bad_email).valid?
@@ -36,7 +36,7 @@ class HTRegistrationTest < ActiveSupport::TestCase
   test "objects are persisted" do
     reg = create(:ht_registration)
     persisted = HTRegistration.first
-    
+
     field_symbols = [
       :inst_id,
       :jira_ticket,
@@ -50,12 +50,12 @@ class HTRegistrationTest < ActiveSupport::TestCase
       :dsp_date,
       :mfa_addendum
     ]
-    
+
     field_symbols.each do |field|
       assert_equal reg.public_send(field), persisted.public_send(field)
     end
   end
-  
+
   test "checkpoint: resource_type and resource_id" do
     @registration = create(:ht_registration)
     @inst = create(:ht_institution)

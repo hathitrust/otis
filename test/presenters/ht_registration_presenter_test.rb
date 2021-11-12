@@ -14,17 +14,17 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
 
   test "edit_link" do
     assert_not_nil @registration.edit_link
-    assert_match /#{@registration.id}.+>#{@registration.name}</, @registration.edit_link
+    assert_match(/#{@registration.id}.+>#{@registration.name}</, @registration.edit_link)
   end
 
   test "inst_link" do
     assert_not_nil @registration.inst_link
-    assert_match /#{@registration.inst_id}.+>#{@registration.inst_id}</, @registration.inst_link
+    assert_match(/#{@registration.inst_id}.+>#{@registration.inst_id}</, @registration.inst_link)
   end
 
   test "contact" do
     # auth_contact and dsp_contact just call contact, so not adding tests for them
     contact = @registration.contact("xax", "xbx", "xcx")
-    assert_match /xax.+mailto:xbx.+>xbx<.+xcx/, contact
+    assert_match(/xax.+mailto:xbx.+>xbx<.+xcx/, contact)
   end
 end

@@ -52,24 +52,24 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
 
   test "show page should include data from registration" do
     get ht_registration_url @registration
-    assert_match @registration.inst_id,        @response.body
-    assert_match @registration.jira_ticket,    @response.body
-    assert_match @registration.name,           @response.body
-    assert_match @registration.contact_info,   @response.body
-    assert_match @registration.auth_rep_name,  @response.body
+    assert_match @registration.inst_id, @response.body
+    assert_match @registration.jira_ticket, @response.body
+    assert_match @registration.name, @response.body
+    assert_match @registration.contact_info, @response.body
+    assert_match @registration.auth_rep_name, @response.body
     assert_match @registration.auth_rep_email, @response.body
-    assert_match @registration.auth_rep_date,  @response.body
-    assert_match @registration.dsp_name,       @response.body
-    assert_match @registration.dsp_email,      @response.body
-    assert_match @registration.dsp_date,       @response.body
+    assert_match @registration.auth_rep_date, @response.body
+    assert_match @registration.dsp_name, @response.body
+    assert_match @registration.dsp_email, @response.body
+    assert_match @registration.dsp_date, @response.body
   end
 
   test "show page contains edit and delete buttons" do
     get ht_registration_url @registration
-    edit_btn = %r[<a.+?>Edit</a>]
-    del_btn  = %r[<a.+?>Delete Registration</a>]
+    edit_btn = %r{<a.+?>Edit</a>}
+    del_btn = %r{<a.+?>Delete Registration</a>}
     assert_match(edit_btn, @response.body)
-    assert_match(del_btn,  @response.body)
+    assert_match(del_btn, @response.body)
   end
 end
 
@@ -80,17 +80,17 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
 
   test "new registration page has all the fields" do
     get new_ht_registration_url
-    assert_match 'name="ht_registration[name]"',           @response.body
-    assert_select %q{select[name="ht_registration[inst_id]"]}
-    assert_match 'name="ht_registration[jira_ticket]"',    @response.body
-    assert_match 'name="ht_registration[contact_info]"',   @response.body
-    assert_match 'name="ht_registration[auth_rep_name]"',  @response.body
+    assert_match 'name="ht_registration[name]"', @response.body
+    assert_select 'select[name="ht_registration[inst_id]"]'
+    assert_match 'name="ht_registration[jira_ticket]"', @response.body
+    assert_match 'name="ht_registration[contact_info]"', @response.body
+    assert_match 'name="ht_registration[auth_rep_name]"', @response.body
     assert_match 'name="ht_registration[auth_rep_email]"', @response.body
-    assert_match 'name="ht_registration[auth_rep_date]"',  @response.body
-    assert_match 'name="ht_registration[dsp_name]"',       @response.body
-    assert_match 'name="ht_registration[dsp_email]"',      @response.body
-    assert_match 'name="ht_registration[dsp_date]"',       @response.body
-    assert_match 'name="ht_registration[mfa_addendum]"',   @response.body
+    assert_match 'name="ht_registration[auth_rep_date]"', @response.body
+    assert_match 'name="ht_registration[dsp_name]"', @response.body
+    assert_match 'name="ht_registration[dsp_email]"', @response.body
+    assert_match 'name="ht_registration[dsp_date]"', @response.body
+    assert_match 'name="ht_registration[mfa_addendum]"', @response.body
   end
 
   test "can create" do
@@ -107,17 +107,17 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     # Shows up in log
     log = HTRegistration.find(id).ht_logs.first
     assert_not_nil(log.data["params"])
-    assert_equal(log.data["params"]["name"],           params[:name])
-    assert_equal(log.data["params"]["inst_id"],        params[:inst_id])
-    assert_equal(log.data["params"]["jira_ticket"],    params[:jira_ticket])
-    assert_equal(log.data["params"]["contact_info"],   params[:contact_info])
-    assert_equal(log.data["params"]["auth_rep_name"],  params[:auth_rep_name])
+    assert_equal(log.data["params"]["name"], params[:name])
+    assert_equal(log.data["params"]["inst_id"], params[:inst_id])
+    assert_equal(log.data["params"]["jira_ticket"], params[:jira_ticket])
+    assert_equal(log.data["params"]["contact_info"], params[:contact_info])
+    assert_equal(log.data["params"]["auth_rep_name"], params[:auth_rep_name])
     assert_equal(log.data["params"]["auth_rep_email"], params[:auth_rep_email])
-    assert_equal(log.data["params"]["auth_rep_date"],  params[:auth_rep_date])
-    assert_equal(log.data["params"]["dsp_name"],       params[:dsp_name])
-    assert_equal(log.data["params"]["dsp_email"],      params[:dsp_email])
-    assert_equal(log.data["params"]["dsp_date"],       params[:dsp_date])
-    assert_equal(log.data["params"]["mfa_addendum"],   params[:mfa_addendum])
+    assert_equal(log.data["params"]["auth_rep_date"], params[:auth_rep_date])
+    assert_equal(log.data["params"]["dsp_name"], params[:dsp_name])
+    assert_equal(log.data["params"]["dsp_email"], params[:dsp_email])
+    assert_equal(log.data["params"]["dsp_date"], params[:dsp_date])
+    assert_equal(log.data["params"]["mfa_addendum"], params[:mfa_addendum])
   end
 end
 
@@ -136,34 +136,34 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
 
   test "form fields are present" do
     get edit_ht_registration_url @registration
-    assert_match 'name="ht_registration[name]"',           @response.body
-    assert_select %q{select[name="ht_registration[inst_id]"]}
-    assert_match 'name="ht_registration[jira_ticket]"',    @response.body
-    assert_match 'name="ht_registration[contact_info]"',   @response.body
-    assert_match 'name="ht_registration[auth_rep_name]"',  @response.body
+    assert_match 'name="ht_registration[name]"', @response.body
+    assert_select 'select[name="ht_registration[inst_id]"]'
+    assert_match 'name="ht_registration[jira_ticket]"', @response.body
+    assert_match 'name="ht_registration[contact_info]"', @response.body
+    assert_match 'name="ht_registration[auth_rep_name]"', @response.body
     assert_match 'name="ht_registration[auth_rep_email]"', @response.body
-    assert_match 'name="ht_registration[auth_rep_date]"',  @response.body
-    assert_match 'name="ht_registration[dsp_name]"',       @response.body
-    assert_match 'name="ht_registration[dsp_email]"',      @response.body
-    assert_match 'name="ht_registration[dsp_date]"',       @response.body
-    assert_match 'name="ht_registration[mfa_addendum]"',   @response.body
+    assert_match 'name="ht_registration[auth_rep_date]"', @response.body
+    assert_match 'name="ht_registration[dsp_name]"', @response.body
+    assert_match 'name="ht_registration[dsp_email]"', @response.body
+    assert_match 'name="ht_registration[dsp_date]"', @response.body
+    assert_match 'name="ht_registration[mfa_addendum]"', @response.body
   end
 
   test "can update fields" do
-    new_txt_val   = "updated by test"
+    new_txt_val = "updated by test"
     new_email_val = "upd@ted.biz"
 
     patch ht_registration_url @registration, params: {
-            ht_registration: {
-              "name"           => new_txt_val,
-              "jira_ticket"    => new_txt_val,
-              "contact_info"   => new_txt_val,
-              "auth_rep_name"  => new_txt_val,
-              "auth_rep_email" => new_email_val,
-              "dsp_name"       => new_txt_val,
-              "dsp_email"      => new_email_val,
-            }
-          }
+      ht_registration: {
+        "name" => new_txt_val,
+        "jira_ticket" => new_txt_val,
+        "contact_info" => new_txt_val,
+        "auth_rep_name" => new_txt_val,
+        "auth_rep_email" => new_email_val,
+        "dsp_name" => new_txt_val,
+        "dsp_email" => new_email_val
+      }
+    }
 
     relookup = HTRegistration.find(@registration.id)
 
@@ -203,5 +203,4 @@ class HTRegistrationsControllerDeleteTest < ActionDispatch::IntegrationTest
       HTRegistration.find reg_id
     end
   end
-  
 end
