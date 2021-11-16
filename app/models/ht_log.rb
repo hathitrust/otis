@@ -13,4 +13,5 @@ class HTLog < ApplicationRecord
   scope :ht_contact_type, -> { where(model: :HTContactType).order("time") }
   scope :ht_institution, -> { where(model: :HTInstitution).order("time") }
   scope :ht_user, -> { where(model: :HTUser).order("time") }
+  scope :ht_registration, -> { where(model: :HTRegistration).order("time") }
 end

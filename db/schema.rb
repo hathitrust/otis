@@ -45,6 +45,20 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.text :description
   end
 
+  create_table :ht_registrations do |t|
+    t.string :inst_id
+    t.string :jira_ticket
+    t.string :name
+    t.string :contact_info
+    t.string :auth_rep_name
+    t.string :auth_rep_email
+    t.string :auth_rep_date
+    t.string :dsp_name
+    t.string :dsp_email
+    t.string :dsp_date
+    t.string :mfa_addendum
+  end
+
   # Tables also used by other applications; must be kept in sync with
   # https://github.com/hathitrust/db-image
 
