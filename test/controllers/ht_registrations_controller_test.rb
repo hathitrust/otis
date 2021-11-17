@@ -54,7 +54,6 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     get ht_registration_url @registration
     assert_match @registration.inst_id, @response.body
     assert_match @registration.jira_ticket, @response.body
-    assert_match @registration.name, @response.body
     assert_match @registration.contact_info, @response.body
     assert_match @registration.auth_rep_name, @response.body
     assert_match @registration.auth_rep_email, @response.body
@@ -80,7 +79,6 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
 
   test "new registration page has all the fields" do
     get new_ht_registration_url
-    assert_match 'name="ht_registration[name]"', @response.body
     assert_select 'select[name="ht_registration[inst_id]"]'
     assert_match 'name="ht_registration[jira_ticket]"', @response.body
     assert_match 'name="ht_registration[contact_info]"', @response.body
@@ -101,13 +99,12 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
 
     HTRegistration.delete_all
     post ht_registrations_url, params: {ht_registration: params}
-    assert_redirected_to ht_registrations_url
+    assert_redirected_to /preview/
     assert_equal 1, HTRegistration.count
 
     # Shows up in log
     log = HTRegistration.first.ht_logs.first
     assert_not_nil(log.data["params"])
-    assert_equal(log.data["params"]["name"], params[:name])
     assert_equal(log.data["params"]["inst_id"], params[:inst_id])
     assert_equal(log.data["params"]["jira_ticket"], params[:jira_ticket])
     assert_equal(log.data["params"]["contact_info"], params[:contact_info])
@@ -136,10 +133,8 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
 
   test "form fields are present" do
     get edit_ht_registration_url @registration
-    assert_match 'name="ht_registration[name]"', @response.body
     assert_select 'select[name="ht_registration[inst_id]"]'
     assert_match 'name="ht_registration[jira_ticket]"', @response.body
-    assert_match 'name="ht_registration[contact_info]"', @response.body
     assert_match 'name="ht_registration[auth_rep_name]"', @response.body
     assert_match 'name="ht_registration[auth_rep_email]"', @response.body
     assert_match 'name="ht_registration[auth_rep_date]"', @response.body
@@ -147,6 +142,7 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
     assert_match 'name="ht_registration[dsp_email]"', @response.body
     assert_match 'name="ht_registration[dsp_date]"', @response.body
     assert_match 'name="ht_registration[mfa_addendum]"', @response.body
+    assert_match 'name="ht_registration[contact_info]"', @response.body
   end
 
   test "can update fields" do
@@ -155,9 +151,8 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
 
     patch ht_registration_url @registration, params: {
       ht_registration: {
-        "name" => new_txt_val,
         "jira_ticket" => new_txt_val,
-        "contact_info" => new_txt_val,
+        "contact_info" => new_email_val,
         "auth_rep_name" => new_txt_val,
         "auth_rep_email" => new_email_val,
         "dsp_name" => new_txt_val,
@@ -168,13 +163,12 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
     relookup = HTRegistration.find(@registration.id)
 
     assert_response :redirect
-    assert_equal new_txt_val, relookup.name
     assert_equal new_txt_val, relookup.jira_ticket
-    assert_equal new_txt_val, relookup.contact_info
     assert_equal new_txt_val, relookup.auth_rep_name
     assert_equal new_email_val, relookup.auth_rep_email
     assert_equal new_txt_val, relookup.dsp_name
     assert_equal new_email_val, relookup.dsp_email
+    assert_equal new_email_val, relookup.contact_info
   end
 
   test "fails update with bogus email" do
@@ -202,5 +196,65 @@ class HTRegistrationsControllerDeleteTest < ActionDispatch::IntegrationTest
     assert_raises ActiveRecord::RecordNotFound do
       HTRegistration.find reg_id
     end
+  end
+end
+
+class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
+  def setup
+    ActionMailer::Base.deliveries.clear
+    @registration = create(:ht_registration)
+    sign_in! username: ADMIN_USER
+  end
+
+  test "should get e-mail preview" do
+    get preview_ht_registration_path @registration
+    assert_response :success
+    assert_equal "preview", @controller.action_name
+    assert_not_nil assigns(:finalize_url)
+    assert_not_nil assigns(:email_body)
+    assert_match /E-mail Preview/i, @response.body
+  end
+
+  test "e-mail preview is well-formed HTML" do
+    get preview_ht_registration_path @registration
+    assert_equal 0, w3c_errs(@response.body).length
+  end
+end
+
+class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
+  def setup
+    @registration = create(:ht_registration)
+  end
+
+  def mail_registration(registration: @registration, params: {})
+    sign_in!
+    post(mail_ht_registration_path(registration), params: params)
+    assert_response :redirect
+    assert_equal "mail", @controller.action_name
+    follow_redirect!
+  end
+
+  test "should use provided email body" do
+    test_text = Faker::Lorem.paragraph
+
+    mail_registration params: {email_body: test_text}
+
+    ActionMailer::Base.deliveries.first.body.parts.each do |part|
+      assert_match test_text, part.to_s
+    end
+  end
+
+  test "should send mail" do
+    mail_registration
+
+    assert ActionMailer::Base.deliveries.size
+  end
+
+  test "should update request status" do
+    mail_registration
+
+    assert_not_nil @registration.reload.sent
+    assert_not_nil @registration.reload[:token_hash]
+    assert_equal "show", @controller.action_name
   end
 end

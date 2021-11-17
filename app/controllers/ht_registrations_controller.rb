@@ -31,8 +31,8 @@ class HTRegistrationsController < ApplicationController
     @registration = HTRegistrationPresenter.new(HTRegistration.new(reg_params))
     if @registration.save
       log
-      flash.now[:alert] = "Registration created for #{@registration.name}."
-      redirect_to action: :index
+      flash.now[:alert] = "Registration created for #{@registration.dsp_name}."
+      redirect_to preview_ht_registration_path(@registration)
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "new"
@@ -49,15 +49,26 @@ class HTRegistrationsController < ApplicationController
 
   def update
     fetch_presenter
-
     if @registration.update(reg_params)
       log
-      flash[:notice] = "Registration updated for #{@registration.name}"
+      flash[:notice] = "Registration updated for #{@registration.dsp_name}"
       redirect_to action: :index
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "edit"
     end
+  end
+
+  def preview
+    fetch_presenter
+    @finalize_url = finalize_url @registration.token
+    @email_body = render_to_string partial: "shared/registration_body"
+  end
+
+  def mail
+    fetch_registration
+    send_mail
+    redirect_to action: :show
   end
 
   def destroy
@@ -90,5 +101,17 @@ class HTRegistrationsController < ApplicationController
 
   def log(params = reg_params)
     log_action(@registration, params)
+  end
+
+  def send_mail
+    RegistrationMailer.with(registration: @registration,
+      finalize_url: finalize_url(@registration.token, host: request.base_url),
+      body: params[:email_body]).registration_email.deliver_now
+    flash[:notice] = "Message sent"
+    log params.transform_values! { |v| v.present? ? v : nil }.permit!
+    @registration.sent = Time.zone.now
+    @registration.save!
+  rescue => e
+    flash[:alert] = e.message
   end
 end

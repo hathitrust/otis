@@ -46,17 +46,22 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
   end
 
   create_table :otis_registrations do |t|
+    t.string :dsp_name
+    t.string :dsp_email
+    t.string :dsp_date
     t.string :inst_id
     t.string :jira_ticket
-    t.string :name
+    # Institution-level ATRS point of contact
     t.string :contact_info
     t.string :auth_rep_name
     t.string :auth_rep_email
     t.string :auth_rep_date
-    t.string :dsp_name
-    t.string :dsp_email
-    t.string :dsp_date
     t.string :mfa_addendum
+    # Added for e-mail support, based on approval requests, may need elaboration based on expected workflow
+    # Should be displayed on show page, not editable
+    t.text :token_hash
+    t.timestamp :sent
+    t.timestamp :received
   end
 
   # Tables also used by other applications; must be kept in sync with

@@ -37,3 +37,9 @@ These tests are not run by default since they rely on an external service.
 ```
 docker-compose run -e W3C_VALIDATION=1 test
 ```
+
+To run a single test class use an invocation along these lines:
+
+```
+docker-compose run test bundle exec ruby -I test test/controllers/ht_users_controller_test.rb
+```

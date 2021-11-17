@@ -116,18 +116,14 @@ def create_ht_registration(inst_id)
   HTRegistration.create(
     inst_id: inst_id,
     jira_ticket: "HT-#{ticket_no}",
-    name: Faker::Name.name,
-    contact_info: Faker::Lorem.sentence(word_count: 6),
-
-    auth_rep_name: Faker::Name.name,
-    auth_rep_email: Faker::Internet.email,
-    auth_rep_date: Faker::Date.backward(days: 180),
-
     dsp_name: Faker::Name.name,
     dsp_email: Faker::Internet.email,
     dsp_date: Faker::Date.backward(days: 180),
-
-    mfa_addendum: ["yes", "no"].sample
+    auth_rep_name: Faker::Name.name,
+    auth_rep_email: Faker::Internet.email,
+    auth_rep_date: Faker::Date.backward(days: 180),
+    mfa_addendum: ["yes", "no"].sample,
+    contact_info: Faker::Internet.email
   )
 end
 

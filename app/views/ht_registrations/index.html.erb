@@ -9,25 +9,19 @@
   <table class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true" data-search="true" data-show-search-clear-button="true">
     <tr>
       <th data-sortable="true">Name</th>
-      <th data-sortable="true">Institution</th>
       <th data-sortable="true">Ticket</th>
-      <th data-sortable="true">Contact Info</th>
-      <th data-sortable="true">Auth Rep</th>
+      <th data-sortable="true">Institution</th>
       <th data-sortable="true">DSP</th>
+      <th data-sortable="true">Auth Rep</th>
       <th data-sortable="true">MFA?</th>
     </tr>
     <% @all_registrations.each do |reg| %>
     <tr>
       <td><%= reg.edit_link %></td>
-      <td><%= reg.inst_link %></td>
       <td><%= reg.jira_link %></td>
-      <td><%= reg.contact_info %></td>
-      <td>
-	<%== reg.auth_contact %>
-      </td>
-      <td>
-	<%== reg.dsp_contact %>
-      </td>
+      <td><%= reg.inst_link %></td>
+      <td><%== reg.dsp_contact %></td>
+      <td><%== reg.auth_contact %></td>
       <td><%= reg.mfa_addendum %></td>
     </tr>
     <% end %>

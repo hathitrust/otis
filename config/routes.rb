@@ -30,7 +30,12 @@ Rails.application.routes.draw do
   end
 
   scope format: false, constraints: {id: /.+/} do
-    resources :ht_registrations
+    resources :ht_registrations do
+      member do
+        get "preview"
+        post "mail"
+      end
+    end
   end
 
   get "/login", to: "session#new", as: "login"
@@ -40,6 +45,8 @@ Rails.application.routes.draw do
   end
 
   get "/approve/:token", to: "approval#new", as: :approve
+
+  get "/finalize/:token", to: "finalize#new", as: :finalize
 
   unless Rails.env.production?
     get "Shibboleth.sso/Login", controller: :fake_shib, as: :fake_shib, action: :new
