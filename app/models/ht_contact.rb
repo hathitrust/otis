@@ -14,15 +14,6 @@ class HTContact < ApplicationRecord
 
   self.primary_key = "id"
 
-  # Checkpoint
-  def resource_type
-    :ht_contact
-  end
-
-  def resource_id
-    id
-  end
-
   def institution
     HTInstitution.find(self[:inst_id])
   end

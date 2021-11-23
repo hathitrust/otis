@@ -11,15 +11,6 @@ class HTContactType < ApplicationRecord
 
   self.primary_key = "id"
 
-  # Checkpoint
-  def resource_type
-    :ht_contact_type
-  end
-
-  def resource_id
-    id
-  end
-
   private
 
   def check_contacts

@@ -44,15 +44,6 @@ class HTApprovalRequest < ApplicationRecord
     find_by_token_hash(digest(tok))
   end
 
-  # Checkpoint
-  def resource_type
-    :ht_approval_request
-  end
-
-  def resource_id
-    id
-  end
-
   # This is the bit that goes to the approver, just a gob of b64 data acting as a 'password'
   def token
     @token ||= SecureRandom.urlsafe_base64 16

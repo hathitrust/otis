@@ -41,11 +41,7 @@ class HTUser < ApplicationRecord
     HUMANIZED_ATTRIBUTES[attr.to_sym] || super
   end
 
-  # Checkpoint
-  def resource_type
-    :ht_user
-  end
-
+  # Checkpoint override
   def resource_id
     email
   end

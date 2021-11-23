@@ -26,9 +26,8 @@ class ApplicationController < ActionController::Base
     raise NotAuthorizedError unless can?(params[:action], params[:controller], current_user)
   end
 
-  def can?(action, resource, user = current_user)
-    res = Checkpoint::Resource::AllOfType.new(resource)
-    Checkpoint::Query::ActionPermitted.new(user, action, res, authority: Services.checkpoint).true?
+  def can?(action, object, user = current_user)
+    policy(object).can?(action, authorizable_object(object), user)
   end
 
   # This could be replaced by a landing page that is accessible
@@ -40,6 +39,17 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  # Turn string or symbol referencing ActiveRecord class into that class.
+  # For ActiveRecord objects and classes this is an identity.
+  # Typically this will take something like "ht_users" and return HTUser.
+  # Use this intermediate representation (instead of just converting to a Checkpoint::Resource)
+  # because policies may need to reason about real model objects.
+  def authorizable_object(object)
+    return object if object.respond_to? :to_resource
+
+    Object.const_get(object.to_s.singularize.camelize)
+  end
 
   def user_not_authorized
     # logout
@@ -69,6 +79,24 @@ class ApplicationController < ActionController::Base
 
   def set_csrf_cookie
     cookies["CSRF-TOKEN"] = form_authenticity_token
+  end
+
+  # Derive the policy class from either a controller name like ht_users,
+  # or from an object, typically when more fine-grained access control is
+  # to be enforced.
+  def policy(resource)
+    basename = if [String, Symbol].include?(resource.class)
+      resource.to_s
+    else
+      resource.class.to_s
+    end
+    basename = basename.pluralize.camelize + "Policy"
+    begin
+      policy_class = Object.const_get(basename)
+    rescue NameError => _e
+      policy_class = Object.const_get("ApplicationPolicy")
+    end
+    policy_class.new
   end
 
   def attributes_factory

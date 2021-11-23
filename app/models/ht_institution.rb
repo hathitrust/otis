@@ -22,15 +22,6 @@ class HTInstitution < ApplicationRecord
   scope :enabled, -> { where("enabled = 1") }
   scope :other, -> { where("enabled != 1") }
 
-  # Checkpoint
-  def resource_type
-    :ht_institution
-  end
-
-  def resource_id
-    id
-  end
-
   def set_defaults
     self.mapto_inst_id ||= inst_id
     return unless entityID
