@@ -48,6 +48,9 @@ class ApplicationController < ActionController::Base
   def authorizable_object(object)
     return object if object.respond_to? :to_resource
 
+    require 'pry'
+    binding.pry if object.to_s.singularize.camelize == "HTApprovalRequest"
+
     Object.const_get(object.to_s.singularize.camelize)
   end
 
@@ -127,7 +130,7 @@ class ApplicationController < ActionController::Base
 
     raise "Unable to extract object id from #{obj.inspect}" if obj.id.blank?
     rails_action = "#{params[:controller]}##{params[:action]}"
-    log_entry = HTLog.new(model: obj.resource_type.to_s.camelize, objid: obj.id)
+    log_entry = OtisLog.new(model: obj.resource_type.to_s.camelize, objid: obj.id)
     log_entry.data = {
       action: rails_action,
       ip_address: request.remote_ip,

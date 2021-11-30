@@ -8,9 +8,9 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
     @user1 = create(:ht_user, email: "user1@example.com", approver: "approver@example.com")
     @user2 = create(:ht_user, email: "user2@example.com", approver: "approver@example.com")
     @user3 = create(:ht_user, email: "user3@example.com", approver: "another_approver@example.com")
-    @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver)
-    @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver)
-    @req3 = create(:ht_approval_request, userid: @user3.email, approver: @user3.approver)
+    @req1 = create(:approval_request, userid: @user1.email, approver: @user1.approver)
+    @req2 = create(:approval_request, userid: @user2.email, approver: @user2.approver)
+    @req3 = create(:approval_request, userid: @user3.email, approver: @user3.approver)
   end
 
   def email(reqs: [@req1], base_url: @base_url, body: "")

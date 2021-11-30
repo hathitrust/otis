@@ -14,7 +14,7 @@
       <dt>Display Name:</dt> <dd><%= @user.displayname %></dd>
       <dt>User ID:</dt> <dd><%= @user.userid %></dd>
       <dt>Activity Contact:</dt> <dd><%= @user.activitycontact %></dd>
-      <dt>Approver:</dt> <dd><%= link_to @user.approver, ht_approval_request_path(@user.approver) %></dd>
+      <dt>Approver:</dt> <dd><%= link_to @user.approver, approval_request_path(@user.approver) %></dd>
       <dt>Authorizer:</dt> <dd><%= @user.authorizer %></dd>
       <dt>User Type:</dt> <dd><%= @user.usertype %></dd>
       <dt>Role:</dt> <dd><%= @user.role_name %></dd>

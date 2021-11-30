@@ -6,7 +6,7 @@
 class ApprovalController < ApplicationController
   def new
     @token = params[:token]
-    @req = HTApprovalRequest.find_by_token(params[:token])
+    @req = ApprovalRequest.find_by_token(params[:token])
 
     return render_not_found unless @req&.token_hash
 

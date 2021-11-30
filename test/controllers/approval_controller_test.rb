@@ -5,7 +5,7 @@ require "test_helper"
 class ApprovalControllerTest < ActionDispatch::IntegrationTest
   def setup
     @user = create(:ht_user, approver: "approver@wherever.edu", expire_type: "expiresannually", expires: Time.zone.now)
-    @req = create(:ht_approval_request, userid: @user.email, approver: @user.approver, sent: Date.today - 1.day)
+    @req = create(:approval_request, userid: @user.email, approver: @user.approver, sent: Date.today - 1.day)
   end
 
   test "succeeds approval by approver with email not known in advance" do
@@ -39,7 +39,7 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get approve_url @req.token
 
-    assert @user.ht_logs.first
+    assert @user.otis_logs.first
   end
 
   test "logs attributes from keycard" do
@@ -53,7 +53,7 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
 
       process(:get, approve_url(@req.token), headers: {"HTTP_X_SHIB_EDUPERSONPRINCIPALNAME" => email})
 
-      log_data = @user.ht_logs.first.data
+      log_data = @user.otis_logs.first.data
 
       assert_equal email, log_data["eduPersonPrincipalName"]
       assert_equal request.remote_ip, log_data["ip_address"]
@@ -67,7 +67,7 @@ class ApprovalControllerTest < ActionDispatch::IntegrationTest
 
     get approve_url @req.token
 
-    log_data = @user.ht_logs.first.data
+    log_data = @user.otis_logs.first.data
     assert_not log_data["params"].key?("token")
   end
 end
@@ -76,8 +76,8 @@ class ApprovalControllerFailureTest < ActionDispatch::IntegrationTest
   def setup
     @user = create(:ht_user, approver: "no_account@example.com")
     @user2 = create(:ht_user, approver: "nobody@example.com")
-    @req = create(:ht_approval_request, userid: @user.email, approver: @user.approver, sent: Date.today - 2.day)
-    @req2 = create(:ht_approval_request, userid: @user2.email, approver: @user2.approver, sent: Date.today - 2.week)
+    @req = create(:approval_request, userid: @user.email, approver: @user.approver, sent: Date.today - 2.day)
+    @req2 = create(:approval_request, userid: @user2.email, approver: @user2.approver, sent: Date.today - 2.week)
   end
 
   test "gets 404 with nonsense token" do
@@ -87,7 +87,7 @@ class ApprovalControllerFailureTest < ActionDispatch::IntegrationTest
   end
 
   test "gets 404 with unsent approval" do
-    unsent = create(:ht_approval_request)
+    unsent = create(:approval_request)
     sign_in!
     get approve_url unsent.token
     assert_response :not_found

@@ -36,7 +36,7 @@ en:
         HTUser:
           attributes:
             iprestrict: "requires valid IPv4 addresess (separated by commas if multiple)"
-  ht_approval_request:
+  approval_request:
     badges:
       approved: "Approved"
       expired: "Request Expired"

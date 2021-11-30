@@ -98,8 +98,8 @@ class HTInstitutionsControllerShowTest < ActionDispatch::IntegrationTest
   end
 
   test "shows contacts" do
-    contact1 = create(:ht_contact, inst_id: @inst.id)
-    contact2 = create(:ht_contact, inst_id: @inst.id)
+    contact1 = create(:contact, inst_id: @inst.id)
+    contact2 = create(:contact, inst_id: @inst.id)
     get ht_institution_url @inst
     assert_match(contact1.email, @response.body)
     assert_match(contact2.email, @response.body)
@@ -272,7 +272,7 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
     inst_params = attributes_for(:ht_institution)
     inst_id = inst_params[:inst_id]
     post ht_institutions_url, params: {ht_institution: inst_params}
-    assert_equal(inst_id, HTInstitution.find(inst_id).ht_logs.last.data["params"]["inst_id"])
+    assert_equal(inst_id, HTInstitution.find(inst_id).otis_logs.last.data["params"]["inst_id"])
   end
 end
 
@@ -338,7 +338,7 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
     inst = create(:ht_institution, emergency_status: nil)
     patch ht_institution_url inst, params: {"ht_institution" => {"emergency_status" => new_status}}
 
-    log = HTInstitution.find(inst.inst_id).ht_logs.last
+    log = HTInstitution.find(inst.inst_id).otis_logs.last
 
     assert_not_nil(log.time)
     assert_equal(new_status, log.data["params"]["emergency_status"])

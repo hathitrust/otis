@@ -20,7 +20,7 @@ class HTUserPresenter < SimpleDelegator
   def badge
     return "" if approval_request.nil?
 
-    HTApprovalRequestPresenter.new(approval_request)&.badge
+    ApprovalRequestPresenter.new(approval_request)&.badge
   end
 
   def can_renew?
@@ -91,7 +91,7 @@ class HTUserPresenter < SimpleDelegator
   end
 
   def approval_request
-    @approval_request ||= HTApprovalRequest.most_recent(email).first
+    @approval_request ||= ApprovalRequest.most_recent(email).first
   end
 
   def checkmark_icon(field)

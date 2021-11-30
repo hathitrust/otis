@@ -2,8 +2,8 @@
 
 module ApplicationHelper
   def nav_menu
-    %w[users approval_requests institutions contacts contact_types logs registrations]
-      .select { |item| can?(:index, "ht_#{item}") }
-      .map { |item| [item.titleize, send("ht_#{item}_path")] }
+    %w[ht_users approval_requests ht_institutions contacts contact_types otis_logs registrations]
+      .select { |item| can?(:index, item) }
+      .map { |item| [item.titleize, send("#{item}_path")] }
   end
 end

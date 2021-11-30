@@ -5,7 +5,7 @@ require "test_helper"
 class UserMailerTest < ActionMailer::TestCase
   def setup
     @user1 = create(:ht_user, email: "user1@example.com", approver: "approver@example.com")
-    @req1 = create(:ht_approval_request, userid: @user1.email, approver: @user1.approver)
+    @req1 = create(:approval_request, userid: @user1.email, approver: @user1.approver)
   end
 
   def email(req: @req1)

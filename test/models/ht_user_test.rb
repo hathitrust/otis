@@ -171,20 +171,20 @@ class HTUserUpdateApprover < ActiveSupport::TestCase
   end
 
   test "deletes non-approved request when updating approver" do
-    create(:ht_approval_request, ht_user: @user)
+    create(:approval_request, ht_user: @user)
     @user.reload
     @user.approver = "somebodyelse@example.com"
-    assert_difference -> { HTApprovalRequest.count }, -1 do
+    assert_difference -> { ApprovalRequest.count }, -1 do
       @user.save
     end
   end
 
   test "does not delete approved request when updating approver" do
-    create(:ht_approval_request, ht_user: @user, received: Faker::Time.backward)
+    create(:approval_request, ht_user: @user, received: Faker::Time.backward)
 
     @user.reload
     @user.approver = "somebodyelse@example.com"
-    assert_no_difference -> { HTApprovalRequest.count } do
+    assert_no_difference -> { ApprovalRequest.count } do
       @user.save
     end
   end
@@ -194,7 +194,7 @@ class HTUserUpdateApprover < ActiveSupport::TestCase
 
     @user.reload
     @user.approver = "somebodyelse@example.com"
-    assert_no_difference -> { HTApprovalRequest.count } do
+    assert_no_difference -> { ApprovalRequest.count } do
       @user.save
     end
   end
@@ -206,20 +206,20 @@ class HTUserManualExpire < ActiveSupport::TestCase
   end
 
   test "deletes non-approved request when manually expiring user" do
-    create(:ht_approval_request, ht_user: @user, sent: Faker::Time.backward)
+    create(:approval_request, ht_user: @user, sent: Faker::Time.backward)
     @user.reload
     @user.expires = Time.zone.now
-    assert_difference -> { HTApprovalRequest.count }, -1 do
+    assert_difference -> { ApprovalRequest.count }, -1 do
       @user.save
     end
   end
 
   test "does not delete approved request when manually expiring user" do
-    create(:ht_approval_request, ht_user: @user, received: Faker::Time.backward)
+    create(:approval_request, ht_user: @user, received: Faker::Time.backward)
 
     @user.reload
     @user.expires = Time.zone.now
-    assert_no_difference -> { HTApprovalRequest.count } do
+    assert_no_difference -> { ApprovalRequest.count } do
       @user.save
     end
   end

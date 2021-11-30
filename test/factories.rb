@@ -79,7 +79,7 @@ FactoryBot.define do
     auth_requested { [false, true].sample }
   end
 
-  factory :ht_approval_request do
+  factory :approval_request do
     approver { Faker::Internet.email }
     ht_user
 
@@ -110,20 +110,20 @@ FactoryBot.define do
     end
   end
 
-  factory :ht_contact_type do
+  factory :contact_type do
     sequence(:id) { |n| n.to_s }
     name { Faker::Lorem.unique.characters(number: 10) }
     description { Faker::Lorem.sentence(word_count: 10) }
   end
 
-  factory :ht_contact do
+  factory :contact do
     sequence(:id) { |n| n.to_s }
     email { Faker::Internet.email }
     association :ht_institution, strategy: :create
-    association :ht_contact_type, strategy: :create
+    association :contact_type, strategy: :create
   end
 
-  factory :ht_registration do
+  factory :registration do
     sequence(:id) { |n| n.to_s }
 
     jira_ticket { Faker::Alphanumeric.alpha(number: 6).upcase }

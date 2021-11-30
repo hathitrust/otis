@@ -16,8 +16,8 @@ namespace :otis do
     admin_role = Checkpoint::Credential::Role.new(:admin)
     view_role = Checkpoint::Credential::Role.new(:view)
     res_wildcard = Checkpoint::Resource::AllOfAnyType.new
-    res_contact = Checkpoint::Resource::AllOfType.new(:ht_contact)
-    res_contact_type = Checkpoint::Resource::AllOfType.new(:ht_contact_type)
+    res_contact = Checkpoint::Resource::AllOfType.new(:contact)
+    res_contact_type = Checkpoint::Resource::AllOfType.new(:contact_type)
     if Otis.config.users.present?
       Otis.config.users.each do |u|
         agent = Checkpoint::Agent::Token.new("user", u)

@@ -49,16 +49,16 @@ def create_ht_user(expires:)
     auth_requested: [false, true].sample
   )
   c.save
-  create_ht_approval_request(u)
+  create_approval_request(u)
 end
 
-def create_ht_approval_request(user)
+def create_approval_request(user)
   return unless rand < 0.1
 
   sent = [nil, Faker::Time.backward].sample
   received = sent.nil? ? nil : [nil, sent + Faker::Number.within(range: 1..10).days].sample
   renewed = received.nil? ? nil : [nil, received + Faker::Number.within(range: 1..10).days].sample
-  ar = HTApprovalRequest.new(
+  ar = ApprovalRequest.new(
     id: Faker::Number.unique.number(digits: 9),
     approver: user.approver,
     userid: user.email,
@@ -97,23 +97,23 @@ def create_ht_billing_member(inst_id)
   )
 end
 
-def create_ht_contact(inst_id)
-  HTContact.create(
+def create_contact(inst_id)
+  Contact.create(
     inst_id: inst_id,
-    contact_type: HTContactType.all.sample.id,
+    contact_type: ContactType.all.sample.id,
     email: Faker::Internet.email
   )
 end
 
-def create_ht_contact_type
-  HTContactType.create(name: Faker::Job.position,
+def create_contact_type
+  ContactType.create(name: Faker::Job.position,
                        description: Faker::Lorem.sentence(word_count: 10))
 end
 
-def create_ht_registration(inst_id)
+def create_registration(inst_id)
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
 
-  HTRegistration.create(
+  Registration.create(
     inst_id: inst_id,
     jira_ticket: "HT-#{ticket_no}",
     name: Faker::Name.name,
@@ -131,18 +131,18 @@ def create_ht_registration(inst_id)
   )
 end
 
-HTContactType.create(name: "ETAS",
+ContactType.create(name: "ETAS",
                      description: "Emergency Temporary Access Service")
 
 5.times do
-  create_ht_contact_type
+  create_contact_type
 end
 
 10.times do
   inst_id = create_ht_institution(1)
   create_ht_billing_member(inst_id) if [0, 1].sample.zero?
-  create_ht_contact(inst_id) if [0, 1].sample.zero?
-  create_ht_registration(inst_id)
+  create_contact(inst_id) if [0, 1].sample.zero?
+  create_registration(inst_id)
 end
 
 2.times do

@@ -1,0 +1,20 @@
+  <h1><%= @contact_type.name %></h1>
+
+  <%= render 'shared/flash_message' %>
+
+  <%= form_with(model: @contact_type, local: true, id: 'edit_contact_type_form') do |form| %>
+    <div class="col-sm-6">
+      <dl class="dl-horizontal">
+        <dt>ID:</dt> <dd><%= @contact_type.id %></dd>
+
+        <dt>Name:</dt>
+        <dd><%= form.text_field :name, size: 20 %></dd>
+
+        <dt>Description:</dt> 
+        <dd> <%= form.text_area :description, size: "80x4" %> </dd>
+      </dl>
+      <%= form.submit 'Submit Changes', class: 'btn btn-primary' %>
+      <%= @contact_type.cancel_button %>
+    </div>
+
+  <% end %>

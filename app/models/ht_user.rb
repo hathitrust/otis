@@ -8,8 +8,8 @@ class HTUser < ApplicationRecord
 
   belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
   has_one :ht_count, foreign_key: :userid, primary_key: :userid
-  has_many :ht_logs, -> { HTLog.ht_user }, foreign_key: :objid, primary_key: :email
-  has_many :ht_approval_request, foreign_key: :userid, primary_key: :email
+  has_many :otis_logs, -> { OtisLog.ht_user }, foreign_key: :objid, primary_key: :email
+  has_many :approval_request, foreign_key: :userid, primary_key: :email
 
   validates :iprestrict, presence: true, unless: :mfa
   validate :validate_iprestrict
@@ -130,7 +130,7 @@ class HTUser < ApplicationRecord
   end
 
   def approval_requested?
-    ht_approval_request.count.positive?
+    approval_request.count.positive?
   end
 
   def renew!
@@ -139,11 +139,11 @@ class HTUser < ApplicationRecord
   end
 
   def add_or_update_renewal(approver:, force: false)
-    req = ht_approval_request.approved.not_renewed.first
+    req = approval_request.approved.not_renewed.first
 
     if force
-      req ||= ht_approval_request.not_renewed.first
-      req ||= HTApprovalRequest.new(approver: approver, ht_user: self)
+      req ||= approval_request.not_renewed.first
+      req ||= ApprovalRequest.new(approver: approver, ht_user: self)
     end
 
     raise("No approved request for #{email}; must be renewed manually") unless req
@@ -168,7 +168,7 @@ class HTUser < ApplicationRecord
   def clean_requests
     if saved_change_to_approver? || (saved_change_to_expires? &&
                                      expiration_date(true).days_until_expiration < 1)
-      ht_approval_request.not_approved.not_renewed.destroy_all
+      approval_request.not_approved.not_renewed.destroy_all
     end
   end
 end

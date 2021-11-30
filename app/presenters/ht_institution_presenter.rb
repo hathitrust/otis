@@ -107,7 +107,7 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def contacts
-    HTContact.for_institution(id).map { |c| HTContactPresenter.new c }
+    Contact.for_institution(id).map { |c| ContactPresenter.new c }
   end
 
   private

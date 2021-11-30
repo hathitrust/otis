@@ -1,0 +1,52 @@
+<div id="maincontent" class="row">
+
+  <%= render 'shared/flash_message' %>
+
+  <div class="row">
+    <h2>Contacts</h2>
+  </div>
+
+  <div class="row">
+    <%= form_tag(contacts_url, method: :get) do %>
+      <%= select_tag :contact_type,
+                     options_from_collection_for_select(ContactType.all, :id, :name,
+                                                        params[:contact_type].blank? ? nil : params[:contact_type]),
+                     include_blank: "(All)" %>
+      <%= submit_tag 'Search', name: nil %>
+    <% end %>
+  </div>
+
+  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+         data-search="true" data-show-search-clear-button="true">
+    <thead class="thead-dark">
+    <tr>
+      <th data-sortable="true">ID</th>
+      <th data-sortable="true">Institution</th>
+      <th data-sortable="true">Type</th>
+      <th data-sortable="true">Email</th>
+    </tr>
+    </thead>
+
+    <% @contacts.each do |c| %>
+      <tr>
+        <td><%= c.id %></td>
+        <td><%= c.inst_link %></td>
+        <td><%= c.contact_type_display %></td>
+        <td><%= c.email_display %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <br />
+
+  <% if can?(:create, :contacts) %>
+    <%= link_to 'Add New Contact', new_contact_path, class: 'btn btn-primary' %>
+  <% end %>
+  <% if @contacts.any? %>
+    <%= link_to 'Download CSV',
+                contacts_url(format: :csv, contact_type: params[:contact_type]),
+                class: 'btn btn-info' %>
+  <% end %>
+
+</div>
+

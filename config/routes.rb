@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   scope format: false, constraints: {id: /.+/} do
-    resources :ht_approval_requests
+    resources :approval_requests
   end
 
   root "ht_users#index"
@@ -18,19 +18,19 @@ Rails.application.routes.draw do
   end
 
   scope format: false, constraints: {id: /.+/} do
-    resources :ht_contacts
+    resources :contacts
   end
 
   scope format: false, constraints: {id: /.+/} do
-    resources :ht_contact_types
+    resources :contact_types
   end
 
   scope constraints: {id: /.+/} do
-    resources :ht_logs
+    resources :otis_logs
   end
 
   scope format: false, constraints: {id: /.+/} do
-    resources :ht_registrations
+    resources :registrations
   end
 
   get "/login", to: "session#new", as: "login"

@@ -3,7 +3,7 @@
 class ApprovalRequestMailerPreview < ActionMailer::Preview
   def approval_request_email
     reqs = []
-    HTApprovalRequest.all.sample(3).each do |req|
+    ApprovalRequest.all.sample(3).each do |req|
       reqs << req.dup
       reqs.last[:approver] = "approver@example.com"
     end
