@@ -2,6 +2,8 @@
 
 # Map of institution email contact and type
 class HTContact < ApplicationRecord
+  self.table_name = "otis_contacts"
+
   belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id, required: true
   belongs_to :ht_contact_type, foreign_key: :contact_type, primary_key: :id, required: true
   scope :for_institution, ->(inst_id) { where(inst_id: inst_id).order(:contact_type) }
