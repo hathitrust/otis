@@ -2,6 +2,8 @@
 
 # Name and description for type of institution contact
 class HTContactType < ApplicationRecord
+  self.table_name = "otis_contact_types"
+
   validates :name, presence: true, uniqueness: true, allow_blank: false
   validates :description, presence: true, allow_blank: false
 

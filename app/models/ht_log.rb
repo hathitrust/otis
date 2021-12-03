@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class HTLog < ApplicationRecord
+  self.table_name = "otis_logs"
+
   validates :model, presence: true
   validates :objid, presence: true
   validates :data, presence: true
