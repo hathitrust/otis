@@ -39,7 +39,7 @@
 
   <br />
 
-  <% if can?(:create, :ht_contacts) %>
+  <% if can?(:create, HTContact) %>
     <%= link_to 'Add New Contact', new_ht_contact_path, class: 'btn btn-primary' %>
   <% end %>
   <% if @contacts.any? %>
