@@ -1,6 +1,6 @@
 <div id="maincontent" class="row">
   <h1>Approval Requests</h1>
-  <% if can?(:edit, :ht_approval_requests) %>
+  <% if can?(:edit, HTApprovalRequest) %>
     <p>To edit and send an approval request email, click on an approver email.</p>
   <% end %>
 
@@ -24,19 +24,19 @@
     <% @incomplete_reqs.each do |req| %>
       <%= tag(:tr, class: @added_users.include?(req.userid) ? :success : nil) %>
         <td>
-          <% if can?(:edit, :ht_approval_requests) %>
+          <% if can?(:edit, HTApprovalRequest) %>
             <%= req.select_for_renewal_checkbox %>
           <% end %>
         </td>
         <td>
-          <% if can?(:edit, :ht_approval_requests) %>
+          <% if can?(:edit, HTApprovalRequest) %>
             <%= req.approver_link %>
           <% else %>
             <%= req.approver %>
           <% end %>
         </td>
         <td>
-          <%= req.userid_link(label: can?(:edit, :ht_approval_requests)) %>
+          <%= req.userid_link(label: can?(:edit, HTApprovalRequest)) %>
         </td>
         <td class="text-nowrap">
           <%= req.sent(short: true) %>
@@ -50,10 +50,10 @@
     <% end %>
   </table>
   <br/>
-  <% if can?(:edit, :ht_users) %>
+  <% if can?(:edit, HTUser) %>
     <%= submit_tag 'Renew Selected Users', name: 'submit_renewals', class: 'btn btn-primary' %>
   <% end %>
-  <% if can?(:destroy, :ht_approval_requests) && HTApprovalRequest.expired.any? %>
+  <% if can?(:destroy, HTApprovalRequest) && HTApprovalRequest.expired.any? %>
     <%= submit_tag 'Delete Expired Requests', name: 'delete_expired', class: 'btn btn-danger',
                    data: { confirm: "Please confirm deletion of #{HTApprovalRequestPresenter.expired_requests}." } %>
   <% end %>

@@ -28,11 +28,11 @@
   </dl>
   <br />
 
-  <% if can?(:edit, :ht_registrations) %>
+  <% if can?(:edit, HTRegistration) %>
     <%= link_to 'Edit', edit_ht_registration_path, class: 'btn btn-primary' %>
   <% end %>
 
-  <% if can?(:destroy, :ht_registrations) %>
+  <% if can?(:destroy, HTRegistration) %>
     <%= link_to 'Delete Registration', ht_registration_path, method: :delete, class: 'btn btn-danger',
 	data: { confirm: "Please confirm deletion of registration \"#{@registration.name}\"" } %>
   <% end %>

@@ -61,7 +61,7 @@
   <%= link_to 'Download CSV', ht_institutions_url(format: :csv), class: 'btn btn-info' %>
   <br />
 
-  <% if can?(:create, :ht_institutions) %>
+  <% if can?(:create, HTInstitution) %>
     <h2> Add New Institution </h2>
 
     <p> <a target="_blank" href="https://met.refeds.org">Search REFEDS Metadata Explorer (opens in new tab)</a> for a SAML

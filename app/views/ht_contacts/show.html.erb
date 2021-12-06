@@ -13,11 +13,11 @@
 
    <br />
 
-    <% if can?(:edit, :ht_contacts) %>
+    <% if can?(:edit, HTContact) %>
       <%= link_to 'Edit', edit_ht_contact_path, class: 'btn btn-primary' %>
     <% end %>
 
-    <% if can?(:destroy, :ht_contacts) %>
+    <% if can?(:destroy, HTContact) %>
       <%= link_to 'Delete Contact', ht_contact_path, method: :delete, class: 'btn btn-danger',
                   data: { confirm: "Please confirm deletion of contact \"#{@contact.email}\"" } %>
     <% end %>

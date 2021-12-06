@@ -25,7 +25,7 @@
 
   <br />
 
-  <% if can?(:create, :ht_contact_types) %>
+  <% if can?(:create, HTContactType) %>
     <%= link_to 'Add New Contact Type', new_ht_contact_type_path, class: 'btn btn-primary' %>
   <% end %>
 

@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   # This could be replaced by a landing page that is accessible
   # to everyone.
   def default_path
-    return ht_institutions_path unless can?(:index, :ht_users)
+    return ht_institutions_path unless can?(:index, HTUser)
 
     root_path
   end
