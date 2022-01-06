@@ -1,11 +1,11 @@
 <%= javascript_include_tag Ckeditor.cdn_url %>
 
 <div id="maincontent" class="row">
-  <h1>Approval Requests for <%= params[:id] %></h1>
+  <h1><%= t ".requests_for", approver: params[:id] %></h1>
 
   <%= render 'shared/flash_message' %>
   <% if @reqs.count == 0 %>
-    There are no outstanding requests for this approver.
+    <%= t ".no_requests", approver: params[:id] %>
   <% else %>
   <ul class="list-group">
     <% @reqs.each do |req| %>
@@ -15,23 +15,30 @@
       </li>
     <% end %>
     </ul>
+
     <!-- MAIL PREVIEW -->
     <% counts = controller.status_counts %>
     <% if counts[:unsent]&.positive? || counts[:expired]&.positive? %>
       <%= form_tag ht_approval_request_path, method: :put do %>
         <div class="panel panel-default">
-          <div class="panel-heading">E-mail Preview</div>
-          <div class="panel-body">
-            <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px' } %>
-          </div>
-          <div class="panel-body">
-            <%= render 'shared/approval_request_user_table' %>
-          </div>
+          <div class="panel-heading"><%= t ".email_preview" %></div>
+          <!-- Turn off locale setting for mail preview -->
+          <!-- e-mail content language is orthogonal to UI language -->
+          <% I18n.with_locale(I18n.default_locale) do %>
+            <div class="panel-body">
+              <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px',
+                                                                        language: 'de' } %>
+            </div>
+            <div class="panel-body">
+              <%= render 'shared/approval_request_user_table' %>
+            </div>
+          <% end %> <!-- default locale -->
         </div>
-        <% label = counts[:expired]&.positive? ? 'RESEND' : 'SEND' %>
+        <% label = counts[:expired]&.positive? ? t(".resend") : t(".send") %>
         <%= submit_tag label, class: 'btn btn-primary' %>
-        <%= link_to 'Cancel', ht_approval_request_path(@reqs[0].approver), class: 'btn btn-primary' %>
+        <%= link_to t(".cancel"), ht_approval_request_path(@reqs[0].approver), class: 'btn btn-primary' %>
       <% end %>
     <% end %>
   <% end %>
 </div>
+

@@ -4,17 +4,15 @@
 
   <%= form_with(model: @contact, local: true, id: 'edit_ht_contact_form') do |form| %>
     <div class="col-sm-6">
+    
       <dl class="dl-horizontal">
-        <dt>Institution:</dt> <dd><%= form.collection_select(:inst_id, HTInstitution.enabled.all, :inst_id, :name) %></dd>
-
-        <dt>Type:</dt> <dd><%= form.collection_select(:contact_type, HTContactType.all, :id, :name) %></dd>
-
-        <dt>Email:</dt>
-        <dd><%= form.text_field :email, size: 80 %></dd>
+        <% HTContactPresenter::ALL_FIELDS.each do |field| %>
+          <dt><%= @contact.field_label field, form: form %></dt>
+          <dd><%= @contact.field_value field, form: form %></dd>
+        <% end %>
       </dl>
 
-      <%= form.submit 'Submit Changes', class: 'btn btn-primary' %>
-      <%= @contact.cancel_button %>
+      <%= form.submit t(".submit_changes"), class: 'btn btn-primary' %>
+      <%= link_to t(".cancel"), @contact.cancel_path, class: 'btn btn-primary' %>
     </div>
-
   <% end %>

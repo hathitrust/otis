@@ -4,20 +4,22 @@
   <%= render 'shared/flash_message' %>
 
   <div class="col-sm-6">
+  
     <dl class="dl-horizontal">
-      <dt>ID:</dt> <dd><%= @contact_type.id %></dd>
-      <dt>Name:</dt> <dd> <%= @contact_type.name %> </dd>
-      <dt>Description:</dt> <dd><%= @contact_type.description %></dd>
+      <% HTContactTypePresenter::ALL_FIELDS.each do |field| %>
+        <dt><%= @contact_type.field_label field %></dt>
+        <dd><%= @contact_type.field_value field %></dd>
+      <% end %>
     </dl>
     <br/>
 
     <% if can?(:edit, HTContactType) %>
-      <%= link_to 'Edit', edit_ht_contact_type_path, class: 'btn btn-primary' %>
+      <%= link_to t(".edit"), edit_ht_contact_type_path, class: 'btn btn-primary' %>
     <% end %>
     
     <% if can?(:destroy, HTContactType) %>
-      <%= link_to 'Delete Contact Type', ht_contact_type_path, method: :delete, class: 'btn btn-danger',
-                  data: { confirm: "Please confirm deletion of contact type \"#{@contact_type.name}\"" } %>
+      <%= link_to t(".delete"), ht_contact_type_path, method: :delete, class: 'btn btn-danger',
+                  data: { confirm: t(".confirm_delete", name: @contact_type.name) } %>
     <% end %>
   </div>
 </div>

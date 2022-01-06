@@ -1,9 +1,9 @@
 <div id="maincontent" class="row">
-  <h1>Approval Requests for <%= params[:id] %></h1>
+  <h1><%= t ".requests_for", approver: params[:id] %></h1>
 
   <%= render 'shared/flash_message' %>
   <% if @reqs.count == 0 %>
-    There are no outstanding requests for this approver.
+    <%= t ".no_requests", approver: params[:id] %>
   <% else %>
     <ul class="list-group">
     <% @reqs.each do |req| %>
@@ -15,7 +15,7 @@
     </ul>
     <% counts = controller.status_counts %>
     <% if counts[:unsent]&.positive? || counts[:expired]&.positive? %>
-      <%= link_to 'Edit', edit_ht_approval_request_path, class: 'btn btn-primary' %>
+      <%= link_to t(".edit"), edit_ht_approval_request_path, class: 'btn btn-primary' %>
     <% end %>
   <% end %>
 </div>

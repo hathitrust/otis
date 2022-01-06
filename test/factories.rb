@@ -128,12 +128,19 @@ FactoryBot.define do
     jira_ticket { Faker::Alphanumeric.alpha(number: 6).upcase }
     dsp_name { Faker::Name.name }
     dsp_email { Faker::Internet.email }
-    dsp_date { Faker::Lorem.unique.characters(number: 2) }
+    dsp_date { Faker::Date.backward(days: 180) }
     auth_rep_name { Faker::Name.name }
     auth_rep_email { Faker::Internet.email }
-    auth_rep_date { Faker::Lorem.unique.characters(number: 2) }
+    auth_rep_date { Faker::Date.backward(days: 180) }
     mfa_addendum { [true, false].sample }
     contact_info { Faker::Internet.email }
     association :ht_institution, strategy: :create
+  end
+
+  factory :ht_log do
+    objid { Faker::Lorem.unique.characters(number: 10) }
+    model { %w[HTApprovalRequest HTUser HTInstitution HTContact HTContactType HTRegistration].sample }
+    time { Faker::Time.backward }
+    data { '{"action"=>"ht_contacts#update", "ip_address"=>"127.0.0.1", "params"=>{"inst_id"=>"bartoletti-bins", "contact_type"=>"7", "email"=>"rosann@hettinger.edu"}, "user_agent"=>"WhizzyAgent", "client_ip"=>"127.0.0.1"}' }
   end
 end

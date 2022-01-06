@@ -15,8 +15,4 @@ class HTContact < ApplicationRecord
   validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
 
   self.primary_key = "id"
-
-  def institution
-    HTInstitution.find(self[:inst_id])
-  end
 end

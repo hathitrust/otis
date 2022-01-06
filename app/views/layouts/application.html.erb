@@ -9,7 +9,7 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
-    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css") %>
+    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css") %>
 
     <% # Keyboard-related overrides that trigger when a bootstrap-table search  %>
     <% # field has focus.                                                       %>
@@ -45,7 +45,10 @@
     </div>
     <% # Uses bootstrap-table  %>
     <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
-
+    <% locale_map = {"ja" => "ja-JP"} %>
+    <% if locale_map[I18n.locale].present? %>
+      <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/locale/bootstrap-table-<%= locale_map[I18n.locale] %>.min.js"></script>
+    <% end %>
     <script>
        // Add aria-label to bootstrap-table search box.
        // Doesn't silence warnings about lack of visible label, however.

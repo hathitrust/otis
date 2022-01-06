@@ -16,25 +16,25 @@ class IPRestrictionTest < ActiveSupport::TestCase
   end
 
   test "rejects out-of-range IPs" do
-    assert_raises ArgumentError do
+    assert_raises IPRestrictionError do
       IPRestriction.new(["256.257.258.259"]).validate
     end
   end
 
   test "rejects IPv6 IPs" do
-    assert_raises ArgumentError do
+    assert_raises IPRestrictionError do
       IPRestriction.new(["2001:1234::1"]).validate
     end
   end
 
   test "rejects non-public IPs" do
-    assert_raises ArgumentError do
+    assert_raises IPRestrictionError do
       IPRestriction.new(["10.1.2.3"]).validate
     end
   end
 
   test "rejects loopback IPs" do
-    assert_raises ArgumentError do
+    assert_raises IPRestrictionError do
       IPRestriction.new(["127.0.0.1"]).validate
     end
   end
@@ -63,8 +63,8 @@ class IPRestrictionFromRegexTest < ActiveSupport::TestCase
     assert_instance_of(IPRestriction::Any, IPRestriction.from_regex("^.*$"))
   end
 
-  test "raises ArgumentError for unparseable nonsense" do
-    assert_raises ArgumentError do
+  test "raises IPRestrictionError for unparseable nonsense" do
+    assert_raises IPRestrictionError do
       IPRestriction.from_regex("this is not an IP address").validate
     end
   end

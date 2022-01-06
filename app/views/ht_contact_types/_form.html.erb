@@ -5,16 +5,14 @@
   <%= form_with(model: @contact_type, local: true, id: 'edit_ht_contact_type_form') do |form| %>
     <div class="col-sm-6">
       <dl class="dl-horizontal">
-        <dt>ID:</dt> <dd><%= @contact_type.id %></dd>
-
-        <dt>Name:</dt>
-        <dd><%= form.text_field :name, size: 20 %></dd>
-
-        <dt>Description:</dt> 
-        <dd> <%= form.text_area :description, size: "80x4" %> </dd>
+        <% HTContactTypePresenter::ALL_FIELDS.each do |field| %>
+          <dt><%= @contact_type.field_label field, form: form %></dt>
+          <dd><%= @contact_type.field_value field, form: form %></dd>
+        <% end %>
       </dl>
-      <%= form.submit 'Submit Changes', class: 'btn btn-primary' %>
-      <%= @contact_type.cancel_button %>
+
+      <%= form.submit t(".submit_changes"), class: 'btn btn-primary' %>
+      <%= link_to t(".cancel"), @contact_type.cancel_path, class: 'btn btn-primary' %>
     </div>
 
   <% end %>

@@ -1,43 +1,16 @@
 # frozen_string_literal: true
 
-class HTApprovalRequestBadge
-  def initialize(tag, css_class)
-    @css_class = css_class
-    @tag = tag
-  end
-
-  def label_text
-    I18n.t("ht_approval_request.badges.#{tag}")
-  end
-
-  def label_span
-    "<span class='label #{css_class}'>#{label_text}</span>".html_safe
-  end
-
-  private
-
-  attr_reader :css_class, :tag
-end
-
-class HTApprovalRequestPresenter < SimpleDelegator
-  include ActionView::Helpers::FormTagHelper
-  include Rails.application.routes.url_helpers
+class HTApprovalRequestPresenter < ApplicationPresenter
+  # Currently unused
+  ALL_FIELDS = %i[approver user sent approved renewed]
+  INDEX_FIELDS = %i[approver user sent approved renewed]
 
   BADGES = {
-    approved: HTApprovalRequestBadge.new("approved", "label-success"),
-    expired: HTApprovalRequestBadge.new("expired", "label-danger"),
-    sent: HTApprovalRequestBadge.new("sent", "label-default"),
-    unsent: HTApprovalRequestBadge.new("unsent", "label-warning")
+    approved: Otis::Badge.new("ht_approval_request.badges.approved", "label-success"),
+    expired: Otis::Badge.new("ht_approval_request.badges.expired", "label-danger"),
+    sent: Otis::Badge.new("ht_approval_request.badges.sent", "label-default"),
+    unsent: Otis::Badge.new("ht_approval_request.badges.unsent", "label-warning")
   }.freeze
-
-  def self.expired_requests
-    expired = HTApprovalRequest.expired
-    "#{expired.count} expired #{"request".pluralize(expired.count)}"
-  end
-
-  def init(request)
-    @request = request
-  end
 
   def badge
     BADGES[renewal_state]&.label_span
@@ -75,9 +48,5 @@ class HTApprovalRequestPresenter < SimpleDelegator
 
   def simple_userid_link
     link_to userid, ht_user_path(userid)
-  end
-
-  def controller
-    # required for url helpers to work
   end
 end

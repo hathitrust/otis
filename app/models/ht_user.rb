@@ -3,6 +3,16 @@
 require "expiration_date"
 require "forwardable"
 
+class HTUserRenewalError < StandardError
+  attr_reader :type
+  TYPES = %i[missing].freeze
+
+  def initialize(msg = "Renewal Error", type:)
+    @type = type
+    super msg
+  end
+end
+
 class HTUser < ApplicationRecord
   self.primary_key = "email"
 
@@ -13,6 +23,7 @@ class HTUser < ApplicationRecord
 
   validates :iprestrict, presence: true, unless: :mfa
   validate :validate_iprestrict
+  validate :validate_expires
 
   validates :email, presence: true
   validates :userid, presence: true
@@ -27,28 +38,22 @@ class HTUser < ApplicationRecord
 
   after_save :clean_requests
 
-  validate do
-    Time.zone.parse(expires.to_s)
-  rescue
-    errors[:expires] << "must be a valid timestamp, not #{expires}"
-  end
-
-  HUMANIZED_ATTRIBUTES = {
-    iprestrict: "IP Restriction"
-  }.freeze
-
-  def self.human_attribute_name(attr, options = {})
-    HUMANIZED_ATTRIBUTES[attr.to_sym] || super
-  end
-
   # Checkpoint override
   def resource_id
     email
   end
 
-  # Grab an expiration_date object. And yes, the long method name is deserved.
-  def construct_and_set_expiration_date
-    @expiration_date = ExpirationDate.new(self[:expires], self[:expire_type])
+  # Work around the fact that Rails' built-in typecasting clobbers various bogus
+  # dates into nil. https://stackoverflow.com/a/35553281
+  def validate_expires
+    if expires.nil? && respond_to?(:expires_before_type_cast)
+      raw_data = expires_before_type_cast.to_s
+      begin
+        Time.zone.parse(raw_data)
+      rescue
+        errors.add(:expires, :invalid)
+      end
+    end
   end
 
   # Update expiration_date only if it already exists, because factorybot updates
@@ -90,6 +95,8 @@ class HTUser < ApplicationRecord
   ## Forward some stuff to @expiration_date
 
   # Display datetime without UTC suffix or just date
+  # This is used by the approval request mailer which is not yet really locale-aware.
+  # Otherwise we would ditch it.
   def expires_string
     expiration_date.to_s
   end
@@ -124,13 +131,9 @@ class HTUser < ApplicationRecord
 
     begin
       IPRestriction.from_regex(self[:iprestrict]).validate
-    rescue ArgumentError => e
-      errors.add :iprestrict, e.message
+    rescue IPRestrictionError => e
+      errors.add :iprestrict, e.type, addr: e.address
     end
-  end
-
-  def approval_requested?
-    ht_approval_request.count.positive?
   end
 
   def renew!
@@ -146,7 +149,7 @@ class HTUser < ApplicationRecord
       req ||= HTApprovalRequest.new(approver: approver, ht_user: self)
     end
 
-    raise("No approved request for #{email}; must be renewed manually") unless req
+    raise(HTUserRenewalError.new(type: :no_approved_request)) unless req
 
     req.renewed = Time.zone.now
     req.save!

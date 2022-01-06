@@ -2,32 +2,30 @@
 
   <%= render 'shared/flash_message' %>
 
-  <h2 class="pull-left">Logs</h2>
+  <h2 class="pull-left"><%= t(".logs") %></h2>
 
+  <% fields = HTLogPresenter::ALL_FIELDS %>
   <table id="log_entries" class="table table-striped" data-toggle="table" data-height="460"
          data-virtual-scroll="true" data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
-      <th data-sortable="true">Model</th>
-      <th data-sortable="true">ID</th>
-      <th data-sortable="true">Time</th>
-      <th data-sortable="true">Data</th>
-      
+      <% fields.each do |field| %>
+        <th data-sortable="true"><%= HTLogPresenter.field_label field %></th>
+      <% end %>
     </tr>
     </thead>
 
     <% @logs.each do |log| %>
       <tr>
-        <td><%= log.model %></td>
-        <td><%= log.objid %></td>
-        <td><%= log.time %></td>
-        <td><%= log.data_display %></td>
+        <% fields.each do |field| %>
+          <td><%= log.field_value field %></td>
+        <% end %>
       </tr>
     <% end %>
   </table>
 
   <br />
-  <%= link_to 'Download JSON', ht_logs_url(format: :json), class: 'btn btn-info' %>
+  <%= link_to t(".download_json"), ht_logs_url(format: :json), class: 'btn btn-info' %>
 
 </div>
 

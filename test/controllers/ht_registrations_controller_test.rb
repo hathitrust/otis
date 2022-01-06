@@ -21,8 +21,9 @@ class HTRegistrationsControllerIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "index is well-formed HTML" do
-    get ht_registrations_url
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      get ht_registrations_url
+    end
   end
 
   test "as admin, shows link for new registration" do
@@ -46,8 +47,9 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
   end
 
   test "show page is well-formed HTML" do
-    get ht_registration_url @registration
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      get ht_registration_url @registration
+    end
   end
 
   test "show page should include data from registration" do
@@ -57,10 +59,10 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_match @registration.contact_info, @response.body
     assert_match ERB::Util.html_escape(@registration.auth_rep_name), @response.body
     assert_match @registration.auth_rep_email, @response.body
-    assert_match @registration.auth_rep_date, @response.body
+    assert_match Date.parse(@registration.auth_rep_date).year.to_s, @response.body
     assert_match ERB::Util.html_escape(@registration.dsp_name), @response.body
     assert_match @registration.dsp_email, @response.body
-    assert_match @registration.dsp_date, @response.body
+    assert_match Date.parse(@registration.dsp_date).year.to_s, @response.body
   end
 
   test "show page contains edit and delete buttons" do
@@ -101,7 +103,6 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     post ht_registrations_url, params: {ht_registration: params}
     assert_redirected_to /preview/
     assert_equal 1, HTRegistration.count
-
     # Shows up in log
     log = HTRegistration.first.ht_logs.first
     assert_not_nil(log.data["params"])
@@ -114,7 +115,23 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_equal(log.data["params"]["dsp_name"], params[:dsp_name])
     assert_equal(log.data["params"]["dsp_email"], params[:dsp_email])
     assert_equal(log.data["params"]["dsp_date"], params[:dsp_date])
-    assert_equal(log.data["params"]["mfa_addendum"], params[:mfa_addendum])
+    assert_equal(log.data["params"]["mfa_addendum"], params[:mfa_addendum].to_s)
+  end
+
+  test "alerts on create failure due to missing fields" do
+    params = FactoryBot.build(:ht_registration).attributes.except(
+      "created_at",
+      "updated_at",
+      "auth_rep_name",
+      "auth_rep_email",
+      "auth_rep_date"
+    ).symbolize_keys
+
+    HTRegistration.delete_all
+    post ht_registrations_url, params: {ht_registration: params}
+    assert_equal "create", @controller.action_name
+    assert_equal 0, HTRegistration.count
+    assert_not_empty flash[:alert]
   end
 end
 
@@ -127,8 +144,9 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
   end
 
   test "edit page is well-formed HTML" do
-    get edit_ht_registration_url @registration
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      get edit_ht_registration_url @registration
+    end
   end
 
   test "form fields are present" do

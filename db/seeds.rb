@@ -81,7 +81,9 @@ def create_ht_institution(enabled)
     entityID: Faker::Internet.url,
     allowed_affiliations: "^(alum|member)" + domain,
     shib_authncontext_class: [nil, Faker::Internet.url].sample,
-    emergency_contact: Faker::Internet.email
+    emergency_status: [nil, "^(faculty|staff|student)" + domain].sample,
+    emergency_contact: Faker::Internet.email,
+    last_update: Faker::Time.backward
   )
   inst_id
 end
@@ -106,23 +108,25 @@ def create_ht_contact(inst_id)
 end
 
 def create_ht_contact_type
-  HTContactType.create(name: Faker::Job.position,
-    description: Faker::Lorem.sentence(word_count: 10))
+  HTContactType.create(
+    name: Faker::Job.position,
+    description: Faker::Lorem.sentence(word_count: 10)
+  )
 end
 
 def create_ht_registration(inst_id)
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
 
   HTRegistration.create(
+    auth_rep_name: Faker::Name.name,
+    auth_rep_email: Faker::Internet.email,
+    auth_rep_date: Faker::Date.backward(days: 180),
     inst_id: inst_id,
     jira_ticket: "HT-#{ticket_no}",
     dsp_name: Faker::Name.name,
     dsp_email: Faker::Internet.email,
     dsp_date: Faker::Date.backward(days: 180),
-    auth_rep_name: Faker::Name.name,
-    auth_rep_email: Faker::Internet.email,
-    auth_rep_date: Faker::Date.backward(days: 180),
-    mfa_addendum: ["yes", "no"].sample,
+    mfa_addendum: [true, false].sample,
     contact_info: Faker::Internet.email
   )
 end

@@ -24,8 +24,7 @@ class HTApprovalRequest < ApplicationRecord
   scope :approved, -> { where.not(received: nil) }
   validates :approver, presence: true
   validates :ht_user, uniqueness: {
-    conditions: -> { not_renewed },
-    message: ->(_object, data) { "#{data[:value]} already has an approval request" }
+    conditions: -> { not_renewed }
   }
   validates :token_hash, presence: true, if: :sent
   validates :sent, presence: true, if: :token_hash
@@ -35,7 +34,7 @@ class HTApprovalRequest < ApplicationRecord
   def sent_before_received
     return unless self[:sent].present? && self[:received].present? && self[:sent] > self[:received]
 
-    errors.add(:sent, "date sent cannot be after date received")
+    errors.add(:sent, :after_received)
   end
 
   def self.digest(tok)

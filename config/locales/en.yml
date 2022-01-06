@@ -1,82 +1,337 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
+---
 en:
   activerecord:
+    attributes:
+      ht_approval_request:
+        approved: Approved
+        approver: Approver
+        renewed: Renewed
+        sent: Sent
+        user: User
+      ht_billing_member:
+        country_code: Country Code
+        marc21_sym: MARC Symbol
+        oclc_sym: OCLC Symbol
+        status: Enabled for Billing
+        weight: Weight
+      ht_contact:
+        contact_type: Type
+        email: E-mail
+        id: ID
+        inst_id: Institution
+      ht_contact_type:
+        description: Description
+        id: ID
+        name: Name
+      ht_institution:
+        allowed_affiliations: Affiliations
+        domain: Domain
+        emergency_contact: ETAS Contact
+        emergency_status: ETAS Status
+        enabled: Enabled for Login
+        entityID: Entity ID
+        grin_instance: GRIN Instance
+        inst_id: Institution ID
+        last_update: Last Updated
+        mapto_inst_id: Holdings Institution ID
+        mapto_name: Mapped Name
+        name: Name
+        shib_authncontext_class: MFA Auth Context
+        template: Template
+        us: US
+      ht_log:
+        data: Data
+        model: Model
+        objid: ID
+        time: Time
+      ht_registration:
+        auth_rep: Auth Rep
+        auth_rep_date: Auth Rep Date
+        auth_rep_email: Auth Rep E-mail
+        auth_rep_name: Auth Rep Name
+        contact_info: Contact Info
+        dsp: Disability Service Provider
+        dsp_date: DSP Date
+        dsp_email: DSP E-mail
+        dsp_name: DSP Name
+        inst_id: Institution
+        jira_ticket: Ticket
+        mfa_addendum: MFA
+        name: Name
+      ht_user:
+        access: Access
+        accesses: Accesses
+        activitycontact: Activity Contact
+        approver: Approver
+        authorizer: Authorizer
+        displayname: Display Name
+        email: E-mail
+        expire_type: Expire Type
+        expires: Expires
+        identity_provider: Identity Provider
+        institution: Institution
+        iprestrict: IP Restriction
+        last_access: Last Access
+        mfa: Multi-Factor
+        renewal_status: Renewal Status
+        role: Role
+        userid: User ID
+        usertype: User Type
     errors:
       models:
-        HTUser:
+        ht_approval_request:
           attributes:
-            iprestrict: "requires valid IPv4 addresess (separated by commas if multiple)"
+            sent:
+              after_received: date sent cannot be after date received
+        ht_contact_type:
+          in_use: "%{model} '%{name}' is in use"
+        ht_user:
+          attributes:
+            expires:
+              invalid: must be a valid timestamp
+            iprestrict:
+              invalid: requires valid IPv4 address (separated by commas if multiple)
+              ipv6: "%{addr} is an IPv6 address; only IPv4 addresses are allowed"
+              loopback: "%{addr} is a loopback IPv4 address; only public addresses are allowed"
+              private: "%{addr} is a private IPv4 address; only public addresses are allowed"
+    models:
+      ht_approval_request: Approval Request
+      ht_contact: Contact
+      ht_contact_type: Contact Type
+      ht_institution: Institution
+      ht_registration: Registration
+      ht_user: User
+  approval:
+    new:
+      already_used_html: "<strong>This link is no longer valid; it may have already been used.</strong>"
+      expired_html: "<strong>Approval request for %{user} has expired. Please contact %{mailto}.</strong>"
+      not_found_html: "<strong>No approval request found for token %{token}.</strong>"
+      recorded_html: Elevated access approval recorded for <strong>%{user}</strong> from <strong>%{approver}</strong>.
+      thanks: Thank you.
+  global:
+    fake_shib_controller:
+      email: E-mail
+      log_in: Log In
+    go: Go
+    home: Home
+    log_out: Log Out
+    logged_in_as: Logged in as %{user}
+    menus:
+      approval_requests: Approval Requests
+      contact_types: Contact Types
+      contacts: Contacts
+      institutions: Institutions
+      logs: Logs
+      registrations: Registrations
+      users: Users
+    not_logged_in: Not logged in
   ht_approval_request:
     badges:
-      approved: "Approved"
-      expired: "Request Expired"
-      sent: "Sent"
-      unsent: "Unsent"
-  ht_institution:
-    badges:
-      disabled: "Disabled"
-      enabled: "Enabled"
-      private: "Private"
-      social: "Social Login"
-  ht_user:
-    role_names:
-      corrections: "Corrections Support"
-      cataloging: "Cataloging Support"
-      crms: "Copyright Reviewer"
-      superuser: "UM Staff Developer"
-      quality: "Quality Reviewer"
-      ssd: "Accessible Text Request Service Patron"
-      ssdproxy: "Accessible Text Request Service Provider"
-      inprintstatus: "In-print Status Reviewer"
-      replacement: "Page Replacement Support"
-      staffdeveloper: "Staff Developer"
-      staffsysadmin: "Staff Systems Administrator"
-      developer: "Experimental search API role – do not use"
-    role_descriptions:
-      corrections: "Support of corrections or updates to HathiTrust volumes"
-      cataloging: "Correct or add to the bibliographic records of HathiTrust volumes"
-      crms: "Perform copyright review on HathiTrust volumes"
-      superuser: "UM staff developer – includes roles staffdeveloper and staffsysadmin"
-      quality: "Evaluate the quality of digital volumes in HathiTrust"
-      ssd: "Users who have print disabilities"
-      ssdproxy: "Act as a proxy for users who have print disabilities"
-      inprintstatus: "Perform in-print status review of volumes in HathiTrust"
-      replacement: "Create replacement copies of individual pages of volumes in HathiTrust"
-      staffdeveloper: "Develop software for HathiTrust services or operations"
-      staffsysadmin: "Operate or maintain HathiTrust repository infrastructure"
-      developer: "Experimental search API role – do not use"
+      approved: Approved
+      expired: Request Expired
+      sent: Sent
+      unsent: Unsent
+  ht_approval_requests:
+    create:
+      added_users: Added requests for %{users}.
+      deleted_users: Removed requests for %{users}.
+      errors:
+        no_approved_request: No approved request for %{user}; must be renewed manually.
+      no_selection: No users selected.
+      renewed_users: Renewed requests for %{users}.
     edit:
-      iprestrict_prompt: "If multiple IP addresses, enter as a comma-separated list."
-    attributes:
-      ht_auth_request:
-        userid: "User"
+      cancel: Cancel
+      email_preview: E-mail Preview
+      no_requests: There are no outstanding requests for %{approver}.
+      requests_for: Approval Requests for %{approver}
+      resend: RESEND
+      send: SEND
+    index:
+      active_requests: Active Requests
+      approval_requests: Approval Requests
+      confirm_delete: Please confirm deletion of expired requests (%{count}).
+      delete_expired: Delete Expired Requests
+      inactive_requests: Inactive Requests
+      instructions: To edit and send an approval request email, click on an approver email.
+      renew_selected: Renew Selected Users
+      select: Select
+    show:
+      edit: Edit
+      no_requests: There are no outstanding requests for %{approver}.
+      requests_for: Approval Requests for %{approver}
+    update:
+      messages_sent: Messages sent.
+  ht_billing_member:
+    values:
+      status:
+        disabled: Disabled
+        enabled: Enabled
+  ht_contact_types:
+    create:
+      success: Contact Type created.
+    destroy:
+      success: Contact Type removed.
+    form:
+      cancel: Cancel
+      submit_changes: Submit Changes
+    index:
+      add_new_contact_type: Add New Contact Type
+      contact_types: Contact Types
+    new:
+      new_contact_type: New Contact Type
+    show:
+      confirm_delete: Please confirm deletion of contact type "%{name}"
+      delete: Delete Contact Type
+      edit: Edit
+    update:
+      success: Contact Type updated.
+  ht_contacts:
+    create:
+      success: Contact created.
+    destroy:
+      success: Contact removed.
+    form:
+      cancel: Cancel
+      submit_changes: Submit Changes
+    index:
+      add_new_contact: Add New Contact
+      contacts: Contacts
+      download_csv: Download CSV
+    new:
+      new_contact: New Contact
+    show:
+      confirm_delete: Please confirm deletion of contact "%{email}"
+      delete: Delete Contact
+      edit: Edit
+    update:
+      success: Contact updated.
+  ht_institution:
+    values:
+      emergency_status:
+        etas_enabled: ETAS enabled
+        etas_not_enabled: ETAS not enabled
+      enabled:
+        disabled: Disabled
+        enabled: Enabled
+        private: Private
+        social: Social Login
+  ht_institutions:
+    create:
+      success: Institution created.
+    form:
+      add_billing_info: Add Billing Info
+      cancel: Cancel
+      submit_changes: Submit Changes
+    index:
+      add: Add New Institution
+      add_hint1_html: "<a target='_blank' href='https://met.refeds.org'>Search REFEDS Metadata Explorer (opens in new tab)</a> for a SAML entity ID and enter it here to pre-populate the institution data:"
+      add_hint2: 'Or, manually provide the information:'
+      download_csv: Download CSV
+      enabled_institutions: Enabled Institutions
+      entity_id: Entity ID
+      load_metadata: Load Metadata
+      other_institutions: Other Institutions
+    new:
+      new_institution: New Institution
+    show:
+      active_users: Active Users
+      all_users: All Users
+      contacts: Contacts
+      edit: Edit
+      test_login: Test Login
+      test_login_mfa: Test Login with MFA
+      users: Users
+    update:
+      success: Institution updated.
+  ht_logs:
+    index:
+      download_json: Download JSON
+      logs: Logs
+  ht_registrations:
+    create:
+      success: Registration created for %{name}.
+    destroy:
+      success: Registration removed.
+    edit:
+      edit: Edit Registration
+    form:
+      cancel: Cancel
+      submit_changes: Submit Changes
+    index:
+      current_registrations: Current Registrations
+      new_registration: New Registration
+    new:
+      new_registration: New Registration
+    show:
+      confirm_delete: Please confirm deletion of registration "%{name}"
+      delete: Delete Registration
+      edit: Edit
+    update:
+      success: Registration updated for %{name}.
+  ht_user:
+    badges:
+      expired: Expired
+      expiring_soon: Expiring Soon
+    edit:
+      expire_now: Expire Now
+      iprestrict_prompt: If multiple IP addresses, enter as a comma-separated list.
+      renew_now: Renew Now
+    role_descriptions:
+      cataloging: Correct or add to the bibliographic records of HathiTrust volumes
+      corrections: Support of corrections or updates to HathiTrust volumes
+      crms: Perform copyright review on HathiTrust volumes
+      developer: Experimental search API role – do not use
+      inprintstatus: Perform in-print status review of volumes in HathiTrust
+      quality: Evaluate the quality of digital volumes in HathiTrust
+      replacement: Create replacement copies of individual pages of volumes in HathiTrust
+      ssd: Users who have print disabilities
+      ssdproxy: Act as a proxy for users who have print disabilities
+      staffdeveloper: Develop software for HathiTrust services or operations
+      staffsysadmin: Operate or maintain HathiTrust repository infrastructure
+      superuser: UM staff developer – includes roles staffdeveloper and staffsysadmin
+    values:
+      access:
+        normal: normal
+        total: total
+      expire_type:
+        expiresannually: 1 year
+        expiresbiannually: 2 years
+        expirescustom60: 60 days
+        expirescustom90: 90 days
+      iprestrict:
+        any: Any
+      mfa:
+        unavailable: Unavailable
+      role:
+        cataloging: Cataloging Support
+        corrections: Corrections Support
+        crms: Copyright Reviewer
+        developer: Experimental search API role – do not use
+        inprintstatus: In-print Status Reviewer
+        quality: Quality Reviewer
+        replacement: Page Replacement Support
+        ssd: Accessible Text Request Service Patron
+        ssdproxy: Accessible Text Request Service Provider
+        staffdeveloper: Staff Developer
+        staffsysadmin: Staff Systems Administrator
+        superuser: UM Staff Developer
+      usertype:
+        external: External
+        staff: Staff
+        student: Student
+  ht_users:
+    edit:
+      cancel: Cancel
+      submit_changes: Submit Changes
+    index:
+      active_users: Active Users
+      create_approval_requests: Create Approval Requests
+      download_csv: Download CSV
+      expired_users: Expired Users
+      renew_selected_users: Renew Selected Users
+      select: Select
+      users: Users
+    show:
+      edit: Edit
+    update:
+      success: User updated.

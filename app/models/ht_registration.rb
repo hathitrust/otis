@@ -36,8 +36,9 @@ class HTRegistration < ApplicationRecord
   # mfa = multi factor authentication
   validates :mfa_addendum, presence: true
   validates :token_hash, presence: true, if: :sent
-
   validates :contact_info, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
+
+  validates_inclusion_of :mfa_addendum, in: [true, false]
 
   # This is the bit that goes to the DSP, just a gob of b64 data acting as a 'password'
   def token

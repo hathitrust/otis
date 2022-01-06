@@ -19,9 +19,10 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "index is well-formed HTML" do
-    sign_in!
-    get ht_approval_requests_url
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get ht_approval_requests_url
+    end
   end
 
   test "index should have table headings matching status badges" do
@@ -44,7 +45,7 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     assert_not_nil assigns(:incomplete_reqs)
     assert_not_nil assigns(:complete_reqs)
     assert_equal "index", @controller.action_name
-    assert_select "a[href='#{edit_ht_approval_request_path(@user1.approver)}']"
+    assert_select "a:match('href', ?)", @user1.approver
   end
 
   test "should get index page and fail to submit zero-length request list" do
@@ -85,9 +86,10 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   end
 
   test "edit page is well-formed HTML" do
-    sign_in!
-    get edit_ht_approval_request_url @user.approver
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get edit_ht_approval_request_url @user.approver
+    end
   end
 
   test "edit page should not contain approval link" do
@@ -189,9 +191,10 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
   end
 
   test "show page is well-formed HTML" do
-    sign_in!
-    get ht_approval_request_url @user.approver
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get ht_approval_request_url @user.approver
+    end
   end
 end
 

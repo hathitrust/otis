@@ -31,7 +31,7 @@ class SAMLMetadata
   end
 
   def domain
-    scopes.first
+    scopes.first || ""
   end
 
   def domain_base

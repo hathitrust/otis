@@ -5,21 +5,22 @@
 
   <div class="col-sm-6">
     <dl class="dl-horizontal">
-      <dt>ID:</dt> <dd><%= @contact.id%></dd>
-      <dt>Institution:</dt> <dd><%= @contact.institution_display %></dd>
-      <dt>Type:</dt> <dd> <%= @contact.contact_type_display %> </dd>
-      <dt>Email:</dt> <dd><%= @contact.email_display %></dd>
+      <% HTContactPresenter::ALL_FIELDS.each do |field| %>
+        <dt><%= @contact.field_label field %></dt>
+        <dd><%= @contact.field_value field %></dd>
+      <% end %>
     </dl>
+    
 
-   <br />
+    <br/>
 
     <% if can?(:edit, HTContact) %>
-      <%= link_to 'Edit', edit_ht_contact_path, class: 'btn btn-primary' %>
+      <%= link_to t(".edit"), edit_ht_contact_path, class: 'btn btn-primary' %>
     <% end %>
 
     <% if can?(:destroy, HTContact) %>
-      <%= link_to 'Delete Contact', ht_contact_path, method: :delete, class: 'btn btn-danger',
-                  data: { confirm: "Please confirm deletion of contact \"#{@contact.email}\"" } %>
+      <%= link_to t(".delete"), ht_contact_path, method: :delete, class: 'btn btn-danger',
+                  data: { confirm: t(".confirm_delete", email: @contact.email) } %>
     <% end %>
   </div>
 </div>

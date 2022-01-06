@@ -28,15 +28,14 @@ class HTInstitutionsController < ApplicationController
   PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[inst_id]
 
   def new
-    @institution = HTInstitutionPresenter.new(HTInstitution.new)
-
+    @institution = presenter HTInstitution.new
     @institution.set_defaults_for_entity(params[:entityID]) if params[:entityID]
     @institution.ht_billing_member = HTBillingMember.new
   end
 
   def index
-    @enabled_institutions = HTInstitution.enabled.order("name").map { |i| HTInstitutionPresenter.new(i) }
-    @other_institutions = HTInstitution.other.order("name").map { |i| HTInstitutionPresenter.new(i) }
+    @enabled_institutions = HTInstitution.enabled.order("name").map { |i| presenter i }
+    @other_institutions = HTInstitution.other.order("name").map { |i| presenter i }
     respond_to do |format|
       format.html
       format.csv { send_data institutions_csv }
@@ -48,8 +47,8 @@ class HTInstitutionsController < ApplicationController
 
     if @institution.update(inst_params(PERMITTED_UPDATE_FIELDS))
       log
-      flash[:notice] = "Institution updated"
-      redirect_to @institution
+      flash[:notice] = t(".success")
+      redirect_to presenter(@institution)
     else
       flash.now[:alert] = @institution.errors.full_messages.to_sentence
       fetch_institution
@@ -62,15 +61,20 @@ class HTInstitutionsController < ApplicationController
 
     if @institution.save
       log
-      redirect_to @institution, note: "Institution was successfully created"
+      flash[:notice] = t(".success")
+      redirect_to presenter(@institution)
     else
       flash.now[:alert] = @institution.errors.full_messages.to_sentence
-      @institution = HTInstitutionPresenter.new(@institution)
+      @institution = presenter @institution
       render :new
     end
   end
 
   private
+
+  def presenter(institution)
+    HTInstitutionPresenter.new(institution, controller: self, action: params[:action].to_sym)
+  end
 
   def log
     log_action(@institution, @inst_params)
@@ -99,7 +103,7 @@ class HTInstitutionsController < ApplicationController
   end
 
   def fetch_institution
-    @institution = HTInstitutionPresenter.new(HTInstitution.find(params[:id]))
+    @institution = presenter HTInstitution.find(params[:id])
   end
 
   def institutions_csv

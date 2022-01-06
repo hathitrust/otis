@@ -4,64 +4,33 @@
 
   <%= form_with(model: @institution, local: true, id: 'edit_ht_institution_form') do |form| %>
     <div class="col-sm-6">
+
       <dl class="dl-horizontal">
-        <dt>Institution ID:</dt> <dd><%= @institution.form_inst_id(form) %></dd>
-
-        <dt>Name:</dt>
-        <dd><%= form.text_field :name, size: 80 %></dd>
-
-        <dt>Domain:</dt> 
-        <dd> <%= form.text_field :domain, size: 40 %> </dd>
-
-        <dt>Mapped Name:</dt>
-        <dd><%= form.text_field :mapto_name, size: 80 %></dd>
-
-        <dt>Entity ID</dt>
-        <dd><%= form.text_field :entityID, size: 80 %></dd>
-
-        <dt>Holdings Institution ID:</dt>
-        <dd><%= form.text_field :mapto_inst_id %></dd>
-
-        <dt>US:</dt>
-        <dd><%= form.check_box :us %></dd>
-
-        <dt>GRIN Instance:</dt> <dd>
-        <%= form.text_field :grin_instance %></dd>
-
-        <dt>MFA auth context:</dt>
-        <dd><%= form.text_field :shib_authncontext_class, size: 80 %></dd>
-
-        <dt>Affiliations:</dt>
-        <dd><%= form.text_field :allowed_affiliations, size: 40 %></dd>
-
-        <dt>Affiliations for ETAS:</dt>
-        <dd><%= form.text_field :emergency_status, size: 40 %></dd>
-
-        <dt>Enabled for Login:</dt> <dd>
-        <%= form.select :enabled, @institution.badge_options %>
-        </dd>
+        <% HTInstitutionPresenter::ALL_FIELDS.each do |field| %>
+          <dt><%= @institution.field_label field, form: form %></dt>
+          <dd><%= @institution.field_value field, form: form %></dd>
+        <% end %>
       </dl>
-      <%= form.fields_for :ht_billing_member, @institution.ht_billing_member || HTBillingMember.new do |billing_form| %>
-      <dl class="dl-horizontal">
-        <% if @institution.show_create_billing_member? %>
-          <dt>Add billing info?:</dt>
+    
+      <% member = @institution.ht_billing_member || HTBillingMember.new %>
+      <% member = HTBillingMemberPresenter.new member,
+           controller: @institution.controller, action: @institution.action %>
+      <%= form.fields_for :ht_billing_member, member do |billing_form| %>
+        <dl class="dl-horizontal">
+        <% if @institution.can_create_billing_member? %>
+          <dt><label for="create_billing_member"><%= t(".add_billing_info") %></label></dt>
           <dd><%= check_box_tag :create_billing_member %></dd>
         <% end %>
-        <dt>Weight:</dt>
-        <dd><%= billing_form.text_field :weight, size:8 %></dd>
-        <dt>OCLC Symbol:</dt>
-        <dd><%= billing_form.text_field :oclc_sym, size:8 %> (<a target="_blank" href="https://www.oclc.org/en/contacts/libraries.html">Lookup</a>)</dd>
-        <dt>MARC Code:</dt>
-        <dd><%= billing_form.text_field :marc21_sym, size:8 %> (<a target="_blank" href="https://www.loc.gov/marc/organizations/">Lookup</a>)</dd>
-        <dt>Country Code:</dt>
-        <dd><%= billing_form.text_field :country_code, size:8 %> (<a target="_blank" href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">Lookup</a>)</dd>
-        <dt>Enabled for Billing:</dt>
-        <dd><%= billing_form.check_box :status %></dd>
-      </dl>
+        <% HTBillingMemberPresenter::ALL_FIELDS.each do |field| %>
+          <dt><%= member.field_label field, form: billing_form %></dt>
+          <dd><%= member.field_value field, form: billing_form %></dd>
+        <% end %>
+        </dl>
       <% end %>
 
-      <%= form.submit 'Submit Changes', class: 'btn btn-primary' %>
-      <%= @institution.cancel_button %>
+      <%= form.submit t(".submit_changes"), class: 'btn btn-primary' %>
+      <% path = @institution.persisted? ? ht_institution_path(@institution) : ht_institutions_path %>
+      <%= link_to t(".cancel"), path, class: 'btn btn-primary' %>
     </div>
 
   <% end %>

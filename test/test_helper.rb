@@ -8,17 +8,19 @@ SimpleCov.start "rails"
 
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
+require_relative "fake_form"
 require "rails/test_help"
 
 def sign_in!(username: "admin@default.invalid")
   post login_as_url, params: {username: username}
 end
 
-def w3c_errs(html)
+def check_w3c_errs
   skip "Skipping W3C test" unless ENV["W3C_VALIDATION"]
 
+  yield
   sleep 1
-  W3CValidators::NuValidator.new.validate_text(html).errors
+  assert_equal [], W3CValidators::NuValidator.new.validate_text(@response.body).errors
 end
 
 Keycard::DB.migrate!

@@ -80,6 +80,9 @@ gem "bootstrap-sass"
 gem "jquery-rails"
 gem "ckeditor"
 gem "whois"
+gem "accept_language"
+gem "flag-icons-rails"
+gem "rails-i18n", "~> 6.0.0"
 
 gem "canister"
 gem "ettin"
@@ -101,6 +104,7 @@ group :development, :test do
   gem "faker"
   gem "factory_bot_rails"
   gem "simplecov"
+  gem "i18n-tasks"
 end
 
 group :test do

@@ -18,20 +18,18 @@ class HTRegistrationsController < ApplicationController
   ].freeze
 
   def new
-    @registration = HTRegistrationPresenter.new(HTRegistration.new)
+    @registration = presenter HTRegistration.new
   end
 
   def index
-    @all_registrations = HTRegistration.all.map { |r|
-      HTRegistrationPresenter.new(r)
-    }
+    @all_registrations = HTRegistration.all.map { |r| presenter r }
   end
 
   def create
-    @registration = HTRegistrationPresenter.new(HTRegistration.new(reg_params))
+    @registration = presenter HTRegistration.new(reg_params)
     if @registration.save
       log
-      flash.now[:alert] = "Registration created for #{@registration.dsp_name}."
+      flash.now[:notice] = t(".success", name: @registration.dsp_name)
       redirect_to preview_ht_registration_path(@registration)
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -51,7 +49,7 @@ class HTRegistrationsController < ApplicationController
     fetch_presenter
     if @registration.update(reg_params)
       log
-      flash[:notice] = "Registration updated for #{@registration.dsp_name}"
+      flash[:notice] = t(".success", name: @registration.dsp_name)
       redirect_to action: :index
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -75,7 +73,7 @@ class HTRegistrationsController < ApplicationController
     @registration = HTRegistration.find(params[:id])
     log params.permit!
     @registration.destroy
-    flash[:notice] = "Registration deleted"
+    flash[:notice] = t(".success")
     redirect_to action: :index
   end
 
@@ -87,12 +85,17 @@ class HTRegistrationsController < ApplicationController
       .transform_values! { |v| v.present? ? v : nil }
   end
 
+  def presenter(registration)
+    HTRegistrationPresenter.new(registration, controller: self,
+      action: params[:action].to_sym)
+  end
+
   def fetch_registration
     @registration = HTRegistration.find(params[:id])
   end
 
   def fetch_presenter
-    @registration = HTRegistrationPresenter.new(fetch_registration)
+    @registration = presenter fetch_registration
   end
 
   def fetch_institutions

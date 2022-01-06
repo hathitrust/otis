@@ -2,23 +2,24 @@
 
   <%= render 'shared/flash_message' %>
 
-  <h2 class="pull-left">Contact Types</h2>
+  <h2 class="pull-left"><%= t ".contact_types" %></h2>
 
-  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+  <% fields = HTContactTypePresenter::ALL_FIELDS %>
+  <table id="contact_types" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
-    <thead class="thead-dark">
+    <thead class="thead-dark">    
     <tr>
-      <th data-sortable="true">ID</th>
-      <th data-sortable="true">Name</th>
-      <th data-sortable="true">Description</th>
+      <% fields.each do |field| %>
+        <th data-sortable="true"><%= HTContactTypePresenter.field_label field %></th>
+      <% end %>
     </tr>
     </thead>
 
     <% @contact_types.each do |c| %>
       <tr>
-        <td><%= c.id %></td>
-        <td><%= c.show_link %></td>
-        <td><%= c.description %></td>
+        <% fields.each do |field| %>
+          <td><%= c.field_value field %></td>
+        <% end %>
       </tr>
     <% end %>
   </table>
@@ -26,7 +27,7 @@
   <br />
 
   <% if can?(:create, HTContactType) %>
-    <%= link_to 'Add New Contact Type', new_ht_contact_type_path, class: 'btn btn-primary' %>
+    <%= link_to t(".add_new_contact_type"), new_ht_contact_type_path, class: 'btn btn-primary' %>
   <% end %>
 
 </div>

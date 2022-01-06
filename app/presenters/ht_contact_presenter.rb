@@ -1,44 +1,31 @@
 # frozen_string_literal: true
 
-class HTContactPresenter < SimpleDelegator
-  include ActionView::Helpers::UrlHelper
-  include Rails.application.routes.url_helpers
-
-  def init(contact, _controller)
-    @contact = contact
-  end
-
-  def inst_link
-    link_to institution_display, ht_contact_path(id)
-  end
-
-  def institution_display
-    ht_institution&.name
-  end
-
-  def contact_type_display
-    ht_contact_type&.name
-  end
-
-  def email_display
-    mailto_link email
-  end
-
-  def cancel_button
-    button "Cancel", persisted? ? ht_contact_path(id) : ht_contacts_path
-  end
+class HTContactPresenter < ApplicationPresenter
+  ALL_FIELDS = %i[id inst_id contact_type email].freeze
+  READ_ONLY_FIELDS = %i[id].freeze
+  FIELD_SIZE = 30
 
   private
 
-  def controller
-    # required for url helpers to work
+  def show_email
+    return "" unless email.present?
+
+    link_to(email, action == :index ? ht_contact_path(self) : "mailto:#{email}")
   end
 
-  def button(title, url)
-    link_to title, url, class: "btn btn-default"
+  def show_inst_id
+    link_to ht_institution.name, ht_institution_path(ht_institution)
   end
 
-  def mailto_link(value)
-    (link_to value, "mailto:#{value}" if value) || "(None)"
+  def show_contact_type
+    link_to ht_contact_type.name, ht_contact_type_path(ht_contact_type)
+  end
+
+  def edit_inst_id(form:)
+    form.collection_select(:inst_id, HTInstitution.enabled.all, :inst_id, :name)
+  end
+
+  def edit_contact_type(form:)
+    form.collection_select(:contact_type, HTContactType.all, :id, :name)
   end
 end

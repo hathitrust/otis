@@ -1,40 +1,23 @@
 <div id="maincontent" class="row">
   <h1><%= @user.displayname %></h1>
 
-
-  <% expired_text = @user.expired? ? "Expired" : "Expires"
-     expires_class = @user.expiring_soon? ? "bg-danger" : ""
-  %>
-
   <%= render 'shared/flash_message' %>
 
   <div class="col-sm-6">
     <dl class="dl-horizontal">
-      <dt>E-mail:</dt> <dd><%= @user.email %></dd>
-      <dt>Display Name:</dt> <dd><%= @user.displayname %></dd>
-      <dt>User ID:</dt> <dd><%= @user.userid %></dd>
-      <dt>Activity Contact:</dt> <dd><%= @user.activitycontact %></dd>
-      <dt>Approver:</dt> <dd><%= link_to @user.approver, ht_approval_request_path(@user.approver) %></dd>
-      <dt>Authorizer:</dt> <dd><%= @user.authorizer %></dd>
-      <dt>User Type:</dt> <dd><%= @user.usertype %></dd>
-      <dt>Role:</dt> <dd><%= @user.role_name %></dd>
-      <dt>Access:</dt> <dd><%= @user.access %></dd>
-      <dt>Expire Type:</dt> <dd><%= @user.expire_type %></dd>
-      <dt><%= expired_text %></dt> <dd class="<%= expires_class %>"><%= @user.expires_string %></dd>
-      <dt>Renewal Status</dt> <dd><%= @user.badge %></dd>
-      <dt>IP Restriction:</dt> <dd><%= @user.iprestrict&.join(', ') %></dd>
-      <dt>Multi-Factor?:</dt> <dd><%= @user.mfa_icon %></dd>
-      <dt>Institution:</dt> <dd><%= link_to @user.institution, ht_institution_path(@user.ht_institution.inst_id) %></dd>
+      <% HTUserPresenter::ALL_FIELDS.each do |field| %>
+        <dt><%= @user.field_label field %></dt> <dd><%= @user.field_value field %></dd>
+      <% end %>
     </dl>
     <hr/>
     <dl class="dl-horizontal">
-      <dt>Accesses</dt> <dd><%= @user.ht_count&.accesscount %></dd>
-      <dt>Last Access</dt> <dd><%= @user.ht_count&.last_access&.to_s(:db) %></dd>
+      <% HTUserPresenter::COUNT_FIELDS.each do |field| %>
+        <dt><%= @user.field_label field %></dt> <dd><%= @user.field_value field %></dd>
+      <% end %>
     </dl>
+
     <% if can?(:edit, HTUser) %>
-      <%= link_to 'Edit', edit_ht_user_path, class: 'btn btn-primary' %>
+      <%= link_to t('.edit'), edit_ht_user_path, class: 'btn btn-primary' %>
     <% end %>
   </div>
 </div>
-
-

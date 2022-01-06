@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/mlibrary/keycard.git
-  revision: 565e87d072eecf6729ab5b2dbe521ab6bcd12737
+  revision: a91922a0bed8e58f277acde79b050e67dfc1a753
   specs:
     keycard (0.3.4)
       sequel
@@ -8,6 +8,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    accept_language (2.0.2)
     actioncable (6.1.4.4)
       actionpack (= 6.1.4.4)
       activesupport (= 6.1.4.4)
@@ -106,7 +107,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
-    deep_merge (1.2.1)
+    deep_merge (1.2.2)
     docile (1.4.0)
     dotenv (2.7.6)
     dotenv-rails (2.7.6)
@@ -123,11 +124,24 @@ GEM
       railties (>= 5.0.0)
     faker (2.19.0)
       i18n (>= 1.6, < 2)
-    ffi (1.15.4)
+    ffi (1.15.5)
+    flag-icons-rails (3.4.6.1)
+      sass-rails
     globalid (1.0.0)
       activesupport (>= 5.0)
+    highline (2.0.3)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
+    i18n-tasks (0.9.37)
+      activesupport (>= 4.0.2)
+      ast (>= 2.1.0)
+      erubi
+      highline (>= 2.0.0)
+      i18n
+      parser (>= 2.2.3.0)
+      rails-i18n
+      rainbow (>= 2.2.2, < 4.0)
+      terminal-table (>= 1.5.1)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -152,13 +166,13 @@ GEM
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.6.1)
     minitest (5.15.0)
     msgpack (1.4.2)
     mysql2 (0.5.3)
     nio4r (2.5.8)
-    nokogiri (1.12.5)
-      mini_portile2 (~> 2.6.1)
+    nokogiri (1.13.0-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.13.0-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.21.0)
@@ -201,6 +215,9 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.2)
       loofah (~> 2.3)
+    rails-i18n (6.0.0)
+      i18n (>= 0.7, < 2)
+      railties (>= 6.0.0, < 7)
     railties (6.1.4.4)
       actionpack (= 6.1.4.4)
       activesupport (= 6.1.4.4)
@@ -230,6 +247,8 @@ GEM
       rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.11.0)
     rubyzip (2.3.2)
+    sass-rails (6.0.0)
+      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -260,6 +279,8 @@ GEM
     standard (1.6.0)
       rubocop (= 1.24.1)
       rubocop-performance (= 1.13.1)
+    terminal-table (3.0.2)
+      unicode-display_width (>= 1.1.1, < 3)
     thor (1.2.1)
     tilt (2.0.10)
     turbolinks (5.2.1)
@@ -289,9 +310,11 @@ GEM
     zeitwerk (2.5.3)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
+  accept_language
   autoprefixer-rails
   bootsnap (>= 1.1.0)
   bootstrap-sass
@@ -305,6 +328,8 @@ DEPENDENCIES
   ettin
   factory_bot_rails
   faker
+  flag-icons-rails
+  i18n-tasks
   jbuilder (~> 2.5)
   jquery-rails
   kcv
@@ -317,6 +342,7 @@ DEPENDENCIES
   puma (~> 4.3)
   rails (~> 6.1.4)
   rails-controller-testing
+  rails-i18n (~> 6.0.0)
   rubyzip (~> 2.0)
   sassc-rails
   selenium-webdriver

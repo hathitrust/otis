@@ -20,9 +20,10 @@ class HTInstitutionsControllerIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "index is well-formed HTML" do
-    sign_in!
-    get ht_institutions_url
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get ht_institutions_url
+    end
   end
 
   test "enabled institutions separated from disabled ones" do
@@ -69,9 +70,10 @@ class HTInstitutionsControllerShowTest < ActionDispatch::IntegrationTest
   end
 
   test "show page is well-formed HTML" do
-    sign_in!
-    get ht_institution_url @inst
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get ht_institution_url @inst
+    end
   end
 
   test "shows institution name and id" do
@@ -83,6 +85,11 @@ class HTInstitutionsControllerShowTest < ActionDispatch::IntegrationTest
   test "Shows whoami link" do
     get ht_institution_url @inst
     assert_match(%r{/cgi/whoami}m, @response.body)
+  end
+
+  test "Without MFA auth context, suppresses whoami link with step-up MFA" do
+    get ht_institution_url @inst
+    assert_no_match(%r{authnContextClassRef=https://refeds.org/profile/mfa}m, @response.body)
   end
 
   test "With MFA auth context, shows whoami link with step-up MFA" do
@@ -108,9 +115,10 @@ end
 
 class HTInstitutionsControllerCSVTest < ActionDispatch::IntegrationTest
   def setup
-    @inst1 = HTInstitution.new(inst_id: "testinst", grin_instance: "b",
-      name: "University of Testland", entityID: "https://testinst.edu/idp",
-      enabled: 1)
+    @inst1 = HTInstitution.new(
+      inst_id: "testinst", grin_instance: "b", name: "University of Testland",
+      entityID: "https://testinst.edu/idp", enabled: 1
+    )
     @inst1.save!
     @inst2 = create(:ht_institution, inst_id: "z")
   end
@@ -275,6 +283,14 @@ class HTInstitutionsControllerCreateTest < ActionDispatch::IntegrationTest
     post ht_institutions_url, params: {ht_institution: inst_params}
     assert_equal(inst_id, HTInstitution.find(inst_id).ht_logs.last.data["params"]["inst_id"])
   end
+
+  test "shows error and reloads form on creation failure" do
+    inst_params = attributes_for(:ht_institution)
+    inst_params[:name] = nil
+    post ht_institutions_url, params: {ht_institution: inst_params}
+    assert_not_empty flash[:alert]
+    assert_template "ht_institutions/new"
+  end
 end
 
 class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
@@ -283,9 +299,10 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
   end
 
   test "edit page is well-formed HTML" do
-    inst = create(:ht_institution)
-    get edit_ht_institution_url inst
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      inst = create(:ht_institution)
+      get edit_ht_institution_url inst
+    end
   end
 
   test "Editable fields present" do
@@ -387,5 +404,14 @@ class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
     }
 
     assert_equal "xx", HTInstitution.find(inst.inst_id).ht_billing_member.country_code
+  end
+
+  test "fails update with missing name" do
+    inst = create :ht_institution
+    patch ht_institution_url inst, params: {ht_institution: {"name" => nil}}
+
+    assert_response :success
+    assert_equal "update", @controller.action_name
+    assert_not_empty flash[:alert]
   end
 end

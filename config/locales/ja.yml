@@ -1,0 +1,337 @@
+---
+ja:
+  activerecord:
+    attributes:
+      ht_approval_request:
+        approved: 承認済み
+        approver: 秘書
+        renewed: 更新
+        sent: 送信済
+        user: ユーザー
+      ht_billing_member:
+        country_code: 国コード
+        marc21_sym: MARC記号
+        oclc_sym: OCLC記号
+        status: 可能請求
+        weight: 加重
+      ht_contact:
+        contact_type: 種類
+        email: Eメール
+        id: ID
+        inst_id: 機関
+      ht_contact_type:
+        description: 説明
+        id: ID
+        name: 表示名
+      ht_institution:
+        allowed_affiliations: 所属
+        domain: ドメイン
+        emergency_contact: ETAS連絡先
+        emergency_status: ETAS所属
+        enabled: ログイン可能
+        entityID: エンティティID
+        grin_instance: GRIN実例
+        inst_id: 機関ID
+        last_update: 最終更新
+        mapto_inst_id: 持ち株の機関ID
+        mapto_name: マップされた表示名
+        name: 表示名
+        shib_authncontext_class: 多要素認証コンテキスト
+        template: テンプレート
+        us: 米国
+      ht_log:
+        data: データ
+        model: モデル
+        objid: ID
+        time: 時間
+      ht_registration:
+        auth_rep: 認証担当者
+        auth_rep_date: 認証担当者の年月日
+        auth_rep_email: 認証担当者のEメール
+        auth_rep_name: 認証担当者の表示名
+        contact_info: 連絡先情報
+        dsp: 障害者サービスプロバイダー
+        dsp_date: DSP年月日
+        dsp_email: DSPEメール
+        dsp_name: DSP表示名
+        inst_id: 機関
+        jira_ticket: チケット
+        mfa_addendum: 多要素認証
+        name: 表示名
+      ht_user:
+        access: アクセス
+        accesses: アクセス数
+        activitycontact: 活動連絡先
+        approver: 秘書
+        authorizer: 承認者
+        displayname: 表示名
+        email: Eメール
+        expire_type: 有効期限タイプ
+        expires: 有効期限
+        identity_provider: IDプロバイダー
+        institution: 機関
+        iprestrict: IPアドレスの制限
+        last_access: 最後のアクセス
+        mfa: 多要素認証
+        renewal_status: 更新状況
+        role: 役割
+        userid: ユーザーID
+        usertype: ユーザータイプ
+    errors:
+      models:
+        ht_approval_request:
+          attributes:
+            sent:
+              after_received: 送信日は受信日以降にすることはできません
+        ht_contact_type:
+          in_use: "%{model}「%{name}」が使用中です"
+        ht_user:
+          attributes:
+            expires:
+              invalid: 有効なタイムスタンプである必要があります
+            iprestrict:
+              invalid: 有効なIPv4アドレスが必要です（複数の場合はコンマで区切ります）
+              ipv6: "「%{addr}」はIPv6アドレスであり、IPv4アドレスのみが許可されます"
+              loopback: "「%{addr}」はループバックIPv4アドレスであり、パブリックアドレスのみが許可されます"
+              private: "「%{addr}」はプライベートIPv4アドレスであり、パブリックアドレスのみが許可されます"
+    models:
+      ht_approval_request: 承認リクエスト
+      ht_contact: 連絡先
+      ht_contact_type: 連絡先種類
+      ht_institution: 機関
+      ht_registration: 登録
+      ht_user: ユーザー
+  approval:
+    new:
+      already_used_html: "<strong>このリンクは無効になりました。すでに使用されている可能性があります。</strong>"
+      expired_html: "<strong>%{user}の承認リクエストが期限切れになりました。 %{mailto}までご連絡ください。</strong>"
+      not_found_html: "<strong>トークン%{token}の承認リクエストが見つかりません。</strong>"
+      recorded_html: "<strong>%{approver}</strong>から<strong>%{user}</strong>の高架アクセス承認が記録されました。"
+      thanks: ありがとうございます。
+  global:
+    fake_shib_controller:
+      email: Eメール
+      log_in: ログイン
+    go: 行く
+    home: ホーム
+    log_out: ログアウト
+    logged_in_as: "%{user}としてログイン"
+    menus:
+      approval_requests: 承認リクエスト
+      contact_types: 連絡先種類
+      contacts: 連絡先
+      institutions: 機関
+      logs: ログ
+      registrations: 登録
+      users: ユーザー
+    not_logged_in: ログインしていない
+  ht_approval_request:
+    badges:
+      approved: 承認済み
+      expired: リクエストの期限切れ
+      sent: 送信済
+      unsent: 未送信
+  ht_approval_requests:
+    create:
+      added_users: "%{users}のリクエストを追加しました。"
+      deleted_users: "%{users}のリクエストを削除しました。"
+      errors:
+        no_approved_request: "%{user}に対する承認されたリクエストはありません。手動で更新する必要があります。"
+      no_selection: ユーザーは選択されていません。
+      renewed_users: "%{users}のリクエストを更新しました。"
+    edit:
+      cancel: キャンセル
+      email_preview: Eメールプレビュー
+      no_requests: "%{approver}に対する保留中の要求はありません。"
+      requests_for: "%{approver}の承認リクエスト"
+      resend: 再送
+      send: 送信
+    index:
+      active_requests: アクティブなリクエスト
+      approval_requests: 承認リクエスト
+      confirm_delete: 期限切れのリクエスト（%{count}）の削除を確認してください。
+      delete_expired: 期限切れのリクエストを削除する
+      inactive_requests: 非アクティブなリクエスト
+      instructions: 承認リクエストメールを編集して送信するには、承認者メールをクリックしてください。
+      renew_selected: 選択したユーザーを更新する
+      select: 選択
+    show:
+      edit: 編集
+      no_requests: "%{approver}に対する保留中の要求はありません。"
+      requests_for: "%{approver}の承認リクエスト"
+    update:
+      messages_sent: メッセージが送信されました。
+  ht_billing_member:
+    values:
+      status:
+        disabled: 無効
+        enabled: 有効
+  ht_contact_types:
+    create:
+      success: 連絡先種類が作成されました。
+    destroy:
+      success: 連絡先種類が削除されました。
+    form:
+      cancel: キャンセル
+      submit_changes: 変更を送信する
+    index:
+      add_new_contact_type: 新しい連絡先種類を追加します
+      contact_types: 連絡先種類
+    new:
+      new_contact_type: 新しい連絡先種類
+    show:
+      confirm_delete: 連絡先種類「%{name}」の削除を確認してください。
+      delete: 連絡先種類を削除する
+      edit: 編集
+    update:
+      success: 連絡先種類が更新されました。
+  ht_contacts:
+    create:
+      success: 連絡先が作成されました。
+    destroy:
+      success: 連絡先が削除されました。
+    form:
+      cancel: キャンセル
+      submit_changes: 変更を送信する
+    index:
+      add_new_contact: 新しい連絡先を追加します
+      contacts: 連絡先
+      download_csv: CSVをダウンロード
+    new:
+      new_contact: 新しい連絡先
+    show:
+      confirm_delete: 連絡先「%{email}」の削除を確認してください。
+      delete: 連絡先を削除する
+      edit: 編集
+    update:
+      success: 連絡先が更新されました。
+  ht_institution:
+    values:
+      emergency_status:
+        etas_enabled: ETAS有効
+        etas_not_enabled: ETASが有効になっていません
+      enabled:
+        disabled: 無効
+        enabled: 有効
+        private: 民間
+        social: ソーシャルログイン
+  ht_institutions:
+    create:
+      success: 機関が作成されました。
+    form:
+      add_billing_info: 請求情報を追加する
+      cancel: キャンセル
+      submit_changes: 変更を送信する
+    index:
+      add: 新しい機関を追加する
+      add_hint1_html: "<a target='_blank' href='https://met.refeds.org'>REFEDSメタデータエクスプローラー（新しいタブで開きます）</a>でSAMLエンティティIDを検索し、ここに入力して機関データを事前入力します："
+      add_hint2: または、手動で情報を提供します：
+      download_csv: CSVをダウンロード
+      enabled_institutions: 有効な機関
+      entity_id: エンティティID
+      load_metadata: メタデータをロードする
+      other_institutions: 他の機関
+    new:
+      new_institution: 新しい機関
+    show:
+      active_users: アクティブユーザー
+      all_users: 全てのユーザー
+      contacts: 連絡先
+      edit: 編集
+      test_login: ログインをテストする
+      test_login_mfa: 多要素認証ログインをテストします
+      users: ユーザー
+    update:
+      success: 機関が更新されました。
+  ht_logs:
+    index:
+      download_json: JSONをダウンロード
+      logs: ログ
+  ht_registrations:
+    create:
+      success: "%{name}の登録が作成されました。"
+    destroy:
+      success: 登録が削除されました。
+    edit:
+      edit: 登録を編集する
+    form:
+      cancel: キャンセル
+      submit_changes: 変更を送信する
+    index:
+      current_registrations: 現在の登録
+      new_registration: 新しい登録
+    new:
+      new_registration: 新しい登録
+    show:
+      confirm_delete: 登録「%{name}」の削除を確認してください。
+      delete: 登録を削除する
+      edit: 編集
+    update:
+      success: "%{name}の登録が更新されました。"
+  ht_user:
+    badges:
+      expired: 期限切れ
+      expiring_soon: 間もなく期限切れ
+    edit:
+      expire_now: 期限切れにする
+      iprestrict_prompt: 複数のIPアドレスの場合は、コンマ区切りのリストとして入力します。
+      renew_now: 更新する
+    role_descriptions:
+      cataloging: HathiTrustボリュームの書誌レコードを修正または追加します
+      corrections: HathiTrustボリュームの修正または更新のサポート
+      crms: HathiTrustボリュームの著作権レビューを実行します
+      developer: 実験的な検索APIの役割：使用禁止
+      inprintstatus: HathiTrustのボリュームの印刷中のステータスレビューを実行します
+      quality: HathiTrustのデジタルボリュームの品質を評価する
+      replacement: HathiTrustでボリュームの個々のページの置換コピーを作成します
+      ssd: 印刷障害のあるユーザー
+      ssdproxy: 印刷障害を持つユーザーのプロキシとして機能する
+      staffdeveloper: HathiTrustのサービスまたは運用のためのソフトウェアを開発する
+      staffsysadmin: HathiTrustリポジトリインフラストラクチャを運用または保守する
+      superuser: UMスタッフ開発者–ロールstaffdeveloperとstaffsysadminが含まれます
+    values:
+      access:
+        normal: 正常
+        total: 全権
+      expire_type:
+        expiresannually: 1年間
+        expiresbiannually: 2年間
+        expirescustom60: 60日間
+        expirescustom90: 90日間
+      iprestrict:
+        any: 任意
+      mfa:
+        unavailable: 利用できません
+      role:
+        cataloging: カタログサポート
+        corrections: 修正サポート
+        crms: 著作権レビューア
+        developer: 実験的な検索APIの役割 -- 使用禁止
+        inprintstatus: 印刷中のステータスレビューア
+        quality: 品質レビューア
+        replacement: ページ置換サポート
+        ssd: アクセシブルなテキストリクエストサービスパトロン
+        ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
+        staffdeveloper: スタッフ開発者
+        staffsysadmin: スタッフシステム管理者
+        superuser: UMスタッフ開発者
+      usertype:
+        external: 外部
+        staff: スタッフ
+        student: 学生
+  ht_users:
+    edit:
+      cancel: キャンセル
+      submit_changes: 変更を送信する
+    index:
+      active_users: アクティブユーザー
+      create_approval_requests: 承認リクエストを作成する
+      download_csv: CSVをダウンロード
+      expired_users: 期限切れのユーザー
+      renew_selected_users: 選択したユーザーを更新する
+      select: 選択
+      users: ユーザー
+    show:
+      edit: 編集
+    update:
+      success: ユーザーが更新されました。
