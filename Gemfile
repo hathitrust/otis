@@ -13,10 +13,10 @@ gem "rubyzip", "~> 2.0"
 # https://github.com/advisories/GHSA-c3gv-9cxf-6f57
 gem "loofah", ["~> 2.3", ">= 2.3.1"]
 
-# ruby '2.5.1'
+# ruby '3.0.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 5.2.6"
+gem "rails", "~> 6.1.4"
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
@@ -82,7 +82,8 @@ gem "ckeditor"
 
 gem "canister"
 gem "ettin"
-gem "keycard"
+gem "keycard", github: "mlibrary/keycard"
+
 gem "kcv"
 gem "checkpoint"
 
@@ -94,7 +95,7 @@ group :development, :test do
   gem "byebug"
   gem "standard"
   gem "pry"
-  gem "pry-byebug"
+  gem "pry-byebug", ">= 3.9.0"
   gem "sqlite3"
   gem "faker"
   gem "factory_bot_rails"

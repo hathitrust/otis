@@ -187,7 +187,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get ht_users_url
     # look for the class name
-    assert_match(/expiring-soon/m, @response.body)
+    assert_match(/bg-danger/m, @response.body)
   end
 
   test "Editable fields present" do
@@ -256,11 +256,11 @@ class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
   def setup
     @inst1 = create(:ht_institution, entityID: "http://example.com", inst_id: "X", name: "Y")
     @user1 = HTUser.new(userid: "a@b", displayname: "A B", email: "c@d",
-                        activitycontact: "e@f", approver: "g@h",
-                        authorizer: "i@j", usertype: "staff", role: "ssd",
-                        access: "total", expires: "2020-01-01 00:00:00",
-                        expire_type: "expiresannually", iprestrict: "any",
-                        mfa: false, identity_provider: "http://example.com")
+      activitycontact: "e@f", approver: "g@h",
+      authorizer: "i@j", usertype: "staff", role: "ssd",
+      access: "total", expires: "2020-01-01 00:00:00",
+      expire_type: "expiresannually", iprestrict: "any",
+      mfa: false, identity_provider: "http://example.com")
     @user1.save!
     @user2 = create(:ht_user, :expired, userid: "y@z")
   end
