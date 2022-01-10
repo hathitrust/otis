@@ -27,5 +27,5 @@ role_map = {admin: [:create, :destroy, :edit, :index, :new, :save, :show, :updat
 
 Services.register(:checkpoint) do
   Checkpoint::Authority.new(credential_resolver: Checkpoint::Credential::RoleMapResolver.new(role_map),
-                            resource_resolver: Checkpoint::Resource::Resolver.new)
+    resource_resolver: Checkpoint::Resource::Resolver.new)
 end

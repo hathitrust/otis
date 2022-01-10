@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
     begin
       policy_class = Object.const_get(basename)
     rescue NameError => _e
-      policy_class = Object.const_get("ApplicationPolicy")
+      policy_class = Object.const_get(:ApplicationPolicy)
     end
     policy_class.new
   end

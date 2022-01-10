@@ -108,8 +108,9 @@ end
 
 class HTInstitutionsControllerCSVTest < ActionDispatch::IntegrationTest
   def setup
-    @inst1 = HTInstitution.new(inst_id: "testinst", grin_instance: "b", name: "University of Testland",
-                               entityID: "https://testinst.edu/idp", enabled: 1)
+    @inst1 = HTInstitution.new(inst_id: "testinst", grin_instance: "b",
+      name: "University of Testland", entityID: "https://testinst.edu/idp",
+      enabled: 1)
     @inst1.save!
     @inst2 = create(:ht_institution, inst_id: "z")
   end

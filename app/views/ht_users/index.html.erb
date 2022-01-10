@@ -37,7 +37,7 @@
           <%= u.expires_string %>
           <% if u.expiring_soon? %>
             <div class="text-danger">
-              <span class="expiring-soon text-danger"><%= u.days_until_expiration %>
+              <span class="bg-danger text-danger"><%= u.days_until_expiration %>
                 days</span>
             </div>
           <% end %>

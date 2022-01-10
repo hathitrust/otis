@@ -107,7 +107,7 @@ end
 
 def create_ht_contact_type
   HTContactType.create(name: Faker::Job.position,
-                       description: Faker::Lorem.sentence(word_count: 10))
+    description: Faker::Lorem.sentence(word_count: 10))
 end
 
 def create_ht_registration(inst_id)
@@ -131,8 +131,10 @@ def create_ht_registration(inst_id)
   )
 end
 
-HTContactType.create(name: "ETAS",
-                     description: "Emergency Temporary Access Service")
+HTContactType.create(
+  name: "ETAS",
+  description: "Emergency Temporary Access Service"
+)
 
 5.times do
   create_ht_contact_type

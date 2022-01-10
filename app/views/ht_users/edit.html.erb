@@ -27,7 +27,7 @@
     <%= form.hidden_field :userid %>
     <% ed = @user.expiration_date
        expired_text = ed.expired? ? "Expired" : "Expires"
-       expires_class = ed.expiring_soon? ? "expiring-soon" : ""
+       expires_class = ed.expiring_soon? ? "bg-danger" : ""
     %>
 
     <div class="col-2">

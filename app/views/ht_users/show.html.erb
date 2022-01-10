@@ -3,7 +3,7 @@
 
 
   <% expired_text = @user.expired? ? "Expired" : "Expires"
-     expires_class = @user.expiring_soon? ? "expiring-soon" : ""
+     expires_class = @user.expiring_soon? ? "bg-danger" : ""
   %>
 
   <%= render 'shared/flash_message' %>
