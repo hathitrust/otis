@@ -28,9 +28,9 @@ def create_ht_user(expires:)
     mfa: [false, true].sample
   )
   if u.mfa
-    u.identity_provider = HTInstitution.enabled.where.not(shib_authncontext_class: nil).sample.entityID
+    u.inst_id = HTInstitution.enabled.where.not(shib_authncontext_class: nil).sample.inst_id
   else
-    u.identity_provider = HTInstitution.enabled.sample.entityID
+    u.inst_id = HTInstitution.enabled.sample.inst_id
     u.iprestrict = if rand > 0.4
       Faker::Internet.public_ip_v4_address
     elsif rand > 0.2

@@ -76,7 +76,8 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :expire_type
     t.string :iprestrict
     t.boolean :mfa
-    t.string :identity_provider
+    t.string :identity_provider # deprecated in favor of inst_id
+    t.string :inst_id
   end
 
   create_table :ht_institutions, id: false do |t|
