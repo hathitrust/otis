@@ -99,11 +99,11 @@ class HTInstitutionPresenter < SimpleDelegator
   end
 
   def user_count
-    HTUser.where(identity_provider: entityID).count
+    HTUser.where(inst_id: inst_id).count
   end
 
   def active_user_count
-    HTUser.active.where(identity_provider: entityID).count
+    HTUser.active.where(inst_id: inst_id).count
   end
 
   def contacts

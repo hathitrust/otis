@@ -41,6 +41,18 @@ class HTUserTest < ActiveSupport::TestCase
   end
 end
 
+class HTUserInstitutionTest < ActiveSupport::TestCase
+  def setup
+    @inst1 = create(:ht_institution, entityID: "http://ok.com", inst_id: "ok")
+    @inst2 = create(:ht_institution, entityID: "http://bogus.com", inst_id: "bogus")
+    @user1 = create(:ht_user, identity_provider: "http://bogus.com", inst_id: "ok")
+  end
+
+  test "joins on inst_id instead of deprecated identity_provider" do
+    assert_equal @inst1, @user1.ht_institution
+  end
+end
+
 class HTUserActiveExpiredTest < ActiveSupport::TestCase
   def setup
     @active = create(:ht_user, :active)

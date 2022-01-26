@@ -24,7 +24,6 @@
       <dt>Renewal Status</dt> <dd><%= @user.badge %></dd>
       <dt>IP Restriction:</dt> <dd><%= @user.iprestrict&.join(', ') %></dd>
       <dt>Multi-Factor?:</dt> <dd><%= @user.mfa_icon %></dd>
-      <dt>Identity Provider:</dt> <dd><%= @user.identity_provider %></dd>
       <dt>Institution:</dt> <dd><%= link_to @user.institution, ht_institution_path(@user.ht_institution.inst_id) %></dd>
     </dl>
     <hr/>

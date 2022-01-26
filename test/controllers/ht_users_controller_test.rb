@@ -254,13 +254,13 @@ end
 
 class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
   def setup
-    @inst1 = create(:ht_institution, entityID: "http://example.com", inst_id: "X", name: "Y")
+    @inst1 = create(:ht_institution, inst_id: "X", name: "Y")
     @user1 = HTUser.new(userid: "a@b", displayname: "A B", email: "c@d",
       activitycontact: "e@f", approver: "g@h",
       authorizer: "i@j", usertype: "staff", role: "ssd",
       access: "total", expires: "2020-01-01 00:00:00",
       expire_type: "expiresannually", iprestrict: "any",
-      mfa: false, identity_provider: "http://example.com")
+      mfa: false, identity_provider: "http://example.com", inst_id: "X")
     @user1.save!
     @user2 = create(:ht_user, :expired, userid: "y@z")
   end

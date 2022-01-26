@@ -6,7 +6,7 @@ require "forwardable"
 class HTUser < ApplicationRecord
   self.primary_key = "email"
 
-  belongs_to :ht_institution, foreign_key: :identity_provider, primary_key: :entityID
+  belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id
   has_one :ht_count, foreign_key: :userid, primary_key: :userid
   has_many :ht_logs, -> { HTLog.ht_user }, foreign_key: :objid, primary_key: :email
   has_many :ht_approval_request, foreign_key: :userid, primary_key: :email
@@ -17,7 +17,7 @@ class HTUser < ApplicationRecord
   validates :email, presence: true
   validates :userid, presence: true
   validates :expires, presence: true
-  validates :identity_provider, presence: true
+  validates :inst_id, presence: true
   validates :approver, presence: true
 
   validates :mfa, absence: true, unless: -> { ht_institution.shib_authncontext_class.present? }
@@ -154,13 +154,11 @@ class HTUser < ApplicationRecord
   end
 
   def csv_cols
-    extra_cols = ["inst_id", "inst_name"]
-    attributes.keys + extra_cols
+    attributes.keys + ["inst_name"]
   end
 
   def csv_vals
-    extra_vals = [ht_institution.inst_id, institution]
-    attributes.values + extra_vals
+    attributes.values + [institution]
   end
 
   private
