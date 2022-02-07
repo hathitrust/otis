@@ -14,7 +14,8 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
 
   test "edit_link" do
     assert_not_nil @registration.edit_link
-    assert_match(/#{@registration.id}.+>#{@registration.name}</, @registration.edit_link)
+    name = ERB::Util.html_escape @registration.dsp_name
+    assert_match(/#{@registration.id}.+>#{name}</, @registration.edit_link)
   end
 
   test "inst_link" do

@@ -4,16 +4,16 @@ class HTRegistration < ApplicationRecord
   self.primary_key = "id"
   self.table_name = "otis_registrations"
 
-  validates :id, uniqueness: true
+  def self.digest(tok)
+    Digest::SHA256.base64digest(Base64.decode64(tok))
+  end
 
   belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id, required: true
-  validates :inst_id, presence: true
-
   has_many :ht_logs, -> { HTLog.ht_registration }, foreign_key: :objid, primary_key: :id
 
+  validates :id, uniqueness: true
   validates :jira_ticket, presence: true
-  validates :name, presence: true
-  validates :contact_info, presence: true
+  validates :inst_id, presence: true
 
   # auth_rep = authorized representative
   validates :auth_rep_name, presence: true
@@ -27,6 +27,19 @@ class HTRegistration < ApplicationRecord
 
   # mfa = multi factor authentication
   validates :mfa_addendum, presence: true
+  validates :token_hash, presence: true, if: :sent
+
+  validates :contact_info, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
+
+  # This is the bit that goes to the DSP, just a gob of b64 data acting as a 'password'
+  def token
+    @token ||= SecureRandom.urlsafe_base64 16
+  end
+
+  def sent=(value)
+    self[:sent] = value
+    self[:token_hash] = self.class.digest(token)
+  end
 
   def resource_id
     id

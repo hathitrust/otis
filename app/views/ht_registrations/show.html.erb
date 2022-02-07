@@ -1,20 +1,12 @@
 <div class="col-sm-6">
-  <h1><%= @registration.name %></h1>
+  <h1><%= @registration.dsp_name %></h1>
+  <%= render 'shared/flash_message' %>
+
   <dl class="dl-horizontal">
-    <dt>Institution:</dt>
-    <dd><%= @registration.inst_link %></dd>
     <dt>JIRA Ticket:</dt>
     <dd><%= @registration.jira_link %></dd>
-    <dt>Contact Info:</dt>
-    <dd><%= @registration.contact_info %></dd>
-    <dt>Auth Rep Name:</dt>
-    <dd><%= @registration.auth_rep_name %></dd>
-    <dt>Auth Rep Email:</dt>
-    <dd>
-      <%= link_to(@registration.auth_rep_email, "mailto:#{@registration.auth_rep_email}") %>
-    </dd>
-    <dt>Auth Rep Date:</dt>
-    <dd><%= @registration.auth_rep_date %></dd>
+    <dt>Institution:</dt>
+    <dd><%= @registration.inst_link %></dd>
     <dt>DSP Name:</dt>
     <dd><%= @registration.dsp_name %></dd>
     <dt>DSP Email:</dt>
@@ -23,17 +15,36 @@
     </dd>
     <dt>DSP Date:</dt>
     <dd><%= @registration.dsp_date %></dd>
+    <dt>Auth Rep Name:</dt>
+    <dd><%= @registration.auth_rep_name %></dd>
+    <dt>Auth Rep Email:</dt>
+    <dd>
+      <%= link_to(@registration.auth_rep_email, "mailto:#{@registration.auth_rep_email}") %>
+    </dd>
+    <dt>Auth Rep Date:</dt>
+    <dd><%= @registration.auth_rep_date %></dd>
     <dt>MFA Addendum:</dt>
     <dd><%= @registration.mfa_addendum %></dd>
+    <dt>Institution ATRS Contact:</dt>
+    <dd><%= @registration.contact_info %></dd>
+    <dt>Sent:</dt>
+    <dd><%= @registration.sent %></dd>
+    <dt>Received:</dt>
+    <dd><%= @registration.received %></dd>
   </dl>
   <br />
 
   <% if can?(:edit, HTRegistration) %>
     <%= link_to 'Edit', edit_ht_registration_path, class: 'btn btn-primary' %>
   <% end %>
+  
+  <% if can?(:preview, :ht_registrations) %>
+    <%= link_to 'E-mail Preview', preview_ht_registration_path, class: 'btn btn-primary' %>
+  <% end %>
 
-  <% if can?(:destroy, HTRegistration) %>
+  <% ### FIXME: should be able to delete registration that has already been sent? %>
+  <% if can?(:destroy, :ht_registrations) %>
     <%= link_to 'Delete Registration', ht_registration_path, method: :delete, class: 'btn btn-danger',
-	data: { confirm: "Please confirm deletion of registration \"#{@registration.name}\"" } %>
+	data: { confirm: "Please confirm deletion of registration \"#{@registration.dsp_name}\"" } %>
   <% end %>
 </div>

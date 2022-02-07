@@ -125,20 +125,15 @@ FactoryBot.define do
 
   factory :ht_registration do
     sequence(:id) { |n| n.to_s }
-
     jira_ticket { Faker::Alphanumeric.alpha(number: 6).upcase }
-    name { Faker::Lorem.unique.characters(number: 3) }
-    contact_info { Faker::Lorem.unique.characters(number: 3) }
-
-    auth_rep_name { Faker::Lorem.unique.characters(number: 3) }
-    auth_rep_email { Faker::Internet.email }
-    auth_rep_date { Faker::Lorem.unique.characters(number: 2) }
-
-    dsp_name { Faker::Lorem.unique.characters(number: 3) }
+    dsp_name { Faker::Name.name }
     dsp_email { Faker::Internet.email }
     dsp_date { Faker::Lorem.unique.characters(number: 2) }
-
+    auth_rep_name { Faker::Name.name }
+    auth_rep_email { Faker::Internet.email }
+    auth_rep_date { Faker::Lorem.unique.characters(number: 2) }
     mfa_addendum { [true, false].sample }
+    contact_info { Faker::Internet.email }
     association :ht_institution, strategy: :create
   end
 end

@@ -19,7 +19,7 @@ class HTRegistrationPresenter < SimpleDelegator
   end
 
   def edit_link
-    link_to name, ht_registration_path(id)
+    link_to dsp_name, ht_registration_path(id)
   end
 
   def inst_link
