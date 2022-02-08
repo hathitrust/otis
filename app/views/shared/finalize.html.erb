@@ -1,0 +1,43 @@
+<div id="maincontent" class="row">
+
+  <% if @registration.expired? %>
+    <strong>Registration for <%= @registration.dsp_email %> has expired.
+            Please contact <%= mail_to ApplicationMailer.default[:from] %>.</strong>
+  <% elsif @already_used %>
+    <strong>This link is no longer valid; it may have already been used.</strong>
+  <% else %>
+    <p><i>WARNING: THE FOLLOWING PLACEHOLDER TEXT HAS NOT BEEN REVIEWED BY THE LEGAL DEPARTMENT.</i></p>
+    <p>Thank you.</p>
+    <p>Elevated access registration confirmed for <strong><%= @registration.dsp_email %></strong>.</p>
+    <p>A HathiTrust staff member will approve your registration and respond shortly by e-mail.</p>
+    
+    <% if @institution.entityID && @institution.shib_authncontext_class %>
+
+      <p>Your registration indicates you have access to multi-factor authentication (MFA).
+        <i>As a reminder, this means than any secure access to HathiTrust must be done
+           through you institution's MFA-enabled sign-in portal.</i>
+      </p>
+      <p>You can test your ability to log in with MFA using the link
+        <%= raw @institution.mfa_test_link %>.
+      </p>
+
+    <% elsif @registration.mfa_addendum? %>
+
+      <% # TODO HT-1212: we want to direct users out and back to pick up MFA info if possible %>
+      <p>Your registration indicates you have access to mult-factor authentication (MFA).
+         HathiTrust staff will take measures to ensure interoperability with your institution's
+         authentication system.</p>
+
+    <% else %>
+
+      <p>Please take a moment to confirm that <code><%= raw @ip_address %></code> is a static IP address.
+         If you are not sure, we recommend you contact your network administrator.</p>
+      <p>This is the only IP address from which you will be able to use the service.
+         If your IP address changes in the future, you will need to contact HathiTrust
+         and/or your network administrator.</p>
+      <p>You can test your ability to log in at HathiTrust using the link
+        <%= @institution.login_test_link %>.</p>
+
+    <% end %>
+  <% end %>
+</div>
