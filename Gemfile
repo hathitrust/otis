@@ -79,6 +79,7 @@ gem "autoprefixer-rails"
 gem "bootstrap-sass"
 gem "jquery-rails"
 gem "ckeditor"
+gem "whois"
 
 gem "canister"
 gem "ettin"

@@ -11,10 +11,9 @@
         <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px' } %>
       </div>
     </div>
-    <% if can?(:mail, :ht_registrations) %>
-      <% ### FIXME: need schema support for @registration.expired? %>
-      <% expired = false %>
-      <% label = expired ? 'RESEND' : 'SEND' %>
+    <% if can?(:mail, :ht_registrations) && !@registration.received? &&
+       (!@registration.sent? || @registration.expired?) %>
+      <% label = @registration.expired? ? 'RESEND' : 'SEND' %>
       <%= submit_tag label, class: 'btn btn-primary' %>
     <% end %>
     <%= link_to 'Cancel', ht_registration_path(@registration), class: 'btn btn-primary' %>

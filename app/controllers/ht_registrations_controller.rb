@@ -108,6 +108,10 @@ class HTRegistrationsController < ApplicationController
       finalize_url: finalize_url(@registration.token, host: request.base_url),
       body: params[:email_body]).registration_email.deliver_now
     flash[:notice] = "Message sent"
+    # This is for debugging only
+    if Rails.env.development?
+      flash[:notice] = "Message sent: #{finalize_url @registration.token}"
+    end
     log params.transform_values! { |v| v.present? ? v : nil }.permit!
     @registration.sent = Time.zone.now
     @registration.save!

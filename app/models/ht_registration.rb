@@ -4,8 +4,16 @@ class HTRegistration < ApplicationRecord
   self.primary_key = "id"
   self.table_name = "otis_registrations"
 
+  def self.expiration_date
+    Date.today - 1.week
+  end
+
   def self.digest(tok)
     Digest::SHA256.base64digest(Base64.decode64(tok))
+  end
+
+  def self.find_by_token(tok)
+    find_by_token_hash(digest(tok))
   end
 
   belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id, required: true
@@ -39,6 +47,24 @@ class HTRegistration < ApplicationRecord
   def sent=(value)
     self[:sent] = value
     self[:token_hash] = self.class.digest(token)
+  end
+
+  # Registrations are good for a week once the e-mail is sent.
+  def expired?
+    sent? && self[:sent] < HTRegistration.expiration_date
+  end
+
+  def sent?
+    self[:sent].present?
+  end
+
+  def received?
+    self[:received].present?
+  end
+
+  # Since not currently stored as a Boolean, checking value can be tricky.
+  def mfa_addendum?
+    self[:mfa_addendum] == "1"
   end
 
   def resource_id

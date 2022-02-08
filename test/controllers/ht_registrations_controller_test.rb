@@ -55,10 +55,10 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_match @registration.inst_id, @response.body
     assert_match @registration.jira_ticket, @response.body
     assert_match @registration.contact_info, @response.body
-    assert_match @registration.auth_rep_name, @response.body
+    assert_match ERB::Util.html_escape(@registration.auth_rep_name), @response.body
     assert_match @registration.auth_rep_email, @response.body
     assert_match @registration.auth_rep_date, @response.body
-    assert_match @registration.dsp_name, @response.body
+    assert_match ERB::Util.html_escape(@registration.dsp_name), @response.body
     assert_match @registration.dsp_email, @response.body
     assert_match @registration.dsp_date, @response.body
   end
@@ -202,7 +202,7 @@ end
 class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
   def setup
     ActionMailer::Base.deliveries.clear
-    @registration = create(:ht_registration)
+    @registration = create(:ht_registration, sent: nil, received: nil)
     sign_in! username: ADMIN_USER
   end
 
@@ -213,11 +213,33 @@ class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
     assert_not_nil assigns(:finalize_url)
     assert_not_nil assigns(:email_body)
     assert_match /E-mail Preview/i, @response.body
+    assert_select "input[value='SEND']"
   end
 
   test "e-mail preview is well-formed HTML" do
     get preview_ht_registration_path @registration
     assert_equal 0, w3c_errs(@response.body).length
+  end
+
+  test "allow resend if the registration is expired" do
+    expired_registration = create(:ht_registration, sent: Time.now - 2.week, received: nil)
+    get preview_ht_registration_path expired_registration
+    assert_select "input[value='SEND']", false
+    assert_select "input[value='RESEND']"
+  end
+
+  test "do not give option to resend if the registration is complete" do
+    complete_registration = create(:ht_registration, sent: Time.now, received: Time.now)
+    get preview_ht_registration_path complete_registration
+    assert_select "input[value='SEND']", false
+    assert_select "input[value='RESEND']", false
+  end
+
+  test "do not give option to send if already sent and not expired" do
+    sent_registration = create(:ht_registration, sent: Time.now, received: nil)
+    get preview_ht_registration_path sent_registration
+    assert_select "input[value='SEND']", false
+    assert_select "input[value='RESEND']", false
   end
 end
 
