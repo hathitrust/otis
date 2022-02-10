@@ -9,9 +9,7 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
 
   test "class constants" do
     assert_not_nil HTRegistrationPresenter::ALL_FIELDS
-    assert_equal 11, HTRegistrationPresenter::ALL_FIELDS.count
     assert_not_nil HTRegistrationPresenter::INDEX_FIELDS
-    assert_equal 7, HTRegistrationPresenter::INDEX_FIELDS.count
   end
 
   test "field labels" do
@@ -33,6 +31,16 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   test "#field_value :auth_rep_email displays as mailto link" do
     # Localized value, can't make assumptions about content
     assert_match /mailto/, @reg.field_value(:auth_rep_email)
+  end
+
+  test "#field_value :dsp_name displays as link on index page" do
+    reg = HTRegistrationPresenter.new build(:ht_registration), action: :index
+    assert_match "/ht_registrations/#{reg.id}", reg.field_value(:dsp_name)
+  end
+
+  test "#field_value :dsp_name displays without link elsewhere" do
+    reg = HTRegistrationPresenter.new build(:ht_registration), action: :show
+    assert_no_match "/ht_registrations/#{reg.id}", reg.field_value(:dsp_name)
   end
 
   test "#field_value :dsp" do
@@ -67,16 +75,6 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   test "#field_value :mfa_addendum blank when unset" do
     reg = HTRegistrationPresenter.new build(:ht_registration, mfa_addendum: false)
     assert_match "", reg.field_value(:mfa_addendum)
-  end
-
-  test "#field_value :name displays as link on index page" do
-    reg = HTRegistrationPresenter.new build(:ht_registration), action: :index
-    assert_match "/ht_registrations/#{reg.id}", reg.field_value(:name)
-  end
-
-  test "#field_value :name displays without link elsewhere" do
-    reg = HTRegistrationPresenter.new build(:ht_registration), action: :show
-    assert_no_match "/ht_registrations/#{reg.id}", reg.field_value(:name)
   end
 
   test "#field_value :inst_id edits as select menu" do

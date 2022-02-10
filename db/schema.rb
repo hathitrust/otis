@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :auth_rep_name
     t.string :auth_rep_email
     t.string :auth_rep_date
-    t.boolean :mfa_addendum
+    t.boolean :mfa_addendum, default: false
     t.text :token_hash
     t.timestamp :sent
     t.timestamp :received

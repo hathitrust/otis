@@ -2,11 +2,13 @@
 
 class HTRegistrationPresenter < ApplicationPresenter
   ALL_FIELDS = %i[
-    name inst_id jira_ticket contact_info auth_rep_name auth_rep_email auth_rep_date
-    dsp_name dsp_email dsp_date mfa_addendum
+    dsp_name dsp_email dsp_date inst_id jira_ticket
+    auth_rep_name auth_rep_email auth_rep_date
+    contact_info mfa_addendum sent received
   ].freeze
 
-  INDEX_FIELDS = %i[name inst_id jira_ticket contact_info auth_rep dsp mfa_addendum].freeze
+  INDEX_FIELDS = %i[dsp_name dsp inst_id jira_ticket auth_rep mfa_addendum].freeze
+  READ_ONLY_FIELDS = %i[sent received].freeze
   JIRA_BASE_URL = "https://tools.lib.umich.edu/jira/browse"
   FIELD_SIZE = 45
 
@@ -40,6 +42,10 @@ class HTRegistrationPresenter < ApplicationPresenter
     link_to dsp_email, "mailto:#{dsp_email}"
   end
 
+  def show_dsp_name
+    action == :index ? link_to(dsp_name, ht_registration_path(id)) : dsp_name
+  end
+
   def show_jira_ticket
     link_to jira_ticket, "#{self.class::JIRA_BASE_URL}/#{jira_ticket}"
   end
@@ -52,8 +58,16 @@ class HTRegistrationPresenter < ApplicationPresenter
     mfa_addendum ? "<span class='label label-success'><i class='glyphicon glyphicon-lock'></i></span>" : ""
   end
 
-  def show_name
-    action == :index ? link_to(name, ht_registration_path(id)) : name
+  def show_sent
+    return "" unless sent.present?
+
+    I18n.l sent.to_date, format: :long
+  end
+
+  def show_received
+    return "" unless received.present?
+
+    I18n.l received.to_date, format: :long
   end
 
   # See comments about localization and date entry in ht_user_presenter.rb

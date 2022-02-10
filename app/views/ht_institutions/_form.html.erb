@@ -1,12 +1,10 @@
   <h1><%= @institution.name %></h1>
 
-  <%= render 'shared/flash_message' %>
-
   <%= form_with(model: @institution, local: true, id: 'edit_ht_institution_form') do |form| %>
     <div class="col-sm-6">
 
       <dl class="dl-horizontal">
-        <% HTInstitutionPresenter::ALL_FIELDS.each do |field| %>
+        <% @institution.all_fields.each do |field| %>
           <dt><%= @institution.field_label field, form: form %></dt>
           <dd><%= @institution.field_value field, form: form %></dd>
         <% end %>
@@ -21,7 +19,7 @@
           <dt><label for="create_billing_member"><%= t(".add_billing_info") %></label></dt>
           <dd><%= check_box_tag :create_billing_member %></dd>
         <% end %>
-        <% HTBillingMemberPresenter::ALL_FIELDS.each do |field| %>
+        <% member.all_fields.each do |field| %>
           <dt><%= member.field_label field, form: billing_form %></dt>
           <dd><%= member.field_value field, form: billing_form %></dd>
         <% end %>

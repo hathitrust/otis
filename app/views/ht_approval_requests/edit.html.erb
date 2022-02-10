@@ -3,7 +3,6 @@
 <div id="maincontent" class="row">
   <h1><%= t ".requests_for", approver: params[:id] %></h1>
 
-  <%= render 'shared/flash_message' %>
   <% if @reqs.count == 0 %>
     <%= t ".no_requests", approver: params[:id] %>
   <% else %>

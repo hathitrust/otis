@@ -1,8 +1,8 @@
 <div class="col-sm-6">
-  <h1><%= @registration.name %></h1>
+  <h1><%= @registration.dsp_name %></h1>
   
   <dl class="dl-horizontal">
-    <% HTRegistrationPresenter::ALL_FIELDS.each do |field| %>
+    <% @registration.all_fields.each do |field| %>
       <dt><%= @registration.field_label field %></dt>
       <dd><%= @registration.field_value field %></dd>
     <% end %>
@@ -14,7 +14,7 @@
   <% end %>
   
   <% if can?(:preview, :ht_registrations) %>
-    <%= link_to 'E-mail Preview', preview_ht_registration_path, class: 'btn btn-primary' %>
+    <%= link_to t(".email_preview"), preview_ht_registration_path, class: 'btn btn-primary' %>
   <% end %>
 
   <% if can?(:destroy, HTRegistration) && !@registration.sent? %>

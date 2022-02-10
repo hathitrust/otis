@@ -1,8 +1,6 @@
 <div id="maincontent" class="row">
   <h1><%= t ".users" %></h1>
 
-  <%= render 'shared/flash_message' %>
-
   <% fields = HTUserPresenter::INDEX_FIELDS %>
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
 

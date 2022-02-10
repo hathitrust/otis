@@ -21,18 +21,16 @@
     })
   </script>
 
-  <%= render 'shared/flash_message' %>
-
   <%= form_with(model: @user, local: true, id: 'edit_ht_user_form') do |form| %>
     <dl class="dl-horizontal">
-      <% HTUserPresenter::ALL_FIELDS.each do |field| %>
+      <% @user.all_fields.each do |field| %>
         <dt><%= @user.field_label field, form: form %></dt>
         <dd><%= @user.field_value field, form: form %></dd>
       <% end %>
     </dl>
     <hr/>
     <dl class="dl-horizontal">
-      <% HTUserPresenter::COUNT_FIELDS.each do |field| %>
+      <% @user.ht_counts_fields.each do |field| %>
         <dt><%= @user.field_label field, form: form %></dt>
         <dd><%= @user.field_value field, form: form %></dd>
       <% end %>

@@ -1,12 +1,10 @@
 <div id="maincontent" class="row">
   <h1><%= @contact_type.name %></h1>
 
-  <%= render 'shared/flash_message' %>
-
   <div class="col-sm-6">
   
     <dl class="dl-horizontal">
-      <% HTContactTypePresenter::ALL_FIELDS.each do |field| %>
+      <% @contact_type.all_fields.each do |field| %>
         <dt><%= @contact_type.field_label field %></dt>
         <dd><%= @contact_type.field_value field %></dd>
       <% end %>

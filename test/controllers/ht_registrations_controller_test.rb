@@ -235,8 +235,9 @@ class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
   end
 
   test "e-mail preview is well-formed HTML" do
-    get preview_ht_registration_path @registration
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      get preview_ht_registration_path @registration
+    end
   end
 
   test "allow resend if the registration is expired" do

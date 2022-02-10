@@ -40,6 +40,10 @@ class ApplicationPresenter < SimpleDelegator
     @action = action
   end
 
+  def all_fields
+    self.class::ALL_FIELDS
+  end
+
   # By default form cancel button goes to show page if persisted,
   # index page otherwise.
   def cancel_path
@@ -92,7 +96,7 @@ class ApplicationPresenter < SimpleDelegator
   end
 
   def localize_value(field)
-    value = try(field) || return
+    value = send(field) || return
 
     begin
       I18n.t(self.class.value_scope + ".#{field}.#{value}", raise: true)

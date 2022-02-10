@@ -1,17 +1,15 @@
 <div id="maincontent" class="row">
   <h1><%= @user.displayname %></h1>
 
-  <%= render 'shared/flash_message' %>
-
   <div class="col-sm-6">
     <dl class="dl-horizontal">
-      <% HTUserPresenter::ALL_FIELDS.each do |field| %>
+      <% @user.all_fields.each do |field| %>
         <dt><%= @user.field_label field %></dt> <dd><%= @user.field_value field %></dd>
       <% end %>
     </dl>
     <hr/>
     <dl class="dl-horizontal">
-      <% HTUserPresenter::COUNT_FIELDS.each do |field| %>
+      <% @user.ht_counts_fields.each do |field| %>
         <dt><%= @user.field_label field %></dt> <dd><%= @user.field_value field %></dd>
       <% end %>
     </dl>

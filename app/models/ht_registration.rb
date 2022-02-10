@@ -33,11 +33,10 @@ class HTRegistration < ApplicationRecord
   validates :dsp_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :dsp_date, presence: true
 
-  # mfa = multi factor authentication
-  validates :mfa_addendum, presence: true
   validates :token_hash, presence: true, if: :sent
   validates :contact_info, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
 
+  # mfa = multi factor authentication
   validates_inclusion_of :mfa_addendum, in: [true, false]
 
   # This is the bit that goes to the DSP, just a gob of b64 data acting as a 'password'
@@ -61,11 +60,6 @@ class HTRegistration < ApplicationRecord
 
   def received?
     self[:received].present?
-  end
-
-  # Since not currently stored as a Boolean, checking value can be tricky.
-  def mfa_addendum?
-    self[:mfa_addendum] == "1"
   end
 
   def resource_id

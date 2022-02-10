@@ -10,8 +10,8 @@ class HTUserPresenter < ApplicationPresenter
   ].freeze
 
   INDEX_FIELDS = %i[email displayname role institution expires renewal_status iprestrict mfa].freeze
-  COUNT_FIELDS = %i[accesses last_access].freeze
-  READ_ONLY_FIELDS = (ALL_FIELDS + COUNT_FIELDS - %i[userid iprestrict expires approver mfa]).freeze
+  HT_COUNTS_FIELDS = %i[accesses last_access].freeze
+  READ_ONLY_FIELDS = (ALL_FIELDS + HT_COUNTS_FIELDS - %i[userid iprestrict expires approver mfa]).freeze
   FIELD_SIZE = 40
 
   def self.role_name(role)
@@ -20,6 +20,10 @@ class HTUserPresenter < ApplicationPresenter
 
   def self.role_description(role)
     I18n.t role, scope: "ht_user.role_descriptions", default: nil
+  end
+
+  def ht_counts_fields
+    self.class::HT_COUNTS_FIELDS
   end
 
   def can_renew?

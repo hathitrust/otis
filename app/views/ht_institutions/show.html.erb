@@ -1,11 +1,9 @@
 <div id="maincontent" class="row">
   <h1><%= @institution.name %></h1>
 
-  <%= render 'shared/flash_message' %>
-
   <div class="col-sm-6">
     <dl class="dl-horizontal">
-      <% HTInstitutionPresenter::ALL_FIELDS.each do |field| %>
+      <% @institution.all_fields.each do |field| %>
         <dt><%= @institution.field_label field %></dt>
         <dd><%= @institution.field_value field %></dd>
       <% end %>
@@ -15,7 +13,7 @@
         <% member = @institution.ht_billing_member || HTBillingMember.new %>
         <% member = HTBillingMemberPresenter.new member, controller: controller,
              action: @institution.action %>
-        <% HTBillingMemberPresenter::ALL_FIELDS.each do |field| %>
+        <% member.all_fields.each do |field| %>
           <dt><%= member.field_label field %></dt>
           <dd><%= member.field_value field %></dd>
         <% end %>

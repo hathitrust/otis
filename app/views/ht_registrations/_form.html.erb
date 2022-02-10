@@ -1,11 +1,9 @@
-<%= render 'shared/flash_message' %>
-
 <%= form_with(model: @registration, local: true, id: 'edit_ht_registration_form') do |form| %>
 
 <div class="col-sm-6">
 
   <dl class="dl-horizontal">
-    <% HTRegistrationPresenter::ALL_FIELDS.each do |field| %>
+    <% @registration.all_fields.each do |field| %>
       <dt><%= @registration.field_label field, form: form %></dt>
       <dd><%= @registration.field_value field, form: form %></dd>
     <% end %>

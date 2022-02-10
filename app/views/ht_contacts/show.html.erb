@@ -1,17 +1,13 @@
 <div id="maincontent" class="row">
   <h1><%= @contact.email %></h1>
 
-  <%= render 'shared/flash_message' %>
-
   <div class="col-sm-6">
     <dl class="dl-horizontal">
-      <% HTContactPresenter::ALL_FIELDS.each do |field| %>
+      <% @contact.all_fields.each do |field| %>
         <dt><%= @contact.field_label field %></dt>
         <dd><%= @contact.field_value field %></dd>
       <% end %>
     </dl>
-    
-
     <br/>
 
     <% if can?(:edit, HTContact) %>

@@ -4,8 +4,6 @@
     <p><%= t ".instructions" %></p>
   <% end %>
 
-  <%= render 'shared/flash_message' %>
-
   <% fields = HTApprovalRequestPresenter::INDEX_FIELDS %>
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
 

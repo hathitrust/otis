@@ -1,12 +1,10 @@
   <h1><%= @contact.email %></h1>
 
-  <%= render 'shared/flash_message' %>
-
   <%= form_with(model: @contact, local: true, id: 'edit_ht_contact_form') do |form| %>
     <div class="col-sm-6">
     
       <dl class="dl-horizontal">
-        <% HTContactPresenter::ALL_FIELDS.each do |field| %>
+        <% @contact.all_fields.each do |field| %>
           <dt><%= @contact.field_label field, form: form %></dt>
           <dd><%= @contact.field_value field, form: form %></dd>
         <% end %>

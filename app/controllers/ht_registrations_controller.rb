@@ -59,7 +59,7 @@ class HTRegistrationsController < ApplicationController
 
   def preview
     fetch_presenter
-    @finalize_url = finalize_url @registration.token
+    @finalize_url = finalize_url @registration.token, locale: nil
     @email_body = render_to_string partial: "shared/registration_body"
   end
 
@@ -110,10 +110,10 @@ class HTRegistrationsController < ApplicationController
     RegistrationMailer.with(registration: @registration,
       finalize_url: finalize_url(@registration.token, host: request.base_url),
       body: params[:email_body]).registration_email.deliver_now
-    flash[:notice] = "Message sent"
+    flash[:notice] = t("ht_registrations.mail.success")
     # This is for debugging only
     if Rails.env.development?
-      flash[:notice] = "Message sent: #{finalize_url @registration.token}"
+      flash[:notice] = "Message sent: #{finalize_url @registration.token, locale: nil}"
     end
     log params.transform_values! { |v| v.present? ? v : nil }.permit!
     @registration.sent = Time.zone.now

@@ -41,6 +41,7 @@
   <body>
     <%= render 'shared/header' %>
     <div id="main-container" class="container">
+        <%= render 'shared/flash_message' %>
       <%= yield %>
     </div>
     <% # Uses bootstrap-table  %>

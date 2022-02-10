@@ -15,11 +15,15 @@ class FinalizeController < ApplicationController
     # WHOIS text is not appropriate content for a signup page.
     # This can be moved into a <pre> block in a ht_registration -> ht_user transmogrification page.
     # @whois = Whois::Client.new.lookup(@ip_address)
-    if @registration.ht_institution.present?
-      @institution = HTInstitutionPresenter.new @registration.ht_institution
+    @institution = HTInstitutionPresenter.new @registration.ht_institution
+    @message_type = if @institution.entityID && @institution.shib_authncontext_class
+      :success_mfa
+    elsif @registration.mfa_addendum
+      :success_mfa_addendum
+    else
+      :success_static_ip
     end
-    finalize unless @registration.nil? || @registration.expired? || @already_used
-    render "shared/finalize"
+    finalize unless @registration.expired? || @already_used
   end
 
   # Users who cannot access the rest of the application can still use the

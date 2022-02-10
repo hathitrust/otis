@@ -115,6 +115,7 @@ ignore_unused:
   - 'ht_billing_member.values.*'
   - 'ht_institution.values.*'
   - 'ht_user.*'
+  - 'ht_registrations.preview.*'
 # - '{devise,kaminari,will_paginate}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'
