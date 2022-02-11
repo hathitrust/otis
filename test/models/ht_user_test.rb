@@ -11,10 +11,6 @@ class HTUserTest < ActiveSupport::TestCase
     assert_not build(:ht_user, iprestrict: "127.0.0.1.1").valid?
   end
 
-  test "iprestrict to English" do
-    assert_equal "IP Restriction", HTUser.human_attribute_name(:iprestrict)
-  end
-
   test "iprestrict escaping and unescaping" do
     user = build(:ht_user, iprestrict: "1.2.3.4")
     assert_equal '^1\.2\.3\.4$', user[:iprestrict]
@@ -38,6 +34,12 @@ class HTUserTest < ActiveSupport::TestCase
     assert_not user.valid?
     user.expires = nil
     assert_not user.valid?
+  end
+
+  test "expires validation produces localized error on bogative timestamp" do
+    user = build(:ht_user, expires: "2020-21-XX")
+    assert_not user.valid?
+    assert user.errors.full_messages.any? %r{valid timestamp}
   end
 end
 

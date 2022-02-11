@@ -1,101 +1,38 @@
 # frozen_string_literal: true
 
-class HTInstitutionBadge
-  def initialize(tag, css_class)
-    @css_class = css_class
-    @tag = tag
-  end
-
-  def label_text
-    I18n.t("ht_institution.badges.#{tag}")
-  end
-
-  def label_span
-    "<span class='label #{css_class}'>#{label_text}</span>".html_safe
-  end
-
-  private
-
-  attr_reader :css_class, :tag
-end
-
-class HTInstitutionPresenter < SimpleDelegator
-  include ActionView::Helpers::UrlHelper
-  include Rails.application.routes.url_helpers
-
-  BADGES = {
-    0 => HTInstitutionBadge.new("disabled", "label-danger"),
-    1 => HTInstitutionBadge.new("enabled", "label-success"),
-    2 => HTInstitutionBadge.new("private", "label-warning"),
-    3 => HTInstitutionBadge.new("social", "label-primary")
+class HTInstitutionPresenter < ApplicationPresenter
+  ENABLED_MAP = {
+    0 => "disabled",
+    1 => "enabled",
+    2 => "private",
+    3 => "social"
   }.freeze
 
-  def init(institution, _controller)
-    @institution = institution
-  end
+  BADGES = {
+    0 => Otis::Badge.new(value_scope + ".enabled.disabled", "label-danger"),
+    1 => Otis::Badge.new(value_scope + ".enabled.enabled", "label-success"),
+    2 => Otis::Badge.new(value_scope + ".enabled.private", "label-warning"),
+    3 => Otis::Badge.new(value_scope + ".enabled.social", "label-primary")
+  }.freeze
 
-  def badge
-    BADGES[enabled]&.label_span
-  end
+  ETAS_BADGES = {
+    enabled: Otis::Badge.new(value_scope + ".emergency_status.etas_enabled", "label-success"),
+    disabled: Otis::Badge.new(value_scope + ".emergency_status.etas_not_enabled", "label-danger")
+  }.freeze
+
+  ALL_FIELDS = %i[
+    inst_id domain name mapto_name entityID mapto_inst_id template us
+    grin_instance shib_authncontext_class allowed_affiliations emergency_status enabled
+    last_update
+  ].freeze
+
+  INDEX_FIELDS = %i[inst_id name domain us entityID emergency_status].freeze
+  INDEX_FIELDS_INACTIVE = %i[inst_id name domain us enabled entityID].freeze
+  READ_ONLY_FIELDS = %i[last_update].freeze
+  READ_ONLY_AFTER_PERSISTED_FIELDS = %i[inst_id].freeze
 
   def badge_options
     BADGES.map { |k, v| [v.label_text, k] }
-  end
-
-  def us_icon
-    checkmark_icon(us)
-  end
-
-  def etas_active_icon
-    checkmark_icon(emergency_status)
-  end
-
-  def billing_enabled_icon
-    checkmark_icon(ht_billing_member&.status)
-  end
-
-  def formatted_mapto_name
-    mapto_name || "(None)"
-  end
-
-  def etas_affiliations
-    emergency_status || "(ETAS not enabled)"
-  end
-
-  def login_test_link
-    button "Test Login", login_test_url
-  end
-
-  def mapped_inst_link
-    (link_to mapto_inst_id, ht_institution_path(mapto_inst_id) if mapto_inst_id) || "(None)"
-  end
-
-  def metadata_link
-    link_to entityID, "#{Otis.config.met_entity_endpoint}/#{entityID}" if entityID
-  end
-
-  def mfa_test_link
-    button "Test Login with MFA", mfa_test_url if entityID && shib_authncontext_class
-  end
-
-  def grin_link
-    link_to grin_instance, "#{Otis.config.books_library_endpoint}/#{grin_instance}" if grin_instance
-  end
-
-  def cancel_button
-    button "Cancel", persisted? ? ht_institution_path(inst_id) : ht_institutions_path
-  end
-
-  def show_create_billing_member?
-    !persisted? || !ht_billing_member&.persisted?
-  end
-
-  def form_inst_id(form)
-    if persisted?
-      inst_id
-    else
-      form.text_field :inst_id
-    end
   end
 
   def user_count
@@ -110,25 +47,73 @@ class HTInstitutionPresenter < SimpleDelegator
     HTContact.for_institution(id).map { |c| HTContactPresenter.new c }
   end
 
-  private
-
-  def checkmark_icon(field)
-    raw field ? '<i class="glyphicon glyphicon-ok"></i>' : ""
-  end
-
-  def controller
-    # required for url helpers to work
-  end
-
-  def button(title, url)
-    link_to title, url, class: "btn btn-default"
-  end
-
   def login_test_url
     "#{Otis.config.ht_login_test_endpoint}&entityID=#{entityID}"
   end
 
   def mfa_test_url
     "#{login_test_url}&authnContextClassRef=#{shib_authncontext_class}"
+  end
+
+  private
+
+  def etas_badge
+    ETAS_BADGES[emergency_status.present? ? :enabled : :disabled].label_span
+  end
+
+  def show_allowed_affiliations
+    "<code>#{allowed_affiliations}</code>"
+  end
+
+  # Index version: ETAS badge or blank
+  # Non-index version: code value or "not enabled"
+  def show_emergency_status
+    if action == :index
+      emergency_status.present? ? etas_badge : ""
+    elsif emergency_status.present?
+      "<code>#{emergency_status}</code>"
+    else
+      etas_badge
+    end
+  end
+
+  def show_enabled
+    BADGES[enabled]&.label_span
+  end
+
+  def show_entityID
+    link_to entityID, "#{Otis.config.met_entity_endpoint}/#{entityID}" if entityID
+  end
+
+  def show_grin_instance
+    link_to grin_instance, "#{Otis.config.books_library_endpoint}/#{grin_instance}" if grin_instance
+  end
+
+  def show_inst_id
+    if action == :index
+      link_to(inst_id, ht_institution_path(inst_id))
+    else
+      inst_id
+    end
+  end
+
+  def show_last_update
+    last_update ? I18n.l(Time.zone.parse(last_update.to_s).to_date, format: :long) : ""
+  end
+
+  def show_mapto_inst_id
+    link_to(mapto_inst_id, ht_institution_path(mapto_inst_id)) if mapto_inst_id
+  end
+
+  def show_us
+    us ? "<span class=\"flag-icon flag-icon-us\"></span>" : ""
+  end
+
+  def edit_enabled(form:)
+    form.select :enabled, badge_options
+  end
+
+  def edit_us(form:)
+    form.check_box :us
   end
 end

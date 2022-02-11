@@ -1,28 +1,17 @@
 # frozen_string_literal: true
 
-class HTContactTypePresenter < SimpleDelegator
-  include ActionView::Helpers::UrlHelper
-  include Rails.application.routes.url_helpers
-
-  def init(contact_type, _controller)
-    @contact_type = contact_type
-  end
-
-  def show_link
-    link_to name, ht_contact_type_path(id)
-  end
-
-  def cancel_button
-    button "Cancel", persisted? ? ht_contact_type_path(id) : ht_contact_types_path
-  end
+class HTContactTypePresenter < ApplicationPresenter
+  ALL_FIELDS = %i[id name description].freeze
+  READ_ONLY_FIELDS = %i[id].freeze
+  FIELD_SIZE = 20
 
   private
 
-  def controller
-    # required for url helpers to work
+  def show_name
+    action == :index ? link_to(name, ht_contact_type_path(self)) : name
   end
 
-  def button(title, url)
-    link_to title, url, class: "btn btn-default"
+  def edit_description(form:)
+    form.text_area :description, size: "80x4"
   end
 end

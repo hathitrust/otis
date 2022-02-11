@@ -58,3 +58,25 @@ class HTInstitutionTest < ActiveSupport::TestCase
       inst.template)
   end
 end
+
+class HTInstitutionSAMLTest < ActiveSupport::TestCase
+  TEST_ENTITY_ID = "https://east.westland.test/idp/shibboleth"
+
+  def setup
+    @inst = create(:ht_institution)
+  end
+
+  test "sets SAML metadata" do
+    test_metadata_path = Rails.root.join("test", "fixtures", "test_metadata.xml")
+    metadata = SAMLMetadata.new(TEST_ENTITY_ID, data: File.read(test_metadata_path))
+    @inst.set_defaults_for_entity(TEST_ENTITY_ID, metadata)
+    assert_equal TEST_ENTITY_ID, @inst.entityID
+    assert_equal metadata.name, @inst.name
+    assert_equal metadata.domain, @inst.domain
+    assert_equal metadata.domain_base, @inst.inst_id
+    assert_equal metadata.domain_base, @inst.mapto_inst_id
+    metadata.scopes.each do |scope|
+      assert_match scope, @inst.allowed_affiliations
+    end
+  end
+end

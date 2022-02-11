@@ -1,82 +1,67 @@
 <div id="maincontent" class="row">
 
-  <%= render 'shared/flash_message' %>
+  <% fields = HTInstitutionPresenter::INDEX_FIELDS %>
 
-  <h2 class="pull-left">Enabled Institutions</h2>
+  <h2 class="pull-left"><%= t ".enabled_institutions" %></h2>
 
-  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+  <table id="active_institutions" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
-    <thead class="thead-dark">
+    <thead class="thead-dark">    
     <tr>
-      <th data-sortable="true">ID</th>
-      <th data-sortable="true">Name</th>
-      <th data-sortable="true">Domain</th>
-      <th data-sortable="true">US?</th>
-      <th data-sortable="true">Entity ID</th>
-      <th data-sortable="true">ETAS?</th>
+      <% fields.each do |field| %>
+        <th data-sortable="true"><%= HTInstitutionPresenter.field_label field %></th>
+      <% end %>
     </tr>
     </thead>
 
     <% @enabled_institutions.each do |i| %>
       <tr>
-        <td><%= link_to i.inst_id, ht_institution_path(i.inst_id) %></td>
-        <td><%= i.name %></td>
-        <td><%= i.domain %></td>
-        <td><%= i.us_icon %></td>
-        <td><%= i.metadata_link %></td>
-        <td><%= i.etas_active_icon %></td>
+        <% fields.each do |field| %>
+          <td><%= i.field_value field %></td>
+        <% end %>
       </tr>
     <% end %>
   </table>
 
-  <h2 class="pull-left">Other Institutions</h2>
+  <% fields = HTInstitutionPresenter::INDEX_FIELDS_INACTIVE %>
+  <h2 class="pull-left"><%= t ".other_institutions" %></h2>
 
   <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true">
     <thead>
+    
     <tr>
-      <th data-sortable="true">ID</th>
-      <th data-sortable="true">Name</th>
-      <th data-sortable="true">Domain</th>
-      <th data-sortable="true">US?</th>
-      <th data-sortable="true">Enabled?</th>
-      <th data-sortable="true">Entity ID</th>
+      <% fields.each do |field| %>
+        <th data-sortable="true"><%= HTInstitutionPresenter.field_label field %></th>
+      <% end %>
     </tr>
     </thead>
     <% @other_institutions.each do |i| %>
       <tr>
-        <td><%= link_to i.inst_id, ht_institution_path(i.inst_id) %></td>
-        <td><%= i.name %></td>
-        <td><%= i.domain %></td>
-        <td>
-          <%= raw i[:us] ? '<i class="glyphicon glyphicon-ok"></i>' : '' %>
-        </td>
-        <td><%= i.badge %></td>
-        <td><%= i.metadata_link %></td>
+      <% fields.each do |field| %>
+        <td><%= i.field_value field %></td>
+      <% end %>
       </tr>
     <% end %>
   </table>
 
   <br />
-  <%= link_to 'Download CSV', ht_institutions_url(format: :csv), class: 'btn btn-info' %>
+  <%= link_to t(".download_csv"), ht_institutions_url(format: :csv), class: 'btn btn-info' %>
   <br />
 
   <% if can?(:create, HTInstitution) %>
-    <h2> Add New Institution </h2>
+    <h2><%= t ".add" %></h2>
 
-    <p> <a target="_blank" href="https://met.refeds.org">Search REFEDS Metadata Explorer (opens in new tab)</a> for a SAML
-    entity ID and enter it here to pre-populate the institution data:</p>
+    <p><%= t ".add_hint1_html" %></p>
 
     <%= form_with url: new_ht_institution_path, method: :get, local: true do |form| %>
-      <%= form.label :entityID, "Entity ID:" %>
-      <%= form.text_field :entityID, size: 40 %>
-      <%= form.submit "Load Metadata", class: 'btn btn-primary' %>
+      <%= form.label :entityID, t(".entity_id") %>
+      <%= form.text_field :entityID, size: 50 %>
+      <%= form.submit t(".load_metadata"), class: 'btn btn-primary' %>
     <% end %>
 
-    <p> Or, manually provide the information:
-
-    <%= link_to 'Add New Instititution', new_ht_institution_path, class: 'btn btn-primary' %>
-
+    <p> <%= t ".add_hint2" %>
+      <%= link_to t(".add"), new_ht_institution_path, class: 'btn btn-primary' %>
     </p>
   <% end %>
 

@@ -1,26 +1,29 @@
 # frozen_string_literal: true
 
-class HTUserPresenter < SimpleDelegator
-  include ActionView::Helpers::FormTagHelper
-  include ActionView::Helpers::UrlHelper
-  include Rails.application.routes.url_helpers
+class HTUserPresenter < ApplicationPresenter
+  include ActionView::Helpers::DateHelper
+
+  ALL_FIELDS = %i[
+    email userid displayname activitycontact approver authorizer usertype
+    role access expire_type expires renewal_status iprestrict mfa
+    identity_provider institution
+  ].freeze
+
+  INDEX_FIELDS = %i[email displayname role institution expires renewal_status iprestrict mfa].freeze
+  HT_COUNTS_FIELDS = %i[accesses last_access].freeze
+  READ_ONLY_FIELDS = (ALL_FIELDS + HT_COUNTS_FIELDS - %i[userid iprestrict expires approver mfa]).freeze
+  FIELD_SIZE = 40
 
   def self.role_name(role)
-    I18n.t role, scope: "ht_user.role_names", default: nil
+    I18n.t role, scope: "ht_user.values.role", default: nil
   end
 
   def self.role_description(role)
     I18n.t role, scope: "ht_user.role_descriptions", default: nil
   end
 
-  def init(user)
-    @user = user
-  end
-
-  def badge
-    return "" if approval_request.nil?
-
-    HTApprovalRequestPresenter.new(approval_request)&.badge
+  def ht_counts_fields
+    self.class::HT_COUNTS_FIELDS
   end
 
   def can_renew?
@@ -56,31 +59,64 @@ class HTUserPresenter < SimpleDelegator
     HTUserPresenter.role_description role
   end
 
-  def mfa_icon
-    checkmark_icon(mfa)
-  end
-
-  # MFA checkbox and label would be simpler if we could just use the edit page
-  # ActionView::Helpers::FormHelper form, alas it complicates testing.
-  def mfa_label
-    if ht_institution.shib_authncontext_class.present?
-      label_tag :mfa_checkbox, "Multi-Factor?:"
-    else
-      "Multi-Factor?:"
-    end
-  end
-
-  def mfa_checkbox
-    if ht_institution.shib_authncontext_class.present?
-      raw [hidden_field_tag("ht_user[mfa]", 0),
-        check_box_tag("ht_user[mfa]", 1, mfa.present?, id: :mfa_checkbox,
-                                                       onclick: "check_mfa();")].join "\n"
-    else
-      "Not Available"
-    end
+  # Override for MFA which may or may not be editable on the edit page.
+  # Suppress the form if the field is :mfa and not editable.
+  # The purpose of this is to prevent bogus HTML with a <label> that points
+  # to nothing.
+  def field_label(field, form: nil)
+    form = nil if field == :mfa && !edit_mfa?
+    super field, form: form
   end
 
   private
+
+  def show_accesses
+    ht_count&.accesscount
+  end
+
+  def show_email
+    action == :index ? email_link : email
+  end
+
+  def show_expires
+    if action == :index
+      fmt = I18n.l(self[:expires].to_date, format: :long) +
+        "<p>#{expiration_badge}</p>"
+      if expiring_soon?
+        fmt += "<p><span class=\"bg-danger text-danger\">" +
+          time_to_expiration + "</span></p>"
+      end
+      fmt
+    else
+      I18n.l(self[:expires].to_date, format: :long) + "&nbsp;" + expiration_badge
+    end
+  end
+
+  def show_institution
+    link_to institution, ht_institution_path(ht_institution.inst_id)
+  end
+
+  def show_iprestrict
+    return "" unless iprestrict.present?
+    if iprestrict == ["any"]
+      return Otis::Badge.new("ht_user.values.iprestrict.any", "label-success label-any").label_span
+    end
+
+    iprestrict.to_sentence
+  end
+
+  def show_last_access
+    date = ht_count&.last_access&.to_date
+    date.present? ? I18n.l(date, format: :long) : ""
+  end
+
+  def show_mfa
+    mfa ? "<span class='label label-success'><i class='glyphicon glyphicon-lock'></i></span>" : ""
+  end
+
+  def show_renewal_status
+    renewal_status_badge
+  end
 
   def select_for_renewal_checkbox_id
     "ht_users_#{email}"
@@ -94,11 +130,63 @@ class HTUserPresenter < SimpleDelegator
     @approval_request ||= HTApprovalRequest.most_recent(email).first
   end
 
-  def checkmark_icon(field)
-    raw field ? '<i class="glyphicon glyphicon-ok"></i>' : ""
+  def renewal_status_badge
+    return "" if approval_request.nil?
+
+    HTApprovalRequestPresenter.new(approval_request)&.badge
   end
 
-  def controller
-    # required for url helpers to work
+  # NOTE: we do not use localized dates for this because the controller would
+  # have to parse localized date formats when the value is edited.
+  # There are two gems that may (or may not) be able to do this:
+  # Chronic https://github.com/mojombo/chronic/
+  # Delocalize https://github.com/clemens/delocalize
+  # Both of these appear to be abandonware, so they have not been tried.
+  # The calendar widget pushes most of the responsibility onto the browser
+  # locale support and ensures we get consistent values.
+  #
+  # The buttons should maybe be pushed back out into edit.html.erb
+  def edit_expires(form:)
+    expires_class = expiring_soon? ? "bg-danger" : ""
+    html = [form.date_field(:expires, value: expiration_date.to_s, class: expires_class)]
+    unless expired?
+      html << form.button(I18n.t("ht_user.edit.expire_now"), type: :button,
+                onclick: "$('#ht_user_expires').val('#{Date.today}').addClass('bg-danger');".html_safe,
+                class: "btn btn-primary")
+    end
+    new_expiration = expiration_date.default_extension_date
+    html << form.button(I18n.t("ht_user.edit.renew_now"), type: :button,
+              onclick: "$('#ht_user_expires').val('#{new_expiration}').removeClass('bg-danger');".html_safe,
+              class: "btn btn-primary")
+    html.join("\n")
+  end
+
+  def edit_iprestrict(form:)
+    [form.text_field(:iprestrict, value: iprestrict&.join(", "), size: 40, disabled: mfa),
+      "<p class='text-muted'>#{I18n.t("ht_user.edit.iprestrict_prompt")}</p>"].join("\n")
+  end
+
+  def edit_mfa?
+    ht_institution.shib_authncontext_class.present?
+  end
+
+  def edit_mfa(form:)
+    if edit_mfa?
+      form.check_box(:mfa, onclick: "check_mfa();".html_safe)
+    else
+      Otis::Badge.new("ht_user.values.mfa.unavailable", "label-warning").label_span
+    end
+  end
+
+  def expiration_badge
+    return Otis::Badge.new("ht_user.badges.expired", "label-danger").label_span if expired?
+    return Otis::Badge.new("ht_user.badges.expiring_soon", "label-warning").label_span if expiring_soon?
+
+    ""
+  end
+
+  def time_to_expiration
+    distance_of_time_in_words_to_now(DateTime.now + days_until_expiration,
+      include_seconds: false)
   end
 end

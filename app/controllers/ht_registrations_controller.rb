@@ -18,20 +18,18 @@ class HTRegistrationsController < ApplicationController
   ].freeze
 
   def new
-    @registration = HTRegistrationPresenter.new(HTRegistration.new)
+    @registration = presenter HTRegistration.new
   end
 
   def index
-    @all_registrations = HTRegistration.all.map { |r|
-      HTRegistrationPresenter.new(r)
-    }
+    @all_registrations = HTRegistration.all.map { |r| presenter r }
   end
 
   def create
-    @registration = HTRegistrationPresenter.new(HTRegistration.new(reg_params))
+    @registration = presenter HTRegistration.new(reg_params)
     if @registration.save
       log
-      flash.now[:alert] = "Registration created for #{@registration.dsp_name}."
+      flash.now[:notice] = t(".success", name: @registration.dsp_name)
       redirect_to preview_ht_registration_path(@registration)
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -51,7 +49,7 @@ class HTRegistrationsController < ApplicationController
     fetch_presenter
     if @registration.update(reg_params)
       log
-      flash[:notice] = "Registration updated for #{@registration.dsp_name}"
+      flash[:notice] = t(".success", name: @registration.dsp_name)
       redirect_to action: :index
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -61,7 +59,7 @@ class HTRegistrationsController < ApplicationController
 
   def preview
     fetch_presenter
-    @finalize_url = finalize_url @registration.token
+    @finalize_url = finalize_url @registration.token, locale: nil
     @email_body = render_to_string partial: "shared/registration_body"
   end
 
@@ -75,7 +73,7 @@ class HTRegistrationsController < ApplicationController
     @registration = HTRegistration.find(params[:id])
     log params.permit!
     @registration.destroy
-    flash[:notice] = "Registration deleted"
+    flash[:notice] = t(".success")
     redirect_to action: :index
   end
 
@@ -87,12 +85,17 @@ class HTRegistrationsController < ApplicationController
       .transform_values! { |v| v.present? ? v : nil }
   end
 
+  def presenter(registration)
+    HTRegistrationPresenter.new(registration, controller: self,
+      action: params[:action].to_sym)
+  end
+
   def fetch_registration
     @registration = HTRegistration.find(params[:id])
   end
 
   def fetch_presenter
-    @registration = HTRegistrationPresenter.new(fetch_registration)
+    @registration = presenter fetch_registration
   end
 
   def fetch_institutions
@@ -107,10 +110,10 @@ class HTRegistrationsController < ApplicationController
     RegistrationMailer.with(registration: @registration,
       finalize_url: finalize_url(@registration.token, host: request.base_url),
       body: params[:email_body]).registration_email.deliver_now
-    flash[:notice] = "Message sent"
+    flash[:notice] = t("ht_registrations.mail.success")
     # This is for debugging only
     if Rails.env.development?
-      flash[:notice] = "Message sent: #{finalize_url @registration.token}"
+      flash[:notice] = "Message sent: #{finalize_url @registration.token, locale: nil}"
     end
     log params.transform_values! { |v| v.present? ? v : nil }.permit!
     @registration.sent = Time.zone.now

@@ -70,18 +70,28 @@ class FinalizeControllerTest < ActionDispatch::IntegrationTest
     assert_not log_data["params"].key?("token")
   end
 
-  test "references MFA addendum on success" do
+  test "shows MFA message on success" do
     sign_in! username: Faker::Internet.email
-    mfa_reg = create(:ht_registration, sent: Date.today - 1.day, mfa_addendum: true)
-    get finalize_url mfa_reg.token
-    assert_match "mult-factor authentication", @response.body
+    inst = create(:ht_institution, shib_authncontext_class: "https://refeds.org/profile/mfa")
+    reg = create(:ht_registration, inst_id: inst.inst_id, sent: Date.today - 1.day, mfa_addendum: true)
+    get finalize_url reg.token
+    assert_equal :success_mfa, assigns[:message_type]
   end
 
-  test "references static IP on success" do
+  test "shows MFA addendum message on success" do
     sign_in! username: Faker::Internet.email
-    ip_reg = create(:ht_registration, sent: Date.today - 1.day, mfa_addendum: false)
-    get finalize_url ip_reg.token
-    assert_match "static IP address", @response.body
+    inst = create(:ht_institution, entityID: nil, shib_authncontext_class: nil)
+    reg = create(:ht_registration, inst_id: inst.inst_id, sent: Date.today - 1.day, mfa_addendum: true)
+    get finalize_url reg.token
+    assert_equal :success_mfa_addendum, assigns[:message_type]
+  end
+
+  test "shows static IP message on success" do
+    sign_in! username: Faker::Internet.email
+    inst = create(:ht_institution)
+    reg = create(:ht_registration, inst_id: inst.inst_id, sent: Date.today - 1.day, mfa_addendum: false)
+    get finalize_url reg.token
+    assert_equal :success_static_ip, assigns[:message_type]
   end
 end
 

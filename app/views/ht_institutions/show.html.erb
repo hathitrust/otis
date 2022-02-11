@@ -1,51 +1,41 @@
 <div id="maincontent" class="row">
   <h1><%= @institution.name %></h1>
 
-  <%= render 'shared/flash_message' %>
-
   <div class="col-sm-6">
     <dl class="dl-horizontal">
-      <dt>Institution ID:</dt> <dd><%= @institution.inst_id %></dd>
-      <dt>Domain:</dt> <dd> <%= @institution.domain %> </dd>
-      <dt>Name:</dt> <dd><%= @institution.name %></dd>
-      <dt>Mapped Name:</dt> <dd>
-      <%= @institution.formatted_mapto_name %>
-      <!--      <p><small>Used when displaying the name of a logged-in user's institution, for example in the footer. This is typically used with university system members where individual campuses have separate log-in but the member is the university system as a whole.</small></p> -->
-      <dt>Entity ID:</dt> <dd> <%= @institution.metadata_link %> </dd>
-      <dt>Holdings Institution ID:</dt> 
-      <dd><%= @institution.mapped_inst_link %>
-    <!--    <p><small>The ID of the institution submitting holdings including this partner. In most cases it is the same as the institution itself. For university systems with separate login for each campus but combined holdings, this should be the ID of the system.</small></p> -->
-      </dd>
-      <dt>US:</dt> <dd><%= @institution.us_icon %></dd>
-      <dt>GRIN Instance:</dt> <dd><%= @institution.grin_link %></dd>
-      <dt>MFA auth context:</dt> <dd> <%= @institution.shib_authncontext_class %> </dd>
-      <dt>Affiliations:</dt> <dd><%= @institution.allowed_affiliations %></dd>
-      <dt>Affiliations for ETAS:</dt> <dd><%= @institution.etas_affiliations %></dd>
-      <dt>Enabled for Login:</dt> <dd><%= @institution.badge %></dd>
-      <dt>Last Updated:</dt> <dd><%= @institution.last_update %></dd>
-
-      <% if(@institution.ht_billing_member) %>
-        <dt>Weight:</dt> <dd><%= @institution.ht_billing_member.weight %></dd>
-        <dt>OCLC Symbol:</dt> <dd><%= @institution.ht_billing_member.oclc_sym %></dd>
-        <dt>MARC Code:</dt> <dd><%= @institution.ht_billing_member.marc21_sym %></dd>
-        <dt>Country Code:</dt> <dd><%= @institution.ht_billing_member.country_code %></dd>
-        <dt>Enabled for Billing:</dt> <dd><%= @institution.billing_enabled_icon %></dd>
+      <% @institution.all_fields.each do |field| %>
+        <dt><%= @institution.field_label field %></dt>
+        <dd><%= @institution.field_value field %></dd>
+      <% end %>
+      
+      
+      <% if @institution.ht_billing_member %>
+        <% member = @institution.ht_billing_member || HTBillingMember.new %>
+        <% member = HTBillingMemberPresenter.new member, controller: controller,
+             action: @institution.action %>
+        <% member.all_fields.each do |field| %>
+          <dt><%= member.field_label field %></dt>
+          <dd><%= member.field_value field %></dd>
+        <% end %>
       <% end %>
     </dl>
+
     <hr/>
-    <h2>Users</h2>
+    <h2><%= t ".users" %></h2>
     <dl class="dl-horizontal">
-      <dt>Active Users:</dt> <dd><%= @institution.active_user_count %></dd>
-      <dt>All Users:</dt> <dd><%= @institution.user_count %></dd>
+      <dt><%= t ".active_users" %></dt> <dd><%= @institution.active_user_count %></dd>
+      <dt><%= t ".all_users" %></dt> <dd><%= @institution.user_count %></dd>
     </dl>
 
     <% contacts = @institution.contacts %>
     <% if contacts.any? %>
       <hr/>
-      <h2>Contacts</h2>
+      <h2><%= t ".contacts" %></h2>
       <dl class="dl-horizontal">
         <% contacts.each do |contact| %>
-          <dt><%= "#{contact.contact_type_display}:" %></dt> <dd><%= contact.email_display %></dd>
+          <% contact = HTContactPresenter.new contact, controller: controller %>
+          <dt><%= contact.field_value :contact_type %></dt>
+          <dd><%= contact.field_value :email %></dd>
         <% end %>
       </dl>
     <% end %>
@@ -53,11 +43,13 @@
    <br />
 
     <% if can?(:edit, HTInstitution) %>
-      <%= link_to 'Edit', edit_ht_institution_path, class: 'btn btn-primary' %>
+      <%= link_to t(".edit"), edit_ht_institution_path, class: 'btn btn-primary' %>
     <% end %>
 
-    <%= @institution.login_test_link %>
-    <%= @institution.mfa_test_link %>
+    <%= link_to t(".test_login"), @institution.login_test_url, class: 'btn btn-info' %>
+    <% if @institution.mfa? %>
+      <%= link_to t(".test_login_mfa"), @institution.mfa_test_url, class: 'btn btn-info' %>
+    <% end %>
 
   </div>
 </div>

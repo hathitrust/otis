@@ -20,9 +20,10 @@ class HTContactTypesIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "index is well-formed HTML" do
-    sign_in!
-    get ht_contact_types_url
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get ht_contact_types_url
+    end
   end
 
   test "contact types sorted by name" do
@@ -53,8 +54,9 @@ class HTContactTypesShowTest < ActionDispatch::IntegrationTest
   end
 
   test "show page is well-formed HTML" do
-    get ht_contact_type_url @type
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      get ht_contact_type_url @type
+    end
   end
 
   test "shows id, name, and description" do
@@ -158,6 +160,15 @@ class HTContactTypesControllerCreateTest < ActionDispatch::IntegrationTest
     assert_equal(type_id.to_s, log.data["params"]["id"])
     assert_not_nil(log.time)
   end
+
+  test "alerts on create failure due to missing description" do
+    type_params = attributes_for(:ht_contact_type).except(:description)
+    HTContactType.delete_all
+    post ht_contact_types_url, params: {ht_contact_type: type_params}
+    assert_equal "create", @controller.action_name
+    assert_equal 0, HTContactType.count
+    assert_not_empty flash[:alert]
+  end
 end
 
 class HTContactTypesControllerEditTest < ActionDispatch::IntegrationTest
@@ -167,8 +178,9 @@ class HTContactTypesControllerEditTest < ActionDispatch::IntegrationTest
   end
 
   test "edit page is well-formed HTML" do
-    get edit_ht_contact_type_url @type
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      get edit_ht_contact_type_url @type
+    end
   end
 
   test "Editable name and description fields present" do
@@ -228,7 +240,7 @@ class HTContactTypesControllerDeleteTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     assert_equal "destroy", @controller.action_name
     assert_not_empty flash[:notice]
-    assert_redirected_to ht_contact_types_path
+    assert_redirected_to %r{ht_contact_types}
     follow_redirect!
     assert_raises ActiveRecord::RecordNotFound do
       HTContactType.find type_id

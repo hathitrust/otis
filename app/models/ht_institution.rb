@@ -37,4 +37,12 @@ class HTInstitution < ApplicationRecord
     self.mapto_inst_id = metadata.domain_base
     self.allowed_affiliations = "^(member|alum|faculty|staff|student)@(#{metadata.scopes.join("|")})"
   end
+
+  def mfa?
+    entityID && shib_authncontext_class
+  end
+
+  def can_create_billing_member?
+    !persisted? || !ht_billing_member&.persisted?
+  end
 end

@@ -12,7 +12,7 @@ class SessionControllerTest < ActionDispatch::IntegrationTest
   test "login succeeds for known user" do
     post login_as_url, params: {username: "admin@default.invalid"}
     assert_response :redirect
-    assert_redirected_to root_path
+    assert_redirected_to root_url(locale: I18n.locale)
   end
 
   test "login fails (eventually) for unknown user" do
@@ -26,6 +26,6 @@ class SessionControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     post logout_url
     assert_response :redirect
-    assert_redirected_to root_path
+    assert_redirected_to root_url(locale: I18n.locale)
   end
 end

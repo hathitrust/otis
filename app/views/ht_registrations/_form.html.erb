@@ -1,37 +1,16 @@
-<%= render 'shared/flash_message' %>
-
 <%= form_with(model: @registration, local: true, id: 'edit_ht_registration_form') do |form| %>
 
 <div class="col-sm-6">
+
   <dl class="dl-horizontal">
-    <dt>JIRA Ticket:</dt>
-    <dd><%= form.text_field :jira_ticket, size: 45 %></dd>
-    <dt>Institution:</dt>
-    <dd>
-      <%= form.collection_select(:inst_id, HTInstitution.all.sort,
-            :inst_id, :name, {include_blank: true }) %>
-    </dd>
-    <dt>DSP Name:</dt>
-    <dd><%= form.text_field :dsp_name, size: 45 %></dd>
-    <dt>DSP Email:</dt>
-    <dd><%= form.text_field :dsp_email, size: 45 %></dd>
-    <dt>DSP Date:</dt>
-    <dd><%= form.text_field :dsp_date, size: 45 %></dd>
-    <dt>Auth Rep Name:</dt>
-    <dd><%= form.text_field :auth_rep_name, size: 45 %></dd>
-    <dt>Auth Rep Email:</dt>
-    <dd><%= form.text_field :auth_rep_email, size: 45 %></dd>
-    <dt>Auth Rep Date:</dt>
-    <dd><%= form.text_field :auth_rep_date, size: 45 %></dd>
-    <dt>Institution ATRS Contact:</dt>
-    <dd><%= form.text_field :contact_info, size: 45 %></dd>
-    <dt>MFA Addendum:</dt>
-    <dd>
-      <%= form.radio_button :mfa_addendum, "yes", :checked => true %> Yes
-      <%= form.radio_button :mfa_addendum,  "no" %> No
-    </dd>
+    <% @registration.all_fields.each do |field| %>
+      <dt><%= @registration.field_label field, form: form %></dt>
+      <dd><%= @registration.field_value field, form: form %></dd>
+    <% end %>
   </dl>
-  <%= form.submit 'Submit Registration', class: 'btn btn-primary' %>
+
+  <%= form.submit t(".submit_changes"), class: 'btn btn-primary' %>
+  <%= link_to t(".cancel"), @registration.cancel_path, class: 'btn btn-primary' %>
 </div>
 
 <% end %>

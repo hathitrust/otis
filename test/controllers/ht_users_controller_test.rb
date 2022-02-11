@@ -22,9 +22,10 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index is well-formed HTML" do
-    sign_in!
-    get ht_users_url
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get ht_users_url
+    end
   end
 
   test "shows nav menu" do
@@ -57,9 +58,10 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show page is well-formed HTML" do
-    sign_in!
-    get ht_user_url @user1
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get ht_user_url @user1
+    end
   end
 
   test "should get show page with no iprestrict" do
@@ -79,16 +81,18 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "edit page is well-formed HTML" do
-    sign_in!
-    get edit_ht_user_url @user1
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      get edit_ht_user_url @user1
+    end
   end
 
   test "edit page is well-formed HTML for MFA user" do
-    sign_in!
-    user3 = create(:ht_user_mfa)
-    get edit_ht_user_url user3
-    assert_equal 0, w3c_errs(@response.body).length
+    check_w3c_errs do
+      sign_in!
+      user3 = create(:ht_user_mfa)
+      get edit_ht_user_url user3
+    end
   end
 
   test "edit IP address succeeds" do
@@ -128,7 +132,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     patch ht_user_url user, params: {"ht_user" => {"iprestrict" => "33.33.33.blah"}}
     assert_response :success
     assert_equal "update", @controller.action_name
-    assert_match "invalid address", flash[:alert]
+    assert_match "valid IPv4 address", flash[:alert]
     assert_match "1.2.3.4", @response.body
   end
 
@@ -140,7 +144,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_not_empty flash[:notice]
     assert_redirected_to ht_user_path(@user1.email)
     follow_redirect!
-    assert_match "any", @response.body
+    assert_match "label-any", @response.body
     assert_equal "^.*$", HTUser.find(@user1.email)[:iprestrict]
   end
 
@@ -187,7 +191,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get ht_users_url
     # look for the class name
-    assert_match(/bg-danger/m, @response.body)
+    assert_match(/label-warning/m, @response.body)
   end
 
   test "Editable fields present" do
@@ -205,7 +209,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     create(:ht_user_mfa, id: "test")
     sign_in!
     get edit_ht_user_url id: "test"
-    assert_select "input#iprestrict_field" do |input|
+    assert_select "input#ht_user_iprestrict" do |input|
       assert input.attr("disabled").present?
     end
   end
@@ -215,7 +219,7 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     patch ht_user_url user, params: {"ht_user" => {"mfa" => true}}
     assert_response :success
-    assert_match "Mfa", flash[:alert]
+    assert_match %r{must be blank}i, flash[:alert]
     assert_nil HTUser.find(user.email)[:mfa]
   end
 

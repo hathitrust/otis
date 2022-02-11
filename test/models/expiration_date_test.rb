@@ -47,4 +47,26 @@ class ExpirationDateTest < ActiveSupport::TestCase
     assert_equal(eq1, eq3)
     assert_not_equal(eq1, neq)
   end
+
+  test "Data stringification" do
+    ExpirationDate::EXPIRES_TYPE.each do |_k, v|
+      assert_equal v.label, v.to_s
+    end
+  end
+end
+
+class ExpirationDateConversionTest < ActiveSupport::TestCase
+  # Objects that don't respond to #to_date.
+  class IDontRespondToToDate
+    def to_s
+      "2021-01-10"
+    end
+  end
+
+  test "Date conversion fallback" do
+    thing = IDontRespondToToDate.new
+    date = ExpirationDate.convert_to_date thing
+    assert_kind_of Date, date
+    assert_equal date, Date.parse(thing.to_s)
+  end
 end

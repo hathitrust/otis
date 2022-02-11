@@ -1,26 +1,20 @@
 <div id="maincontent" class="row">
-  <h1>Users</h1>
+  <h1><%= t ".users" %></h1>
 
-  <%= render 'shared/flash_message' %>
-
+  <% fields = HTUserPresenter::INDEX_FIELDS %>
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
 
-  <h2 class="pull-left">Active Users</h2>
+  <h2 class="pull-left"><%= t ".active_users" %></h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
       <% if can?(:create, HTApprovalRequest) || can?(:edit, HTUser) %>
-        <th data-sortable="true">Select</th>
+        <th data-sortable="true"><%= t ".select" %></th>
       <% end %>
-      <th data-sortable="true">E-mail</th>
-      <th>Name</th>
-      <th data-sortable="true">Role</th>
-      <th data-sortable="true">Institution</th>
-      <th data-sortable="true">Expires</th>
-      <th data-sortable="true">Renewal Status</th>
-      <th>IP Restriction</th>
-      <th data-sortable="true">MFA?</th>
+      <% fields.each do |field| %>
+        <th data-sortable="true"><%= HTUserPresenter.field_label field %></th>
+      <% end %>
     </tr>
     </thead>
 
@@ -29,59 +23,38 @@
         <% if can?(:create, HTApprovalRequest) || can?(:edit, HTUser) %>
           <td><%= u.select_for_renewal_checkbox %></td>
         <% end %>
-        <td><%= u.email_link %></td>
-        <td><%= u.displayname %></td>
-        <td><%= u.role_name %></td>
-        <td><%= link_to u.institution, ht_institution_path(u.ht_institution.inst_id) %></td>
-        <td class="text-nowrap <%= u.expiring_soon? ? "bg-danger" : '' %>">
-          <%= u.expires_string %>
-          <% if u.expiring_soon? %>
-            <div class="text-danger">
-              <span class="bg-danger text-danger"><%= u.days_until_expiration %>
-                days</span>
-            </div>
-          <% end %>
-        </td>
-        <td><%= u.badge %></td>
-        <td><%= u.iprestrict&.join(', ') %></td>
-        <td><%= u.mfa_icon %></td>
+        <% fields.each do |field| %>
+          <td><%= u.field_value field %></td>
+        <% end %>
       </tr>
     <% end %>
   </table>
   <br/>
 
   <% if can?(:create, HTApprovalRequest)  %>
-    <%= button_tag 'Create Approval Requests', type: 'submit', name: 'submit_requests', class: 'btn btn-primary' %>
+    <%= button_tag t(".create_approval_requests"), type: 'submit', name: 'submit_requests', class: 'btn btn-primary' %>
   <% end %>
   <% if can?(:edit, HTUser) %>
-    <%= button_tag 'Renew Selected Users', type: 'submit', name: 'submit_renewals', class: 'btn btn-primary' %>
+    <%= button_tag t(".renew_selected_users"), type: 'submit', name: 'submit_renewals', class: 'btn btn-primary' %>
   <% end %>
-  <%= link_to 'Download CSV', ht_users_url(format: :csv), class: 'btn btn-info' %>
+  <%= link_to t(".download_csv"), ht_users_url(format: :csv), class: 'btn btn-info' %>
   <% end # form_tag %>
 
-  <h2 class="pull-left">Expired Users</h2>
+  <h2 class="pull-left"><%= t ".expired_users" %></h2>
   <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true">
     <thead>
     <tr>
-      <th data-sortable="true">E-mail</th>
-      <th>Name</th>
-      <th data-sortable="true">Role</th>
-      <th data-sortable="true">Institution</th>
-      <th data-sortable="true">Expired</th>
-      <th>IP Restriction</th>
-      <th data-sortable="true">MFA?</th>
+      <% fields.each do |field| %>
+        <th data-sortable="true"><%= HTUserPresenter.field_label field %></th>
+      <% end %>
     </tr>
     </thead>
     <% @expired_users.each do |u| %>
       <tr>
-        <td><%= u.email_link %></td>
-        <td><%= u.displayname %></td>
-        <td><%= u.role_name %></td>
-        <td><%= u.institution %></td>
-        <td><%= u.expires_string %></td>
-        <td><%= u.iprestrict&.join(', ') %></td>
-        <td><%= u.mfa_icon %></td>
+        <% fields.each do |field| %>
+          <td><%= u.field_value field %></td>
+        <% end %>
       </tr>
     <% end %>
   </table>

@@ -7,9 +7,9 @@ class HTUsersController < ApplicationController
 
   def index
     users = HTUser.joins(:ht_institution).order("ht_institutions.name")
-    @users = users.active.map { |u| HTUserPresenter.new(u) }
-    @expired_users = users.expired.map { |u| HTUserPresenter.new(u) }
-    @all_users = users.map { |u| HTUserPresenter.new(u) }
+    @users = users.active.map { |u| presenter u }
+    @expired_users = users.expired.map { |u| presenter u }
+    @all_users = users.map { |u| presenter u }
     respond_to do |format|
       format.html
       format.csv { send_data users_csv }
@@ -33,6 +33,10 @@ class HTUsersController < ApplicationController
 
   private
 
+  def presenter(user)
+    HTUserPresenter.new(user, controller: self, action: params[:action].to_sym)
+  end
+
   def update_user_failure
     flash.now[:alert] = @user.errors.full_messages.to_sentence
     fetch_user
@@ -40,12 +44,12 @@ class HTUsersController < ApplicationController
   end
 
   def update_user_success
-    flash[:notice] = "User updated"
+    flash[:notice] = t "ht_users.update.success"
     redirect_to @user
   end
 
   def fetch_user
-    @user = HTUserPresenter.new(HTUser.joins(:ht_institution).find(params[:id]))
+    @user = presenter HTUser.joins(:ht_institution).find(params[:id])
   end
 
   def user_params

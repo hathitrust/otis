@@ -4,83 +4,38 @@
   <script>
     var save_ip = '';
     function check_mfa() {
-      if ($('#mfa_checkbox').prop('checked')) {
-        save_ip = $('#iprestrict_field').val();
-        $('#iprestrict_field').val('');
-        $('#iprestrict_field').attr('disabled', true);
+      if ($('#ht_user_mfa').prop('checked')) {
+        save_ip = $('#ht_user_iprestrict').val();
+        $('#ht_user_iprestrict').val('');
+        $('#ht_user_iprestrict').attr('disabled', true);
       }
       else {
         if (save_ip.length > 0) {
-          $('#iprestrict_field').val(save_ip);
+          $('#ht_user_iprestrict').val(save_ip);
         }
-        $('#iprestrict_field').attr('disabled', false);
+        $('#ht_user_iprestrict').attr('disabled', false);
       }
     }
     $('#edit_ht_user_form').submit(function() {
-      $('#iprestrict_field').attr('disabled', false);
+      $('#ht_user_iprestrict').attr('disabled', false);
     })
   </script>
 
-  <%= render 'shared/flash_message' %>
-
   <%= form_with(model: @user, local: true, id: 'edit_ht_user_form') do |form| %>
-    <%= form.hidden_field :userid %>
-    <% ed = @user.expiration_date
-       expired_text = ed.expired? ? "Expired" : "Expires"
-       expires_class = ed.expiring_soon? ? "bg-danger" : ""
-    %>
-
-    <div class="col-2">
-      <dl class="dl-horizontal">
-        <dt>E-mail:</dt>
-        <dd><%= @user.email %></dd>
-        <dt>Display Name:</dt>
-        <dd><%= @user.displayname %></dd>
-        <dt>User ID:</dt>
-        <dd><%= @user.userid %></dd>
-        <dt>Activity Contact:</dt>
-        <dd><%= @user.activitycontact %></dd>
-        <dt><%= form.label :approver %></dt>
-        <dd><%= form.text_field :approver, size: 40 %></dd>
-        <dt>Authorizer:</dt>
-        <dd><%= @user.authorizer %></dd>
-        <dt>User Type:</dt>
-        <dd><%= @user.usertype %></dd>
-        <dt>Role:</dt>
-        <dd><%= @user.role_name %></dd>
-        <dt>Access:</dt>
-        <dd><%= @user.access %></dd>
-        <dt>Expire Type:</dt>
-        <dd><%= @user.expire_type %></dd>
-        <dt><%= form.label :expires, expired_text, for: :expires_field %></dt>
-        <dd><%= form.text_field :expires, value: @user.expires_string, size: 12, id: :expires_field, class: expires_class %>
-          <% unless @user.expired? %>
-            <%= form.button "Expire Now", type: :button, onclick: "$('#expires_field').val('#{Time.current.to_s(:db)}');", class: 'btn btn-primary' %>
-          <% end %>
-          <% new_expiration = @user.expiration_date.default_extension_date %>
-          <%= form.button "Renew Now", type: :button, onclick: "$('#expires_field').val('#{new_expiration}');", class: 'btn btn-primary' %>
-        </dd>
-        <dt>Renewal Status</dt>
-        <dd><%= @user.badge %></dd>
-        <dt><%= form.label :iprestrict, for: :iprestrict_field %></dt>
-        <dd><%= form.text_field :iprestrict, value: @user.iprestrict&.join(', '), size: 40, id: :iprestrict_field, disabled: @user.mfa %>
-          <p class="text-muted"><%= t('ht_user.edit.iprestrict_prompt') %></p>
-        </dd>
-        <dt><%= @user.mfa_label %></dt>
-        <dd><%= @user.mfa_checkbox %></dd>
-        <dt>Institution:</dt>
-        <dd><%= @user.institution %></dd>
-      </dl>
-      <hr/>
-      <dl class="dl-horizontal">
-        <dt>Accesses:</dt>
-        <dd><%= @user.ht_count&.accesscount %></dd>
-        <dt>Last Access:</dt>
-        <dd><%= @user.ht_count&.last_access&.to_s(:db) %></dd>
-      </dl>
-    </div>
-    <%= form.submit 'Submit Changes', class: 'btn btn-primary' %>
-    <%= link_to 'Cancel', ht_user_path(@user), class: 'btn btn-primary' %>
+    <dl class="dl-horizontal">
+      <% @user.all_fields.each do |field| %>
+        <dt><%= @user.field_label field, form: form %></dt>
+        <dd><%= @user.field_value field, form: form %></dd>
+      <% end %>
+    </dl>
+    <hr/>
+    <dl class="dl-horizontal">
+      <% @user.ht_counts_fields.each do |field| %>
+        <dt><%= @user.field_label field, form: form %></dt>
+        <dd><%= @user.field_value field, form: form %></dd>
+      <% end %>
+    </dl>
+    <%= form.submit t(".submit_changes"), class: 'btn btn-primary' %>
+    <%= link_to t(".cancel"), ht_user_path(@user), class: 'btn btn-primary' %>
   <% end %>
 </div>
-

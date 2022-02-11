@@ -6,25 +6,31 @@ class HTApprovalRequestsController < ApplicationController
   def create
     if params[:submit_requests]
       @added_users = add_requests(params[:ht_users])
-      flash[:notice] = "Added #{"request".pluralize(@added_users.count)} for #{@added_users.join ", "}" if @added_users.count.positive?
+      if @added_users.any?
+        flash[:notice] = t ".added_users", users: @added_users.to_sentence
+      end
       session[:added_users] = @added_users
     end
     if params[:submit_renewals]
       @renewed_users = add_renewals(params[:ht_users])
-      flash[:notice] = "Renewed #{@renewed_users.join ", "}" if @renewed_users.count.positive?
+      if @renewed_users.any?
+        flash[:notice] = t ".renewed_users", users: @renewed_users.to_sentence
+      end
       session[:renewed_users] = @renewed_users
     end
     if params[:delete_expired]
       deleted = delete_expired
-      flash[:notice] = "Removed #{deleted} #{"request".pluralize(deleted)}"
+      if deleted.any?
+        flash[:notice] = t ".deleted_users", users: deleted.to_sentence
+      end
     end
     redirect_to action: :index
   end
 
   def index
     requests = HTApprovalRequest.order("approver")
-    @incomplete_reqs = requests.not_renewed.map { |r| HTApprovalRequestPresenter.new(r) }
-    @complete_reqs = requests.renewed.map { |r| HTApprovalRequestPresenter.new(r) }
+    @incomplete_reqs = requests.not_renewed.map { |r| presenter r }
+    @complete_reqs = requests.renewed.map { |r| presenter r }
     @added_users = session[:added_users] || []
     @renewed_users = session[:renewed_users] || []
     session.delete :added_users
@@ -41,7 +47,7 @@ class HTApprovalRequestsController < ApplicationController
         req.sent = Time.zone.now
         req.save!
       end
-      flash[:notice] = "Messages sent"
+      flash[:notice] = t ".messages_sent"
     rescue => e
       flash[:alert] = e.message
     end
@@ -59,9 +65,13 @@ class HTApprovalRequestsController < ApplicationController
 
   private
 
+  def presenter(user)
+    HTApprovalRequestPresenter.new(user, controller: self, action: params[:action].to_sym)
+  end
+
   def fetch_requests
     @reqs = HTApprovalRequest.for_approver(params[:id]).not_renewed.map do |r|
-      HTApprovalRequestPresenter.new(r)
+      presenter r
     end
   end
 
@@ -70,7 +80,7 @@ class HTApprovalRequestsController < ApplicationController
   # Returns an Array of ht_user emails added to requests.
   def add_requests(emails)
     if emails.nil? || emails.empty?
-      flash[:alert] = "No users selected"
+      flash[:alert] = t "ht_approval_requests.create.no_selection"
       return []
     end
     adds = []
@@ -101,13 +111,15 @@ class HTApprovalRequestsController < ApplicationController
     emails.each do |e|
       HTUser.find(e).add_or_update_renewal(approver: current_user.id)
       adds << e
-    rescue => e
-      flash[:alert] = e.message
+    rescue HTUserRenewalError => err
+      flash[:alert] = t ".errors.#{err.type}", user: e
     end
     adds
   end
 
   def delete_expired
-    HTApprovalRequest.expired.destroy_all.count
+    deleted = HTApprovalRequest.expired.map(&:userid)
+    HTApprovalRequest.expired.destroy_all
+    deleted
   end
 end

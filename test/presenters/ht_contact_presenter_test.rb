@@ -9,34 +9,50 @@ class HTContactPresenterTest < ActiveSupport::TestCase
     @contact = HTContactPresenter.new(create(:ht_contact, ht_institution: @inst, ht_contact_type: @type))
   end
 
-  test "#inst_link" do
-    assert_not_nil @contact.inst_link
-    assert_match "/ht_contacts/#{@contact.id}", @contact.inst_link
+  test "class constants" do
+    assert_not_nil HTContactPresenter::ALL_FIELDS
+    assert_equal 4, HTContactPresenter::ALL_FIELDS.count
+    assert_not_nil HTContactPresenter::READ_ONLY_FIELDS
+    assert_equal 1, HTContactPresenter::READ_ONLY_FIELDS.count
   end
 
-  test "#institution_display" do
-    assert_not_nil @contact.institution_display
-    assert_match @inst.name, @contact.institution_display
+  test "#field_value :email on index page" do
+    contact = HTContactPresenter.new(create(:ht_contact, ht_institution: @inst, ht_contact_type: @type),
+      action: :index)
+    assert_match "/ht_contacts/#{contact.id}", contact.field_value(:email)
   end
 
-  test "#contact_type_display" do
-    assert_not_nil @contact.contact_type_display
-    assert_match @type.name, @contact.contact_type_display
+  test "#field_value :email elsewhere" do
+    %i[edit new show].each do |action|
+      contact = HTContactPresenter.new(create(:ht_contact, ht_institution: @inst, ht_contact_type: @type),
+        action: action)
+      assert_match "mailto:", contact.field_value(:email)
+    end
   end
 
-  test "#email_display" do
-    assert_not_nil @contact.email_display
-    assert_match "mailto", @contact.email_display
+  test "#field_value :inst_id displays as link" do
+    assert_match "ht_institutions/", @contact.field_value(:inst_id)
   end
 
-  test "#cancel_button for saved object goes to object" do
-    assert_not_nil @contact.cancel_button
-    assert_match "/ht_contacts/#{@contact.id}", @contact.cancel_button
+  test "#field_value :contact_type displays as link" do
+    assert_match "ht_contact_types/", @contact.field_value(:contact_type)
   end
 
-  test "#cancel_button for unsaved object goes to index" do
+  test "#field_value :inst_id edits as select menu" do
+    assert_equal "SELECT", @contact.field_value(:inst_id, form: FakeForm.new)
+  end
+
+  test "#field_value :contact_type edits as select menu" do
+    assert_equal "SELECT", @contact.field_value(:contact_type, form: FakeForm.new)
+  end
+
+  test "#cancel_path for saved object goes to object" do
+    assert_match "/ht_contacts/#{@contact.id}", @contact.cancel_path
+  end
+
+  test "#cancel_path for unsaved object goes to index" do
     contact = HTContactPresenter.new(build(:ht_contact))
-    assert_not_nil contact.cancel_button
-    assert_no_match "/ht_contacts/#{contact.id}", contact.cancel_button
+    assert_not_nil contact.cancel_path
+    assert_no_match "/ht_contacts/#{contact.id}", contact.cancel_path
   end
 end

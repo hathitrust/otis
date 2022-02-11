@@ -7,16 +7,13 @@ class HTContactsController < ApplicationController
   PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[id]
 
   def new
-    @contact = HTContactPresenter.new(HTContact.new)
+    @contact = presenter HTContact.new
   end
 
   def index
-    contacts = if params[:contact_type].blank?
-      HTContact.includes(:ht_institution).order("ht_institutions.name")
-    else
-      HTContact.where(contact_type: params[:contact_type])
-    end
-    @contacts = contacts.map { |c| HTContactPresenter.new(c) }
+    @contacts = HTContact.includes(:ht_institution)
+      .order("ht_institutions.name")
+      .map { |c| presenter c }
     respond_to do |format|
       format.html
       format.csv do
@@ -31,8 +28,8 @@ class HTContactsController < ApplicationController
     @contact = HTContact.find(params[:id])
     if @contact.update(contact_params(PERMITTED_UPDATE_FIELDS))
       log
-      flash[:notice] = "Contact updated"
-      redirect_to @contact
+      flash[:notice] = t ".success"
+      redirect_to presenter(@contact)
     else
       flash.now[:alert] = @contact.errors.full_messages.to_sentence
       fetch_contact
@@ -44,10 +41,11 @@ class HTContactsController < ApplicationController
     @contact = HTContact.new(contact_params(PERMITTED_CREATE_FIELDS))
     if @contact.save
       log
-      redirect_to @contact, note: "Contact #{@contact.email} created"
+      flash[:notice] = t ".success"
+      redirect_to presenter(@contact)
     else
       flash.now[:alert] = @contact.errors.full_messages.to_sentence
-      @contact = HTContactPresenter.new(@contact)
+      @contact = presenter @contact
       render :new
     end
   end
@@ -56,15 +54,20 @@ class HTContactsController < ApplicationController
     # Log here, because after #destroy the object becomes invalid
     log params.permit!
     if @contact.destroy
-      flash[:notice] = "contact removed"
+      flash[:notice] = t ".success"
       redirect_to ht_contacts_url
     else
+      # Don't know how to trigger this for testing without dynamic patching.
       flash.now[:alert] = @contact.errors.full_messages.to_sentence
       render :show
     end
   end
 
   private
+
+  def presenter(contact)
+    HTContactPresenter.new(contact, controller: self, action: params[:action].to_sym)
+  end
 
   def log(params = @contact_params)
     log_action(@contact, params)
@@ -77,7 +80,7 @@ class HTContactsController < ApplicationController
   end
 
   def fetch_contact
-    @contact = HTContactPresenter.new(HTContact.find(params[:id]))
+    @contact = presenter HTContact.find(params[:id])
   end
 
   def contacts_csv

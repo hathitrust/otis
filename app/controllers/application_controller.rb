@@ -6,8 +6,11 @@ class ApplicationController < ActionController::Base
 
   include Keycard::ControllerMethods
 
+  # Records the locale chosen, mainly for testing
+  attr_reader :chosen_locale
   helper_method :logged_in?, :current_user, :can?
 
+  around_action :switch_locale
   before_action :validate_session
   before_action :authenticate!
   before_action :authorize!
@@ -19,6 +22,25 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::InvalidAuthenticityToken, with: :user_not_authorized
   rescue_from NotAuthorizedError, with: :user_not_authorized
   rescue_from ActionController::RoutingError, with: :render_not_found
+
+  def switch_locale(&action)
+    @chosen_locale = choose_locale
+    I18n.with_locale(@chosen_locale, &action)
+  end
+
+  # Get locale from parameter if available and valid.
+  # Fall back on HTTP header if not found.
+  def choose_locale
+    if I18n.available_locales.include? params[:locale]&.to_sym
+      return params[:locale]
+    end
+
+    if request.headers.key?("HTTP_ACCEPT_LANGUAGE")
+      header = request.headers.fetch("HTTP_ACCEPT_LANGUAGE")
+      locale = AcceptLanguage.parse(header).match(*I18n.available_locales)
+    end
+    locale || I18n.default_locale
+  end
 
   def authorize!
     return if current_user.nil?
@@ -36,6 +58,10 @@ class ApplicationController < ActionController::Base
     return ht_institutions_path unless can?(:index, HTUser)
 
     root_path
+  end
+
+  def default_url_options
+    {locale: I18n.locale}
   end
 
   private

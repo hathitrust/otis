@@ -7,20 +7,20 @@ class HTContactTypesController < ApplicationController
   PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[id]
 
   def new
-    @contact_type = HTContactTypePresenter.new(HTContactType.new)
+    @contact_type = presenter HTContactType.new
   end
 
   def index
     contact_types = HTContactType.order(:name)
-    @contact_types = contact_types.map { |c| HTContactTypePresenter.new(c) }
+    @contact_types = contact_types.map { |c| presenter c }
   end
 
   def update
     @contact_type = HTContactType.find(params[:id])
     if @contact_type.update(contact_type_params(PERMITTED_UPDATE_FIELDS))
       log
-      flash[:notice] = "Contact type updated"
-      redirect_to @contact_type
+      flash[:notice] = t(".success")
+      redirect_to presenter(@contact_type)
     else
       flash.now[:alert] = @contact_type.errors.full_messages.to_sentence
       fetch_contact_type
@@ -32,10 +32,11 @@ class HTContactTypesController < ApplicationController
     @contact_type = HTContactType.new(contact_type_params(PERMITTED_CREATE_FIELDS))
     if @contact_type.save
       log
-      redirect_to @contact_type, note: "Contact type successfully created"
+      flash[:notice] = t(".success")
+      redirect_to presenter(@contact_type)
     else
       flash.now[:alert] = @contact_type.errors.full_messages.to_sentence
-      @contact_type = HTContactTypePresenter.new(@contact_type)
+      @contact_type = presenter @contact_type
       render :new
     end
   end
@@ -44,7 +45,7 @@ class HTContactTypesController < ApplicationController
     # Log here, because after #destroy the object becomes invalid
     log params.permit!
     if @contact_type.destroy
-      flash[:notice] = "Contact type removed"
+      flash[:notice] = t(".success")
       redirect_to ht_contact_types_url
     else
       flash.now[:alert] = @contact_type.errors.full_messages.to_sentence
@@ -53,6 +54,10 @@ class HTContactTypesController < ApplicationController
   end
 
   private
+
+  def presenter(contact_type)
+    HTContactTypePresenter.new(contact_type, controller: self, action: params[:action].to_sym)
+  end
 
   def log(params = @contact_type_params)
     log_action(@contact_type, params)
@@ -65,6 +70,6 @@ class HTContactTypesController < ApplicationController
   end
 
   def fetch_contact_type
-    @contact_type = HTContactTypePresenter.new(HTContactType.find(params[:id]))
+    @contact_type = presenter HTContactType.find(params[:id])
   end
 end

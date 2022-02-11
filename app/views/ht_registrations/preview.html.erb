@@ -6,17 +6,17 @@
   <!-- MAIL PREVIEW -->
   <%= form_tag mail_ht_registration_path, method: :post do %>
     <div class="panel panel-default">
-      <div class="panel-heading">E-mail Preview</div>
+      <div class="panel-heading"><%= t ".email_preview" %></div>
       <div class="panel-body">
         <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px' } %>
       </div>
     </div>
     <% if can?(:mail, :ht_registrations) && !@registration.received? &&
        (!@registration.sent? || @registration.expired?) %>
-      <% label = @registration.expired? ? 'RESEND' : 'SEND' %>
-      <%= submit_tag label, class: 'btn btn-primary' %>
+      <% label = @registration.expired? ? ".resend" : ".send" %>
+      <%= submit_tag t(label), class: 'btn btn-primary' %>
     <% end %>
-    <%= link_to 'Cancel', ht_registration_path(@registration), class: 'btn btn-primary' %>
+    <%= link_to t(".cancel"), ht_registration_path(@registration), class: 'btn btn-primary' %>
   <% end %>
   </div>
 </div>

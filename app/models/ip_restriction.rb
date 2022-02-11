@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+class IPRestrictionError < StandardError
+  attr_reader :type, :address
+  TYPES = %i[invalid ipv6 private loopback].freeze
+
+  def initialize(msg = "IP Restriction Error", type:, address:)
+    @type = type
+    @address = address
+    super msg
+  end
+end
+
 class IPRestriction
   attr_reader :addrs
 
@@ -9,10 +20,14 @@ class IPRestriction
 
   def validate
     addrs.each do |addr|
-      parsed = IPAddr.new(addr)
-      raise ArgumentError, "#{addr} is an IPv6 address; only IPv4 addresses allowed" if parsed.ipv6?
-      raise ArgumentError, "#{addr} is a private IPv4 address; only public addresses allowed" if parsed.private?
-      raise ArgumentError, "#{addr} is a loopback IPv4 address; only public addresses allowed" if parsed.loopback?
+      begin
+        parsed = IPAddr.new(addr)
+      rescue IPAddr::InvalidAddressError
+        raise IPRestrictionError.new(type: :invalid, address: addr)
+      end
+      raise IPRestrictionError.new(type: :ipv6, address: addr) if parsed.ipv6?
+      raise IPRestrictionError.new(type: :private, address: addr) if parsed.private?
+      raise IPRestrictionError.new(type: :loopback, address: addr) if parsed.loopback?
     end
   end
 

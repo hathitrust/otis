@@ -1,38 +1,25 @@
 <div id="maincontent" class="row">
 
-  <%= render 'shared/flash_message' %>
-
   <div class="row">
-    <h2>Contacts</h2>
+    <h2><%= t ".contacts" %></h2>
   </div>
-
-  <div class="row">
-    <%= form_tag(ht_contacts_url, method: :get) do %>
-      <%= select_tag :contact_type,
-                     options_from_collection_for_select(HTContactType.all, :id, :name,
-                                                        params[:contact_type].blank? ? nil : params[:contact_type]),
-                     include_blank: "(All)" %>
-      <%= submit_tag 'Search', name: nil %>
-    <% end %>
-  </div>
-
-  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
+  
+  <% fields = HTContactPresenter::ALL_FIELDS %>
+  <table id="contacts" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
-    <thead class="thead-dark">
+    <thead class="thead-dark">    
     <tr>
-      <th data-sortable="true">ID</th>
-      <th data-sortable="true">Institution</th>
-      <th data-sortable="true">Type</th>
-      <th data-sortable="true">Email</th>
+      <% fields.each do |field| %>
+        <th data-sortable="true"><%= HTContactPresenter.field_label field %></th>
+      <% end %>
     </tr>
     </thead>
 
     <% @contacts.each do |c| %>
       <tr>
-        <td><%= c.id %></td>
-        <td><%= c.inst_link %></td>
-        <td><%= c.contact_type_display %></td>
-        <td><%= c.email_display %></td>
+        <% fields.each do |field| %>
+          <td><%= c.field_value field %></td>
+        <% end %>
       </tr>
     <% end %>
   </table>
@@ -40,10 +27,10 @@
   <br />
 
   <% if can?(:create, HTContact) %>
-    <%= link_to 'Add New Contact', new_ht_contact_path, class: 'btn btn-primary' %>
+    <%= link_to t(".add_new_contact"), new_ht_contact_path, class: 'btn btn-primary' %>
   <% end %>
   <% if @contacts.any? %>
-    <%= link_to 'Download CSV',
+    <%= link_to t(".download_csv"),
                 ht_contacts_url(format: :csv, contact_type: params[:contact_type]),
                 class: 'btn btn-info' %>
   <% end %>

@@ -56,9 +56,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :auth_rep_name
     t.string :auth_rep_email
     t.string :auth_rep_date
-    t.string :mfa_addendum
-    # Added for e-mail support, based on approval requests, may need elaboration based on expected workflow
-    # Should be displayed on show page, not editable
+    t.boolean :mfa_addendum, default: false
     t.text :token_hash
     t.timestamp :sent
     t.timestamp :received

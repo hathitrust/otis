@@ -25,6 +25,15 @@ class ExpirationDate
     expirescustom90: ExpiresTypeData.new("90 days", 90.days).freeze
   }.freeze
 
+  # Shared utility for converting a (mostly) arbitrary value into a Date.
+  def self.convert_to_date(obj)
+    if obj.respond_to? :to_date
+      obj.to_date
+    else
+      Time.zone.parse(obj.to_s).to_date
+    end
+  end
+
   # An expiration date is an actually two things:
   # * a date (returned from ActiveRecord as an ActiveSupport::TimeWithZone,
   #   which stringifies nicely into something Date.parse can deal with)
@@ -34,11 +43,7 @@ class ExpirationDate
   #   This is always truncated to just the date (see  https://hathitrust.slack.com/archives/DKV93G37T/p1576770049002400)
   # @param [String,Symbol] type The expires_type to use
   def initialize(date, type = :expiresannually)
-    @date = if date.respond_to? :to_date
-      date.to_date
-    else
-      Time.zone.parse(date.to_s).to_date
-    end.freeze
+    @date = self.class.convert_to_date(date).freeze
     @expires_type = type.to_sym
   end
 
@@ -83,6 +88,8 @@ class ExpirationDate
 
   # What text describes the extension period?
   # @return [String] A human readable extension period (.e.g, "1 year")
+  # FIXME: on the chopping block in favor of localization
+  # This is used by the approval request mailer which is not yet really locale-aware.
   def extension_period_text
     EXPIRES_TYPE[@expires_type].label
   end
@@ -100,10 +107,6 @@ class ExpirationDate
   #  or a string that can be parsed by Time.zone.parse
   # @return [Integer] Normal <=> return indicating (in)equality of the dates only
   def <=>(other)
-    to_date <=> if other.respond_to?(:to_date)
-      other.to_date
-    else
-      Time.zone.parse(other.to_s).to_date
-    end
+    to_date <=> self.class.convert_to_date(other)
   end
 end

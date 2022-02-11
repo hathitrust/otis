@@ -1,34 +1,28 @@
 <div id="maincontent" class="row">
-  <%= render 'shared/flash_message' %>
 
-  <%= link_to 'New Registration', new_ht_registration_path, class: 'btn btn-primary' %>
+  <%= link_to t(".new_registration"), new_ht_registration_path, class: 'btn btn-primary' %>
   <br/>
   
-  <h2 class="pull-left">Current Registrations</h2>
-
+  <h2 class="pull-left"><%= t(".current_registrations") %></h2>
+  
+  <% fields = HTRegistrationPresenter::INDEX_FIELDS %>
   <table class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true" data-search="true" data-show-search-clear-button="true">
     <tr>
-      <th data-sortable="true">Name</th>
-      <th data-sortable="true">Ticket</th>
-      <th data-sortable="true">Institution</th>
-      <th data-sortable="true">DSP</th>
-      <th data-sortable="true">Auth Rep</th>
-      <th data-sortable="true">MFA?</th>
+      <% fields.each do |field| %>
+        <th data-sortable="true"><%= HTRegistrationPresenter.field_label field %></th>
+      <% end %>
     </tr>
     <% @all_registrations.each do |reg| %>
-    <tr>
-      <td><%= reg.edit_link %></td>
-      <td><%= reg.jira_link %></td>
-      <td><%= reg.inst_link %></td>
-      <td><%== reg.dsp_contact %></td>
-      <td><%== reg.auth_contact %></td>
-      <td><%= reg.mfa_addendum %></td>
-    </tr>
+      <tr>
+      <% fields.each do |field| %>
+        <td><%= reg.field_value field %></td>
+      <% end %>
+      </tr>
     <% end %>
   </table>
 
   <% if @all_registrations.size > 10 %>
-  <br/>
-  <%= link_to 'New Registration', new_ht_registration_path, class: 'btn btn-primary' %>
+    <br/>
+    <%= link_to t(".new_registration"), new_ht_registration_path, class: 'btn btn-primary' %>
   <% end %>
 </div>

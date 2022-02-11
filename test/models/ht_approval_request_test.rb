@@ -16,7 +16,9 @@ class HTApprovalRequestTest < ActiveSupport::TestCase
   end
 
   test "sent must come before received" do
-    assert_not build(:ht_approval_request, sent: Time.zone.now, received: Time.zone.now - 1).valid?
+    req = build(:ht_approval_request, sent: Time.zone.now, received: Time.zone.now - 1)
+    assert_not req.valid?
+    assert req.errors.full_messages.any? %r{date sent cannot be after date received}
   end
 
   test "a newly-sent request is not expired and not renewed" do

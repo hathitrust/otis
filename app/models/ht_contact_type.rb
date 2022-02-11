@@ -17,7 +17,7 @@ class HTContactType < ApplicationRecord
 
   def check_contacts
     if HTContact.where(contact_type: id).count.positive?
-      errors.add(:base, "Contact type is in use")
+      errors.add :base, :in_use, name: name
       throw :abort
     end
   end

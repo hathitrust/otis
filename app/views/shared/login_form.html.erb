@@ -2,9 +2,9 @@
   <body>
     <form method="post" action="<%= login_as_path %>">
       <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
-      <label for="usernameField">E-mail: </label>
+      <label for="usernameField"><%= t "global.fake_shib_controller.email" %></label>
       <input id="usernameField" type="text" name="username" />
-      <input type="submit" name="login" value="Log In" />
+      <input type="submit" name="login" value="<%= t "global.fake_shib_controller.log_in" %>"/>
     </form>
   </body>
 </html>
