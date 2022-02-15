@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require "rails"
+require "checkpoint"
+require "keycard"
+require "canister"
 
 def assign_db(lhs, rhs)
   if rhs.is_a? String
