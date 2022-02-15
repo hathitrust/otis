@@ -88,7 +88,6 @@ gem "canister"
 gem "ettin"
 gem "keycard", github: "mlibrary/keycard"
 
-gem "kcv"
 gem "checkpoint"
 
 # Use MySQL as the database for Active Record
