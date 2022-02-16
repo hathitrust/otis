@@ -45,6 +45,7 @@ ja:
         objid: ID
         time: 時間
       ht_registration:
+        access: アクセス
         auth_rep: 認証担当者
         auth_rep_date: 認証担当者の年月日
         auth_rep_email: 認証担当者のEメール
@@ -54,11 +55,17 @@ ja:
         dsp_date: DSP年月日
         dsp_email: DSPEメール
         dsp_name: DSP表示名
+        env: 認証データ
+        finished: 終了した
         inst_id: 機関
+        ip_address: IPアドレス
         jira_ticket: チケット
         mfa_addendum: 多要素認証の補遺
         received: 受信した
+        role: 役割
         sent: 送信された
+        status: 状態
+        usertype: ユーザータイプ
       ht_user:
         access: アクセス
         accesses: アクセス数
@@ -282,9 +289,11 @@ ja:
       send: 送信
     show:
       confirm_delete: 登録「%{name}」の削除を確認してください。
+      create_user: ユーザーを作成する
       delete: 登録を削除する
       edit: 編集
       email_preview: Eメールプレビュー
+      whois_data: WHOISデータ
     update:
       success: "%{name}の登録が更新されました。"
   ht_user:

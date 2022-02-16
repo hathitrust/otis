@@ -25,7 +25,7 @@ Keycard.config.access = Otis.config.keycard&.access || :direct
 
 Services = Canister.new
 
-role_map = {admin: [:create, :destroy, :edit, :index, :new, :save, :show, :update, :preview, :mail],
+role_map = {admin: [:create, :destroy, :edit, :index, :new, :save, :show, :update, :preview, :mail, :finish],
             view: [:index, :show]}
 
 Services.register(:checkpoint) do
@@ -34,3 +34,5 @@ Services.register(:checkpoint) do
     resource_resolver: Checkpoint::Resource::Resolver.new
   )
 end
+
+Services.register(:whois) { Whois::Client.new }

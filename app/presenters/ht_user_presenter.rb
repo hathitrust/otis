@@ -5,13 +5,12 @@ class HTUserPresenter < ApplicationPresenter
 
   ALL_FIELDS = %i[
     email userid displayname activitycontact approver authorizer usertype
-    role access expire_type expires renewal_status iprestrict mfa
-    identity_provider institution
+    role access expire_type expires renewal_status iprestrict mfa institution
   ].freeze
 
   INDEX_FIELDS = %i[email displayname role institution expires renewal_status iprestrict mfa].freeze
   HT_COUNTS_FIELDS = %i[accesses last_access].freeze
-  READ_ONLY_FIELDS = (ALL_FIELDS + HT_COUNTS_FIELDS - %i[userid iprestrict expires approver mfa]).freeze
+  READ_ONLY_FIELDS = (HT_COUNTS_FIELDS + %i[email activitycontact renewal_status institution]).freeze
   FIELD_SIZE = 40
 
   def self.role_name(role)
@@ -136,6 +135,10 @@ class HTUserPresenter < ApplicationPresenter
     HTApprovalRequestPresenter.new(approval_request)&.badge
   end
 
+  def edit_access(form:)
+    form.select(:access, access_options)
+  end
+
   # NOTE: we do not use localized dates for this because the controller would
   # have to parse localized date formats when the value is edited.
   # There are two gems that may (or may not) be able to do this:
@@ -176,6 +179,26 @@ class HTUserPresenter < ApplicationPresenter
     else
       Otis::Badge.new("ht_user.values.mfa.unavailable", "label-warning").label_span
     end
+  end
+
+  def edit_role(form:)
+    form.select(:role, role_options)
+  end
+
+  def edit_usertype(form:)
+    form.select(:usertype, usertype_options)
+  end
+
+  def access_options
+    @access_options ||= HTUser::ACCESSES.sort.map { |access| [I18n.t("ht_user.values.access.#{access}"), access] }
+  end
+
+  def role_options
+    @role_options ||= HTUser::ROLES.sort.map { |role| [I18n.t("ht_user.values.role.#{role}"), role] }
+  end
+
+  def usertype_options
+    @usertype_options ||= HTUser::USERTYPES.sort.map { |type| [I18n.t("ht_user.values.usertype.#{type}"), type] }
   end
 
   def expiration_badge

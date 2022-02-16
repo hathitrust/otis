@@ -60,6 +60,9 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.text :token_hash
     t.timestamp :sent
     t.timestamp :received
+    t.timestamp :finished
+    t.string :ip_address
+    t.text :env
   end
 
   # Tables also used by other applications; must be kept in sync with

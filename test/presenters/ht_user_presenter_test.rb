@@ -5,7 +5,7 @@ require "test_helper"
 class HTUserPresenterTest < ActiveSupport::TestCase
   test "class constants" do
     assert_not_nil HTUserPresenter::ALL_FIELDS
-    assert_equal 16, HTUserPresenter::ALL_FIELDS.count
+    assert_equal 15, HTUserPresenter::ALL_FIELDS.count
     assert_not_nil HTUserPresenter::INDEX_FIELDS
     assert_equal 8, HTUserPresenter::INDEX_FIELDS.count
   end

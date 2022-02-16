@@ -11,6 +11,14 @@ require_relative "../config/environment"
 require_relative "fake_form"
 require "rails/test_help"
 
+Services.register(:whois) do
+  Class.new do
+    def lookup(ip)
+      "TOTALLY LEGIT WHOIS for #{ip}"
+    end
+  end.new
+end
+
 def sign_in!(username: "admin@default.invalid")
   post login_as_url, params: {username: username}
 end
@@ -21,6 +29,10 @@ def check_w3c_errs
   yield
   sleep 1
   assert_equal [], W3CValidators::NuValidator.new.validate_text(@response.body).errors
+end
+
+def fake_shib_id
+  "#{Faker::Internet.url}!#{Faker::Internet.url}!#{SecureRandom.urlsafe_base64 16}"
 end
 
 Keycard::DB.migrate!

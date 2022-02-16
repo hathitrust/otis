@@ -45,6 +45,7 @@ en:
         objid: ID
         time: Time
       ht_registration:
+        access: Access
         auth_rep: Auth Rep
         auth_rep_date: Auth Rep Date
         auth_rep_email: Auth Rep E-mail
@@ -54,11 +55,17 @@ en:
         dsp_date: DSP Date
         dsp_email: DSP E-mail
         dsp_name: DSP Name
+        env: Authentication Data
+        finished: Finished
         inst_id: Institution
+        ip_address: IP Address
         jira_ticket: Ticket
         mfa_addendum: MFA Addendum
         received: Received
+        role: Role
         sent: Sent
+        status: Status
+        usertype: User Type
       ht_user:
         access: Access
         accesses: Accesses
@@ -282,9 +289,11 @@ en:
       send: SEND
     show:
       confirm_delete: Please confirm deletion of registration "%{name}"
+      create_user: Create User
       delete: Delete Registration
       edit: Edit
       email_preview: E-mail Preview
+      whois_data: WHOIS Data
     update:
       success: Registration updated for %{name}.
   ht_user:
@@ -310,8 +319,8 @@ en:
       superuser: UM staff developer – includes roles staffdeveloper and staffsysadmin
     values:
       access:
-        normal: normal
-        total: total
+        normal: Normal
+        total: Total
       expire_type:
         expiresannually: 1 year
         expiresbiannually: 2 years
