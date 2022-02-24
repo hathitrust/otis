@@ -6,12 +6,16 @@
   <h2 class="pull-left"><%= t(".current_registrations") %></h2>
   
   <% fields = HTRegistrationPresenter::INDEX_FIELDS %>
-  <table class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true" data-search="true" data-show-search-clear-button="true">
-    <tr>
-      <% fields.each do |field| %>
-        <th data-sortable="true"><%= HTRegistrationPresenter.field_label field %></th>
-      <% end %>
-    </tr>
+  <table id="registrations-table" class="table table-striped" data-toggle="table"
+         data-height="800" data-virtual-scroll="true" data-search="true"
+         data-show-search-clear-button="true">
+    <thead>
+      <tr>
+        <% fields.each do |field| %>
+          <th data-sortable="true"><%= HTRegistrationPresenter.field_label field %></th>
+        <% end %>
+      </tr>
+    </thead>
     <% @all_registrations.each do |reg| %>
       <tr>
       <% fields.each do |field| %>

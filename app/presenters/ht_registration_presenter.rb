@@ -4,13 +4,19 @@ class HTRegistrationPresenter < ApplicationPresenter
   ALL_FIELDS = %i[
     dsp_name dsp_email dsp_date inst_id jira_ticket
     auth_rep_name auth_rep_email auth_rep_date
-    contact_info mfa_addendum sent received
+    contact_info mfa_addendum sent received finished ip_address env
   ].freeze
 
-  INDEX_FIELDS = %i[dsp_name dsp inst_id jira_ticket auth_rep mfa_addendum].freeze
-  READ_ONLY_FIELDS = %i[sent received].freeze
+  INDEX_FIELDS = %i[dsp_name dsp inst_id jira_ticket auth_rep mfa_addendum status].freeze
+  READ_ONLY_FIELDS = %i[sent received finished ip_address env].freeze
   JIRA_BASE_URL = "https://tools.lib.umich.edu/jira/browse"
   FIELD_SIZE = 45
+
+  BADGES = {
+    sent: Otis::Badge.new("activerecord.attributes.ht_registration.sent", "label-info"),
+    received: Otis::Badge.new("activerecord.attributes.ht_registration.received", "label-default"),
+    finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "label-success")
+  }.freeze
 
   private
 
@@ -46,16 +52,37 @@ class HTRegistrationPresenter < ApplicationPresenter
     action == :index ? link_to(dsp_name, ht_registration_path(id)) : dsp_name
   end
 
+  def show_env
+    return unless self[:env].present?
+
+    fields = JSON.parse self[:env]
+    return unless fields.any?
+
+    ["<pre>", fields.map { |k, v| "<strong>#{k}</strong> #{v}" }, "</pre>"].join "\n"
+  end
+
+  def show_finished
+    return "" unless finished.present?
+
+    I18n.l finished.to_date, format: :long
+  end
+
   def show_jira_ticket
     link_to jira_ticket, "#{self.class::JIRA_BASE_URL}/#{jira_ticket}"
   end
 
   def show_inst_id
-    link_to inst_id, ht_institution_path(inst_id)
+    link_to ht_institution.name, ht_institution_path(inst_id)
   end
 
   def show_mfa_addendum
     mfa_addendum ? "<span class='label label-success'><i class='glyphicon glyphicon-lock'></i></span>" : ""
+  end
+
+  def show_received
+    return "" unless received.present?
+
+    I18n.l received.to_date, format: :long
   end
 
   def show_sent
@@ -64,10 +91,10 @@ class HTRegistrationPresenter < ApplicationPresenter
     I18n.l sent.to_date, format: :long
   end
 
-  def show_received
-    return "" unless received.present?
-
-    I18n.l received.to_date, format: :long
+  def show_status
+    return BADGES[:finished].label_span if finished?
+    return BADGES[:received].label_span if received?
+    return BADGES[:sent].label_span if sent?
   end
 
   # See comments about localization and date entry in ht_user_presenter.rb

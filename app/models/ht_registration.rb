@@ -62,6 +62,10 @@ class HTRegistration < ApplicationRecord
     self[:received].present?
   end
 
+  def finished?
+    self[:finished].present?
+  end
+
   def resource_id
     id
   end

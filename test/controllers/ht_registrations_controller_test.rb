@@ -72,6 +72,29 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_match(edit_btn, @response.body)
     assert_match(del_btn, @response.body)
   end
+
+  test "received registration shows WHOIS info" do
+    received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
+      ip_address: Faker::Internet.public_ip_v4_address)
+    get ht_registration_url received_registration
+    assert_match "WHOIS", @response.body
+  end
+
+  test "received registration shows Shib env info" do
+    received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
+      env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json)
+    get ht_registration_url received_registration
+    assert_match "<strong>HTTP_X_REMOTE_USER</strong>", @response.body
+  end
+
+  test "finished registration no longer shows edit, mail, delete, or finish buttons" do
+    finished_registration = create(:ht_registration, finished: Time.zone.now - 1.day)
+    get ht_registration_url finished_registration
+    assert_no_match edit_ht_registration_path(finished_registration), @response.body
+    assert_no_match preview_ht_registration_path(finished_registration), @response.body
+    assert_no_match ht_registration_path(finished_registration, method: :delete), @response.body
+    assert_no_match finish_ht_registration_path(finished_registration, method: :post), @response.body
+  end
 end
 
 class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
@@ -297,5 +320,43 @@ class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
     assert_not_nil @registration.reload.sent
     assert_not_nil @registration.reload[:token_hash]
     assert_equal "show", @controller.action_name
+  end
+end
+
+class HTRegistrationFinishTest < ActionDispatch::IntegrationTest
+  def setup
+    @received_registration = create(:ht_registration, received: Time.now,
+      ip_address: Faker::Internet.public_ip_v4_address,
+      env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json)
+    @mfa_inst = create(:ht_institution, shib_authncontext_class: "https://refeds.org/profile/mfa")
+    @mfa_registration = create(:ht_registration, finished: Time.now, inst_id: @mfa_inst.inst_id,
+      env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json)
+  end
+
+  test "finishing registration creates and displays a new user" do
+    sign_in! username: ADMIN_USER
+    post(finish_ht_registration_path(@received_registration))
+    assert_response :redirect
+    @received_registration.reload
+    assert @received_registration.finished?
+    assert_not_nil HTUser.find(@received_registration.dsp_email)
+    follow_redirect!
+    assert_equal "edit", @controller.action_name
+  end
+
+  test "finishing registration with MFA institution creates an MFA-enabled user" do
+    sign_in! username: ADMIN_USER
+    post(finish_ht_registration_path(@mfa_registration))
+    user = HTUser.find(@mfa_registration.dsp_email)
+    assert user.iprestrict.nil?
+    assert user.mfa?
+  end
+
+  test "finishing registration a second time displays an error" do
+    sign_in! username: ADMIN_USER
+    post(finish_ht_registration_path(@received_registration))
+    follow_redirect!
+    post(finish_ht_registration_path(@received_registration))
+    assert_not_empty flash[:alert]
   end
 end

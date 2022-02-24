@@ -20,9 +20,9 @@ def create_ht_user(expires:)
     activitycontact: Faker::Internet.email,
     approver: @approvers.sample,
     authorizer: Faker::Internet.email,
-    usertype: %w[staff external student].sample,
-    role: %w[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd].sample,
-    access: %w[total normal].sample,
+    usertype: HTUser::USERTYPES.sample.to_s,
+    role: HTUser::ROLES.sample.to_s,
+    access: HTUser::ACCESSES.sample.to_s,
     expires: expires,
     expire_type: %w[expiresannually expiresbiannually expirescustom90 expirescustom60].sample,
     mfa: [false, true].sample

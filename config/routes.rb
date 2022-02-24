@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       member do
         get "preview"
         post "mail"
+        post "finish"
       end
     end
   end

@@ -64,7 +64,7 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   end
 
   test "#field_value :inst_id displays as link" do
-    assert_match %r{#{@reg.inst_id}.+>#{@reg.inst_id}<}, @reg.field_value(:inst_id)
+    assert_match "href", @reg.field_value(:inst_id)
   end
 
   test "#field_value :mfa_addendum displays as icon when set" do

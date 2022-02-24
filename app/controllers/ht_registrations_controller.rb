@@ -39,6 +39,9 @@ class HTRegistrationsController < ApplicationController
 
   def show
     fetch_presenter
+    if @registration.ip_address.present?
+      @whois = Services.whois.lookup(@registration.ip_address)
+    end
   end
 
   def edit
@@ -50,7 +53,7 @@ class HTRegistrationsController < ApplicationController
     if @registration.update(reg_params)
       log
       flash[:notice] = t(".success", name: @registration.dsp_name)
-      redirect_to action: :index
+      redirect_to action: :show
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "edit"
@@ -70,11 +73,26 @@ class HTRegistrationsController < ApplicationController
   end
 
   def destroy
-    @registration = HTRegistration.find(params[:id])
+    fetch_registration
     log params.permit!
     @registration.destroy
     flash[:notice] = t(".success")
     redirect_to action: :index
+  end
+
+  # Create user from registration and redirect to its edit or show page
+  def finish
+    fetch_registration
+    user = Otis::RegistrationMover.new(@registration).ht_user
+    if user.valid?
+      @registration.finished = Time.zone.now
+      @registration.save!
+      log params.permit!
+      redirect_to edit_ht_user_path user
+    else
+      flash[:alert] = user.errors.full_messages.to_sentence
+      redirect_to @registration
+    end
   end
 
   private

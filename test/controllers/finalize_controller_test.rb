@@ -25,6 +25,12 @@ class FinalizeControllerTest < ActionDispatch::IntegrationTest
     assert_no_match "Home", @response.body
   end
 
+  test "sets registration IP address" do
+    sign_in! username: Faker::Internet.email
+    get finalize_url @reg.token
+    assert_not_nil @reg.reload.ip_address
+  end
+
   test "refuses to reprocess a finalized registration" do
     sign_in!
     get finalize_url @reg.token
@@ -119,5 +125,48 @@ class FinalizeControllerFailureTest < ActionDispatch::IntegrationTest
     get finalize_url @expired.token
     assert_response :success
     assert_match "expired", @response.body
+  end
+end
+
+class FinalizeControllerShibbolethHeadersTest < ActionDispatch::IntegrationTest
+  def setup
+    @reg = create(:ht_registration, sent: Date.today - 1.day)
+  end
+
+  test "saves all and only Shibboleth ENV headers in registration.env" do
+    old_keycard_mode = Keycard.config.access
+    Keycard.config.access = :shibboleth
+    begin
+      interesting_headers = {
+        "HTTP_X_REMOTE_USER" => fake_shib_id,
+        "HTTP_X_SHIB_AUTHENTICATION_METHOD" => "https://refeds.org/profile/mfa",
+        "HTTP_X_SHIB_AUTHNCONTEXT_CLASS" => "https://refeds.org/profile/mfa",
+        "HTTP_X_SHIB_DISPLAYNAME" => Faker::Name.name,
+        "HTTP_X_SHIB_EDUPERSONPRINCIPALNAME" => Faker::Internet.email,
+        "HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION" => "#{Faker::Internet.email};#{Faker::Internet.email}",
+        "HTTP_X_SHIB_IDENTITY_PROVIDER" => "https://shibboleth.umich.edu/idp/shibboleth",
+        "HTTP_X_SHIB_MAIL" => Faker::Internet.email,
+        "HTTP_X_SHIB_PERSISTENT_ID" => fake_shib_id
+      }
+      boring_headers = {
+        "SERVER_ADDR" => Faker::Internet.public_ip_v4_address,
+        "SERVER_ADMIN" => Faker::Internet.email,
+        "SERVER_NAME" => Faker::Internet.domain_name,
+        "SERVER_PORT" => "443",
+        "SERVER_PROTOCOL" => "HTTP/1.1"
+      }
+      sign_in! username: Faker::Internet.email
+      process(:get, finalize_url(@reg.token), headers: interesting_headers.merge(response.headers))
+      assert_response :success
+      headers = JSON.parse @reg.reload.env
+      interesting_headers.keys.each do |key|
+        assert headers.key?(key)
+      end
+      boring_headers.keys.each do |key|
+        assert !headers.key?(key)
+      end
+    ensure
+      Keycard.config.access = old_keycard_mode
+    end
   end
 end
