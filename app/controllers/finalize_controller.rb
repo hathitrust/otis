@@ -43,6 +43,7 @@ class FinalizeController < ApplicationController
   # For development and (maybe) testing, visiting this page will taint
   # the ip_address field with "localhost" and cause a validation error on ht_user
   # created with this registration. So we use a TEST-NET-1 value.
+  # If you want a value that can be looked up in the test GeoIP DB, use 216.160.83.56
   def ip_address
     Rails.env.production? ? request.remote_ip : "192.0.2.1"
   end

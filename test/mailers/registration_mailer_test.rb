@@ -8,7 +8,8 @@ class RegistrationMailerTest < ActionMailer::TestCase
   end
 
   def email(reg: @reg)
-    RegistrationMailer.with(registration: reg).registration_email
+    RegistrationMailer.with(registration: reg, base_url: "example.com")
+      .registration_email
   end
 
   test "send email for one request" do

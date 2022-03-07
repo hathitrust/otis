@@ -7,7 +7,7 @@ Name  E-mail  Activity  Term  Expires
     <% unless role_stars[u.role] %>
       <% role_stars[u.role] = role_stars.count + 1 %>
     <% end %>
-<%= u.displayname %>  <%= u.email %>  <%= u.role_name %><%= '*' * role_stars[u.role] %>  <%= u.expiration_date.extension_period_text %>  <%= u.expires_string %>  <%= approve_url(req.token, host: @base_url) %>
+<%= u.displayname %>  <%= u.email %>  <%= u.role_name %><%= '*' * role_stars[u.role] %>  <%= u.expiration_date.extension_period_text %>  <%= u.expires_string %>  <%= approve_url(req.token, host: @base_url, locale: nil) %>
   <% end %>
 
 <% role_stars.each do |k,v| %>

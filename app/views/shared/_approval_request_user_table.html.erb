@@ -24,7 +24,9 @@
       <% if(@preview) %>
         <b>Approve User</b>
       <% else %>
-        <%= link_to 'Approve User', approve_url(req.token, host: @base_url), style: "font-weight: bold;" %>
+        <%= link_to 'Approve User', approve_url(req.token, host: @base_url, locale: nil),
+              style: "font-weight: bold;"
+        %>
       <% end %>
     </td>
   </tr>

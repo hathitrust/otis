@@ -15,6 +15,13 @@
         <%= text_field_tag "subject", RegistrationMailer.subject, size: 60 %>
         <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px' } %>
       </div>
+      <div class="panel-body">
+        <!-- Turn off locale setting since this is part of mail preview -->
+        <!-- e-mail content language is orthogonal to UI language -->
+        <% I18n.with_locale(I18n.default_locale) do %>
+          <%= render 'shared/registration_link' %>
+        <% end %>
+      </div>
     </div>
     <% if can?(:mail, :ht_registrations) && !@registration.received? &&
        (!@registration.sent? || @registration.expired?) %>

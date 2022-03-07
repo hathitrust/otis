@@ -22,7 +22,7 @@ relative_url_root: '/'
 keycard:
   database:
     adapter: mysql2
-    database: ht
+    database: ht_repository
     username: otis
     password: otis
     host: mariadb-test
@@ -30,10 +30,11 @@ keycard:
 checkpoint:
   database:
     adapter: mysql2
-    database: ht
+    database: ht_repository
     username: otis
     password: otis
     host: mariadb-test
 
 shibboleth:
   url: /useradmin/Shibboleth.sso/Login
+

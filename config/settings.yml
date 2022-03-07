@@ -13,3 +13,5 @@ reply_to_email: reply_to@default.invalid
 met_entity_endpoint: "https://met.refeds.org/met/entity"
 books_library_endpoint: "https://books.google.com/libraries"
 ht_login_test_endpoint: "https://babel.hathitrust.org/Shibboleth.sso/Login?target=https://babel.hathitrust.org/cgi/whoami"
+
+geoip_path: "/usr/src/app/vendor/geoip/GeoIP2-City-Test.mmdb"

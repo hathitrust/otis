@@ -116,6 +116,7 @@ ignore_unused:
   - 'ht_institution.values.*'
   - 'ht_user.*'
   - 'ht_registrations.preview.*'
+  - 'errors.resolv'
 # - '{devise,kaminari,will_paginate}.*'
 # - 'simple_form.{yes,no}'
 # - 'simple_form.{placeholders,hints,labels}.*'

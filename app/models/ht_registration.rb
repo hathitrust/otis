@@ -2,7 +2,7 @@
 
 class HTRegistration < ApplicationRecord
   self.primary_key = "id"
-  self.table_name = "otis_registrations"
+  self.table_name = "ht_web.otis_registrations"
 
   def self.expiration_date
     Date.today - 1.week
@@ -64,6 +64,14 @@ class HTRegistration < ApplicationRecord
 
   def finished?
     self[:finished].present?
+  end
+
+  def env
+    @env ||= begin
+      JSON.parse self[:env]
+    rescue => _e
+      {}
+    end
   end
 
   def resource_id

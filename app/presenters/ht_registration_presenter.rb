@@ -1,10 +1,17 @@
 # frozen_string_literal: true
 
+require "resolv"
+
 class HTRegistrationPresenter < ApplicationPresenter
   ALL_FIELDS = %i[
     dsp_name dsp_email dsp_date inst_id jira_ticket
     auth_rep_name auth_rep_email auth_rep_date
-    contact_info mfa_addendum sent received finished ip_address env
+    contact_info mfa_addendum sent received finished ip_address
+  ].freeze
+
+  DETAIL_FIELDS = %i[
+    detail_edu_person_principal_name detail_display_name detail_email
+    detail_scoped_affiliation detail_identity_provider detail_geoip detail_reverse_lookup
   ].freeze
 
   INDEX_FIELDS = %i[dsp_name dsp inst_id jira_ticket auth_rep mfa_addendum status].freeze
@@ -15,8 +22,14 @@ class HTRegistrationPresenter < ApplicationPresenter
   BADGES = {
     sent: Otis::Badge.new("activerecord.attributes.ht_registration.sent", "label-info"),
     received: Otis::Badge.new("activerecord.attributes.ht_registration.received", "label-default"),
-    finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "label-success")
+    finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "label-success"),
+    institution_static_ip: Otis::Badge.new("activerecord.attributes.ht_registration.institution.static_ip", "label-danger"),
+    institution_mfa: Otis::Badge.new("activerecord.attributes.ht_registration.institution.mfa", "label-success")
   }.freeze
+
+  def detail_fields
+    self.class::DETAIL_FIELDS
+  end
 
   private
 
@@ -52,13 +65,38 @@ class HTRegistrationPresenter < ApplicationPresenter
     action == :index ? link_to(dsp_name, ht_registration_path(id)) : dsp_name
   end
 
-  def show_env
-    return unless self[:env].present?
+  def show_detail_display_name
+    env["HTTP_X_SHIB_DISPLAYNAME"]
+  end
 
-    fields = JSON.parse self[:env]
-    return unless fields.any?
+  def show_detail_edu_person_principal_name
+    env["HTTP_X_SHIB_EDUPERSONPRINCIPALNAME"]
+  end
 
-    ["<pre>", fields.map { |k, v| "<strong>#{k}</strong> #{v}" }, "</pre>"].join "\n"
+  def show_detail_email
+    env["HTTP_X_SHIB_MAIL"]
+  end
+
+  def show_detail_geoip
+    geoip = Services.geoip.city ip_address
+    [geoip.country.name, geoip.most_specific_subdivision.name, geoip.city.name].join(" — ")
+  rescue => _e
+    ""
+  end
+
+  def show_detail_identity_provider
+    entity = env["HTTP_X_SHIB_IDENTITY_PROVIDER"]
+    HTInstitution.where(entityID: entity).first&.name || entity
+  end
+
+  def show_detail_reverse_lookup
+    Resolv.getname ip_address
+  rescue Resolv::ResolvError => _e
+    Otis::Badge.new("errors.resolv", "label-danger", ip_address: ip_address).label_span
+  end
+
+  def show_detail_scoped_affiliation
+    env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"]
   end
 
   def show_finished
@@ -72,7 +110,8 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_inst_id
-    link_to ht_institution.name, ht_institution_path(inst_id)
+    link_to(ht_institution.name, ht_institution_path(inst_id)) + " " +
+      (ht_institution.mfa? ? BADGES[:institution_mfa] : BADGES[:institution_static_ip]).label_span
   end
 
   def show_mfa_addendum

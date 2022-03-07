@@ -9,7 +9,7 @@
 #
 default: &default
   adapter: mysql2
-  database: ht
+  database: ht_repository
   username: otis
   password: otis
   encoding: utf8

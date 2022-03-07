@@ -31,18 +31,22 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysqlroot
-      MYSQL_DATABASE: ht
+      MYSQL_DATABASE: ht_repository
       MYSQL_USER: otis
       MYSQL_PASSWORD: otis
+    volumes: 
+      - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
 
   mariadb-test:
     image: mariadb
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysqlroot
-      MYSQL_DATABASE: ht
+      MYSQL_DATABASE: ht_repository
       MYSQL_USER: otis
       MYSQL_PASSWORD: otis
+    volumes: 
+      - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
 
 volumes:
   gem_cache:

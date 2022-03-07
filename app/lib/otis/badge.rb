@@ -1,12 +1,13 @@
 module Otis
   class Badge
-    def initialize(tag, css_class)
+    def initialize(tag, css_class, **args)
       @tag = tag
       @css_class = css_class
+      @args = args
     end
 
     def label_text
-      I18n.t tag
+      I18n.t tag, **@args
     end
 
     def label_span

@@ -30,7 +30,7 @@ class HTRegistrationsController < ApplicationController
     if @registration.save
       log
       flash.now[:notice] = t(".success", name: @registration.dsp_name)
-      redirect_to preview_ht_registration_path(@registration)
+      redirect_to preview_ht_registration_path(@registration.id)
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "new"
@@ -39,9 +39,6 @@ class HTRegistrationsController < ApplicationController
 
   def show
     fetch_presenter
-    if @registration.ip_address.present?
-      @whois = Services.whois.lookup(@registration.ip_address)
-    end
   end
 
   def edit
@@ -62,7 +59,7 @@ class HTRegistrationsController < ApplicationController
 
   def preview
     fetch_presenter
-    @finalize_url = finalize_url @registration.token, locale: nil
+    @base_url = request.base_url
     @email_body = render_to_string partial: "shared/registration_body"
   end
 
@@ -125,9 +122,9 @@ class HTRegistrationsController < ApplicationController
   end
 
   def send_mail
-    RegistrationMailer.with(registration: @registration,
-      finalize_url: finalize_url(@registration.token, host: request.base_url),
-      body: params[:email_body], subject: params[:subject]).registration_email.deliver_now
+    RegistrationMailer.with(registration: @registration, base_url: request.base_url,
+      body: params[:email_body], subject: params[:subject])
+      .registration_email.deliver_now
     flash[:notice] = t("ht_registrations.mail.success")
     # This is for debugging only
     if Rails.env.development?

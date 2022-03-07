@@ -9,6 +9,17 @@
   </dl>
   <br/>
 
+  <% if @registration.ip_address.present? %>
+    <h2><%= t(".login_details") %></h2>
+    <dl class="dl-horizontal">
+      <% @registration.detail_fields.each do |field| %>
+        <dt><%= @registration.field_label field %></dt>
+        <dd><%= @registration.field_value field %></dd>
+      <% end %>
+    </dl>
+    <br/>
+  <% end %>
+
   <% unless @registration.finished? %>
     <% if can?(:edit, HTRegistration) %>
       <%= link_to t(".edit"), edit_ht_registration_path, class: 'btn btn-primary' %>
@@ -28,10 +39,10 @@
     <% end %>
   <% end %>
 
-  <% if @whois.present? %>
+  <% if @registration.ip_address.present? %>
     <h2><%= t(".whois_data") %></h2>
     <div>
-      <pre><%= @whois.to_s %></pre>
+      <pre><%= Services.whois.lookup(@registration.ip_address).to_s %></pre>
     </div>
   <% end %>
 </div>
