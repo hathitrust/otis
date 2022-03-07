@@ -9,6 +9,13 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
+    <% # Select2 (select2.org) main distro, locale files, CSS %>
+    <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" %>
+    <% I18n.available_locales.each do |locale| %>
+      <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/#{locale.to_s}.js" %>
+    <% end %>
+    <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" %>
+
     <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css") %>
 
     <% # Keyboard-related overrides that trigger when a bootstrap-table search  %>
@@ -57,8 +64,12 @@
          $('.search-input').each(function (index) {
            $(this).attr('aria-label', 'Search');
          });
+
+         $(".select-institution").select2({
+           language: "<%= params[:locale] %>",
+           width: "100%"
+          });
        });
      </script>
-
   </body>
 </html>
