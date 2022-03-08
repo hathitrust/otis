@@ -22,7 +22,8 @@ class HTContactPresenter < ApplicationPresenter
   end
 
   def edit_inst_id(form:)
-    form.collection_select(:inst_id, HTInstitution.enabled.all, :inst_id, :name)
+    form.collection_select(:inst_id, HTInstitution.enabled.all, :inst_id, :name,
+      {}, {class: "select-institution"})
   end
 
   def edit_contact_type(form:)
