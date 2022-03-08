@@ -151,6 +151,12 @@ class HTApprovalRequestControllerUpdateTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "should use provided email subject line" do
+    test_subject = Faker::Lorem.sentence
+    patch_approval_request params: {subject: test_subject}
+    assert_match test_subject, ActionMailer::Base.deliveries.first.subject
+  end
+
   test "should send mail" do
     patch_approval_request
 

@@ -1,4 +1,7 @@
 <%= javascript_include_tag Ckeditor.cdn_url %>
+<script>
+  CKEDITOR.config.language = "<%= I18n.locale %>";
+</script>
 
 <div id="maincontent" class="row">
   <h1><%= @registration.dsp_name %></h1>
@@ -8,6 +11,8 @@
     <div class="panel panel-default">
       <div class="panel-heading"><%= t ".email_preview" %></div>
       <div class="panel-body">
+        <%= label_tag "subject", t(".subject") %>
+        <%= text_field_tag "subject", RegistrationMailer.subject, size: 60 %>
         <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px' } %>
       </div>
     </div>
@@ -20,4 +25,3 @@
   <% end %>
   </div>
 </div>
-
