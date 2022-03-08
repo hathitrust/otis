@@ -164,6 +164,7 @@ ja:
       requests_for: "%{approver}の承認リクエスト"
       resend: 再送
       send: 送信
+      subject: 件名
     index:
       active_requests: アクティブなリクエスト
       approval_requests: 承認リクエスト
@@ -287,6 +288,7 @@ ja:
       email_preview: Eメールプレビュー
       resend: 再送
       send: 送信
+      subject: 件名
     show:
       confirm_delete: 登録「%{name}」の削除を確認してください。
       create_user: ユーザーを作成する

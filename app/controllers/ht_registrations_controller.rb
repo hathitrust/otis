@@ -127,7 +127,7 @@ class HTRegistrationsController < ApplicationController
   def send_mail
     RegistrationMailer.with(registration: @registration,
       finalize_url: finalize_url(@registration.token, host: request.base_url),
-      body: params[:email_body]).registration_email.deliver_now
+      body: params[:email_body], subject: params[:subject]).registration_email.deliver_now
     flash[:notice] = t("ht_registrations.mail.success")
     # This is for debugging only
     if Rails.env.development?

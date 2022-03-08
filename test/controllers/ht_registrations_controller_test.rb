@@ -308,6 +308,12 @@ class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "should use provided email subject line" do
+    test_subject = Faker::Lorem.sentence
+    mail_registration params: {subject: test_subject}
+    assert_match test_subject, ActionMailer::Base.deliveries.first.subject
+  end
+
   test "should send mail" do
     mail_registration
 

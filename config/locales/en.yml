@@ -164,6 +164,7 @@ en:
       requests_for: Approval Requests for %{approver}
       resend: RESEND
       send: SEND
+      subject: Subject
     index:
       active_requests: Active Requests
       approval_requests: Approval Requests
@@ -287,6 +288,7 @@ en:
       email_preview: E-mail Preview
       resend: RESEND
       send: SEND
+      subject: Subject
     show:
       confirm_delete: Please confirm deletion of registration "%{name}"
       create_user: Create User
