@@ -44,5 +44,29 @@ services:
       MYSQL_USER: otis
       MYSQL_PASSWORD: otis
 
+  shib:
+    volumes:
+      - ./shibboleth:/usr/share/shibboleth
+      - ./shib_config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml
+      - ./shib_config/nginx-default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8443:8443"
+    image: shib_test
+    restart: always
+    command: bash -c "
+      shib-keygen -n sp-signing &&
+      shib-keygen -n sp-encrypt &&
+      openssl req -x509 -nodes -days 7 -newkey rsa:2048 -keyout /etc/nginx/key.pem -out /etc/nginx/cert.pem -subj \"/C=US/ST=Ann Arbor/L=Ann Arbor/O=Global Security/OU=IT Department/CN=localhost\" &&
+      /usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
+
+  idp:
+    image: kenchan0130/simplesamlphp
+    container_name: idp
+    ports:
+      - "8080:8080"
+    environment:
+      SIMPLESAMLPHP_SP_ENTITY_ID: https://dev.hathitrust.org/shibboleth
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: https://localhost:8443/Shibboleth.sso/SAML2/POST
+
 volumes:
   gem_cache:
