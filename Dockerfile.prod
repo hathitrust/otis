@@ -21,3 +21,5 @@ RUN bundle install
 COPY --chown=$UID:$GID . /usr/src/app
 
 CMD ["sh", "-c", "bin/rails assets:precompile && bin/rails s"]
+
+LABEL org.opencontainers.image.source="https://github.com/hathitrust/otis"

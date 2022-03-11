@@ -7,7 +7,7 @@ on:
         description: Release
         required: true
   workflow_run:
-    workflows: [ 'Docker Build Master' ]
+    workflows: [ 'Docker Build Main' ]
     types: [ completed ]
 
 jobs:
@@ -45,8 +45,8 @@ jobs:
     - name: Automatic Deploy
       if: ${{ github.event_name == 'workflow_run' }}
       run: |
-        kubectl set image deployment web web=hathitrust/otis-unstable:${{ github.sha }}
+        kubectl set image deployment web web=ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
     - name: Manual Deploy
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
-        kubectl set image deployment web web=hathitrust/otis-unstable:${{ steps.tag_check.outputs.tag }}
+        kubectl set image deployment web web=ghcr.io/hathitrust/otis-unstable:${{ steps.tag_check.outputs.tag }}

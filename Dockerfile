@@ -17,3 +17,5 @@ RUN gem install bundler
 # COPY . /usr/src/app
 
 CMD ["sh", "-c", "bin/rails assets:precompile && bin/rails s -b 0.0.0.0"]
+
+LABEL org.opencontainers.image.source="https://github.com/hathitrust/otis"

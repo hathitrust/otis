@@ -39,4 +39,4 @@ jobs:
         kubectl config set-context default --cluster=cluster --user=default --namespace=otis
         kubectl config use-context default
     - name: Manual Deploy
-      run: kubectl set image deployment web web=hathitrust/otis:${{ steps.tag_check.outputs.tag }}
+      run: kubectl set image deployment web web=ghcr.io/hathitrust/otis:${{ steps.tag_check.outputs.tag }}
