@@ -10,17 +10,18 @@ jobs:
     steps:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-    - name: Login to DockerHub
+    - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Clone latest repository
       uses: actions/checkout@v2
-    - name: Tag latest release in DockerHub
+    - name: Tag latest release in GHCR
       run: |
-        docker pull hathitrust/otis-unstable:${{ github.sha }}
-        docker tag hathitrust/otis-unstable:${{ github.sha }} hathitrust/otis:${{ github.event.release.tag_name }}
-        docker tag hathitrust/otis-unstable:${{ github.sha }} hathitrust/otis:latest
-        docker push hathitrust/otis:${{ github.event.release.tag_name }}
-        docker push hathitrust/otis:latest
+        docker pull ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
+        docker tag ghcr.io/hathitrust/otis-unstable:${{ github.sha }} ghcr.io/hathitrust/otis:${{ github.event.release.tag_name }}
+        docker tag ghcr.io/hathitrust/otis-unstable:${{ github.sha }} ghcr.io/hathitrust/otis:latest
+        docker push ghcr.io/hathitrust/otis:${{ github.event.release.tag_name }}
+        docker push ghcr.io/hathitrust/otis:latest
