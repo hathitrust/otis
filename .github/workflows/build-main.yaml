@@ -47,7 +47,7 @@ jobs:
       with:
         github_username: ${{ github.actor }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        image: hathitrust/otis-unstable:${{ github.sha }}
+        image: ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
         cluster_ca: ${{ secrets.KUBERNETES_CA }}
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
         namespace_token: ${{ secrets.KUBERNETES_TOKEN_TESTING }}
@@ -63,7 +63,7 @@ jobs:
       with:
         github_username: ${{ github.actor }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        image: hathitrust/otis-unstable:${{ github.sha }}
+        image: ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
         cluster_ca: ${{ secrets.KUBERNETES_CA }}
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
         namespace_token: ${{ secrets.KUBERNETES_TOKEN_STAGING }}
