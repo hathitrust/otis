@@ -1,0 +1,80 @@
+name: Manual Deploy to Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: tag
+        required: true
+
+env:
+  environment: staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+    - name: Clone latest repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Check that the tag exists in repo
+      id: tag_check
+      run: |
+        if git rev-parse 'refs/tags/${{ github.event.inputs.tag }}' &> /dev/null; then
+          echo '::set-output name=tag::${{ github.event.inputs.tag }}'
+        elif git rev-parse '${{ github.event.inputs.tag }}' &> /dev/null; then
+          echo "::set-output name=tag::`git rev-parse '${{ github.event.inputs.tag }}'`"
+        else
+          echo "Couldn't figure out tag from input: ${{ github.event.inputs.tag }}"
+          echo "Aborting deployment."
+          false
+        fi
+    - name: Log into Github Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Check that the tag exists in container registry
+      id: image_check
+      run: |
+        if docker manifest inspect ghcr.io/hathitrust/otis-unstable:${{ steps.tag_check.outputs.tag }} > /dev/null; then
+          echo '::set-output name=image_exists::true'
+          echo "image exists!"
+        else
+          echo "image doesn't exist; Starting to Build and push image"
+        fi
+    - name: Checkout Correct repository
+      if: ${{ steps.image_check.outputs.image_exists != 'true' }}
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.tag }}
+    - name: Set up QEMU
+      if: ${{ steps.image_check.outputs.image_exists != 'true' }}
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      if: ${{ steps.image_check.outputs.image_exists != 'true' }}
+      uses: docker/setup-buildx-action@v1
+    - name: Build and Push
+      if: ${{ steps.image_check.outputs.image_exists != 'true' }}
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: Dockerfile.prod
+        # This (and the QEMU/buildx setup) may not be needed if we only want to get
+        # the result onto our k8s
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ghcr.io/hathitrust/otis-unstable:${{steps.tag_check.outputs.tag}}
+    - name: Deploy to ${{ env.environment }}
+      uses: mlibrary/deploy-to-kubernetes@v1
+      with:
+        github_username: ${{ github.actor }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        image: hathitrust/otis-unstable:${{ github.sha }}
+        cluster_ca: ${{ secrets.KUBERNETES_CA }}
+        cluster_server: ${{ secrets.KUBERNETES_SERVER }}
+        namespace_token: ${{ secrets.KUBERNETES_TOKEN_STAGING }}
+        namespace: otis-staging

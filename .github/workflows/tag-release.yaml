@@ -4,13 +4,16 @@ on:
   release:
     types: [ released ]
 
+env:
+  TAG: ${{ github.event.release.tag_name }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-    - name: Login to GitHub Container Registry
+    - name: Log into GitHub Container Registry
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
@@ -19,9 +22,12 @@ jobs:
     - name: Clone latest repository
       uses: actions/checkout@v2
     - name: Tag latest release in GHCR
+      env:
+        UNSTABLE_IMAGE_ID: ghcr.io/hathitrust/otis-unstable
+        PROD_IMAGE_ID: ghcr.io/hathitrust/otis
       run: |
-        docker pull ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
-        docker tag ghcr.io/hathitrust/otis-unstable:${{ github.sha }} ghcr.io/hathitrust/otis:${{ github.event.release.tag_name }}
-        docker tag ghcr.io/hathitrust/otis-unstable:${{ github.sha }} ghcr.io/hathitrust/otis:latest
-        docker push ghcr.io/hathitrust/otis:${{ github.event.release.tag_name }}
-        docker push ghcr.io/hathitrust/otis:latest
+        docker pull $UNSTABLE_IMAGE_ID:${{ github.sha }}
+        docker tag $UNSTABLE_IMAGE_ID:${{ github.sha }} $PROD_IMAGE_ID:${{ env.TAG }}
+        docker tag $UNSTABLE_IMAGE_ID:${{ github.sha }} $PROD_IMAGE_ID:latest
+        docker push $PROD_IMAGE_ID:${{ env.TAG }}
+        docker push $PROD_IMAGE_ID:latest
