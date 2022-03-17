@@ -1,4 +1,4 @@
-name: Build latest from main and deploy to Testing and Staging
+name: Build latest from main and deploy to staging
 
 on:
   workflow_run:
@@ -10,7 +10,6 @@ jobs:
   build:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    environment: testing
     steps:
     - name: Checkout latest repository
       uses: actions/checkout@v2
