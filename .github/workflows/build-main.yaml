@@ -37,22 +37,6 @@ jobs:
           ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
           ghcr.io/hathitrust/otis-unstable:latest
 
-  deploy-testing:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: testing
-    steps:
-    - name: Deploy to Testing
-      uses: mlibrary/deploy-to-kubernetes@v1
-      with:
-        github_username: ${{ github.actor }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        image: ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
-        cluster_ca: ${{ secrets.KUBERNETES_CA }}
-        cluster_server: ${{ secrets.KUBERNETES_SERVER }}
-        namespace_token: ${{ secrets.KUBERNETES_TOKEN_TESTING }}
-        namespace: otis-testing
-
   deploy-staging:
     needs: build
     runs-on: ubuntu-latest
@@ -63,7 +47,7 @@ jobs:
       with:
         github_username: ${{ github.actor }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        image: ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
+        image: hathitrust/otis-unstable:${{ github.sha }}
         cluster_ca: ${{ secrets.KUBERNETES_CA }}
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
         namespace_token: ${{ secrets.KUBERNETES_TOKEN_STAGING }}
