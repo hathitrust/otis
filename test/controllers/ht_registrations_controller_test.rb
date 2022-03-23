@@ -87,13 +87,33 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_match "<strong>HTTP_X_REMOTE_USER</strong>", @response.body
   end
 
-  test "finished registration no longer shows edit, mail, delete, or finish buttons" do
+  test "sent registration shows edit, preview, and delete buttons" do
+    sent_registration = create(:ht_registration, sent: Time.zone.now - 1.day,
+      received: nil, finished: nil)
+    get ht_registration_url sent_registration
+    assert_match edit_ht_registration_path(sent_registration), @response.body
+    assert_match preview_ht_registration_path(sent_registration), @response.body
+    assert_select "a[data-method='delete']"
+    assert_no_match finish_ht_registration_path(sent_registration), @response.body
+  end
+
+  test "received but not finished registration shows only edit, preview, and create user buttons" do
+    sent_registration = create(:ht_registration, sent: Time.zone.now - 1.day,
+      received: Time.zone.now - 1.day, finished: nil)
+    get ht_registration_url sent_registration
+    assert_match edit_ht_registration_path(sent_registration), @response.body
+    assert_match preview_ht_registration_path(sent_registration), @response.body
+    assert_select "a[data-method='delete']", false
+    assert_match finish_ht_registration_path(sent_registration), @response.body
+  end
+
+  test "finished registration no longer shows edit, preview, delete, or create user buttons" do
     finished_registration = create(:ht_registration, finished: Time.zone.now - 1.day)
     get ht_registration_url finished_registration
     assert_no_match edit_ht_registration_path(finished_registration), @response.body
     assert_no_match preview_ht_registration_path(finished_registration), @response.body
-    assert_no_match ht_registration_path(finished_registration, method: :delete), @response.body
-    assert_no_match finish_ht_registration_path(finished_registration, method: :post), @response.body
+    assert_select "a[data-method='delete']", false
+    assert_no_match finish_ht_registration_path(finished_registration), @response.body
   end
 end
 

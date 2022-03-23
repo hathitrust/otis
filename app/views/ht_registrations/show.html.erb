@@ -18,7 +18,7 @@
       <%= link_to t(".email_preview"), preview_ht_registration_path, class: 'btn btn-primary' %>
     <% end %>
 
-    <% if can?(:destroy, HTRegistration) && !@registration.sent? %>
+    <% if can?(:destroy, HTRegistration) && !@registration.received? && !@registration.finished? %>
       <%= link_to t(".delete"), ht_registration_path, method: :delete, class: 'btn btn-danger',
             data: { confirm: t(".confirm_delete", name: @registration.dsp_name) } %>
     <% end %>
