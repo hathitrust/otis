@@ -16,7 +16,7 @@ class HTRegistrationPresenter < ApplicationPresenter
 
   INDEX_FIELDS = %i[dsp_name dsp inst_id jira_ticket auth_rep mfa_addendum status].freeze
   READ_ONLY_FIELDS = %i[sent received finished ip_address env].freeze
-  JIRA_BASE_URL = "https://tools.lib.umich.edu/jira/browse"
+  JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/jira/", "browse/").to_s.freeze
   FIELD_SIZE = 45
 
   BADGES = {
@@ -106,7 +106,7 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_jira_ticket
-    link_to jira_ticket, "#{self.class::JIRA_BASE_URL}/#{jira_ticket}"
+    link_to jira_ticket, self.class::JIRA_BASE_URL + jira_ticket
   end
 
   def show_inst_id
