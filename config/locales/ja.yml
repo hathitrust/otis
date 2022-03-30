@@ -131,9 +131,10 @@ ja:
       email: Eメール
       log_in: ログイン
     go: 行く
+    hathitrust_logo: HathiTrustのロゴ
     home: ホーム
     log_out: ログアウト
-    logged_in_as: "%{user}としてログイン"
+    logged_in: ログインしている
     menus:
       approval_requests: 承認リクエスト
       contact_types: 連絡先種類
