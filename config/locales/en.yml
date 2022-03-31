@@ -131,9 +131,10 @@ en:
       email: E-mail
       log_in: Log In
     go: Go
+    hathitrust_logo: HathiTrust Logo
     home: Home
     log_out: Log Out
-    logged_in_as: Logged in as %{user}
+    logged_in: Logged In
     menus:
       approval_requests: Approval Requests
       contact_types: Contact Types
@@ -142,7 +143,7 @@ en:
       logs: Logs
       registrations: Registrations
       users: Users
-    not_logged_in: Not logged in
+    not_logged_in: Not Logged In
   ht_approval_request:
     badges:
       approved: Approved
