@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-  </head>
-  <body>
-    <div>
-      <%= sanitize(@body) %>
-    </div>
-    <%= image_tag(attachments["HathiTrust_logo.png"].url,
-      size: "230x70", alt: "HathiTrust logo") %>
-    <%= render 'shared/registration_link' %>
-  </body>
-</html>
+<div>
+  <%= sanitize(@body) %>
+</div>
+<%= image_tag(attachments["HathiTrust_logo.png"].url,
+  size: "230x70", alt: "HathiTrust logo") %>
+<br/><br/>
+<%= render 'shared/registration_link' %>

@@ -60,7 +60,8 @@ class HTRegistrationsController < ApplicationController
   def preview
     fetch_presenter
     @base_url = request.base_url
-    @email_body = render_to_string partial: "shared/registration_body"
+    @email_body = render_to_string(partial: "shared/registration_body")
+      .gsub("__NAME__", @registration.dsp_name)
   end
 
   def mail
