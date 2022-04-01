@@ -8,5 +8,7 @@
       <%= sanitize(@body) %>
     </div>
     <%= render 'shared/approval_request_user_table' %>
+    <%= image_tag(attachments["HathiTrust_logo.png"].url,
+      size: "230x70", alt: "HathiTrust logo") %>
   </body>
 </html>
