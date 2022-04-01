@@ -4,6 +4,7 @@ require "rails"
 require "checkpoint"
 require "keycard"
 require "canister"
+require "maxmind/geoip2"
 
 def assign_db(lhs, rhs)
   if rhs.is_a? String
@@ -36,3 +37,5 @@ Services.register(:checkpoint) do
 end
 
 Services.register(:whois) { Whois::Client.new }
+
+Services.register(:geoip) { MaxMind::GeoIP2::Reader.new(database: Otis.config.geoip_path) }

@@ -3,7 +3,8 @@
 class HTUsersController < ApplicationController
   before_action :fetch_user, only: %i[show edit]
 
-  PERMITTED_UPDATE_FIELDS = %i[userid iprestrict expires approver mfa].freeze
+  PERMITTED_UPDATE_FIELDS = %i[userid displayname activitycontact approver authorizer
+    usertype role access expires expire_type iprestrict mfa].freeze
 
   def index
     users = HTUser.joins(:ht_institution).order("ht_institutions.name")

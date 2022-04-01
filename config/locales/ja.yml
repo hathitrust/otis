@@ -51,6 +51,13 @@ ja:
         auth_rep_email: 認証担当者のEメール
         auth_rep_name: 認証担当者の表示名
         contact_info: 連絡先情報
+        detail_display_name: 表示名
+        detail_edu_person_principal_name: プリンシパル名
+        detail_email: Eメール
+        detail_geoip: GeoIP
+        detail_identity_provider: IDプロバイダー
+        detail_reverse_lookup: 逆引き
+        detail_scoped_affiliation: スコープ付き所属
         dsp: 障害者サービスプロバイダー
         dsp_date: DSP年月日
         dsp_email: DSPEメール
@@ -58,6 +65,9 @@ ja:
         env: 認証データ
         finished: 終了した
         inst_id: 機関
+        institution:
+          mfa: 多要素認証
+          static_ip: 静的IP
         ip_address: IPアドレス
         jira_ticket: チケット
         mfa_addendum: 多要素認証の補遺
@@ -116,6 +126,8 @@ ja:
       not_found_html: "<strong>トークン%{token}の承認リクエストが見つかりません。</strong>"
       recorded_html: "<strong>%{approver}</strong>から<strong>%{user}</strong>の高架アクセス承認が記録されました。"
       thanks: ありがとうございます。
+  errors:
+    resolv: "%{ip_address}を検索できません"
   finalize:
     new:
       already_used_html: "<strong>このリンクは無効になりました。すでに使用されている可能性があります。</strong>"
@@ -296,6 +308,7 @@ ja:
       delete: 登録を削除する
       edit: 編集
       email_preview: Eメールプレビュー
+      login_details: ログインの詳細
       whois_data: WHOISデータ
     update:
       success: "%{name}の登録が更新されました。"

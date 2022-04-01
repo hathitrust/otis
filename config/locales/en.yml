@@ -51,6 +51,13 @@ en:
         auth_rep_email: Auth Rep E-mail
         auth_rep_name: Auth Rep Name
         contact_info: Contact Info
+        detail_display_name: Display Name
+        detail_edu_person_principal_name: Principal Name
+        detail_email: E-mail
+        detail_geoip: GeoIP
+        detail_identity_provider: Identity Provider
+        detail_reverse_lookup: Reverse Lookup
+        detail_scoped_affiliation: Scoped Affiliation
         dsp: Disability Service Provider
         dsp_date: DSP Date
         dsp_email: DSP E-mail
@@ -58,6 +65,9 @@ en:
         env: Authentication Data
         finished: Finished
         inst_id: Institution
+        institution:
+          mfa: MFA
+          static_ip: Static IP
         ip_address: IP Address
         jira_ticket: Ticket
         mfa_addendum: MFA Addendum
@@ -116,6 +126,8 @@ en:
       not_found_html: "<strong>No approval request found for token %{token}.</strong>"
       recorded_html: Elevated access approval recorded for <strong>%{user}</strong> from <strong>%{approver}</strong>.
       thanks: Thank you.
+  errors:
+    resolv: Unable to look up %{ip_address}
   finalize:
     new:
       already_used_html: "<strong>This link is no longer valid; it may have already been used.</strong>"
@@ -296,6 +308,7 @@ en:
       delete: Delete Registration
       edit: Edit
       email_preview: E-mail Preview
+      login_details: Login Details
       whois_data: WHOIS Data
     update:
       success: Registration updated for %{name}.

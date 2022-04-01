@@ -158,7 +158,7 @@ class FinalizeControllerShibbolethHeadersTest < ActionDispatch::IntegrationTest
       sign_in! username: Faker::Internet.email
       process(:get, finalize_url(@reg.token), headers: interesting_headers.merge(response.headers))
       assert_response :success
-      headers = JSON.parse @reg.reload.env
+      headers = @reg.reload.env
       interesting_headers.keys.each do |key|
         assert headers.key?(key)
       end

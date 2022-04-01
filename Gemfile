@@ -80,14 +80,15 @@ gem "bootstrap-sass"
 gem "jquery-rails"
 gem "ckeditor"
 gem "whois"
+gem "whois-parser"
 gem "accept_language"
 gem "flag-icons-rails"
 gem "rails-i18n", "~> 6.0.0"
+gem "maxmind-geoip2"
 
 gem "canister"
 gem "ettin"
 gem "keycard", github: "mlibrary/keycard"
-
 gem "checkpoint"
 
 # Use MySQL as the database for Active Record

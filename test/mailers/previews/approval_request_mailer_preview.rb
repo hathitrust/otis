@@ -7,6 +7,8 @@ class ApprovalRequestMailerPreview < ActionMailer::Preview
       reqs << req.dup
       reqs.last[:approver] = "approver@example.com"
     end
-    ApprovalRequestMailer.with(reqs: reqs, base_url: "http://default.invalid").approval_request_email
+    controller = ActionController::Base.new
+    body = controller.render_to_string partial: "shared/approval_request_body"
+    ApprovalRequestMailer.with(reqs: reqs, body: body, base_url: "http://default.invalid").approval_request_email
   end
 end

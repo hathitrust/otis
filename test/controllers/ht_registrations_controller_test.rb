@@ -75,16 +75,53 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
 
   test "received registration shows WHOIS info" do
     received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
-      ip_address: Faker::Internet.public_ip_v4_address)
+      ip_address: Faker::Internet.public_ip_v4_address, env: {})
     get ht_registration_url received_registration
     assert_match "WHOIS", @response.body
   end
 
+  # 216.160.83.56 appears in the GeoIP test DB as Washington US
+  test "received registration shows GeoIP info" do
+    received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
+      ip_address: "216.160.83.56", env: {})
+    get ht_registration_url received_registration
+    assert_match "Washington", @response.body
+  end
+
   test "received registration shows Shib env info" do
     received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
+      ip_address: Faker::Internet.public_ip_v4_address,
       env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json)
     get ht_registration_url received_registration
-    assert_match "<strong>HTTP_X_REMOTE_USER</strong>", @response.body
+    assert_match "Principal Name", @response.body
+    assert_match "Display Name", @response.body
+    assert_match "Identity Provider", @response.body
+    assert_match "E-mail", @response.body
+    assert_match "Scoped Affiliation", @response.body
+  end
+
+  test "received registration shows IDP institution name" do
+    random_inst = HTInstitution.where.not(entityID: nil).sample
+    env = {"HTTP_X_REMOTE_USER" => fake_shib_id,
+           "HTTP_X_SHIB_IDENTITY_PROVIDER" => random_inst.entityID}
+    received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
+      ip_address: Faker::Internet.public_ip_v4_address, env: env.to_json)
+    get ht_registration_url received_registration
+    assert_match ERB::Util.html_escape(random_inst.name), @response.body
+  end
+
+  # The other four Shib values are displayed verbatim
+  test "received registration shows Shibboleth login values" do
+    env = {"HTTP_X_SHIB_DISPLAYNAME" => "Shib display name",
+           "HTTP_X_SHIB_EDUPERSONPRINCIPALNAME" => "Shib principal name",
+           "HTTP_X_SHIB_MAIL" => "Shib mail",
+           "HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION" => "Shib scoped affiliation"}
+    received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
+      ip_address: Faker::Internet.public_ip_v4_address, env: env.to_json)
+    get ht_registration_url received_registration
+    env.each do |_k, v|
+      assert_match v, @response.body
+    end
   end
 
   test "finished registration no longer shows edit, mail, delete, or finish buttons" do
@@ -251,7 +288,7 @@ class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
     get preview_ht_registration_path @registration
     assert_response :success
     assert_equal "preview", @controller.action_name
-    assert_not_nil assigns(:finalize_url)
+    assert_not_nil assigns(:base_url)
     assert_not_nil assigns(:email_body)
     assert_match /E-mail Preview/i, @response.body
     assert_select "input[value='SEND']"
@@ -287,6 +324,7 @@ end
 
 class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
   def setup
+    ActionMailer::Base.deliveries.clear
     @registration = create(:ht_registration)
   end
 
@@ -325,6 +363,13 @@ class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
     assert_not_nil @registration.reload.sent
     assert_not_nil @registration.reload[:token_hash]
     assert_equal "show", @controller.action_name
+  end
+
+  test "e-mailed token matches saved hash" do
+    mail_registration
+
+    token = ActionMailer::Base.deliveries.first.html_part.body.to_s.match(%r{finalize/([A-Za-z0-9\-_]+)})[1]
+    assert_equal @registration.reload.token_hash, HTRegistration.digest(token)
   end
 end
 

@@ -10,7 +10,7 @@ class HTUserPresenter < ApplicationPresenter
 
   INDEX_FIELDS = %i[email displayname role institution expires renewal_status iprestrict mfa].freeze
   HT_COUNTS_FIELDS = %i[accesses last_access].freeze
-  READ_ONLY_FIELDS = (HT_COUNTS_FIELDS + %i[email activitycontact renewal_status institution]).freeze
+  READ_ONLY_FIELDS = (HT_COUNTS_FIELDS + %i[email renewal_status institution]).freeze
   FIELD_SIZE = 40
 
   def self.role_name(role)
@@ -164,6 +164,10 @@ class HTUserPresenter < ApplicationPresenter
     html.join("\n")
   end
 
+  def edit_expire_type(form:)
+    form.select(:expire_type, expire_type_options)
+  end
+
   def edit_iprestrict(form:)
     [form.text_field(:iprestrict, value: iprestrict&.join(", "), size: 40, disabled: mfa),
       "<p class='text-muted'>#{I18n.t("ht_user.edit.iprestrict_prompt")}</p>"].join("\n")
@@ -191,6 +195,10 @@ class HTUserPresenter < ApplicationPresenter
 
   def access_options
     @access_options ||= HTUser::ACCESSES.sort.map { |access| [I18n.t("ht_user.values.access.#{access}"), access] }
+  end
+
+  def expire_type_options
+    @expiretype_options ||= ExpirationDate::EXPIRES_TYPE.keys.sort.map { |type| [I18n.t("ht_user.values.expire_type.#{type}"), type] }
   end
 
   def role_options

@@ -2,7 +2,7 @@
 
 class HTApprovalRequest < ApplicationRecord
   self.primary_key = "id"
-  self.table_name = "otis_approval_requests"
+  self.table_name = "ht_web.otis_approval_requests"
 
   def self.expiration_date
     Date.today - 1.week

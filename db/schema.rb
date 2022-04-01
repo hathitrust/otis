@@ -18,7 +18,7 @@ raise StandardError, 'Not for production use' if Rails.env.production?
 ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
   # Tables only used by otis
 
-  create_table :otis_approval_requests do |t|
+  create_table "ht_web.otis_approval_requests", if_not_exists: true do |t|
     t.string :approver
     t.string :userid
     t.timestamp :sent
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.text :token_hash
   end
 
-  create_table :otis_logs do |t|
+  create_table "ht_web.otis_logs", if_not_exists: true do |t|
     t.string :objid
     t.string :model
     t.timestamp :time
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.text :description
   end
 
-  create_table :otis_registrations do |t|
+  create_table "ht_web.otis_registrations", if_not_exists: true do |t|
     t.string :dsp_name
     t.string :dsp_email
     t.string :dsp_date
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.timestamp :last_update
   end
 
-  create_table :ht_counts, id: false do |t|
+  create_table "ht_web.ht_counts", id: false, if_not_exists: true do |t|
     t.string :userid
     t.integer :accesscount, default: 0
     t.timestamp :last_access
