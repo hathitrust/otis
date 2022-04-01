@@ -38,4 +38,8 @@ class RegistrationMailerTest < ActionMailer::TestCase
       email(reg: nil).deliver_now
     end
   end
+
+  test "mail has HathiTrust logo PNG attachment" do
+    assert_match %r{image/png}, email.attachments[0].content_type
+  end
 end

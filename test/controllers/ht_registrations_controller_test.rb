@@ -302,9 +302,8 @@ class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
     test_text = Faker::Lorem.paragraph
 
     mail_registration params: {email_body: test_text}
-
-    ActionMailer::Base.deliveries.first.body.parts.each do |part|
-      assert_match test_text, part.to_s
+    assert ActionMailer::Base.deliveries.first.body.parts.any? do |part|
+      part.to_s.match? test_text
     end
   end
 

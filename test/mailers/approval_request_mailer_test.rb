@@ -21,8 +21,8 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
 
   test "email contains provided body text" do
     test_text = Faker::Lorem.paragraph
-    email(body: test_text).parts.each do |p|
-      assert_match test_text, p.to_s
+    assert email(body: test_text).parts.any? do |part|
+      part.to_s.match? test_text
     end
   end
 
@@ -46,8 +46,8 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
   end
 
   test "link in email contains url with token" do
-    email.parts.each do |p|
-      assert_match %r{http://default.invalid/approve/#{@req1.token}}, p.to_s
+    assert email.parts.any? do |part|
+      part.to_s.match? %r{http://default.invalid/approve/#{@req1.token}}
     end
   end
 
@@ -87,5 +87,9 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
     assert_raise StandardError do
       emails(reqs: [@req1, @req2]).deliver_now
     end
+  end
+
+  test "mail has HathiTrust logo PNG attachment" do
+    assert_match %r{image/png}, email.attachments[0].content_type
   end
 end
