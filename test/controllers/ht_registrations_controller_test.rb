@@ -398,9 +398,6 @@ class HTRegistrationFinishTest < ActionDispatch::IntegrationTest
     @received_registration = create(:ht_registration, received: Time.now,
       ip_address: Faker::Internet.public_ip_v4_address,
       env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json)
-    @mfa_inst = create(:ht_institution, shib_authncontext_class: "https://refeds.org/profile/mfa")
-    @mfa_registration = create(:ht_registration, finished: Time.now, inst_id: @mfa_inst.inst_id,
-      env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json)
   end
 
   test "finishing registration creates and displays a new user" do
@@ -412,14 +409,6 @@ class HTRegistrationFinishTest < ActionDispatch::IntegrationTest
     assert_not_nil HTUser.find(@received_registration.dsp_email)
     follow_redirect!
     assert_equal "edit", @controller.action_name
-  end
-
-  test "finishing registration with MFA institution creates an MFA-enabled user" do
-    sign_in! username: ADMIN_USER
-    post(finish_ht_registration_path(@mfa_registration))
-    user = HTUser.find(@mfa_registration.dsp_email)
-    assert user.iprestrict.nil?
-    assert user.mfa?
   end
 
   test "finishing registration a second time displays an error" do
