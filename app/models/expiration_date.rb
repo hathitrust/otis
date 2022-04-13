@@ -19,10 +19,12 @@ class ExpirationDate
   end
 
   EXPIRES_TYPE = {
-    expiresannually: ExpiresTypeData.new("1 year", 1.year).freeze,
     expiresbiannually: ExpiresTypeData.new("2 years", 2.years).freeze,
+    expiresannually: ExpiresTypeData.new("1 year", 1.year).freeze,
+    expirescustom180: ExpiresTypeData.new("180 days", 180.days).freeze,
+    expirescustom90: ExpiresTypeData.new("90 days", 90.days).freeze,
     expirescustom60: ExpiresTypeData.new("60 days", 60.days).freeze,
-    expirescustom90: ExpiresTypeData.new("90 days", 90.days).freeze
+    expirescustom30: ExpiresTypeData.new("30 days", 30.days).freeze
   }.freeze
 
   # Shared utility for converting a (mostly) arbitrary value into a Date.

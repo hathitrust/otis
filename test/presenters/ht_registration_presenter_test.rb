@@ -29,32 +29,20 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   end
 
   test "#field_value :auth_rep_email displays as mailto link" do
-    # Localized value, can't make assumptions about content
     assert_match /mailto/, @reg.field_value(:auth_rep_email)
   end
 
-  test "#field_value :dsp_name displays as link on index page" do
-    reg = HTRegistrationPresenter.new build(:ht_registration), action: :index
-    assert_match "/ht_registrations/#{reg.id}", reg.field_value(:dsp_name)
+  test "#field_value :applicant displays with a link" do
+    assert_match /href/, @reg.field_value(:applicant)
   end
 
-  test "#field_value :dsp_name displays without link elsewhere" do
-    reg = HTRegistrationPresenter.new build(:ht_registration), action: :show
-    assert_no_match "/ht_registrations/#{reg.id}", reg.field_value(:dsp_name)
-  end
-
-  test "#field_value :dsp" do
-    assert_match %r{#{@reg.dsp_name}.+mailto:#{@reg.dsp_email}.+<br/>.+}, @reg.field_value(:dsp)
-  end
-
-  test "#field_value :dsp_date" do
+  test "#field_value :applicant_date" do
     # Localized value, can't make assumptions about content
-    assert_not_nil @reg.field_value(:dsp_date)
+    assert_not_nil @reg.field_value(:applicant_date)
   end
 
-  test "#field_value :dsp_email displays as mailto link" do
-    # Localized value, can't make assumptions about content
-    assert_match /mailto/, @reg.field_value(:dsp_email)
+  test "#field_value :applicant_email displays as mailto link" do
+    assert_match /mailto/, @reg.field_value(:applicant_email)
   end
 
   test "#field_value :jira_ticket displays as link" do
@@ -85,6 +73,10 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
 
   test "#field_value :mfa_addendum edits as checkbox" do
     assert_equal "CHECK BOX", @reg.field_value(:mfa_addendum, form: FakeForm.new)
+  end
+
+  test "#field_value :role edits as select menu" do
+    assert_equal "SELECT", @reg.field_value(:role, form: FakeForm.new)
   end
 
   test "#cancel_path for new object goes to index" do

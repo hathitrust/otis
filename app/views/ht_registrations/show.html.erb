@@ -1,5 +1,5 @@
 <div class="col-sm-12">
-  <h1><%= @registration.dsp_name %></h1>
+  <h1><%= @registration.applicant_name %></h1>
 
   <dl class="dl-horizontal">
     <% @registration.all_fields.each do |field| %>
@@ -31,10 +31,10 @@
 
     <% if can?(:destroy, HTRegistration) && !@registration.received? && !@registration.finished? %>
       <%= link_to t(".delete"), ht_registration_path, method: :delete, class: 'btn btn-danger',
-            data: { confirm: t(".confirm_delete", name: @registration.dsp_name) } %>
+            data: { confirm: t(".confirm_delete", name: @registration.applicant_name) } %>
     <% end %>
 
-    <% if can?(:create, HTUser) && @registration.received? && !HTUser.exists?(@registration.dsp_email) %>
+    <% if can?(:create, HTUser) && @registration.received? && !HTUser.exists?(@registration.applicant_email) %>
       <%= link_to t(".create_user"), finish_ht_registration_path, method: :post, class: 'btn btn-success' %>
     <% end %>
   <% end %>

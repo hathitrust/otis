@@ -17,6 +17,7 @@ class HTUser < ApplicationRecord
   ROLES = %i[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd].freeze
   USERTYPES = %i[staff external student].freeze
   ACCESSES = %i[total normal].freeze
+  EXPIRES_TYPES = ExpirationDate::EXPIRES_TYPE.collect { |k, _v| k }.freeze
   self.primary_key = "email"
 
   belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id

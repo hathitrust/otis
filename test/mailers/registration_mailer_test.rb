@@ -4,7 +4,7 @@ require "test_helper"
 
 class RegistrationMailerTest < ActionMailer::TestCase
   def setup
-    @reg = create(:ht_registration, dsp_email: "user@example.com")
+    @reg = create(:ht_registration, applicant_email: "user@example.com")
   end
 
   def email(reg: @reg)

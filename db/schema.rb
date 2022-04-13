@@ -46,16 +46,23 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
   end
 
   create_table "ht_web.otis_registrations", if_not_exists: true do |t|
-    t.string :dsp_name
-    t.string :dsp_email
-    t.string :dsp_date
+    t.string :applicant_name
+    t.string :applicant_email
+    t.string :applicant_date
     t.string :inst_id
     t.string :jira_ticket
+    t.string :role
+    t.string :expire_type
     # Institution-level ATRS point of contact
+    # Not preserved when registrant is moved to ht_users
     t.string :contact_info
+    # Map auth_rep_email -> ht_users.approver
     t.string :auth_rep_name
     t.string :auth_rep_email
     t.string :auth_rep_date
+    # Needed for CAA but not for ATRS
+    # Map hathitrust_authorizer -> ht_user.authorizer
+    t.string :hathitrust_authorizer
     t.boolean :mfa_addendum, default: false
     t.text :token_hash
     t.timestamp :sent

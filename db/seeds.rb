@@ -26,7 +26,7 @@ def create_ht_user(expires:)
     role: HTUser::ROLES.sample.to_s,
     access: HTUser::ACCESSES.sample.to_s,
     expires: expires,
-    expire_type: %w[expiresannually expiresbiannually expirescustom90 expirescustom60].sample,
+    expire_type: HTUser::EXPIRES_TYPES.sample,
     mfa: [false, true].sample
   )
   if u.mfa
@@ -120,14 +120,17 @@ def create_ht_registration(inst_id)
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
 
   HTRegistration.create(
+    applicant_name: Faker::Name.name,
+    applicant_email: Faker::Internet.email,
+    applicant_date: Faker::Date.backward(days: 180),
     auth_rep_name: Faker::Name.name,
     auth_rep_email: Faker::Internet.email,
     auth_rep_date: Faker::Date.backward(days: 180),
+    hathitrust_authorizer: Faker::Internet.email,
     inst_id: inst_id,
+    role: HTRegistration::ROLES.sample.to_s,
+    expire_type: HTUser::EXPIRES_TYPES.sample,
     jira_ticket: "XXX-#{ticket_no}",
-    dsp_name: Faker::Name.name,
-    dsp_email: Faker::Internet.email,
-    dsp_date: Faker::Date.backward(days: 180),
     mfa_addendum: [true, false].sample,
     contact_info: Faker::Internet.email
   )

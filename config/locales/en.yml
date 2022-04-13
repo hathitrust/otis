@@ -46,6 +46,10 @@ en:
         time: Time
       ht_registration:
         access: Access
+        applicant: Applicant
+        applicant_date: Applicant Date
+        applicant_email: Applicant E-mail
+        applicant_name: Applicant Name
         auth_rep: Auth Rep
         auth_rep_date: Auth Rep Date
         auth_rep_email: Auth Rep E-mail
@@ -58,12 +62,10 @@ en:
         detail_identity_provider: Identity Provider
         detail_reverse_lookup: Reverse Lookup
         detail_scoped_affiliation: Scoped Affiliation
-        dsp: Disability Service Provider
-        dsp_date: DSP Date
-        dsp_email: DSP E-mail
-        dsp_name: DSP Name
         env: Authentication Data
+        expire_type: Expire Type
         finished: Finished
+        hathitrust_authorizer: HathiTrust Authorizer
         inst_id: Institution
         institution:
           mfa: MFA
@@ -281,6 +283,13 @@ en:
     index:
       download_json: Download JSON
       logs: Logs
+  ht_registration:
+    values:
+      role:
+        atrs: Accessible Text Request Service
+        crms: Copyright Review
+        quality: Quality Review
+        staffdeveloper: Staff Developer
   ht_registrations:
     create:
       success: Registration created for %{name}.
@@ -342,6 +351,8 @@ en:
       expire_type:
         expiresannually: 1 year
         expiresbiannually: 2 years
+        expirescustom180: 180 days
+        expirescustom30: 30 days
         expirescustom60: 60 days
         expirescustom90: 90 days
       iprestrict:

@@ -4,16 +4,18 @@ class HTRegistrationsController < ApplicationController
   before_action :fetch_institutions
 
   PERMITTED_FIELDS = %i[
+    applicant_name
+    applicant_email
+    applicant_date
     inst_id
-    name
     jira_ticket
+    role
+    expire_type
     contact_info
     auth_rep_name
     auth_rep_email
     auth_rep_date
-    dsp_name
-    dsp_email
-    dsp_date
+    hathitrust_authorizer
     mfa_addendum
   ].freeze
 
@@ -29,7 +31,7 @@ class HTRegistrationsController < ApplicationController
     @registration = presenter HTRegistration.new(reg_params)
     if @registration.save
       log
-      flash.now[:notice] = t(".success", name: @registration.dsp_name)
+      flash.now[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to preview_ht_registration_path(@registration.id)
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -49,7 +51,7 @@ class HTRegistrationsController < ApplicationController
     fetch_presenter
     if @registration.update(reg_params)
       log
-      flash[:notice] = t(".success", name: @registration.dsp_name)
+      flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to action: :show
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -61,7 +63,7 @@ class HTRegistrationsController < ApplicationController
     fetch_presenter
     @base_url = request.base_url
     @email_body = render_to_string(partial: "shared/registration_body")
-      .gsub("__NAME__", @registration.dsp_name)
+      .gsub("__NAME__", @registration.applicant_name)
   end
 
   def mail
@@ -142,7 +144,7 @@ class HTRegistrationsController < ApplicationController
 
   # Adds comment from {:registration_sent, :registration_finished}
   def add_jira_comment(template:)
-    comment = Otis::JiraClient.comment template: template, user: @registration.dsp_email
+    comment = Otis::JiraClient.comment template: template, user: @registration.applicant_email
     Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
   end
 end

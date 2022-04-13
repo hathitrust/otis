@@ -14,6 +14,6 @@ class RegistrationMailer < ApplicationMailer
     @subject = params[:subject] || RegistrationMailer.subject
     @body = params[:body]
     attachments.inline["HathiTrust_logo.png"] = File.read("#{Rails.root}/app/assets/images/HathiTrust_logo.png")
-    mail(to: @registration.dsp_email, subject: @subject)
+    mail(to: @registration.applicant_email, subject: @subject)
   end
 end
