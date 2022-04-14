@@ -122,7 +122,7 @@ def create_ht_registration(inst_id)
     auth_rep_email: Faker::Internet.email,
     auth_rep_date: Faker::Date.backward(days: 180),
     inst_id: inst_id,
-    jira_ticket: "HT-#{ticket_no}",
+    jira_ticket: "XXX-#{ticket_no}",
     dsp_name: Faker::Name.name,
     dsp_email: Faker::Internet.email,
     dsp_date: Faker::Date.backward(days: 180),

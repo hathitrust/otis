@@ -84,6 +84,7 @@ class HTRegistrationsController < ApplicationController
     if user.valid?
       @registration.finished = Time.zone.now
       @registration.save!
+      add_jira_comment template: :registration_finished
       log params.permit!
       redirect_to edit_ht_user_path user
     else
@@ -125,6 +126,7 @@ class HTRegistrationsController < ApplicationController
     RegistrationMailer.with(registration: @registration, base_url: request.base_url,
       body: params[:email_body], subject: params[:subject])
       .registration_email.deliver_now
+    add_jira_comment template: :registration_sent
     flash[:notice] = t("ht_registrations.mail.success")
     # This is for debugging only
     if Rails.env.development?
@@ -135,5 +137,11 @@ class HTRegistrationsController < ApplicationController
     @registration.save!
   rescue => e
     flash[:alert] = e.message
+  end
+
+  # Adds comment from {:registration_sent, :registration_finished}
+  def add_jira_comment(template:)
+    comment = Otis::JiraClient.comment template: template, user: @registration.dsp_email
+    Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
   end
 end
