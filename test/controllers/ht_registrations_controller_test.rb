@@ -181,7 +181,7 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
 
     HTRegistration.delete_all
     post ht_registrations_url, params: {ht_registration: params}
-    assert_redirected_to /preview/
+    assert_redirected_to %r{preview}
     assert_equal 1, HTRegistration.count
     # Shows up in log
     log = HTRegistration.first.ht_logs.first
@@ -390,6 +390,15 @@ class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
 
     token = ActionMailer::Base.deliveries.first.html_part.body.to_s.match(%r{finalize/([A-Za-z0-9\-_]+)})[1]
     assert_equal @registration.reload.token_hash, HTRegistration.digest(token)
+  end
+
+  test "mail substitutes dsp_name value for __NAME__ template" do
+    reg = create(:ht_registration, dsp_email: "user@example.com",
+      dsp_name: "Reggie McRegistrationface")
+    mail_registration(registration: reg)
+    assert ActionMailer::Base.deliveries.first.body.parts.any? do |part|
+      part.to_s.match? reg.dsp_name
+    end
   end
 end
 

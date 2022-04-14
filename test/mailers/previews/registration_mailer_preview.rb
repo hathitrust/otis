@@ -6,8 +6,9 @@ class RegistrationMailerPreview < ActionMailer::Preview
     reg.sent = Time.zone.now
     controller = ActionController::Base.new
     base_url = "http://default.invalid"
-    body = controller.render_to_string partial: "shared/registration_body",
-      locals: {"@registration": reg}
+    body = controller.render_to_string(partial: "shared/registration_body",
+      locals: {"@registration": reg})
+      .gsub("__NAME__", reg.dsp_name)
     RegistrationMailer.with(registration: reg, body: body, base_url: base_url)
       .registration_email
   end
