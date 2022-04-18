@@ -1,0 +1,9 @@
+<div id="maincontent" class="row">
+  <%= form_with(model: @registration, url: finalize_url, local: true, method: :get) do |form| %>
+
+  <%= t(".confirm_html") %>
+  <br/><br/>
+  <%= form.submit t(".confirm_registration"), class: 'btn btn-primary' %>
+
+  <% end %>
+</div>

@@ -10,9 +10,13 @@ class FinalizeController < ApplicationController
     @registration = HTRegistration.find_by_token(params[:token])
     return render_not_found unless @registration&.token_hash
 
-    @already_used = @registration.received.present?
     @ip_address = ip_address
     @institution = HTInstitutionPresenter.new @registration.ht_institution
+    # If the user is submitting the form, finalize registration.
+    if params[:commit].present?
+      finalize
+    end
+
     @message_type = if @institution.entityID && @institution.shib_authncontext_class
       :success_mfa
     elsif @registration.mfa_addendum
@@ -20,7 +24,11 @@ class FinalizeController < ApplicationController
     else
       :success_static_ip
     end
-    finalize unless @registration.expired? || @already_used
+    if @registration.received.present? || @registration.expired?
+      render :show
+    else
+      render :edit
+    end
   end
 
   # Users who cannot access the rest of the application can still use the
@@ -29,6 +37,10 @@ class FinalizeController < ApplicationController
   end
 
   private
+
+  def fetch_registration
+    @registration = HTRegistration.find_by_token(params[:token])
+  end
 
   def finalize
     @registration.received = Time.zone.now

@@ -4,10 +4,7 @@
     <p><%= t ".expired_html", user: @registration.dsp_email,
              mailto: mail_to(ApplicationMailer.default[:from]) %></p>
     </p>
-  <% elsif @already_used %>
-    <p><%= t ".already_used_html" %></p>
   <% else %>
-    <p><i>WARNING: THE FOLLOWING PLACEHOLDER TEXT HAS NOT BEEN REVIEWED BY THE LEGAL DEPARTMENT.</i></p>
     <%= t ".success_html", user: @registration.dsp_email %>
     <% case @message_type %>
     <% when :success_mfa %>
