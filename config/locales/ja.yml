@@ -46,6 +46,10 @@ ja:
         time: 時間
       ht_registration:
         access: アクセス
+        applicant: 申請者
+        applicant_date: 申請者の年月日s
+        applicant_email: 申請者のEメール
+        applicant_name: 申請者の表示名
         auth_rep: 認証担当者
         auth_rep_date: 認証担当者の年月日
         auth_rep_email: 認証担当者のEメール
@@ -58,12 +62,10 @@ ja:
         detail_identity_provider: IDプロバイダー
         detail_reverse_lookup: 逆引き
         detail_scoped_affiliation: スコープ付き所属
-        dsp: 障害者サービスプロバイダー
-        dsp_date: DSP年月日
-        dsp_email: DSPEメール
-        dsp_name: DSP表示名
         env: 認証データ
+        expire_type: 有効期限タイプ
         finished: 終了した
+        hathitrust_authorizer: HathiTrustの認証担当者
         inst_id: 機関
         institution:
           mfa: 多要素認証
@@ -281,6 +283,13 @@ ja:
     index:
       download_json: JSONをダウンロード
       logs: ログ
+  ht_registration:
+    values:
+      role:
+        atrs: アクセス可能なテキストリクエストサービス
+        crms: 著作権レビュー
+        quality: 品質レビュー
+        staffdeveloper: スタッフ開発者
   ht_registrations:
     create:
       success: "%{name}の登録が作成されました。"
@@ -342,6 +351,8 @@ ja:
       expire_type:
         expiresannually: 1年間
         expiresbiannually: 2年間
+        expirescustom180: 180日間
+        expirescustom30: 30日間
         expirescustom60: 60日間
         expirescustom90: 90日間
       iprestrict:

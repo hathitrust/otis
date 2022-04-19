@@ -12,11 +12,11 @@ module Otis
       return @ht_user unless @ht_user.nil?
 
       @ht_user = HTUser.new(userid: userid,
-        email: @registration.dsp_email, displayname: @registration.dsp_name,
+        email: @registration.applicant_email, displayname: @registration.applicant_name,
         inst_id: @registration.inst_id, approver: @registration.auth_rep_email,
-        authorizer: @registration.auth_rep_email, expire_type: :expiresannually,
-        expires: Time.zone.now + 1.year, usertype: :external, access: :total,
-        role: :ssdproxy)
+        authorizer: authorizer, expire_type: @registration.expire_type,
+        expires: ExpirationDate.new(Time.zone.now, @registration.expire_type).default_extension_date,
+        usertype: :external, access: :total, role: @registration.role)
       institution = HTInstitution.find(@registration.inst_id)
       if institution.mfa?
         @ht_user.mfa = true
@@ -29,6 +29,16 @@ module Otis
     end
 
     private
+
+    # For CAA users, hathitrust_authorizer should be present and we should use that.
+    # auth_rep_email is the fallback.
+    def authorizer
+      if !["ssd", "ssdproxy"].include?(@registration.role) && @registration.hathitrust_authorizer.present?
+        @registration.hathitrust_authorizer
+      else
+        @registration.auth_rep_email
+      end
+    end
 
     # Adapted from https://github.com/hathitrust/mdp-lib/blob/master/Utils.pm#L79
     # This logic is largely because of having migrated Michigan users from

@@ -7,7 +7,7 @@
 class FinalizeController < ApplicationController
   def new
     @token = params[:token]
-    @registration = HTRegistration.find_by_token(params[:token])
+    fetch_registration
     return render_not_found unless @registration&.token_hash
 
     @ip_address = ip_address
@@ -66,7 +66,7 @@ class FinalizeController < ApplicationController
   end
 
   def add_jira_comment
-    comment = Otis::JiraClient.comment template: :registration_received, user: @registration.dsp_email
+    comment = Otis::JiraClient.comment template: :registration_received, user: @registration.applicant_email
     Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
   end
 end

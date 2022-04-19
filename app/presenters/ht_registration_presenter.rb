@@ -4,9 +4,10 @@ require "resolv"
 
 class HTRegistrationPresenter < ApplicationPresenter
   ALL_FIELDS = %i[
-    dsp_name dsp_email dsp_date inst_id jira_ticket
-    auth_rep_name auth_rep_email auth_rep_date
-    contact_info mfa_addendum sent received finished ip_address
+    applicant_name applicant_email applicant_date inst_id jira_ticket
+    role expire_type auth_rep_name auth_rep_email auth_rep_date
+    contact_info hathitrust_authorizer mfa_addendum
+    sent received finished ip_address
   ].freeze
 
   DETAIL_FIELDS = %i[
@@ -14,7 +15,7 @@ class HTRegistrationPresenter < ApplicationPresenter
     detail_scoped_affiliation detail_identity_provider detail_geoip detail_reverse_lookup
   ].freeze
 
-  INDEX_FIELDS = %i[dsp_name dsp inst_id jira_ticket auth_rep mfa_addendum status].freeze
+  INDEX_FIELDS = %i[applicant inst_id jira_ticket auth_rep mfa_addendum status].freeze
   READ_ONLY_FIELDS = %i[sent received finished ip_address env].freeze
   JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/jira/", "browse/").to_s.freeze
   FIELD_SIZE = 45
@@ -47,22 +48,20 @@ class HTRegistrationPresenter < ApplicationPresenter
     link_to auth_rep_email, "mailto:#{auth_rep_email}"
   end
 
-  def show_dsp
-    [dsp_name, show_dsp_email, show_dsp_date].join "<br/>"
+  def show_applicant
+    [link_to(applicant_name, ht_registration_path(id)),
+      applicant_email,
+      show_applicant_date].join "<br/>"
   end
 
-  def show_dsp_date
-    return "" unless dsp_date.present?
+  def show_applicant_date
+    return "" unless applicant_date.present?
 
-    I18n.l dsp_date.to_date, format: :long
+    I18n.l applicant_date.to_date, format: :long
   end
 
-  def show_dsp_email
-    link_to dsp_email, "mailto:#{dsp_email}"
-  end
-
-  def show_dsp_name
-    action == :index ? link_to(dsp_name, ht_registration_path(id)) : dsp_name
+  def show_applicant_email
+    link_to applicant_email, "mailto:#{applicant_email}"
   end
 
   def show_detail_display_name
@@ -86,7 +85,7 @@ class HTRegistrationPresenter < ApplicationPresenter
 
   def show_detail_identity_provider
     entity = env["HTTP_X_SHIB_IDENTITY_PROVIDER"]
-    HTInstitution.where(entityID: entity).first&.name || entity
+    ERB::Util.html_escape(HTInstitution.where(entityID: entity).first&.name || entity)
   end
 
   def show_detail_reverse_lookup
@@ -141,8 +140,12 @@ class HTRegistrationPresenter < ApplicationPresenter
     form.date_field :auth_rep_date, value: auth_rep_date.to_s
   end
 
-  def edit_dsp_date(form:)
-    form.date_field :dsp_date, value: dsp_date.to_s
+  def edit_applicant_date(form:)
+    form.date_field :applicant_date, value: applicant_date.to_s
+  end
+
+  def edit_expire_type(form:)
+    form.select(:expire_type, expire_type_options)
   end
 
   def edit_inst_id(form:)
@@ -152,5 +155,17 @@ class HTRegistrationPresenter < ApplicationPresenter
 
   def edit_mfa_addendum(form:)
     form.check_box :mfa_addendum
+  end
+
+  def edit_role(form:)
+    form.select(:role, role_options)
+  end
+
+  def expire_type_options
+    @expiretype_options ||= ExpirationDate::EXPIRES_TYPE.keys.sort.map { |type| [I18n.t("ht_user.values.expire_type.#{type}"), type] }
+  end
+
+  def role_options
+    @role_options ||= HTRegistration::ROLES.sort.map { |role| [I18n.t("ht_registration.values.role.#{role}"), role] }
   end
 end

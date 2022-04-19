@@ -60,9 +60,9 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_match ERB::Util.html_escape(@registration.auth_rep_name), @response.body
     assert_match @registration.auth_rep_email, @response.body
     assert_match Date.parse(@registration.auth_rep_date).year.to_s, @response.body
-    assert_match ERB::Util.html_escape(@registration.dsp_name), @response.body
-    assert_match @registration.dsp_email, @response.body
-    assert_match Date.parse(@registration.dsp_date).year.to_s, @response.body
+    assert_match ERB::Util.html_escape(@registration.applicant_name), @response.body
+    assert_match @registration.applicant_email, @response.body
+    assert_match Date.parse(@registration.applicant_date).year.to_s, @response.body
   end
 
   test "show page contains edit and delete buttons" do
@@ -101,13 +101,18 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
   end
 
   test "received registration shows IDP institution name" do
-    random_inst = HTInstitution.where.not(entityID: nil).sample
+    # Use a second institution just for the entityID since the institution name
+    # can provide a false negative by showing up in the "Institution" field as well
+    # as the IDP detail field. THis test is only concerned with the latter.
+    inst1 = create(:ht_institution)
+    inst2 = create(:ht_institution, entityID: Faker::Internet.url)
     env = {"HTTP_X_REMOTE_USER" => fake_shib_id,
-           "HTTP_X_SHIB_IDENTITY_PROVIDER" => random_inst.entityID}
-    received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
-      ip_address: Faker::Internet.public_ip_v4_address, env: env.to_json)
+           "HTTP_X_SHIB_IDENTITY_PROVIDER" => inst2.entityID}
+    received_registration = create(:ht_registration, inst_id: inst1.id,
+      received: Time.zone.now - 1.day, ip_address: Faker::Internet.public_ip_v4_address,
+      env: env.to_json)
     get ht_registration_url received_registration
-    assert_match ERB::Util.html_escape(random_inst.name), @response.body
+    assert_match ERB::Util.html_escape(inst2.name), @response.body
   end
 
   # The other four Shib values are displayed verbatim
@@ -167,9 +172,9 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_match 'name="ht_registration[auth_rep_name]"', @response.body
     assert_match 'name="ht_registration[auth_rep_email]"', @response.body
     assert_match 'name="ht_registration[auth_rep_date]"', @response.body
-    assert_match 'name="ht_registration[dsp_name]"', @response.body
-    assert_match 'name="ht_registration[dsp_email]"', @response.body
-    assert_match 'name="ht_registration[dsp_date]"', @response.body
+    assert_match 'name="ht_registration[applicant_name]"', @response.body
+    assert_match 'name="ht_registration[applicant_email]"', @response.body
+    assert_match 'name="ht_registration[applicant_date]"', @response.body
     assert_match 'name="ht_registration[mfa_addendum]"', @response.body
   end
 
@@ -192,9 +197,9 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_equal(log.data["params"]["auth_rep_name"], params[:auth_rep_name])
     assert_equal(log.data["params"]["auth_rep_email"], params[:auth_rep_email])
     assert_equal(log.data["params"]["auth_rep_date"], params[:auth_rep_date])
-    assert_equal(log.data["params"]["dsp_name"], params[:dsp_name])
-    assert_equal(log.data["params"]["dsp_email"], params[:dsp_email])
-    assert_equal(log.data["params"]["dsp_date"], params[:dsp_date])
+    assert_equal(log.data["params"]["applicant_name"], params[:applicant_name])
+    assert_equal(log.data["params"]["applicant_email"], params[:applicant_email])
+    assert_equal(log.data["params"]["applicant_date"], params[:applicant_date])
     assert_equal(log.data["params"]["mfa_addendum"], params[:mfa_addendum].to_s)
   end
 
@@ -236,9 +241,9 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
     assert_match 'name="ht_registration[auth_rep_name]"', @response.body
     assert_match 'name="ht_registration[auth_rep_email]"', @response.body
     assert_match 'name="ht_registration[auth_rep_date]"', @response.body
-    assert_match 'name="ht_registration[dsp_name]"', @response.body
-    assert_match 'name="ht_registration[dsp_email]"', @response.body
-    assert_match 'name="ht_registration[dsp_date]"', @response.body
+    assert_match 'name="ht_registration[applicant_name]"', @response.body
+    assert_match 'name="ht_registration[applicant_email]"', @response.body
+    assert_match 'name="ht_registration[applicant_date]"', @response.body
     assert_match 'name="ht_registration[mfa_addendum]"', @response.body
     assert_match 'name="ht_registration[contact_info]"', @response.body
   end
@@ -253,8 +258,8 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
         "contact_info" => new_email_val,
         "auth_rep_name" => new_txt_val,
         "auth_rep_email" => new_email_val,
-        "dsp_name" => new_txt_val,
-        "dsp_email" => new_email_val
+        "applicant_name" => new_txt_val,
+        "applicant_email" => new_email_val
       }
     }
 
@@ -264,18 +269,18 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
     assert_equal new_txt_val, relookup.jira_ticket
     assert_equal new_txt_val, relookup.auth_rep_name
     assert_equal new_email_val, relookup.auth_rep_email
-    assert_equal new_txt_val, relookup.dsp_name
-    assert_equal new_email_val, relookup.dsp_email
+    assert_equal new_txt_val, relookup.applicant_name
+    assert_equal new_email_val, relookup.applicant_email
     assert_equal new_email_val, relookup.contact_info
   end
 
   test "fails update with bogus email" do
     bogus = "bogus_email"
-    patch ht_registration_url @registration, params: {ht_registration: {"dsp_email" => bogus}}
+    patch ht_registration_url @registration, params: {ht_registration: {"applicant_email" => bogus}}
     assert_response :success
     assert_equal "update", @controller.action_name
     assert_not_empty flash[:alert]
-    assert_not_equal bogus, HTRegistration.find(@registration.id).dsp_email
+    assert_not_equal bogus, HTRegistration.find(@registration.id).applicant_email
   end
 end
 
@@ -392,12 +397,12 @@ class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
     assert_equal @registration.reload.token_hash, HTRegistration.digest(token)
   end
 
-  test "mail substitutes dsp_name value for __NAME__ template" do
-    reg = create(:ht_registration, dsp_email: "user@example.com",
-      dsp_name: "Reggie McRegistrationface")
+  test "mail substitutes applicant_name value for __NAME__ template" do
+    reg = create(:ht_registration, applicant_email: "user@example.com",
+      applicant_name: "Reggie McRegistrationface")
     mail_registration(registration: reg)
     assert ActionMailer::Base.deliveries.first.body.parts.any? do |part|
-      part.to_s.match? reg.dsp_name
+      part.to_s.match? reg.applicant_name
     end
   end
 end
@@ -415,7 +420,7 @@ class HTRegistrationFinishTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     @received_registration.reload
     assert @received_registration.finished?
-    assert_not_nil HTUser.find(@received_registration.dsp_email)
+    assert_not_nil HTUser.find(@received_registration.applicant_email)
     follow_redirect!
     assert_equal "edit", @controller.action_name
   end

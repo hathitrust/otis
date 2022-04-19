@@ -3,6 +3,9 @@
 class HTRegistration < ApplicationRecord
   self.primary_key = "id"
   self.table_name = "ht_web.otis_registrations"
+  # FIXME: the roles in HTUser are expected to be simplified to look more like this.
+  # Once that happens this list should be replaced with the one from HTUser
+  ROLES = %i[crms quality ssd ssdproxy staffdeveloper].freeze
 
   def self.expiration_date
     Date.today - 1.week
@@ -22,24 +25,28 @@ class HTRegistration < ApplicationRecord
   validates :id, uniqueness: true
   validates :jira_ticket, presence: true
   validates :inst_id, presence: true
+  validates :role, presence: true
+  validates :expire_type, presence: true
 
   # auth_rep = authorized representative
   validates :auth_rep_name, presence: true
   validates :auth_rep_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
   validates :auth_rep_date, presence: true
 
-  # dsp = disability service provider
-  validates :dsp_name, presence: true
-  validates :dsp_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
-  validates :dsp_date, presence: true
+  validates :applicant_name, presence: true
+  validates :applicant_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
+  validates :applicant_date, presence: true
 
   validates :token_hash, presence: true, if: :sent
   validates :contact_info, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
 
+  # HathiTrust-level authorizer is only required for non-ATRS users.
+  validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["ssd", "ssdproxy"].include? reg.role }
+
   # mfa = multi factor authentication
   validates_inclusion_of :mfa_addendum, in: [true, false]
 
-  # This is the bit that goes to the DSP, just a gob of b64 data acting as a 'password'
+  # This is the bit that goes to the applicant, just a gob of b64 data acting as a 'password'
   def token
     @token ||= SecureRandom.urlsafe_base64 16
   end
