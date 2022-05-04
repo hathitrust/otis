@@ -286,9 +286,10 @@ en:
   ht_registration:
     values:
       role:
-        atrs: Accessible Text Request Service
         crms: Copyright Review
         quality: Quality Review
+        ssd: Accessible Text Request Service Patron
+        ssdproxy: Accessible Text Request Service Provider
         staffdeveloper: Staff Developer
   ht_registrations:
     create:

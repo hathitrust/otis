@@ -286,9 +286,10 @@ ja:
   ht_registration:
     values:
       role:
-        atrs: アクセス可能なテキストリクエストサービス
         crms: 著作権レビュー
         quality: 品質レビュー
+        ssd: アクセシブルなテキストリクエストサービスパトロン
+        ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
         staffdeveloper: スタッフ開発者
   ht_registrations:
     create:

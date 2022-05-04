@@ -204,7 +204,7 @@ GEM
     oauth (0.5.8)
     orm_adapter (0.5.0)
     parallel (1.21.0)
-    parser (3.1.0.0)
+    parser (3.1.2.0)
       ast (~> 2.4.1)
     pry (0.13.1)
       coderay (~> 1.1)
