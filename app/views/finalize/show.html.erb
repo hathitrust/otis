@@ -8,14 +8,11 @@
     <%= t ".success_html", user: @registration.applicant_email %>
     <% case @message_type %>
     <% when :success_mfa %>
-      <%= t ".success_mfa_html",
-            link: link_to(t(".test_login_mfa"), @institution.mfa_test_url, class: "btn btn-primary") %>
+      <%= t ".success_mfa_html" %>
     <% when :success_mfa_addendum %>
-      <% # TODO HT-1212: we want to direct users out and back to pick up MFA info if possible %>
       <%= t ".success_mfa_addendum_html" %>
     <% when :success_static_ip %>
-      <%= t ".success_static_ip_html", ip: @ip_address,
-            link: link_to(t(".test_login"), @institution.login_test_url, class: "btn btn-primary") %>
+      <%= t ".success_static_ip_html", ip: @ip_address %>
     <% else %>
       <% # Fall-through should never happen. Display nothing additional %>
     <% end %>
