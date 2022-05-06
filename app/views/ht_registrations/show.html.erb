@@ -42,7 +42,7 @@
   <% if @registration.ip_address.present? %>
     <h2><%= t(".whois_data") %></h2>
     <div>
-      <pre><%= Services.whois.lookup(@registration.ip_address).to_s %></pre>
+      <%= @registration.whois_block %>
     </div>
   <% end %>
 </div>

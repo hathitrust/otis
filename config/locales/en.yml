@@ -130,6 +130,7 @@ en:
       thanks: Thank you.
   errors:
     resolv: Unable to look up %{ip_address}
+    whois: WHOIS data unavailable (%{err})
   finalize:
     edit:
       confirm_html: Click on the button to confirm elevated access registration.

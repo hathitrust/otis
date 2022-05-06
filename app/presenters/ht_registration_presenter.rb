@@ -32,6 +32,14 @@ class HTRegistrationPresenter < ApplicationPresenter
     self.class::DETAIL_FIELDS
   end
 
+  def whois_block
+    begin
+      Services.whois.lookup(ip_address).to_s
+    rescue => e
+      I18n.t("errors.whois", err: e.to_s)
+    end.yield_self { |s| "<pre>#{s}</pre>" }.html_safe
+  end
+
   private
 
   def show_auth_rep
