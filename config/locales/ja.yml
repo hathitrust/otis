@@ -130,6 +130,7 @@ ja:
       thanks: ありがとうございます。
   errors:
     resolv: "%{ip_address}を検索できません"
+    whois: WHOISデータは利用できません（%{err}）
   finalize:
     edit:
       confirm_html: 昇格されたアクセス登録を確認するには、ボタンをクリックしてください。

@@ -157,6 +157,18 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_select "a[data-method='delete']", false
     assert_no_match finish_ht_registration_path(finished_registration), @response.body
   end
+
+  test "show failure notice when WHOIS lookup fails" do
+    received_registration = create(:ht_registration, received: Time.zone.now - 1.day,
+      ip_address: Faker::Internet.public_ip_v4_address, env: {})
+    begin
+      ENV["SIMULATE_WHOIS_FAILURE"] = "SIMULATE_WHOIS_FAILURE"
+      get ht_registration_url received_registration
+      assert_match "WHOIS data unavailable", @response.body
+    ensure
+      ENV.delete "SIMULATE_WHOIS_FAILURE"
+    end
+  end
 end
 
 class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest

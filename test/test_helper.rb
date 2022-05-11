@@ -14,6 +14,9 @@ require "rails/test_help"
 Services.register(:whois) do
   Class.new do
     def lookup(ip)
+      if ENV["SIMULATE_WHOIS_FAILURE"]
+        raise SocketError, "getaddrinfo: Temporary failure in name resolution"
+      end
       "TOTALLY LEGIT WHOIS for #{ip}"
     end
   end.new
