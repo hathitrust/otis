@@ -139,7 +139,7 @@ en:
       expired_html: "<strong>Registration for %{user} has expired. Please contact %{mailto}.</strong>"
       success_html: "<p>Thank you.</p> <p>Elevated access registration confirmed for <strong>%{user}</strong>. A HathiTrust staff member will approve your registration and respond shortly by e-mail.</p>"
       success_mfa_addendum_html: "<p>Your registration indicates you have access to multi-factor authentication (MFA). HathiTrust staff will take measures to ensure interoperability with your institution's authentication system.</p>"
-      success_mfa_html: "<p>Your registration indicates you have access to multi-factor authentication (MFA). <i>As a reminder, this means than any secure access to HathiTrust must be done through your institution's MFA-enabled sign-in portal.</i></p>"
+      success_mfa_html: "<p>Your registration indicates you have access to multi-factor authentication (MFA). <i>As a reminder, this means that any secure access to HathiTrust must be done through your institution's MFA-enabled sign-in portal.</i></p>"
       success_static_ip_html: "<p>Please take a moment to confirm that <code>%{ip}</code> is a static IP address. If you are not sure, we recommend you contact your network administrator.</p> <p>This is the only IP address from which you will be able to use the service. If your IP address changes in the future, you will need to contact HathiTrust and/or your network administrator.</p>"
   global:
     fake_shib_controller:

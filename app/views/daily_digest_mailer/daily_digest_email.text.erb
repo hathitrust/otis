@@ -1,0 +1,36 @@
+OTIS Action Items
+
+<% if @digest.ready_registrations.any? -%>
+  Registrations Pending New User Creation
+  <% @digest.ready_registrations.each do |registration| %>
+    <%= "#{registration.applicant_email} received #{registration.received.to_date}" %>
+  <% end %>
+<% end %>
+
+<% if @digest.expired_registrations.any? -%>
+  Expired Registrations
+  <% @digest.expired_registrations.each do |registration| %>
+    <%= "#{registration.applicant_email} sent #{registration.sent.to_date}" %>
+  <% end %>
+<% end %>
+
+<% if @digest.ready_approval_requests.any? -%>
+  Approved Renewal Requests
+  <% @digest.ready_approval_requests.each do |request| %>
+    <%= "#{request.approver} for user #{request.userid} received #{request.received.to_date}" %>
+  <% end %>
+<% end %>
+
+<% if @digest.expired_approval_requests.any? -%>
+  Expired Renewal Requests
+  <% @digest.expired_approval_requests.each do |request| %>
+    <%= "#{request.approver} for user #{request.userid} sent #{request.sent.to_date}" %>
+  <% end %>
+<% end %>
+
+<% if @digest.expiring_users.any? -%>
+  Users Expiring Soon
+  <% @digest.expiring_users.each do |user| %>
+    <%= "#{user.displayname} (#{user.email}) expiring #{user.expires.to_date}" %></td>
+  <% end %>
+<% end %>

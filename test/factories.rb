@@ -6,7 +6,7 @@ FactoryBot.define do
   factory :ht_user, class: HTUser do
     sequence(:userid) { |n| "#{n}#{Faker::Internet.email}" }
     approver { Faker::Internet.email }
-    email { Faker::Internet.email }
+    email { Faker::Internet.unique.email }
     expire_type { ExpirationDate::EXPIRES_TYPE.keys.sample.to_s }
     expires { Faker::Time.forward }
     iprestrict { Faker::Internet.public_ip_v4_address }
