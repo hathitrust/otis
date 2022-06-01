@@ -230,6 +230,15 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_equal 0, HTRegistration.count
     assert_not_empty flash[:alert]
   end
+
+  test "refuses to create registration for someone already in ht_users" do
+    user = FactoryBot.create(:ht_user)
+    params = attributes_for(:ht_registration, applicant_email: user.email)
+    HTRegistration.delete_all
+    post ht_registrations_url, params: {ht_registration: params}
+    assert_equal 0, HTRegistration.count
+    assert_match "already exists", flash[:alert]
+  end
 end
 
 class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest

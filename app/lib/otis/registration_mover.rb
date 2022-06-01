@@ -4,6 +4,10 @@ module Otis
   class RegistrationMover
     UMICH_IDP = "https://shibboleth.umich.edu/idp/shibboleth"
 
+    def self.user_exists?(registration)
+      HTUser.where(email: registration.applicant_email).exists?
+    end
+
     def initialize(registration)
       @registration = registration
     end
