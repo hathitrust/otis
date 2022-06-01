@@ -1,0 +1,116 @@
+<h1>OTIS Action Items</h1>
+
+<% if @digest.ready_registrations.any? %>
+  <h2>Registrations Pending New User Creation</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>E-Mail</th>
+        <th>Received</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @digest.ready_registrations.each do |registration| %>
+        <tr>
+          <td><%= link_to registration.applicant_name, ht_registration_url(registration.id) %></td>
+          <td><%= registration.applicant_email %></td>
+          <td><%= registration.received.to_date %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if @digest.expired_registrations.any? %>
+  <h2>Expired Registrations</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>E-Mail</th>
+        <th>Sent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @digest.expired_registrations.each do |registration| %>
+        <tr>
+          <td><%= link_to registration.applicant_name, ht_registration_url(registration.id) %></td>
+          <td><%= registration.applicant_email %></td>
+          <td><%= registration.sent.to_date %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if @digest.ready_approval_requests.any? %>
+  <h2>Approved Renewal Requests</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>E-Mail</th>
+        <th>Approver</th>
+        <th>Received</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @digest.ready_approval_requests.each do |request| %>
+        <tr>
+          <td><%= link_to request.userid, ht_user_url(request.userid) %></td>
+          <td><%= request.approver %></td>
+          <td><%= request.received.to_date %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if @digest.expired_approval_requests.any? %>
+  <h2>Expired Renewal Requests</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>E-Mail</th>
+        <th>Approver</th>
+        <th>Sent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @digest.expired_approval_requests.each do |request| %>
+        <tr>
+          <td><%= request.userid %></td>
+          <td><%= link_to request.approver, ht_approval_request_url(request.approver) %></td>
+          <td><%= request.sent.to_date %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if @digest.expiring_users.any? %>
+  <h2>Users Expiring Soon</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>E-Mail</th>
+        <th>Expires</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @digest.expiring_users.each do |user| %>
+        <tr>
+          <td><%= user.displayname %></td>
+          <td><%= link_to user.email, ht_user_url(user.email) %></td>
+          <td><%= user.expires.to_date %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<br/>
+<br/>
+<%= image_tag(attachments["HathiTrust_logo.png"].url,
+  size: "230x70", alt: "HathiTrust logo") %>

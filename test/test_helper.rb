@@ -4,7 +4,10 @@ require "simplecov"
 require "rake"
 require "w3c_validators"
 
-SimpleCov.start "rails"
+SimpleCov.start "rails" do
+  # Keep code only used with test environment from muddying the waters.
+  add_filter "migrate_users.rake"
+end
 
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"

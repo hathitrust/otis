@@ -27,6 +27,9 @@ class ExpirationDate
     expirescustom30: ExpiresTypeData.new("30 days", 30.days).freeze
   }.freeze
 
+  # Number of days left in term that should be flagged as expiring soon.
+  EXPIRES_SOON_IN_DAYS = (Otis.config&.expires_soon_in_days || 30).freeze
+
   # Shared utility for converting a (mostly) arbitrary value into a Date.
   def self.convert_to_date(obj)
     if obj.respond_to? :to_date
@@ -79,7 +82,7 @@ class ExpirationDate
   # Is this person expiring "soon" (based on the config)?
   # @return [Boolean]
   def expiring_soon?
-    days_until_expiration.between? 0, (Otis.config&.expires_soon_in_days || 30)
+    days_until_expiration.between? 0, ExpirationDate::EXPIRES_SOON_IN_DAYS
   end
 
   # Are we, in fact, already expired?

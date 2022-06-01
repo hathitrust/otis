@@ -118,8 +118,7 @@ end
 
 def create_ht_registration(inst_id)
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
-
-  HTRegistration.create(
+  reg = HTRegistration.create(
     applicant_name: Faker::Name.name,
     applicant_email: Faker::Internet.email,
     applicant_date: Faker::Date.backward(days: 180),
@@ -134,6 +133,16 @@ def create_ht_registration(inst_id)
     mfa_addendum: [true, false].sample,
     contact_info: Faker::Internet.email
   )
+  if rand < 0.5
+    reg.sent = Faker::Date.backward(days: 30)
+    reg.token_hash = HTRegistration.digest SecureRandom.urlsafe_base64(16)
+    if rand < 0.25
+      reg.received = Faker::Date.backward(days: 3)
+      reg.env = {"HTTP_X_REMOTE_USER" => Faker::Internet.email}.to_json
+      reg.ip_address = Faker::Internet.public_ip_v4_address
+    end
+    reg.save!
+  end
 end
 
 HTContactType.create(

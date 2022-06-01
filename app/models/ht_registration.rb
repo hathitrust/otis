@@ -46,6 +46,9 @@ class HTRegistration < ApplicationRecord
   # mfa = multi factor authentication
   validates_inclusion_of :mfa_addendum, in: [true, false]
 
+  scope :expired, -> { where("received IS NULL AND sent<?", expiration_date.to_s) }
+  scope :ready, -> { where("received IS NOT NULL AND finished IS NULL") }
+
   # This is the bit that goes to the applicant, just a gob of b64 data acting as a 'password'
   def token
     @token ||= SecureRandom.urlsafe_base64 16
