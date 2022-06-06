@@ -292,6 +292,7 @@ ja:
         staffdeveloper: スタッフ開発者
   ht_registrations:
     create:
+      duplicate: "「%{email}」というユーザーはすでに存在します。"
       success: "%{name}の登録が作成されました。"
     destroy:
       success: 登録が削除されました。

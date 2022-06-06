@@ -29,7 +29,10 @@ class HTRegistrationsController < ApplicationController
 
   def create
     @registration = presenter HTRegistration.new(reg_params)
-    if @registration.save
+    if Otis::RegistrationMover.user_exists? @registration
+      flash.now[:alert] = t(".duplicate", email: @registration.applicant_email)
+      render "new"
+    elsif @registration.save
       log
       flash.now[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to preview_ht_registration_path(@registration.id)

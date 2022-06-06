@@ -292,6 +292,7 @@ en:
         staffdeveloper: Staff Developer
   ht_registrations:
     create:
+      duplicate: A user identified by "%{email}" already exists.
       success: Registration created for %{name}.
     destroy:
       success: Registration removed.
