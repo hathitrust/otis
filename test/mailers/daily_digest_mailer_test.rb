@@ -4,6 +4,8 @@ require "test_helper"
 
 class DailyDigestMailerTest < ActionMailer::TestCase
   def setup
+    # Give it at least one thing to report.
+    create(:ht_user, expires: Date.today - 10)
     @digest = Otis::DailyDigest.new
   end
 
