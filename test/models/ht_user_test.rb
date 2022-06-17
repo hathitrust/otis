@@ -111,6 +111,20 @@ class HTUserExpiringSoon < ActiveSupport::TestCase
   end
 end
 
+class HTUserExpiringSoonScope < ActiveSupport::TestCase
+  def setup
+    @expiring_user = create(:ht_user, expires: Date.today + 5)
+    @expired_user = create(:ht_user, expires: Date.today - 10)
+    @safe_user = create(:ht_user, expires: Date.today + 100)
+  end
+
+  test "expiring_soon scope is correctly limited" do
+    expiring_soon_users = HTUser.expiring_soon
+    assert(expiring_soon_users.count == 1)
+    assert(expiring_soon_users[0].id == @expiring_user.id)
+  end
+end
+
 class HTUserMFA < ActiveSupport::TestCase
   def setup
     @mfa_user = build(:ht_user_mfa)

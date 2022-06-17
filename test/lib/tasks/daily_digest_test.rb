@@ -23,7 +23,7 @@ module Otis
 
     test "link uses default URL host from environment" do
       ENV["RAKE_DEFAULT_URL_HOST"] = "example.com/otis"
-      create(:ht_user, expires: Date.today - 10)
+      create(:ht_user, expires: Date.today + 5)
       ActionMailer::Base.register_interceptor(MailSnoop)
       Rake::Task["otis:send_daily_digest"].execute
       MailSnoop::SNOOPED_MAIL.last.tap do |mail|

@@ -40,7 +40,8 @@ class HTUser < ApplicationRecord
   scope :active, -> { where("expires > CURRENT_TIMESTAMP") }
   scope :expired, -> { where("expires <= CURRENT_TIMESTAMP") }
   scope :expiring_soon, -> {
-    where("CURRENT_TIMESTAMP >= DATE_SUB(expires,INTERVAL #{ExpirationDate::EXPIRES_SOON_IN_DAYS} DAY)")
+    where("DATE_SUB(expires,INTERVAL #{ExpirationDate::EXPIRES_SOON_IN_DAYS} DAY) <= CURRENT_TIMESTAMP")
+      .where("expires > CURRENT_TIMESTAMP")
   }
 
   after_save :clean_requests
