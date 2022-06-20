@@ -13,12 +13,24 @@ jobs:
     environment: production
     steps:
     - name: Deploy to Production
-      uses: mlibrary/deploy-to-kubernetes@v1
+      uses: mlibrary/deploy-to-kubernetes@v2
       with:
         github_username: ${{ github.actor }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
         image: hathitrust/otis:${{ github.event.inputs.tag }}
-        cluster_ca: ${{ secrets.KUBERNETES_CA }} ### DONE
-        cluster_server: ${{ secrets.KUBERNETES_SERVER }} ### DONE
-        namespace_token: ${{ secrets.KUBERNETES_TOKEN_PROD }} ### DONE
-        namespace: otis ### DONE
+        cluster_ca: ${{ secrets.KUBERNETES_CA }}
+        cluster_server: ${{ secrets.KUBERNETES_SERVER }}
+        namespace_token: ${{ secrets.KUBERNETES_TOKEN_PROD }}
+        namespace: otis
+    - name: Deploy daily-digest Cronjob to Production
+      uses: mlibrary/deploy-to-kubernetes@v2
+      with:
+        github_username: ${{ github.actor }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        image: hathitrust/otis:${{ github.event.inputs.tag }}
+        cluster_ca: ${{ secrets.KUBERNETES_CA }}
+        cluster_server: ${{ secrets.KUBERNETES_SERVER }}
+        namespace_token: ${{ secrets.KUBERNETES_TOKEN_PROD }}
+        namespace: otis
+        type: cronjob
+        cronjob_name: daily-digest
