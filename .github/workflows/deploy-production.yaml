@@ -15,8 +15,8 @@ jobs:
     - name: Deploy to Production
       uses: mlibrary/deploy-to-kubernetes@v2
       with:
-        github_username: ${{ github.actor }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        registry_username: ${{ github.actor }}
+        registry_token: ${{ secrets.GITHUB_TOKEN }}
         image: hathitrust/otis:${{ github.event.inputs.tag }}
         cluster_ca: ${{ secrets.KUBERNETES_CA }}
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
@@ -25,8 +25,8 @@ jobs:
     - name: Deploy daily-digest Cronjob to Production
       uses: mlibrary/deploy-to-kubernetes@v2
       with:
-        github_username: ${{ github.actor }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        registry_username: ${{ github.actor }}
+        registry_token: ${{ secrets.GITHUB_TOKEN }}
         image: hathitrust/otis:${{ github.event.inputs.tag }}
         cluster_ca: ${{ secrets.KUBERNETES_CA }}
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
