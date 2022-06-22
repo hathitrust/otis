@@ -15,6 +15,8 @@ class HTLogPresenterTest < ActiveSupport::TestCase
 
   test "#field_value :time" do
     log = HTLogPresenter.new(create(:ht_log))
-    assert_equal I18n.l(log.time, format: :long), log.field_value(:time)
+    assert_match I18n.l(log.time, format: :long), log.field_value(:time)
+    # Hidden field for sorting
+    assert_match "display:none", log.field_value(:time)
   end
 end
