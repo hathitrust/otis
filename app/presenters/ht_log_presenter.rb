@@ -10,6 +10,8 @@ class HTLogPresenter < ApplicationPresenter
   end
 
   def show_time
-    I18n.l(time, format: :long)
+    # https://stackoverflow.com/a/66646882
+    "<span style=\"display:none\">#{time}</span>" +
+      I18n.l(time, format: :long)
   end
 end

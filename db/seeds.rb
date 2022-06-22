@@ -187,3 +187,12 @@ end
 5.times do
   create_ht_user(expires: Faker::Time.backward)
 end
+
+10.times do
+  HTLog.create(
+    objid: Faker::Number.within(range: 1..10_000),
+    model: %w[HTApprovalRequest HTUser HTInstitution HTContact HTContactType HTRegistration].sample,
+    time: Faker::Time.backward,
+    data: '{"ip_address"=>"127.0.0.1", "user_agent"=>"WhizzyAgent", "client_ip"=>"127.0.0.1"}'
+  )
+end
