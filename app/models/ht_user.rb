@@ -24,6 +24,7 @@ class HTUser < ApplicationRecord
   has_one :ht_count, foreign_key: :userid, primary_key: :userid
   has_many :ht_logs, -> { HTLog.ht_user }, foreign_key: :objid, primary_key: :email
   has_many :ht_approval_request, foreign_key: :userid, primary_key: :email
+  has_many :ht_registration, foreign_key: :applicant_email, primary_key: :email
 
   validates :iprestrict, presence: true, unless: :mfa
   validate :validate_iprestrict
