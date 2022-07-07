@@ -15,17 +15,18 @@ module Otis
     def ht_user
       return @ht_user unless @ht_user.nil?
 
+      institution = HTInstitution.find(@registration.inst_id)
       @ht_user = HTUser.new(userid: userid,
         email: @registration.applicant_email, displayname: @registration.applicant_name,
-        inst_id: @registration.inst_id, approver: @registration.auth_rep_email,
-        authorizer: authorizer, expire_type: @registration.expire_type,
+        inst_id: @registration.inst_id, identity_provider: institution.entityID,
+        approver: @registration.auth_rep_email, authorizer: authorizer,
+        expire_type: @registration.expire_type,
         expires: ExpirationDate.new(Time.zone.now, @registration.expire_type).default_extension_date,
         usertype: :external, access: :total, role: @registration.role)
-      institution = HTInstitution.find(@registration.inst_id)
       if institution.mfa?
         @ht_user.mfa = true
       else
-        @ht_user.iprestrict = @registration.ip_address
+        @ht_user.iprestrict = iprestrict
       end
       @ht_user.tap do |u|
         u.save
@@ -33,6 +34,10 @@ module Otis
     end
 
     private
+
+    def iprestrict
+      @registration.mfa_addendum.present? ? "any" : @registration.ip_address
+    end
 
     # For CAA users, hathitrust_authorizer should be present and we should use that.
     # auth_rep_email is the fallback.
@@ -51,12 +56,16 @@ module Otis
     # It can go away once we either:
     #   - have (non-downcased) REMOTE_USER for all user (otis captures this at registration & renewal)
     #   - can match any form of user id in other places
+    #
+    # Use safe dereference in the downcase call and blank default
+    # mainly for dev testing where registration.env may be empty.
+    # If that happens in production the save operation will fail but app won't crash.
     def userid
       if used_umich_idp?
         umich_uniqname
       else
         @registration.env["HTTP_X_REMOTE_USER"]
-      end.downcase
+      end&.downcase || ""
     end
 
     def umich_uniqname
