@@ -15,13 +15,14 @@ module Otis
     def ht_user
       return @ht_user unless @ht_user.nil?
 
+      institution = HTInstitution.find(@registration.inst_id)
       @ht_user = HTUser.new(userid: userid,
         email: @registration.applicant_email, displayname: @registration.applicant_name,
-        inst_id: @registration.inst_id, approver: @registration.auth_rep_email,
-        authorizer: authorizer, expire_type: @registration.expire_type,
+        inst_id: @registration.inst_id, identity_provider: institution.entityID,
+        approver: @registration.auth_rep_email, authorizer: authorizer,
+        expire_type: @registration.expire_type,
         expires: ExpirationDate.new(Time.zone.now, @registration.expire_type).default_extension_date,
         usertype: :external, access: :total, role: @registration.role)
-      institution = HTInstitution.find(@registration.inst_id)
       if institution.mfa?
         @ht_user.mfa = true
       else

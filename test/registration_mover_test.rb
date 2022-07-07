@@ -79,4 +79,14 @@ module Otis
       assert_equal "authorizer@default.invalid", ht_user.authorizer
     end
   end
+
+  class RegistrationMoverInstitutionTest < ActiveSupport::TestCase
+    test "finishing registration uses institution.entityID to identity_provider" do
+      inst = create(:ht_institution)
+      registration = create(:ht_registration, inst_id: inst.inst_id,
+        env: {"HTTP_X_REMOTE_USER" => "nobody@default.invalid"}.to_json)
+      ht_user = RegistrationMover.new(registration).ht_user
+      assert_equal inst.entityID, ht_user.identity_provider
+    end
+  end
 end
