@@ -26,9 +26,7 @@ module Otis
           password: Rails.application.credentials.jira[:password],
           site: Otis.config.jira.site,
           context_path: Otis.config.jira.context_path,
-          auth_type: :cookie,
-          use_ssl: true,
-          use_cookies: true
+          auth_type: :basic
         })
         # :nocov:
       else
