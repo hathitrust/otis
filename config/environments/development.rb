@@ -61,6 +61,7 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  # private network for docker
-  config.web_console.whitelisted_ips = "172.16.0.0/12"
+  # private networks for docker
+  # See https://stackoverflow.com/q/29417328
+  config.web_console.permissions = ["192.168.0.0/16", "172.16.0.0/12"]
 end
