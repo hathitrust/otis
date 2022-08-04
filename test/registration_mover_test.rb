@@ -89,4 +89,16 @@ module Otis
       assert_equal inst.entityID, ht_user.identity_provider
     end
   end
+
+  class RegistrationMoverMergeTest < ActiveSupport::TestCase
+    test "finishing re-registration merges new fields onto existing user" do
+      old_inst = create(:ht_institution)
+      existing_user = create(:ht_user, inst_id: old_inst.inst_id)
+      new_inst = create(:ht_institution)
+      registration = create(:ht_registration, applicant_email: existing_user.email,
+        inst_id: new_inst.inst_id, env: {"HTTP_X_REMOTE_USER" => existing_user.email}.to_json)
+      new_user = RegistrationMover.new(registration).ht_user
+      assert_equal new_user, existing_user.reload
+    end
+  end
 end

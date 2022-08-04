@@ -62,6 +62,8 @@ en:
         detail_identity_provider: Identity Provider
         detail_reverse_lookup: Reverse Lookup
         detail_scoped_affiliation: Scoped Affiliation
+        email:
+          existing_user: Existing User
         env: Authentication Data
         expire_type: Expire Type
         finished: Finished
@@ -292,12 +294,14 @@ en:
         staffdeveloper: Staff Developer
   ht_registrations:
     create:
-      duplicate: A user identified by "%{email}" already exists.
       success: Registration created for %{name}.
     destroy:
       success: Registration removed.
     edit:
       edit: Edit Registration
+    finish:
+      already_finished: Registration already completed.
+      success: Registration completed for %{name}.
     form:
       cancel: Cancel
       submit_changes: Submit Changes
@@ -321,6 +325,7 @@ en:
       edit: Edit
       email_preview: E-mail Preview
       login_details: Login Details
+      update_user: Update User
       whois_data: WHOIS Data
     update:
       success: Registration updated for %{name}.

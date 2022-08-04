@@ -2,12 +2,6 @@ module Otis
   # Responsible for creating a new HTUser, populating it with the data in
   # an HTRegistration, and saving.
   class RegistrationMover
-    UMICH_IDP = "https://shibboleth.umich.edu/idp/shibboleth"
-
-    def self.user_exists?(registration)
-      HTUser.where(email: registration.applicant_email).exists?
-    end
-
     def initialize(registration)
       @registration = registration
     end
@@ -16,6 +10,7 @@ module Otis
       return @ht_user unless @ht_user.nil?
 
       institution = HTInstitution.find(@registration.inst_id)
+      @ht_user = @registration.existing_user || HTUser.new
       @ht_user = HTUser.new(userid: userid,
         email: @registration.applicant_email, displayname: @registration.applicant_name,
         inst_id: @registration.inst_id, identity_provider: institution.entityID,
@@ -81,7 +76,7 @@ module Otis
     end
 
     def used_umich_idp?
-      @registration.env["HTTP_X_SHIB_IDENTITY_PROVIDER"] == UMICH_IDP
+      @registration.env["HTTP_X_SHIB_IDENTITY_PROVIDER"] == Otis.config.umich_idp
     end
   end
 end

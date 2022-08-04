@@ -40,7 +40,7 @@ FactoryBot.define do
   end
 
   factory :ht_institution do
-    sequence(:inst_id) { |n| "#{n}#{Faker::Internet.domain_word}" }
+    sequence(:inst_id) { |n| "#{n}#{Faker::Internet.unique.domain_word}" }
     domain { Faker::Internet.domain_name }
     name { Faker::University.name }
     entityID { Faker::Internet.url }
