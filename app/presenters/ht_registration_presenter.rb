@@ -19,6 +19,7 @@ class HTRegistrationPresenter < ApplicationPresenter
   READ_ONLY_FIELDS = %i[sent received finished ip_address env].freeze
   JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/jira/", "browse/").to_s.freeze
   FIELD_SIZE = 45
+  VALID_AFFILIATIONS = %r{^(faculty|staff|member|employee)}
 
   BADGES = {
     sent: Otis::Badge.new("activerecord.attributes.ht_registration.sent", "label-info"),
@@ -26,7 +27,10 @@ class HTRegistrationPresenter < ApplicationPresenter
     finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "label-success"),
     institution_static_ip: Otis::Badge.new("activerecord.attributes.ht_registration.institution.static_ip", "label-danger"),
     institution_mfa: Otis::Badge.new("activerecord.attributes.ht_registration.institution.mfa", "label-success"),
-    existing_user: Otis::Badge.new("activerecord.attributes.ht_registration.email.existing_user", "label-warning")
+    existing_user: Otis::Badge.new("activerecord.attributes.ht_registration.email.existing_user", "label-warning"),
+    ok: Otis::Badge.new("activerecord.attributes.ht_registration.detail.ok", "label-success"),
+    mismatch: Otis::Badge.new("activerecord.attributes.ht_registration.detail.mismatch", "label-danger"),
+    questionable: Otis::Badge.new("activerecord.attributes.ht_registration.detail.questionable", "label-warning")
   }.freeze
 
   def detail_fields
@@ -79,11 +83,19 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_detail_edu_person_principal_name
-    env["HTTP_X_SHIB_EDUPERSONPRINCIPALNAME"]
+    name = env["HTTP_X_SHIB_EDUPERSONPRINCIPALNAME"] || ""
+    # Check if principal name or email matches the given DSP email.
+    # Not all IDPs send this info, so no full-blown warning.
+    badge = name == applicant_email ? :ok : :questionable
+    name + " " + BADGES[badge].label_span
   end
 
   def show_detail_email
-    env["HTTP_X_SHIB_MAIL"]
+    email = env["HTTP_X_SHIB_MAIL"] || ""
+    # Check if principal name or email matches the given DSP email.
+    # Not all IDPs send this info, so as with eppn no need for full-blown warning.
+    badge = email == applicant_email ? :ok : :questionable
+    email + " " + BADGES[badge].label_span
   end
 
   def show_detail_geoip
@@ -94,8 +106,15 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_detail_identity_provider
-    entity = env["HTTP_X_SHIB_IDENTITY_PROVIDER"]
-    ERB::Util.html_escape(HTInstitution.where(entityID: entity).first&.name || entity)
+    idp = env["HTTP_X_SHIB_IDENTITY_PROVIDER"] || ""
+    # Check if identity provider matches the institution picked on the signup form
+    inst = HTInstitution.where(entityID: idp).first
+    badge = ""
+    unless Otis.config.registration.auth_exceptions.member?(inst_id)
+      badge_id = idp == ht_institution.entityID ? :ok : :mismatch
+      badge = BADGES[badge_id].label_span
+    end
+    ERB::Util.html_escape(inst&.name || idp) + " " + badge
   end
 
   def show_detail_reverse_lookup
@@ -105,7 +124,29 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_detail_scoped_affiliation
-    env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"]
+    affiliation = env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"] || ""
+    # Check if scoped affiliation is faculty@, staff@, member@, or employee@
+    # AND matches the allowed affiliations for the IdP the user logged in with
+    badge = ""
+    unless Otis.config.registration.auth_exceptions.member? inst_id
+      badge_id = scoped_affiliation_valid? && scoped_affiliation_match? ? :ok : :mismatch
+      badge = BADGES[badge_id].label_span
+    end
+    affiliation + " " + badge
+  end
+
+  def scoped_affiliation_valid?
+    return false unless env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"].present?
+
+    affiliations = env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"].downcase.split(";")
+    affiliations.any? { |affiliation| self.class::VALID_AFFILIATIONS.match? affiliation }
+  end
+
+  def scoped_affiliation_match?
+    return false unless env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"].present?
+
+    affiliations = env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"].downcase.split(";")
+    affiliations.any? { |affiliation| ht_institution.allowed_affiliations.downcase.include? affiliation }
   end
 
   def show_finished

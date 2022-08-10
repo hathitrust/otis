@@ -22,3 +22,8 @@ jira:
   site: https://hathitrust.atlassian.net/
   context_path: ""
   project: GS
+
+# inst_ids with which we relax Shib credential checking in completed registrations.
+registration:
+  auth_exceptions:
+    - nypl

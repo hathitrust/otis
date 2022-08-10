@@ -55,6 +55,10 @@ en:
         auth_rep_email: Auth Rep E-mail
         auth_rep_name: Auth Rep Name
         contact_info: Contact Info
+        detail:
+          mismatch: Mismatch
+          ok: OK
+          questionable: Questionable
         detail_display_name: Display Name
         detail_edu_person_principal_name: Principal Name
         detail_email: E-mail
