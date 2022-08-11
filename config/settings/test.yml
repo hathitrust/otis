@@ -36,4 +36,4 @@ checkpoint:
     host: mariadb-test
 
 shibboleth:
-  url: /useradmin/Shibboleth.sso/Login
+  url: /Shibboleth.sso/Login

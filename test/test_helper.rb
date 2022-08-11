@@ -3,11 +3,17 @@
 require "simplecov"
 require "rake"
 require "w3c_validators"
+require "capybara"
+require "selenium-webdriver"
 
 SimpleCov.start "rails" do
   # Keep code only used with test environment from muddying the waters.
   add_filter "migrate_users.rake"
 end
+
+Capybara.server_host = "0.0.0.0"
+Capybara.app_host = "http://#{ENV.fetch("HOSTNAME")}:#{Capybara.server_port}"
+Selenium::WebDriver.logger.ignore(:browser_options)
 
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"

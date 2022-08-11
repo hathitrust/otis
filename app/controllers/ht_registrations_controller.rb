@@ -31,7 +31,7 @@ class HTRegistrationsController < ApplicationController
     @registration = presenter HTRegistration.new(reg_params)
     if @registration.save
       log
-      flash.now[:notice] = t(".success", name: @registration.applicant_name)
+      flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to preview_ht_registration_path(@registration.id)
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
@@ -136,8 +136,8 @@ class HTRegistrationsController < ApplicationController
       .registration_email.deliver_now
     add_jira_comment template: :registration_sent
     flash[:notice] = t("ht_registrations.mail.success")
-    # This is for debugging only
-    if Rails.env.development?
+    # This is for debugging and system testing only
+    unless Rails.env.production?
       flash[:notice] = "Message sent: #{finalize_url @registration.token, locale: nil}"
     end
     log params.transform_values! { |v| v.present? ? v : nil }.permit!

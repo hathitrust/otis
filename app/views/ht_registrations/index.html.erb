@@ -3,7 +3,7 @@
   <%= link_to t(".new_registration"), new_ht_registration_path, class: 'btn btn-primary' %>
   <br/>
   
-  <h2 class="pull-left"><%= t(".current_registrations") %></h2>
+  <h1 class="pull-left"><%= t(".current_registrations") %></h1>
   
   <% fields = HTRegistrationPresenter::INDEX_FIELDS %>
   <table id="registrations-table" class="table table-striped" data-toggle="table"

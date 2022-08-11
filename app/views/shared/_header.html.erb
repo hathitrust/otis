@@ -5,9 +5,9 @@
         class: "d-inline-block align-top" %>
     </a>
     <% unless logged_in? %>
-      <p class="navbar-text"><%= I18n.t("global.not_logged_in") %></p>
+      <p class="navbar-text" id="nav-not-logged-in"><%= I18n.t("global.not_logged_in") %></p>
     <% else %>
-      <p class="navbar-text"><%= I18n.t("global.logged_in") %></p>
+      <p class="navbar-text" id="nav-logged-in"><%= I18n.t("global.logged_in") %></p>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
           <% unless Rails.env.production? %>
