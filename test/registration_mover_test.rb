@@ -93,12 +93,16 @@ module Otis
   class RegistrationMoverMergeTest < ActiveSupport::TestCase
     test "finishing re-registration merges new fields onto existing user" do
       old_inst = create(:ht_institution)
-      existing_user = create(:ht_user, inst_id: old_inst.inst_id)
-      new_inst = create(:ht_institution)
+      new_inst = create(:ht_institution, :mfa)
+      existing_user = create(:ht_user, inst_id: old_inst.inst_id, role: "superuser")
       registration = create(:ht_registration, applicant_email: existing_user.email,
-        inst_id: new_inst.inst_id, env: {"HTTP_X_REMOTE_USER" => existing_user.email}.to_json)
+        inst_id: new_inst.inst_id, role: "corrections", mfa_addendum: true,
+        env: {"HTTP_X_REMOTE_USER" => existing_user.email}.to_json)
       new_user = RegistrationMover.new(registration).ht_user
+      assert new_user.persisted?
       assert_equal new_user, existing_user.reload
+      assert_equal new_user.inst_id, new_inst.inst_id
+      assert_equal "corrections", new_user.role
     end
   end
 end

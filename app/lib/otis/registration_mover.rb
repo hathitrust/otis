@@ -10,9 +10,8 @@ module Otis
       return @ht_user unless @ht_user.nil?
 
       institution = HTInstitution.find(@registration.inst_id)
-      @ht_user = @registration.existing_user || HTUser.new
-      @ht_user = HTUser.new(userid: userid,
-        email: @registration.applicant_email, displayname: @registration.applicant_name,
+      @ht_user = @registration.existing_user || HTUser.new(email: @registration.applicant_email)
+      @ht_user.update(userid: userid, displayname: @registration.applicant_name,
         inst_id: @registration.inst_id, identity_provider: institution.entityID,
         approver: @registration.auth_rep_email, authorizer: authorizer,
         expire_type: @registration.expire_type,
