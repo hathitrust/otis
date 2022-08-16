@@ -29,10 +29,7 @@ class HTRegistrationsController < ApplicationController
 
   def create
     @registration = presenter HTRegistration.new(reg_params)
-    if Otis::RegistrationMover.user_exists? @registration
-      flash.now[:alert] = t(".duplicate", email: @registration.applicant_email)
-      render "new"
-    elsif @registration.save
+    if @registration.save
       log
       flash.now[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to preview_ht_registration_path(@registration.id)
@@ -86,12 +83,17 @@ class HTRegistrationsController < ApplicationController
   # Create user from registration and redirect to its edit or show page
   def finish
     fetch_registration
+    if @registration.finished?
+      flash[:alert] = t(".already_finished")
+      return redirect_to @registration
+    end
     user = Otis::RegistrationMover.new(@registration).ht_user
     if user.valid?
       @registration.finished = Time.zone.now
       @registration.save!
       add_jira_comment template: :registration_finished
       log params.permit!
+      flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to edit_ht_user_path user
     else
       flash[:alert] = user.errors.full_messages.to_sentence

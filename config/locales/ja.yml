@@ -62,6 +62,8 @@ ja:
         detail_identity_provider: IDプロバイダー
         detail_reverse_lookup: 逆引き
         detail_scoped_affiliation: スコープ付き所属
+        email:
+          existing_user: 既存のユーザー
         env: 認証データ
         expire_type: 有効期限タイプ
         finished: 終了した
@@ -292,12 +294,14 @@ ja:
         staffdeveloper: スタッフ開発者
   ht_registrations:
     create:
-      duplicate: "「%{email}」というユーザーはすでに存在します。"
       success: "%{name}の登録が作成されました。"
     destroy:
       success: 登録が削除されました。
     edit:
       edit: 登録を編集する
+    finish:
+      already_finished: 登録はすでに完了しています。
+      success: "%{name}の登録が完了しました。"
     form:
       cancel: キャンセル
       submit_changes: 変更を送信する
@@ -321,6 +325,7 @@ ja:
       edit: 編集
       email_preview: Eメールプレビュー
       login_details: ログインの詳細
+      update_user: ユーザーを更新する
       whois_data: WHOISデータ
     update:
       success: "%{name}の登録が更新されました。"

@@ -13,6 +13,7 @@ raise StandardError, "Not for production use" if Rails.env.production?
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_registrations")
 
 require "faker"
+UNIQUE_INST_IDS = {}
 
 def create_ht_user(expires:)
   u = HTUser.new(
@@ -87,6 +88,7 @@ def create_ht_institution(enabled)
     emergency_contact: Faker::Internet.email,
     last_update: Faker::Time.backward
   )
+  UNIQUE_INST_IDS[inst_id] = true
   inst_id
 end
 
@@ -116,7 +118,21 @@ def create_ht_contact_type
   )
 end
 
-def create_ht_registration(inst_id)
+def fake_env
+  {
+    HTTP_X_REMOTE_USER: "https://shibboleth.umich.edu/idp/shibboleth!http://www.hathitrust.org/shibboleth-sp!#{Faker::Internet.base64}",
+    HTTP_X_SHIB_AUTHENTICATION_METHOD: "https://refeds.org/profile/mfa",
+    HTTP_X_SHIB_AUTHNCONTEXT_CLASS: "https://refeds.org/profile/mfa",
+    HTTP_X_SHIB_DISPLAYNAME: Faker::Name.name,
+    HTTP_X_SHIB_EDUPERSONPRINCIPALNAME: Faker::Internet.unique.email,
+    HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION: "staff@#{Faker::Internet.domain_name}",
+    HTTP_X_SHIB_IDENTITY_PROVIDER: "https://shibboleth.umich.edu/idp/shibboleth",
+    HTTP_X_SHIB_MAIL: Faker::Internet.unique.email,
+    HTTP_X_SHIB_PERSISTENT_ID: "https://shibboleth.umich.edu/idp/shibboleth!http://www.hathitrust.org/shibboleth-sp!#{Faker::Internet.base64};https://shibboleth.umich.edu/idp/shibboleth!http://www.hathitrust.org/shibboleth-sp!#{Faker::Internet.base64}"
+  }.to_json
+end
+
+def create_ht_registration
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
   reg = HTRegistration.create(
     applicant_name: Faker::Name.name,
@@ -126,7 +142,7 @@ def create_ht_registration(inst_id)
     auth_rep_email: Faker::Internet.email,
     auth_rep_date: Faker::Date.backward(days: 180),
     hathitrust_authorizer: Faker::Internet.email,
-    inst_id: inst_id,
+    inst_id: UNIQUE_INST_IDS.keys.sample,
     role: HTRegistration::ROLES.sample.to_s,
     expire_type: HTUser::EXPIRES_TYPES.sample,
     jira_ticket: "XXX-#{ticket_no}",
@@ -136,9 +152,9 @@ def create_ht_registration(inst_id)
   if rand < 0.5
     reg.sent = Faker::Date.backward(days: 30)
     reg.token_hash = HTRegistration.digest SecureRandom.urlsafe_base64(16)
-    if rand < 0.25
+    if rand < 0.5
       reg.received = Faker::Date.backward(days: 3)
-      reg.env = {"HTTP_X_REMOTE_USER" => Faker::Internet.email}.to_json
+      reg.env = fake_env
       reg.ip_address = Faker::Internet.public_ip_v4_address
     end
     reg.save!
@@ -158,7 +174,6 @@ end
   inst_id = create_ht_institution(1)
   create_ht_billing_member(inst_id) if [0, 1].sample.zero?
   create_ht_contact(inst_id) if [0, 1].sample.zero?
-  create_ht_registration(inst_id)
 end
 
 2.times do
@@ -171,6 +186,10 @@ end
 
 2.times do
   create_ht_institution(3)
+end
+
+20.times do
+  create_ht_registration
 end
 
 # We should simulate the typical situation in which some approvers are shared.

@@ -127,8 +127,8 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faker (2.19.0)
-      i18n (>= 1.6, < 2)
+    faker (2.22.0)
+      i18n (>= 1.8.11, < 2)
     ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
@@ -146,7 +146,7 @@ GEM
     http-cookie (1.0.4)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
-    i18n (1.10.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     i18n-tasks (0.9.37)
       activesupport (>= 4.0.2)
@@ -377,7 +377,6 @@ DEPENDENCIES
   rails (~> 6.1.6.1)
   rails-controller-testing
   rails-i18n (~> 6.0.0)
-  railties (~> 6.1.6.1)
   rubyzip (~> 2.0)
   sassc-rails
   selenium-webdriver
@@ -393,4 +392,4 @@ DEPENDENCIES
   whois-parser
 
 BUNDLED WITH
-   2.3.18
+   2.3.19

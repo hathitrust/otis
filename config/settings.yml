@@ -10,6 +10,8 @@ expires_soon_in_days: 30
 manager_email: manager@default.invalid
 reply_to_email: reply_to@default.invalid
 
+umich_idp: "https://shibboleth.umich.edu/idp/shibboleth"
+
 met_entity_endpoint: "https://met.refeds.org/met/entity"
 books_library_endpoint: "https://books.google.com/libraries"
 ht_login_test_endpoint: "https://babel.hathitrust.org/Shibboleth.sso/Login?target=https://babel.hathitrust.org/cgi/whoami"

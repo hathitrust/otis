@@ -25,7 +25,8 @@ class HTRegistrationPresenter < ApplicationPresenter
     received: Otis::Badge.new("activerecord.attributes.ht_registration.received", "label-default"),
     finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "label-success"),
     institution_static_ip: Otis::Badge.new("activerecord.attributes.ht_registration.institution.static_ip", "label-danger"),
-    institution_mfa: Otis::Badge.new("activerecord.attributes.ht_registration.institution.mfa", "label-success")
+    institution_mfa: Otis::Badge.new("activerecord.attributes.ht_registration.institution.mfa", "label-success"),
+    existing_user: Otis::Badge.new("activerecord.attributes.ht_registration.email.existing_user", "label-warning")
   }.freeze
 
   def detail_fields
@@ -69,7 +70,8 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_applicant_email
-    link_to applicant_email, "mailto:#{applicant_email}"
+    link_to(applicant_email, "mailto:#{applicant_email}") + " " +
+      (existing_user.present? ? BADGES[:existing_user].label_span : "")
   end
 
   def show_detail_display_name

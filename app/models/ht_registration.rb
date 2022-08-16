@@ -84,6 +84,10 @@ class HTRegistration < ApplicationRecord
     end
   end
 
+  def existing_user
+    HTUser.where(email: applicant_email).first
+  end
+
   def resource_id
     id
   end
