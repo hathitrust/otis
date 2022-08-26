@@ -145,8 +145,10 @@ class HTRegistrationPresenter < ApplicationPresenter
   def scoped_affiliation_match?
     return false unless env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"].present?
 
-    affiliations = env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"].downcase.split(";")
-    affiliations.any? { |affiliation| ht_institution.allowed_affiliations.downcase.include? affiliation }
+    affiliations = env["HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION"].split(";")
+    # Unspecified inst.allowed_affiliations counts as a match with empty regex
+    inst_affiliations_re = Regexp.new(ht_institution.allowed_affiliations || "", Regexp::IGNORECASE)
+    affiliations.any? { |affiliation| inst_affiliations_re.match? affiliation }
   end
 
   def show_finished
