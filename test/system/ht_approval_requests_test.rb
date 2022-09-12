@@ -7,21 +7,23 @@ class HTApprovalRequestsTest < ApplicationSystemTestCase
   end
 
   test "approval request workflow" do
-    # Users index page
+    # HT staff with approval request authority visits users index page
     visit_with_login ht_users_url
     first("input[name='ht_users[]']").click
+    # HT staff creates approval request(s)
     click_on "Create Approval Requests"
     # Approval Requests index page
     assert_selector "div.alert-success"
     assert_selector "h1", text: "Approval Requests"
     page.first("tr.success td a").click
-    # Approver/edit page
+    # HT staff edits/approves email and sends it
     click_on "SEND"
     # Show page
     # Extract approve URL from alert (only show in development/test environments)
     assert_selector "div.alert-success"
     link = first("div.alert-success").text.match(/http.+/)[0]
-    # Pretend we're the recipient of the approval e-mail and follow link.
+
+    # Approver follows link from approval e-mail
     visit link
     # TODO: make approval requests more like registrations with a confirmation button.
     # See DEV-390

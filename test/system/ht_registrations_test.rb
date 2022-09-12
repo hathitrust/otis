@@ -8,9 +8,11 @@ class HTRegistrationsTest < ApplicationSystemTestCase
   end
 
   test "registration workflow" do
+    # HT staff creates new registration
     visit_with_login ht_registrations_url
     click_on "New Registration"
     assert_selector "h1", text: "New Registration"
+    # HT staff enters user registration details
     fill_in "Applicant Name", with: "Test Registration Applicant"
     fill_in "Applicant E-mail", with: "test_reg_applicant@default.invalid"
     fill_in "Applicant Date", with: "01/01/2022"
@@ -25,10 +27,10 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     fill_in "Auth Rep Date", with: "01/01/2022"
     fill_in "Contact Info", with: "contact_info@default.invalid"
     fill_in "HathiTrust Authorizer", with: "nobody@hathitrust.org"
-    # Capybara's too dumb to find and click a checkbox
+    # Capybara is unable to find and click a checkbox directly
     check "ht_registration_mfa_addendum"
     click_on "Submit Changes"
-    # Edit email page
+    # HT staff edits and sends email
     assert_selector "div.alert-success"
     assert_selector "h1", text: "Test Registration Applicant"
     assert_content "E-mail Preview"
@@ -38,7 +40,8 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     # Extract finalize URL from alert (only show in development/test environments)
     assert_selector "div.alert-success"
     link = first("div.alert-success").text.match(/http.+/)[0]
-    # Pretend we're the recipient of the registration e-mail and follow link.
+
+    # Registrant follows link in the registration e-mail
     visit link
     click_on "Confirm Registration"
     assert_content "confirmed for test_reg_applicant@default.invalid"
