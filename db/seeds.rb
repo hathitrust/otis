@@ -82,9 +82,9 @@ def create_ht_institution(enabled)
     us: [0, 1].sample,
     enabled: enabled,
     entityID: Faker::Internet.url,
-    allowed_affiliations: "^(alum|member)" + domain,
+    allowed_affiliations: "^(alum|member)@" + domain,
     shib_authncontext_class: [nil, Faker::Internet.url].sample,
-    emergency_status: [nil, "^(faculty|staff|student)" + domain].sample,
+    emergency_status: [nil, "^(faculty|staff|student)@" + domain].sample,
     emergency_contact: Faker::Internet.email,
     last_update: Faker::Time.backward
   )

@@ -55,6 +55,10 @@ ja:
         auth_rep_email: 認証担当者のEメール
         auth_rep_name: 認証担当者の表示名
         contact_info: 連絡先情報
+        detail:
+          mismatch: 不突合
+          ok: OK
+          questionable: 胡乱
         detail_display_name: 表示名
         detail_edu_person_principal_name: プリンシパル名
         detail_email: Eメール

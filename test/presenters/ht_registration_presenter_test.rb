@@ -29,11 +29,11 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   end
 
   test "#field_value :auth_rep_email displays as mailto link" do
-    assert_match /mailto/, @reg.field_value(:auth_rep_email)
+    assert_match %r{mailto}, @reg.field_value(:auth_rep_email)
   end
 
   test "#field_value :applicant displays with a link" do
-    assert_match /href/, @reg.field_value(:applicant)
+    assert_match %r{href}, @reg.field_value(:applicant)
   end
 
   test "#field_value :applicant_date" do
@@ -42,7 +42,7 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   end
 
   test "#field_value :applicant_email displays as mailto link" do
-    assert_match /mailto/, @reg.field_value(:applicant_email)
+    assert_match %r{mailto}, @reg.field_value(:applicant_email)
   end
 
   test "#field_value :jira_ticket displays as link" do
@@ -87,5 +87,95 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   test "#cancel_path for persisted object goes to object" do
     reg = HTRegistrationPresenter.new(create(:ht_registration))
     assert_match "/ht_registrations/#{reg.id}", reg.cancel_path
+  end
+end
+
+class HTRegistrationPresenterENVTest < ActiveSupport::TestCase
+  def setup
+    @inst = create(:ht_institution, inst_id: "test",
+      allowed_affiliations: "^(alum|faculty|staff)@default.invalid")
+    @nypl = create(:ht_institution, inst_id: "nypl")
+    @ok = I18n.t("activerecord.attributes.ht_registration.detail.ok")
+    @mismatch = I18n.t("activerecord.attributes.ht_registration.detail.mismatch")
+    @questionable = I18n.t("activerecord.attributes.ht_registration.detail.questionable")
+  end
+
+  test "HTTP_X_SHIB_EDUPERSONPRINCIPALNAME match" do
+    reg = HTRegistrationPresenter.new build(:ht_registration)
+    reg.env = {"HTTP_X_SHIB_EDUPERSONPRINCIPALNAME" => reg.applicant_email}.to_json
+    assert_match @ok, reg.field_value(:detail_edu_person_principal_name)
+  end
+
+  test "HTTP_X_SHIB_EDUPERSONPRINCIPALNAME mismatch" do
+    reg = HTRegistrationPresenter.new build(:ht_registration)
+    reg.env = {"HTTP_X_SHIB_EDUPERSONPRINCIPALNAME" => "nobody@default.invalid"}.to_json
+    assert_match @questionable, reg.field_value(:detail_edu_person_principal_name)
+  end
+
+  test "HTTP_X_SHIB_MAIL match" do
+    reg = HTRegistrationPresenter.new build(:ht_registration)
+    reg.env = {"HTTP_X_SHIB_MAIL" => reg.applicant_email}.to_json
+    assert_match @ok, reg.field_value(:detail_email)
+  end
+
+  test "HTTP_X_SHIB_MAIL mismatch" do
+    reg = HTRegistrationPresenter.new build(:ht_registration)
+    reg.env = {"HTTP_X_SHIB_MAIL" => "nobody@default.invalid"}.to_json
+    assert_match @questionable, reg.field_value(:detail_email)
+  end
+
+  test "HTTP_X_SHIB_IDENTITY_PROVIDER match" do
+    reg = HTRegistrationPresenter.new build(:ht_registration, inst_id: @inst.inst_id)
+    reg.env = {"HTTP_X_SHIB_IDENTITY_PROVIDER" => @inst.entityID}.to_json
+    assert_match @ok, reg.field_value(:detail_identity_provider)
+  end
+
+  test "HTTP_X_SHIB_IDENTITY_PROVIDER mismatch" do
+    reg = HTRegistrationPresenter.new build(:ht_registration, inst_id: @inst.inst_id)
+    reg.env = {"HTTP_X_SHIB_IDENTITY_PROVIDER" => "http://default.invalid"}.to_json
+    assert_match @mismatch, reg.field_value(:detail_identity_provider)
+  end
+
+  test "HTTP_X_SHIB_IDENTITY_PROVIDER NYPL" do
+    reg = HTRegistrationPresenter.new build(:ht_registration, inst_id: @nypl.inst_id)
+    reg.env = {"HTTP_X_SHIB_IDENTITY_PROVIDER" => "http://default.nypl.invalid"}.to_json
+    assert_no_match @ok, reg.field_value(:detail_identity_provider)
+    assert_no_match @mismatch, reg.field_value(:detail_identity_provider)
+  end
+
+  test "HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION match" do
+    reg = HTRegistrationPresenter.new build(:ht_registration, inst_id: @inst.inst_id)
+    reg.env = {"HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION" => "something@default.invalid;staff@default.invalid"}.to_json
+    assert_match @ok, reg.field_value(:detail_scoped_affiliation)
+  end
+
+  test "HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION mismatch with invalid affiliations" do
+    reg = HTRegistrationPresenter.new build(:ht_registration, inst_id: @inst.inst_id)
+    # 'alum' is not in our list but is in the institution's
+    reg.env = {"HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION" => "alum@default.invalid"}.to_json
+    assert_match @mismatch, reg.field_value(:detail_scoped_affiliation)
+  end
+
+  test "HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION mismatch with mismatched affiliations" do
+    reg = HTRegistrationPresenter.new build(:ht_registration, inst_id: @inst.inst_id)
+    # 'employee' is in our list but not the institution's
+    reg.env = {"HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION" => "employee@default.invalid"}.to_json
+    assert_match @mismatch, reg.field_value(:detail_scoped_affiliation)
+  end
+
+  test "HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION NYPL" do
+    reg = HTRegistrationPresenter.new build(:ht_registration, inst_id: @nypl.inst_id)
+    reg.env = {"HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION" => "something@default.nypl.invalid;staff@default.nypl.invalid"}.to_json
+    assert_no_match @ok, reg.field_value(:detail_scoped_affiliation)
+    assert_no_match @mismatch, reg.field_value(:detail_scoped_affiliation)
+  end
+
+  test "HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION with no allowed affiliations" do
+    inst_nil_aa = create(:ht_institution, inst_id: "test_nil_aa", allowed_affiliations: nil)
+    reg = HTRegistrationPresenter.new build(:ht_registration, inst_id: inst_nil_aa.inst_id)
+    reg.env = {"HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION" => "staff@default.invalid"}.to_json
+    assert_match @ok, reg.field_value(:detail_scoped_affiliation)
+    assert_no_match @mismatch, reg.field_value(:detail_scoped_affiliation)
+    assert_no_match @questionable, reg.field_value(:detail_scoped_affiliation)
   end
 end
