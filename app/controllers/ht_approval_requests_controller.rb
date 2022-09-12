@@ -49,6 +49,11 @@ class HTApprovalRequestsController < ApplicationController
         req.save!
       end
       flash[:notice] = t ".messages_sent"
+      # This is for debugging and system testing only
+      unless Rails.env.production?
+        urls = @reqs.map { |req| approve_url req.token, locale: nil }.join(", ")
+        flash[:notice] = "Message sent: #{urls}"
+      end
     rescue => e
       flash[:alert] = e.message
     end

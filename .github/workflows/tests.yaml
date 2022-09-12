@@ -29,3 +29,6 @@ jobs:
       - name: Run tests
         run: docker-compose run test
 
+      - name: Run system tests
+        run: docker-compose run system-test
+

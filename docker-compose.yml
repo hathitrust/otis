@@ -26,6 +26,19 @@ services:
       restart_policy:
         condition: none
 
+  system-test:
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - gem_cache:/gems
+    depends_on:
+      - mariadb-test
+      - chrome-server
+    command: bash -c "bin/wait-for mariadb-test:3306 && bin/run_system_tests.sh"
+    deploy:
+      restart_policy:
+        condition: none
+
   mariadb-dev:
     image: mariadb
     restart: always
@@ -47,6 +60,10 @@ services:
       MYSQL_PASSWORD: otis
     volumes: 
       - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
+
+  chrome-server:
+    image: selenium/standalone-chrome:latest
+    restart: always
 
 volumes:
   gem_cache:

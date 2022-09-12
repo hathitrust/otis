@@ -43,3 +43,9 @@ To run a single test class use an invocation along these lines:
 ```
 docker-compose run test bundle exec ruby -I test test/controllers/ht_users_controller_test.rb
 ```
+
+System tests, as usual, are not run by default.
+
+```
+docker-compose run system-test
+```
