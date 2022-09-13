@@ -295,6 +295,7 @@ GEM
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
+    simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.3)
     sprockets (4.0.3)
       concurrent-ruby (~> 1.0)
@@ -381,6 +382,7 @@ DEPENDENCIES
   sassc-rails
   selenium-webdriver
   simplecov
+  simplecov-lcov
   sqlite3
   standard
   turbolinks (~> 5)
@@ -392,4 +394,4 @@ DEPENDENCIES
   whois-parser
 
 BUNDLED WITH
-   2.3.19
+   2.3.21

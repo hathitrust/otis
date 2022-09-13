@@ -1,3 +1,7 @@
+[![Tests](https://github.com/hathitrust/otis/actions/workflows/ci.yml/badge.svg)](https://github.com/hathitrust/otis/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/hathitrust/otis/badge.svg?branch=main)](https://coveralls.io/github/hathitrust/otis?branch=main)
+[![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/testdouble/standard)
+
 # Otis Administrative Tools
 
 ## Initial setup

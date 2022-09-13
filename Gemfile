@@ -105,6 +105,7 @@ group :development, :test do
   gem "faker"
   gem "factory_bot_rails"
   gem "simplecov"
+  gem "simplecov-lcov"
   gem "i18n-tasks"
 end
 
