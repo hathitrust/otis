@@ -10,7 +10,7 @@ class HTRegistrationsTest < ApplicationSystemTestCase
   test "registration workflow" do
     # HT staff creates new registration
     visit_with_login ht_registrations_url
-    click_on "New Registration"
+    click_on "New Registration", match: :first
     assert_selector "h1", text: "New Registration"
     # HT staff enters user registration details
     fill_in "Applicant Name", with: "Test Registration Applicant"
