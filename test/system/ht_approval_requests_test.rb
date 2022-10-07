@@ -21,7 +21,8 @@ class HTApprovalRequestsTest < ApplicationSystemTestCase
     # Show page
     # Extract approve URL from alert (only show in development/test environments)
     assert_selector "div.alert-success"
-    link = first("div.alert-success").text.match(/http.+/)[0]
+    # Success alert may have several URLs based on seeded data so we take the first one.
+    link = first("div.alert-success").text.split(", ")[0].match(/http.+/)[0]
 
     # Approver follows link from approval e-mail
     visit link
