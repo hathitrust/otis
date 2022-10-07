@@ -9,6 +9,7 @@ expires_soon_in_days: 30
 
 manager_email: manager@default.invalid
 reply_to_email: reply_to@default.invalid
+support_email: support@hathitrust.org
 
 umich_idp: "https://shibboleth.umich.edu/idp/shibboleth"
 
