@@ -154,13 +154,13 @@ class HTUserPresenter < ApplicationPresenter
     html = [form.date_field(:expires, value: expiration_date.to_s, class: expires_class)]
     unless expired?
       html << form.button(I18n.t("ht_user.edit.expire_now"), type: :button,
-                onclick: "$('#ht_user_expires').val('#{Date.today}').addClass('bg-danger');".html_safe,
-                class: "btn btn-primary")
+        onclick: "$('#ht_user_expires').val('#{Date.today}').addClass('bg-danger');".html_safe,
+        class: "btn btn-primary")
     end
     new_expiration = expiration_date.default_extension_date
     html << form.button(I18n.t("ht_user.edit.renew_now"), type: :button,
-              onclick: "$('#ht_user_expires').val('#{new_expiration}').removeClass('bg-danger');".html_safe,
-              class: "btn btn-primary")
+      onclick: "$('#ht_user_expires').val('#{new_expiration}').removeClass('bg-danger');".html_safe,
+      class: "btn btn-primary")
     html.join("\n")
   end
 

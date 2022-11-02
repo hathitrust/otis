@@ -335,7 +335,7 @@ class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
     assert_equal "preview", @controller.action_name
     assert_not_nil assigns(:base_url)
     assert_not_nil assigns(:email_body)
-    assert_match /E-mail Preview/i, @response.body
+    assert_match(/E-mail Preview/i, @response.body)
     assert_select "input[value='SEND']"
   end
 

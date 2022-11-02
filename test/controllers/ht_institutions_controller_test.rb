@@ -57,7 +57,7 @@ class HTInstitutionsControllerShowTest < ActionDispatch::IntegrationTest
   def setup
     @inst = create(:ht_institution)
     @mfa_inst = create(:ht_institution, name: "MFA University", enabled: true,
-                                        shib_authncontext_class: "https://refeds.org/profile/mfa")
+      shib_authncontext_class: "https://refeds.org/profile/mfa")
 
     sign_in!
   end
