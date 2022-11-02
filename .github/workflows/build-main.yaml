@@ -16,11 +16,13 @@ jobs:
     steps:
       - uses: hathitrust/github_actions/build@v1
         with:
-          image: ghcr.io/hathitrust/otis-unstable
+          image: ghcr.io/${{ github.repository }-unstable
           dockerfile: Dockerfile.prod
           tag: ${{ github.sha }}
           push_latest: true
           registry_token: ${{ github.token }}
+
+
 
   deploy-staging:
     needs: build
@@ -28,11 +30,10 @@ jobs:
     environment: staging
     steps:
     - name: Deploy to ${{ env.environment }}
-      uses: mlibrary/deploy-to-kubernetes@v2
+      uses: mlibrary/deploy-to-kubernetes@v3
       with:
-        registry_username: ${{ github.actor }}
         registry_token: ${{ secrets.GITHUB_TOKEN }}
-        image: ghcr.io/hathitrust/otis-unstable:${{ github.sha }}
+        image: ghcr.io/${{ github.repository }}-unstable:${{ github.sha }}
         cluster_ca: ${{ secrets.KUBERNETES_CA }}
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
         namespace_token: ${{ secrets.KUBERNETES_TOKEN }}
