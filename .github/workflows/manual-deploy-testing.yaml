@@ -8,9 +8,6 @@ on:
         description: tag
         required: true
 
-env:
-  environment: testing
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,7 +35,7 @@ jobs:
         uses: hathitrust/github_actions/validate-tag@v1
         with:
           tag: ${{ github.event.inputs.tag }}
-      - name: Deploy to ${{ env.environment }}
+      - name: Deploy to testing
         uses: mlibrary/deploy-to-kubernetes@v3
         with:
           registry_token: ${{ github.token }}

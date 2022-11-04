@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: hathitrust/github_actions/build@v1
         with:
-          image: ghcr.io/${{ github.repository }-unstable
+          image: ghcr.io/${{ github.repository }}-unstable
           dockerfile: Dockerfile.prod
           tag: ${{ github.sha }}
           push_latest: true
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     steps:
-    - name: Deploy to ${{ env.environment }}
+    - name: Deploy to staging
       uses: mlibrary/deploy-to-kubernetes@v3
       with:
         registry_token: ${{ secrets.GITHUB_TOKEN }}
