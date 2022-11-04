@@ -12,25 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-    - name: Deploy to Production
-      uses: mlibrary/deploy-to-kubernetes@v2
+    - name: Deploy to ${{ env.environment }}
+      uses: mlibrary/deploy-to-kubernetes@v3
       with:
-        registry_username: ${{ github.actor }}
-        registry_token: ${{ secrets.GITHUB_TOKEN }}
-        image: ghcr.io/hathitrust/otis:${{ github.event.inputs.tag }}
+        registry_token: ${{ github.token }}
+        image: ghcr.io/${{ github.repository }}:${{ github.event.inputs.tag }}
         cluster_ca: ${{ secrets.KUBERNETES_CA }}
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
-        namespace_token: ${{ secrets.KUBERNETES_TOKEN_PROD }}
-        namespace: otis
+        namespace_token: ${{ secrets.KUBERNETES_TOKEN }}
+        namespace: ${{ secrets.KUBERNETES_NAMESPACE }}
+    # Additional config for cronjob; we could do this using labels & a
+    # single call to the action, but those labels are not set up in
+    # kubernetes yet
     - name: Deploy daily-digest Cronjob to Production
-      uses: mlibrary/deploy-to-kubernetes@v2
+      uses: mlibrary/deploy-to-kubernetes@v3
       with:
-        registry_username: ${{ github.actor }}
         registry_token: ${{ secrets.GITHUB_TOKEN }}
-        image: ghcr.io/hathitrust/otis:${{ github.event.inputs.tag }}
+        image: ghcr.io/${{ github.repository }}:${{ github.event.inputs.tag }}
         cluster_ca: ${{ secrets.KUBERNETES_CA }}
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
-        namespace_token: ${{ secrets.KUBERNETES_TOKEN_PROD }}
-        namespace: otis
-        type: cronjob
-        cronjob_name: daily-digest
+        namespace_token: ${{ secrets.KUBERNETES_TOKEN }}
+        namespace: ${{ secrets.KUBERNETES_NAMESPACE }}
+        resource_type: cronjob
+        resource_name: daily-digest

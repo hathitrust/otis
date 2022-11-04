@@ -27,7 +27,7 @@ class HTContactTest < ActiveSupport::TestCase
 
   test "validation fails with invalid email" do
     assert_not build(:ht_contact, inst_id: @inst.inst_id, contact_type: @type.id,
-                                  email: "me#here.org").valid?
+      email: "me#here.org").valid?
   end
 
   test "correct Checkpoint resource_type and resource_id" do
