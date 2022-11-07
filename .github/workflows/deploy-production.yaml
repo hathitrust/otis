@@ -35,3 +35,4 @@ jobs:
         namespace: ${{ secrets.KUBERNETES_NAMESPACE }}
         resource_type: cronjob
         resource_name: daily-digest
+        container: daily-digest
