@@ -34,6 +34,13 @@ class HTContactPresenterTest < ActiveSupport::TestCase
     assert_match "ht_institutions/", @contact.field_value(:inst_id)
   end
 
+  # Test a degenerate case seen in production database
+  test "#field_value :inst_id displays as blank if institution does not exist" do
+    bad_contact = HTContactPresenter.new(create(:ht_contact, ht_contact_type: @type))
+    bad_contact.inst_id = "not_a_valid_inst_id"
+    assert_equal "", bad_contact.field_value(:inst_id)
+  end
+
   test "#field_value :contact_type displays as link" do
     assert_match "ht_contact_types/", @contact.field_value(:contact_type)
   end

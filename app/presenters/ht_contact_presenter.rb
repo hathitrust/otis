@@ -14,6 +14,8 @@ class HTContactPresenter < ApplicationPresenter
   end
 
   def show_inst_id
+    return "" if ht_institution.nil?
+
     link_to ht_institution.name, ht_institution_path(ht_institution)
   end
 
