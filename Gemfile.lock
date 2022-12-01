@@ -308,7 +308,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sequel (5.62.0)
+    sequel (5.52.0)
     simplecov (0.21.2)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -409,6 +409,7 @@ DEPENDENCIES
   rubyzip (~> 2.0)
   sassc-rails
   selenium-webdriver
+  sequel (= 5.52.0)
   simplecov
   simplecov-lcov
   sqlite3
