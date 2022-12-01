@@ -101,6 +101,9 @@ gem "checkpoint"
 gem "mysql2"
 gem "dotenv-rails"
 
+# Freeze Sequel version number because of Checkpoint prepared statement issues
+gem "sequel", "5.52.0"
+
 group :development, :test do
   gem "byebug"
   gem "standard"

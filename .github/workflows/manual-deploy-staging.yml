@@ -1,5 +1,5 @@
 ---
-name: Manual Deploy to Testing
+name: Manual Deploy to Staging
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    environment: testing
+    environment: staging
     steps:
       - name: Clone latest repository
         uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
         uses: hathitrust/github_actions/validate-tag@v1
         with:
           tag: ${{ github.event.inputs.tag }}
-      - name: Deploy to testing
+      - name: Deploy to staging
         uses: mlibrary/deploy-to-kubernetes@v3
         with:
           registry_token: ${{ github.token }}
