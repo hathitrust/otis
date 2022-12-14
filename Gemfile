@@ -11,7 +11,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gem "rubyzip", "~> 2.0"
 
 # https://github.com/advisories/GHSA-c3gv-9cxf-6f57
-gem "loofah", ["~> 2.3", ">= 2.3.1"]
+gem "loofah", "~> 2.19"
 
 # ruby '3.0.3'
 
