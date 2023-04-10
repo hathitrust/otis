@@ -4,10 +4,10 @@ require "test_helper"
 
 # Using recommendations at https://nicolasiensen.github.io/2022-03-11-running-rails-system-tests-with-docker/
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  driven_by :selenium, using: :chrome, screen_size: [1400, 1400], options: {
-    browser: :remote,
-    url: "http://chrome-server:4444"
-  }
+  driven_by :selenium, using: :chrome, screen_size: [1400, 1400],
+    options: {browser: :remote, url: "http://chrome-server:4444"} do |driver_option|
+    driver_option.add_argument "disable-dev-shm-usage"
+  end
 
   setup do
     # Prevent idiotic "You are trying to work with something that isn't a file." errors
