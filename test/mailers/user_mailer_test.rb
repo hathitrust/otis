@@ -45,4 +45,9 @@ class UserMailerTest < ActionMailer::TestCase
   test "mail has HathiTrust logo PNG attachment" do
     assert_match %r{image/png}, email.attachments[0].content_type
   end
+
+  test "mail body has correct user support mailto" do
+    assert_match "<a href=\"#{Otis.config.support_email}\">#{Otis.config.support_email}</a>",
+      email.html_part.body.decoded
+  end
 end
