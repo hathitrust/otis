@@ -16,7 +16,7 @@ module Otis
         approver: @registration.auth_rep_email, authorizer: authorizer,
         expire_type: @registration.expire_type,
         expires: ExpirationDate.new(Time.zone.now, @registration.expire_type).default_extension_date,
-        usertype: :external, access: :total, role: @registration.role)
+        usertype: :external, access: access, role: @registration.role)
       if institution.mfa?
         @ht_user.mfa = true
       else
@@ -28,6 +28,11 @@ module Otis
     end
 
     private
+
+    # ssdproxy role grants normal access, all other roles grant total access
+    def access
+      @registration.role == "ssdproxy" ? "normal" : "total"
+    end
 
     def iprestrict
       @registration.mfa_addendum.present? ? "any" : @registration.ip_address
