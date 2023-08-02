@@ -2,5 +2,4 @@
   <%= sanitize(@body) %>
 </div>
 <%= render 'shared/approval_request_user_table' %>
-<%= image_tag(attachments[Otis.config.image.hathitrust.email_signature_logo.name].url,
-  size: Otis.config.image.hathitrust.email_signature_logo.size, alt: "HathiTrust logo") %>
+<%= mailer.show_email_signature_logo %>
