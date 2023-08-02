@@ -11,4 +11,9 @@ class ApplicationMailer < ActionMailer::Base
       .merge(locale: I18n.locale)
       .merge(options)
   end
+
+  def add_email_signature_logo
+    signature_file = File.read("#{Rails.root}/app/assets/images/#{Otis.config.image.hathitrust.email_signature_logo.name}")
+    attachments.inline[Otis.config.image.hathitrust.email_signature_logo.name] = signature_file
+  end
 end

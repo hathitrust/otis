@@ -1,8 +1,10 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <%= image_tag "HathiTrust_logo.png", size: "95x30", alt: I18n.t("global.hathitrust_logo"),
-        class: "d-inline-block align-top" %>
+      <%= image_tag Otis.config.image.hathitrust.logo.name,
+            size: Otis.config.image.hathitrust.logo.size,
+            alt: I18n.t("global.hathitrust_logo"),
+            class: "d-inline-block align-top" %>
     </a>
     <% unless logged_in? %>
       <p class="navbar-text" id="nav-not-logged-in"><%= I18n.t("global.not_logged_in") %></p>

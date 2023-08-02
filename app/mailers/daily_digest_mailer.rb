@@ -5,7 +5,7 @@ class DailyDigestMailer < ApplicationMailer
     @digest = params[:digest]
     raise StandardError, "Cannot send email without a digest" unless @digest.present?
 
-    attachments.inline["HathiTrust_logo.png"] = File.read("#{Rails.root}/app/assets/images/HathiTrust_logo.png")
+    add_email_signature_logo
     mail(to: Otis.config.manager_email, subject: "OTIS Daily Digest")
   end
 end

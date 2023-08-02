@@ -28,3 +28,12 @@ jira:
 registration:
   auth_exceptions:
     - nypl
+
+image:
+  hathitrust:
+    logo:
+      name: "hathitrust-logo-horizontal-orange-gray-rgb.png"
+      size: "95x25"
+    email_signature_logo:
+      name: "hathitrust-email-signature-logo.png"
+      size: "150x44"
