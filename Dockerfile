@@ -5,7 +5,7 @@ ARG GID=1000
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   nano \
-  netcat \
+  netcat-traditional \
   nodejs
 
 # COPY Gemfile* /usr/src/app/

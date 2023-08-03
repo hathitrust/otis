@@ -15,7 +15,7 @@ class ApprovalRequestMailer < ApplicationMailer
     approvers = @reqs.pluck(:approver).uniq
     raise StandardError, "Approval request e-mail must be for a single approver" unless approvers.count == 1
 
-    attachments.inline["HathiTrust_logo.png"] = File.read("#{Rails.root}/app/assets/images/HathiTrust_logo.png")
+    add_email_signature_logo
     mail(to: approvers.first, subject: @subject)
   end
 end

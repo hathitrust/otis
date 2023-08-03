@@ -10,6 +10,8 @@
 
 raise StandardError, "Not for production use" if Rails.env.production?
 
+ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_approval_requests")
+ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_logs")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_registrations")
 
 require "faker"
