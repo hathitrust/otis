@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - gem_cache:/gems
+    depends_on:
+      - mariadb-dev
+      - mariadb-test
+    command: bash -c "rm -f /usr/src/app/tmp/pids/server.pid && bin/init_dev_db.sh && bundle exec rails s -b 0.0.0.0"
+
+  test:
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - gem_cache:/gems
+    depends_on:
+      - mariadb-test
+    command: bash -c "bin/wait-for mariadb-test:3306 && bundle exec rake test"
+    deploy:
+      restart_policy:
+        condition: none
+
+  system-test:
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - gem_cache:/gems
+    depends_on:
+      - mariadb-test
+      - chrome-server
+    command: bash -c "bin/wait-for mariadb-test:3306 && bin/run_system_tests.sh"
+    deploy:
+      restart_policy:
+        condition: none
+
+  mariadb-dev:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlroot
+      MYSQL_DATABASE: ht_repository
+      MYSQL_USER: otis
+      MYSQL_PASSWORD: otis
+    volumes: 
+      - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
+
+  mariadb-test:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlroot
+      MYSQL_DATABASE: ht_repository
+      MYSQL_USER: otis
+      MYSQL_PASSWORD: otis
+    volumes: 
+      - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
+
+  chrome-server:
+    image: seleniarm/standalone-chromium:latest
+    restart: always
+
+volumes:
+  gem_cache:
