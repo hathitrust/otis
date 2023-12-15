@@ -235,7 +235,7 @@ GEM
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
     public_suffix (5.0.0)
-    puma (4.3.12)
+    puma (5.6.7)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
@@ -411,7 +411,7 @@ DEPENDENCIES
   net-smtp
   pry
   pry-byebug (>= 3.9.0)
-  puma (~> 4.3)
+  puma (~> 5.6)
   rails (~> 6.1.7)
   rails-controller-testing
   rails-i18n (~> 6.0.0)
