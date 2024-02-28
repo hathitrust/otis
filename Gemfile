@@ -16,7 +16,7 @@ gem "loofah", "~> 2.19"
 # ruby '3.0.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem "rails", "~> 6.1.7.5"
+gem "rails", "~> 6.1.7.7"
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
