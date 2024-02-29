@@ -19,6 +19,12 @@ ht_login_test_endpoint: "https://babel.hathitrust.org/Shibboleth.sso/Login?targe
 
 geoip_path: "/usr/src/app/vendor/geoip/GeoIP2-City-Test.mmdb"
 
+# Institution export files
+ht_institutions_file: "ht_institutions_test.tsv"
+ht_saml_entity_ids_file: "ht_saml_entity_ids_test.tsv"
+# Where institutions_export cron job ultimately deposits these files.
+export_files_directory: "/usr/src/app/public/"
+
 jira:
   site: https://hathitrust.atlassian.net/
   context_path: ""
