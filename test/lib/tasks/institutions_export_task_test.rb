@@ -6,7 +6,9 @@ module Otis
   class InstitutionsExportTaskTest < ActiveSupport::TestCase
     def setup
       remove_generated_files
-      create(:ht_institution)
+      5.times do
+        create(:ht_institution)
+      end
     end
 
     def teardown
@@ -33,9 +35,13 @@ module Otis
     test "task writes the expected files" do
       Rake::Task["otis:institutions_export"].invoke
       assert File.exist? ht_institutions_file
-      assert File.size(ht_institutions_file).positive?
       assert File.exist? ht_saml_entity_ids_file
-      assert File.size(ht_saml_entity_ids_file).positive?
+      ht_institutions_file_content = File.read(ht_institutions_file)
+      ht_saml_entity_ids_file_content = File.read(ht_saml_entity_ids_file)
+      HTInstitution.find_each do |inst|
+        assert ht_institutions_file_content.include? [inst.inst_id, inst.name].join("\t")
+        assert ht_saml_entity_ids_file_content.include? [inst.entityID, inst.name].join("\t")
+      end
     end
   end
 end
