@@ -13,8 +13,8 @@ namespace :otis do
     Dir.mktmpdir do |d|
       ht_institutions_temp = File.join(d, Otis.config.ht_institutions_file)
       ht_saml_entity_ids_temp = File.join(d, Otis.config.ht_saml_entity_ids_file)
-      File.write(ht_institutions_temp, ie.instid_data)
-      File.write(ht_saml_entity_ids_temp, ie.entityid_data)
+      File.write(ht_institutions_temp, ie.instid_data + "\n")
+      File.write(ht_saml_entity_ids_temp, ie.entityid_data + "\n")
       FileUtils.cp(ht_institutions_temp, Otis.config.export_files_directory)
       FileUtils.cp(ht_saml_entity_ids_temp, Otis.config.export_files_directory)
     end
