@@ -10,3 +10,5 @@ checkpoint:
     url: <%= ENV['DB_URL'] %>
 
 relative_url_root: <%= ENV['RAILS_RELATIVE_URL_ROOT'] %>
+
+export_files_directory: <%= ENV['EXPORT_FILES_DIRECTORY'] %>
