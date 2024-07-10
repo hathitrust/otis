@@ -394,6 +394,8 @@ en:
       active_users: Active Users
       create_approval_requests: Create Approval Requests
       download_csv: Download CSV
+      download_csv_all: All Users
+      download_csv_non_atrs: Non-ATRS Users
       expired_users: Expired Users
       renew_selected_users: Renew Selected Users
       select: Select

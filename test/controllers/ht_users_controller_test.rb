@@ -266,7 +266,7 @@ class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
       expire_type: "expiresannually", iprestrict: "any",
       mfa: false, identity_provider: "http://example.com", inst_id: "X")
     @user1.save!
-    @user2 = create(:ht_user, :expired, userid: "y@z")
+    @user2 = create(:ht_user, :expired, userid: "y@z", role: :crms)
   end
 
   test "export list of all users as CSV" do
@@ -279,6 +279,18 @@ class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
       "iprestrict,mfa,identity_provider,inst_id,inst_name", @response.body
     assert_match "a@b,A B,c@d,e@f,g@h,i@j,staff,ssd,total,2020-01-01 00:00:00 UTC," \
                  "expiresannually,^.*$,false,http://example.com,X,Y", @response.body
+  end
+
+  test "export list of non-ATRS users as CSV" do
+    sign_in!
+    get ht_users_url format: :csv, role_filter: [:ssd, :ssdproxy]
+    assert_equal 2, @response.body.lines.count
+    assert_equal @response.body.lines[0].strip,
+      "userid,displayname,email,activitycontact,approver," \
+      "authorizer,usertype,role,access,expires,expire_type," \
+      "iprestrict,mfa,identity_provider,inst_id,inst_name", @response.body
+    roles = @response.body.lines[1..].map {|line| line.split(",")[7]}
+    refute roles.include? :ssd
   end
 end
 
