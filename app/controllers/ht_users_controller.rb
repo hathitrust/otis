@@ -65,7 +65,7 @@ class HTUsersController < ApplicationController
     CSV.generate do |csv|
       csv << @all_users.first.csv_cols
       @all_users.each do |user|
-        if params[:role_filter] && params[:role_filter].include?(user.role)
+        if params[:role_filter]&.include?(user.role)
           next
         end
         csv << user.csv_vals
