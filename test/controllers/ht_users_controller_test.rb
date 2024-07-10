@@ -289,7 +289,7 @@ class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
       "userid,displayname,email,activitycontact,approver," \
       "authorizer,usertype,role,access,expires,expire_type," \
       "iprestrict,mfa,identity_provider,inst_id,inst_name", @response.body
-    roles = @response.body.lines[1..].map {|line| line.split(",")[7]}
+    roles = @response.body.lines[1..].map { |line| line.split(",")[7] }
     refute roles.include? :ssd
   end
 end
