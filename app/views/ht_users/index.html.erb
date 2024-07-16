@@ -12,10 +12,10 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="download-menu">
       <li>
-        <%= link_to t(".download_csv_non_atrs"), ht_users_url(format: :csv, role_filter: [:ssd, :ssdproxy]) %>
+        <%= link_to t(".download_csv_non_atrs"), ht_users_url(format: :csv, role_filter: [:ssd, :ssdproxy], file_name: "non_atrs_users") %>
       </li>
       <li>
-        <%= link_to t(".download_csv_all"), ht_users_url(format: :csv) %>
+        <%= link_to t(".download_csv_all"), ht_users_url(format: :csv, file_name: "all_users") %>
       </li>
     </ul>
   </div>

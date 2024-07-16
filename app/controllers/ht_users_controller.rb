@@ -14,9 +14,8 @@ class HTUsersController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        filename = "ht_users"
-        filename += "_filtered" if params[:role_filter]
-        send_data users_csv, filename: filename + ".csv"
+        file_name = (params[:file_name] || "ht_users") + ".csv"
+        send_data users_csv, filename: file_name
       end
     end
   end
