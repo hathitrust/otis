@@ -13,7 +13,11 @@ class HTUsersController < ApplicationController
     @all_users = users.map { |u| presenter u }
     respond_to do |format|
       format.html
-      format.csv { send_data users_csv }
+      format.csv do
+        filename = "ht_users"
+        filename += "_filtered" if params[:role_filter]
+        send_data users_csv, filename: filename + ".csv"
+      end
     end
   end
 
