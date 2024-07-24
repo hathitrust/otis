@@ -394,6 +394,8 @@ ja:
       active_users: アクティブユーザー
       create_approval_requests: 承認リクエストを作成する
       download_csv: CSVをダウンロード
+      download_csv_all: 全てのユーザー
+      download_csv_non_atrs: 非ATRSのユーザー
       expired_users: 期限切れのユーザー
       renew_selected_users: 選択したユーザーを更新する
       select: 選択

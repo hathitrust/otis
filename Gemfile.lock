@@ -226,8 +226,10 @@ GEM
       version_gem (~> 1.1)
     orm_adapter (0.5.0)
     parallel (1.22.1)
-    parser (3.1.2.1)
+    parser (3.3.4.0)
       ast (~> 2.4.1)
+      racc
+    popper_js (2.11.8)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -282,8 +284,8 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (2.6.0)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.3.2)
+      strscan
     rubocop (1.35.1)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -411,6 +413,8 @@ DEPENDENCIES
   net-imap
   net-pop
   net-smtp
+  parser (>= 3.1.6)
+  popper_js
   pry
   pry-byebug (>= 3.9.0)
   puma (~> 5.6)

@@ -38,7 +38,10 @@ class HTInstitutionsController < ApplicationController
     @other_institutions = HTInstitution.other.order("name").map { |i| presenter i }
     respond_to do |format|
       format.html
-      format.csv { send_data institutions_csv }
+      format.csv do
+        file_name = (params[:file_name] || "ht_institutions") + ".csv"
+        send_data institutions_csv, filename: file_name
+      end
     end
   end
 
