@@ -4,6 +4,22 @@
   <% fields = HTUserPresenter::INDEX_FIELDS %>
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
 
+  <div class="dropdown">
+    <button class="btn btn-info dropdown-toggle" type="button" id="download-menu"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <%= t(".download_csv") %>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="download-menu">
+      <li>
+        <%= link_to t(".download_csv_non_atrs"), ht_users_url(format: :csv, role_filter: [:ssd, :ssdproxy], file_name: "non_atrs_users") %>
+      </li>
+      <li>
+        <%= link_to t(".download_csv_all"), ht_users_url(format: :csv, file_name: "all_users") %>
+      </li>
+    </ul>
+  </div>
+
   <h2 class="pull-left"><%= t ".active_users" %></h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
@@ -37,7 +53,7 @@
   <% if can?(:edit, HTUser) %>
     <%= button_tag t(".renew_selected_users"), type: 'submit', name: 'submit_renewals', class: 'btn btn-primary' %>
   <% end %>
-  <%= link_to t(".download_csv"), ht_users_url(format: :csv), class: 'btn btn-info' %>
+
   <% end # form_tag %>
 
   <h2 class="pull-left"><%= t ".expired_users" %></h2>

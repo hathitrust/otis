@@ -10,14 +10,14 @@
 ```
 $ git clone https://github.com/hathitrust/otis.git
 $ cd otis
-$ docker-compose build
-$ docker-compose run web bundle install
+$ docker compose build
+$ docker compose run --rm web bundle install
 ```
 
 ### 2. Trying it out
 
 ```
-docker-compose up -d web
+docker compose up -d web
 ```
 
 Development mode uses mysql via Docker with generated data from the `db:seed`
@@ -32,24 +32,24 @@ administrative power.
 ### 3. Running tests
 
 ```
-docker-compose run test
+docker compose run --rm test
 ```
 
 To enable W3C HTML validation of OTIS pages, use the following.
 These tests are not run by default since they rely on an external service.
 
 ```
-docker-compose run -e W3C_VALIDATION=1 test
+docker compose run --rm -e W3C_VALIDATION=1 test
 ```
 
 To run a single test class use an invocation along these lines:
 
 ```
-docker-compose run test bundle exec ruby -I test test/controllers/ht_users_controller_test.rb
+docker compose run --rm test bundle exec ruby -I test test/controllers/ht_users_controller_test.rb
 ```
 
 System tests, as usual, are not run by default.
 
 ```
-docker-compose run system-test
+docker compose run --rm system-test
 ```
