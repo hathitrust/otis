@@ -108,6 +108,8 @@ gem "sequel", "5.52.0"
 group :development, :test do
   gem "byebug"
   gem "standard"
+  # parser should be >= the current Ruby version to avoid warnings
+  gem "parser", ">= 3.1.6"
   gem "pry"
   gem "pry-byebug", ">= 3.9.0"
   gem "sqlite3"
