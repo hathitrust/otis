@@ -16,6 +16,9 @@
   * [Site Maps](#site-maps)
 * [Design](#design)
 * [Functionality](#functionality)
+  * [Jira](#jira)
+  * [Email](#email)
+  * [GeoIP](#geoip)
 * [Usage](#usage)
 * [Tests](#tests)
 * [Hosting](#hosting)
@@ -33,9 +36,10 @@ Users with elevated access are granted the ability to view and/or download page 
 
 ## Built With
 
-Otis is a dockerized (Ruby on) Rails 6 application. 
-It uses Bootstrap 3 for UI. (A big TODO is to update Bootstrap.)
-Mariadb database. Keycard and checkpoint for authentication & authorization.
+* Otis is a dockerized (Ruby on) Rails 6 application. 
+* It uses Bootstrap 3 for UI. (A big TODO is to update Bootstrap.)
+* Mariadb database.
+* Keycard and checkpoint gems for authentication & authorization.
 
 ## Phases
 
@@ -52,6 +56,11 @@ No known near term tangible steps other than the normal basic maintenance.
 User identity management.
 
 ## Project Set Up
+### Prerequisites
+
+Nothing beyond the ordinary (git, repo access, Docker).
+
+### Installation
 
 ```
 $ git clone https://github.com/hathitrust/otis.git
@@ -74,11 +83,6 @@ tasks via `bin/init_dev_db.sh`.
 To try the application, go to http://localhost:3000/useradmin and log in as one
 of `{admin,staff,institution}@default.invalid`, in decreasing order of
 administrative power.
-
-
-### Prerequisites
-
-Nothing beyond the ordinary (git, repo access, Docker).
 
 ### Creating A Pull Request
 
@@ -166,7 +170,8 @@ Otis is an administrative tool in which HathiTrust staff can:
 
 It was created as a replacement for a handful of perl applications that had to be run from the commandline.
 
-Otis is of few HT projects currently attempting to do localization/i18n.
+Otis is of few HT projects currently attempting to do localization/i18n. The Japanese
+localization has, however, not been vetted by a native speaker.
 
 ## Tests
 
@@ -177,7 +182,7 @@ docker compose run --rm test bundle install
 docker compose run --rm test
 ```
 
-To enable W3C HTML validation of OTIS pages, use the following.
+To enable W3C HTML validation of Otis pages, use the following.
 These tests are not run by default since they rely on an external service.
 
 ```
@@ -202,7 +207,7 @@ For system tests on a Mac with ARM64 architecture you need to use SeleniARM inst
 docker compose --file docker-compose.yml.arm64 ...
 ```
 
-TODO: path to preview mailer output
+A list of the mailer templates that can be previewed is at localhost:3000/useradmin/rails/mailers
 
 ## Hosting
 
