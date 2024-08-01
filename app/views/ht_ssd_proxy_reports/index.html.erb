@@ -1,0 +1,65 @@
+<div id="maincontent" class="row">
+
+  <h2><%= t ".ht_ssd_proxy_reports" %></h2>
+
+  <div class="row">
+    <div class="report-toolbar" id="toolbar">
+      <form class="form-inline" id="form-daterange-filter">
+        <div class="form-group">
+          <label for="d1 d2">(DOES NOT WORK YET) Filter between </label>
+          <input class="form-control" type="text" size="11" value="0000-00-00" name="datetime-start" id="d1" />
+          <span style="margin-left: 0.5rem"> - </span>
+          <input class="form-control"  type="text" size="11" value="9999-99-99" name="datetime-end" id="d2" />
+        </div>
+        <button class="btn btn-default" id="action-datetime-filter">Filter</button>
+        <button class="btn btn-default" id="action-clear-datetime-filter" type="button" name="clearDateFilter" title="Clear date filters"><i class="glyphicon glyphicon-trash"></i> </button>
+      </form>
+      <button type="submit" class="btn btn-primary hidden" id="action-copy">Copy</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <% fields = HTSSDProxyReportPresenter::ALL_FIELDS %>
+    <table id="contact_types"
+      class="table table-striped"
+      data-filter-control="true"
+      data-filter-control-multiple-search="true"
+      data-filter-default=""
+      data-pagination="true"
+      data-pagination-v-align="both"
+      data-search="true"
+      data-show-columns="true"
+      data-show-search-clear-button="true"
+      data-show-filter-control-switch="true"
+      data-sort-select-options="true"
+      data-toggle="table"
+      data-toolbar="#toolbar"
+    >
+      <thead class="thead-dark">    
+        <tr>
+          <% fields.each do |field| %>
+            <% control = HTSSDProxyReportPresenter.data_filter_control(field) %>
+            <th data-field="<%= field %>"
+              data-filter-control="<%= control %>"
+              data-sortable="true"
+              <% if control == "datepicker" %>
+              data-filter-starts-with-search="true"
+              <% end %>
+            >
+              <%= HTSSDProxyReportPresenter.field_label field %>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+  
+      <% @reports.each do |c| %>
+        <tr>
+          <% fields.each do |field| %>
+            <td><%= c.field_value field %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+

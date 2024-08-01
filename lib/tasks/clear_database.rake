@@ -15,5 +15,7 @@ namespace :otis do
     ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_approval_requests")
     ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_logs")
     ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_registrations")
+    ActiveRecord::Base.connection.execute("DELETE FROM ht_web.reports_downloads_ssdproxy")
+    ActiveRecord::Base.connection.execute("DELETE FROM hathifiles.hf")
   end
 end
