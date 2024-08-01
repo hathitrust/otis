@@ -1,6 +1,7 @@
 <%= javascript_include_tag Ckeditor.cdn_url %>
 <script>
   CKEDITOR.config.language = "<%= I18n.locale %>";
+  CKEDITOR.config.versionCheck = false;
 </script>
 
 <div id="maincontent" class="row">
