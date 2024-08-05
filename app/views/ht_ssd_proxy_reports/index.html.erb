@@ -1,27 +1,88 @@
+<script>
+  function applyDateRangeFilter() {
+    var $table = $('#table');
+    var d1 = $('#d1').val();
+    var d2 = $('#d2').val();
+    $table.bootstrapTable('filterBy', {}, {
+      'filterAlgorithm': (row, filters) => {
+        return row.datetime >= d1 && row.datetime <= d2;
+      }
+    });
+  }
+
+  function clearDateRangeFilter() {
+    var $table = $('#table');
+    $table.bootstrapTable('filterBy', {}, {
+      'filterAlgorithm': (row, filters) => {
+        return true;
+      }
+    });
+  }
+</script>
+
+<style type="text/css">
+  .report-toolbar {
+    /*margin: 1rem 0;*/
+    display: flex;
+    justify-content: space-between;
+    max-width: 90vw;
+  }
+
+  td.nowrap {
+    white-space: nowrap;
+  }
+
+  td.min--350 {
+    min-width: 350px;
+  }
+  td.min--250 {
+    min-width: 250px;
+  }
+
+  /* Show/hide column control menu items */
+  .dropdown-item-marker {
+    white-space:nowrap;
+  }
+
+  .bootstrap-table .fixed-table-container .table thead th {
+    vertical-align: top;
+  }
+</style>
+
 <div id="maincontent" class="row">
 
   <h2><%= t ".ht_ssd_proxy_reports" %></h2>
 
   <div class="row">
     <div class="report-toolbar" id="toolbar">
-      <form class="form-inline" id="form-daterange-filter">
+      <div class="form-inline" id="form-daterange-filter">
         <div class="form-group">
-          <label for="d1 d2">(DOES NOT WORK YET) Filter between </label>
-          <input class="form-control" type="text" size="11" value="0000-00-00" name="datetime-start" id="d1" />
+          <label for="d1 d2"><%= t ".date_range" %> </label>
+          <input class="form-control" type="text" size="11" value="<%= @time_start %>" name="time-start" id="d1" />
           <span style="margin-left: 0.5rem"> - </span>
-          <input class="form-control"  type="text" size="11" value="9999-99-99" name="datetime-end" id="d2" />
+          <input class="form-control" type="text" size="11" value="<%= @time_end %>" name="time-end" id="d2" />
         </div>
-        <button class="btn btn-default" id="action-datetime-filter">Filter</button>
-        <button class="btn btn-default" id="action-clear-datetime-filter" type="button" name="clearDateFilter" title="Clear date filters"><i class="glyphicon glyphicon-trash"></i> </button>
-      </form>
-      <button type="submit" class="btn btn-primary hidden" id="action-copy">Copy</button>
+        <button class="btn btn-default"
+          id="action-datetime-filter"
+          onclick="applyDateRangeFilter();"
+        >
+          <%= t ".filter" %>
+        </button>
+        <button class="btn btn-default"
+          id="action-clear-datetime-filter"
+          onclick="clearDateRangeFilter();"
+          title="<%= t ".clear_filter" %>"
+        >
+          <i class="glyphicon glyphicon-trash"></i>
+        </button>
+      </div>
     </div>
   </div>
 
   <div class="row">
     <% fields = HTSSDProxyReportPresenter::ALL_FIELDS %>
-    <table id="contact_types"
-      class="table table-striped"
+    <table id="table"
+      class="table table-striped table-bordered table-hover table-condensed"
       data-filter-control="true"
       data-filter-control-multiple-search="true"
       data-filter-default=""
@@ -29,8 +90,10 @@
       data-pagination-v-align="both"
       data-search="true"
       data-show-columns="true"
-      data-show-search-clear-button="true"
+      data-show-export="true"
+      data-show-extended-pagination="true"
       data-show-filter-control-switch="true"
+      data-show-search-clear-button="true"
       data-sort-select-options="true"
       data-toggle="table"
       data-toolbar="#toolbar"
@@ -42,8 +105,9 @@
             <th data-field="<%= field %>"
               data-filter-control="<%= control %>"
               data-sortable="true"
+              data-tableexport-value="<%= field.to_s.titleize %>"
               <% if control == "datepicker" %>
-              data-filter-starts-with-search="true"
+                data-filter-starts-with-search="true"
               <% end %>
             >
               <%= HTSSDProxyReportPresenter.field_label field %>
@@ -55,7 +119,15 @@
       <% @reports.each do |c| %>
         <tr>
           <% fields.each do |field| %>
-            <td><%= c.field_value field %></td>
+            <td
+              <% if [:title, :imprint].include? field %>
+                class="min--350"
+              <% elsif [:institution_name, :author].include? field %>
+                class="min--250"
+              <% end %>
+            >
+              <%= c.field_value field %>
+            </td>
           <% end %>
         </tr>
       <% end %>

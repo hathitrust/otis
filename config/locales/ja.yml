@@ -350,6 +350,9 @@ ja:
       success: "%{name}の登録が更新されました。"
   ht_ssd_proxy_reports:
     index:
+      clear_filter: フィルターをクリアする
+      date_range: 日付範囲
+      filter: フィルタリングする
       ht_ssd_proxy_reports: SSD Proxy 報告
   ht_user:
     badges:
