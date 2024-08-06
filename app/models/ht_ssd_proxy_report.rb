@@ -11,6 +11,6 @@ class HTSSDProxyReport < ApplicationRecord
   end
 
   def hf
-    @hf = ht_hathifile
+    @hf = ht_hathifile || HTHathifile.new(htid: htid)
   end
 end
