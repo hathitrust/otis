@@ -120,6 +120,63 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.boolean :auth_requested, default: false
   end
 
+# MariaDB [ht_web]> describe reports_downloads_ssdproxy;
+# +--------------+------------------+------+-----+---------+----------------+
+# | Field        | Type             | Null | Key | Default | Extra          |
+# +--------------+------------------+------+-----+---------+----------------+
+# | id           | int(11) unsigned | NO   | PRI | NULL    | auto_increment |
+# | in_copyright | int(1)           | YES  |     | NULL    |                |
+# | yyyy         | int(11)          | NO   | MUL | NULL    |                |
+# | yyyymm       | varchar(20)      | NO   |     |         |                |
+# | datetime     | datetime         | NO   | MUL | NULL    |                |
+# | htid         | varchar(255)     | NO   | MUL |         |                |
+# | is_partial   | int(1)           | YES  |     | 0       |                |
+# | email        | varchar(255)     | NO   |     |         |                |
+# | inst_code    | varchar(255)     | YES  | MUL | NULL    |                |
+# | sha          | binary(20)       | YES  | MUL | NULL    |                |
+# +--------------+------------------+------+-----+---------+----------------+
+
+  create_table "ht_web.reports_downloads_ssdproxy", if_not_exists: true do |t|
+    t.boolean :in_copyright
+    t.integer :yyyy, default: 0
+    t.string :yyyymm
+    t.timestamp :datetime
+    t.string :htid
+    t.boolean :is_partial
+    t.string :email
+    t.string :inst_code
+    t.binary :sha
+  end
+
+  create_table "hathifiles.hf", id: false, if_not_exists: true do |t|
+    t.string :htid, null: false
+    t.boolean :access
+    t.string :rights_code
+    t.bigint :bib_num
+    t.string :description
+    t.string :source
+    t.string :source_bib_num
+    t.string :oclc
+    t.string :isbn
+    t.string :issn
+    t.string :lccn
+    t.string :title
+    t.string :imprint
+    t.string :rights_reason
+    t.timestamp :rights_timestamp
+    t.boolean :us_gov_doc_flag
+    t.integer :rights_date_used
+    t.string :pub_place
+    t.string :lang_code
+    t.string :bib_fmt
+    t.string :collection_code
+    t.string :content_provider_code
+    t.string :responsible_entity_code
+    t.string :digitization_agent_code
+    t.string :access_profile_code
+    t.string :author
+  end
+
   create_table :ht_billing_members, id: false do |t|
     t.string :inst_id, primary_key: true
     t.string :parent_inst_id

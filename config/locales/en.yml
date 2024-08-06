@@ -84,6 +84,20 @@ en:
         sent: Sent
         status: Status
         usertype: User Type
+      ht_ssd_proxy_report:
+        author: Author
+        bib_num: Bib Number
+        content_provider_code: Content Provider
+        datetime: Time
+        digitization_agent_code: Digitization Agent
+        email: E-mail
+        htid: HTID
+        imprint: Imprint
+        inst_code: Institution Code
+        institution_name: Institution Name
+        rights_code: Rights Code
+        rights_date_used: Rights Date
+        title: Title
       ht_user:
         access: Access
         accesses: Accesses
@@ -163,6 +177,7 @@ en:
       institutions: Institutions
       logs: Logs
       registrations: Registrations
+      ssd_proxy_reports: SSD Proxy Reports
       users: Users
     not_logged_in: Not Logged In
   ht_approval_request:
@@ -333,6 +348,12 @@ en:
       whois_data: WHOIS Data
     update:
       success: Registration updated for %{name}.
+  ht_ssd_proxy_reports:
+    index:
+      clear_filter: Clear filters
+      date_range: Date Range
+      filter: Filter
+      ht_ssd_proxy_reports: SSD Proxy Reports
   ht_user:
     badges:
       expired: Expired

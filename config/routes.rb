@@ -25,6 +25,10 @@ Rails.application.routes.draw do
     resources :ht_contact_types
   end
 
+  scope format: false, constraints: {id: /.+/} do
+    resources :ht_ssd_proxy_reports
+  end
+
   scope constraints: {id: /.+/} do
     resources :ht_logs
   end

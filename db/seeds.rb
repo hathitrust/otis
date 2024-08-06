@@ -13,15 +13,21 @@ raise StandardError, "Not for production use" if Rails.env.production?
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_approval_requests")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_logs")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_registrations")
+ActiveRecord::Base.connection.execute("DELETE FROM ht_web.reports_downloads_ssdproxy")
+ActiveRecord::Base.connection.execute("DELETE FROM hathifiles.hf")
 
 require "faker"
 UNIQUE_INST_IDS = {}
+UNIQUE_EMAILS = {}
+UNIQUE_HTIDS = {}
 
 def create_ht_user(expires:)
+  email = Faker::Internet.email
+  UNIQUE_EMAILS[email] = true
   u = HTUser.new(
     userid: Faker::Internet.unique.email,
     displayname: Faker::Name.name,
-    email: Faker::Internet.email,
+    email: email,
     activitycontact: Faker::Internet.email,
     approver: @approvers.sample,
     authorizer: Faker::Internet.email,
@@ -163,6 +169,45 @@ def create_ht_registration
   end
 end
 
+def create_reports_downloads_ssdproxy
+  datetime = Faker::Time.backward
+  rep = HTSSDProxyReport.create(
+    in_copyright: [0, 1].sample,
+    yyyy: datetime.year,
+    yyyymm: datetime.strftime("%Y%m"),
+    datetime: datetime,
+    htid: UNIQUE_HTIDS.keys.sample,
+    is_partial: [nil, 0, 1].sample,
+    # FIXME: how about we make sure the email and institution code match?
+    email: UNIQUE_EMAILS.keys.sample,
+    inst_code: UNIQUE_INST_IDS.keys.sample,
+    # The sha field is stored as
+    # UNHEX(SHA1(CONCAT_WS(' ', `datetime`, `htid`, `in_copyright`, `is_partial`, `email`, `inst_code`)))
+    # So this is just not even an approximation
+    sha: SecureRandom.urlsafe_base64(20)
+  )
+  rep.save!
+end
+
+def create_hathifile_entry
+  htid = Faker::Alphanumeric.alpha(number: [2, 3]) + "." + Faker::Alphanumeric.alphanumeric(number: 14)
+  UNIQUE_HTIDS[htid] = true
+  hf = HTHathifile.create(
+    htid: htid,
+    access: [nil, true, false].sample,
+    rights_code: ["ic", "pd", "pdus", "icus", "und"].sample,
+    bib_num: Faker::Number.number(digits: 9),
+    title: Faker::Book.title,
+    imprint: Faker::Book.publisher + ", " + Faker::Date.between(from: "1800-01-01", to: "2000-01-01").year.to_s,
+    author: Faker::Book.author,
+    # the following two are just gibberish for display
+    content_provider_code: Faker::Alphanumeric.alpha(number: [2, 3]),
+    digitization_agent_code: Faker::Alphanumeric.alpha(number: [2, 3]),
+    rights_date_used: Faker::Date.between(from: "1800-01-01", to: "2000-01-01").year.to_s
+  )
+  hf.save!
+end
+
 HTContactType.create(
   name: "ETAS",
   description: "Emergency Temporary Access Service"
@@ -216,4 +261,12 @@ end
     time: Faker::Time.backward,
     data: '{"ip_address"=>"127.0.0.1", "user_agent"=>"WhizzyAgent", "client_ip"=>"127.0.0.1"}'
   )
+end
+
+500.times do
+  create_hathifile_entry
+end
+
+100.times do
+  create_reports_downloads_ssdproxy
 end
