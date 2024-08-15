@@ -33,15 +33,30 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     rights_date_used: :select
   }.freeze
 
+  HF_FIELDS = %i[
+    author
+    bib_num
+    content_provider_code
+    digitization_agent_code
+    imprint
+    rights_code
+    rights_date_used
+    title
+  ].freeze
+
   def self.data_filter_control(field)
     DATA_FILTER_CONTROLS[field].to_s
   end
 
-  private
-
-  def show_author
-    hf.author
+  # Dynamically create simple #show_X methods for each hf column we display in the index.
+  # Could also define these on the model.
+  HF_FIELDS.each do |field|
+    define_method("show_#{field}") do
+      hf.send field
+    end
   end
+
+  private
 
   def show_datetime
     datetime.to_formatted_s(:db)
@@ -51,37 +66,9 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     link_to email, ht_user_path(email)
   end
 
-  def show_bib_num
-    hf.bib_num
-  end
-
-  def show_content_provider_code
-    hf.content_provider_code
-  end
-
-  def show_digitization_agent_code
-    hf.digitization_agent_code
-  end
-
-  def show_imprint
-    hf.imprint
-  end
-
   def show_institution_name
     return "" if institution_name.nil?
 
     link_to institution_name, ht_institution_path(inst_code)
-  end
-
-  def show_rights_code
-    hf.rights_code
-  end
-
-  def show_rights_date_used
-    hf.rights_date_used
-  end
-
-  def show_title
-    hf.title
   end
 end
