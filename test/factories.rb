@@ -151,7 +151,7 @@ FactoryBot.define do
     sequence(:id) { |n| n.to_s }
     datetime = Faker::Time.backward
     in_copyright { [0, 1].sample }
-    yyyy {  datetime.year }
+    yyyy { datetime.year }
     yyyymm { datetime.strftime("%Y%m") }
     datetime { datetime }
     htid { Faker::Lorem.unique.characters(number: 10) }
@@ -163,7 +163,7 @@ FactoryBot.define do
   end
 
   factory :ht_hathifile do
-    htid { htid = Faker::Alphanumeric.alpha(number: [2, 3]) + "." + Faker::Alphanumeric.alphanumeric(number: 14) }
+    htid { Faker::Alphanumeric.alpha(number: [2, 3]) + "." + Faker::Alphanumeric.alphanumeric(number: 14) }
     access { [nil, true, false].sample }
     rights_code { ["ic", "pd", "pdus", "icus", "und"].sample }
     bib_num { Faker::Number.number(digits: 9) }

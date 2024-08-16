@@ -23,7 +23,7 @@ end
 #   def setup
 #     4.times { create(:ht_log) }
 #   end
-# 
+#
 #   test "export list of all logs as JSON" do
 #     sign_in!
 #     get ht_logs_url format: :json

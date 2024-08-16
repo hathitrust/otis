@@ -22,14 +22,14 @@ class HTSSDProxyReportPresenterTest < ActiveSupport::TestCase
 
   test "show datetime" do
     report = HTSSDProxyReportPresenter.new(create(:ht_ssd_proxy_report), action: :index)
-    assert_match /\d\d\d\d-\d\d-\d\d/, report.field_value(:datetime)
+    assert_match(/\d\d\d\d-\d\d-\d\d/, report.field_value(:datetime))
   end
-  
+
   test "show email" do
     report = HTSSDProxyReportPresenter.new(create(:ht_ssd_proxy_report), action: :index)
     assert_match "href=", report.field_value(:email)
   end
-  
+
   test "show institution name" do
     create(:ht_ssd_proxy_report) do |rep|
       create(:ht_institution) do |inst|

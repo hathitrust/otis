@@ -7,7 +7,7 @@ class HTSSDProxyReportTest < ActiveSupport::TestCase
   test "validation passes" do
     assert build(:ht_ssd_proxy_report).valid?
   end
-  
+
   test "#institution_name" do
     build(:ht_ssd_proxy_report) do |rep|
       create(:ht_user) do |user|
