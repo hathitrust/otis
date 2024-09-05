@@ -59,11 +59,12 @@ class HTSSDProxyReportsController < ApplicationController
     # Ransack requires lower case sort direction.
     search.sorts = "#{sort_name} #{sort_order.downcase}"
     result = search.result
+    total = result.count
     if params[:pageNumber] && params[:pageSize]
       result = result.page(params[:pageNumber]).per(params[:pageSize])
     end
     {
-      total: result.count,
+      total: total,
       totalNotFiltered: HTSSDProxyReport.count,
       rows: result.map { |line| report_to_json line }
     }
