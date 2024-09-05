@@ -160,6 +160,7 @@ FactoryBot.define do
     inst_code { Faker::Internet.unique.domain_word }
     sha { SecureRandom.urlsafe_base64(20) }
     ht_hathifile
+    ht_institution
   end
 
   factory :ht_hathifile do

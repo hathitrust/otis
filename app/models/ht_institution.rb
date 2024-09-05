@@ -16,6 +16,11 @@ class HTInstitution < ApplicationRecord
 
   before_save :set_defaults
 
+  # SSD Proxy Reports uses Ransack gem to search by association
+  def self.ransackable_attributes(auth_object = nil)
+    %w[inst_id name]
+  end
+
   # https://stackoverflow.com/a/57485464
   attribute :enabled, ActiveRecord::Type::Integer.new
 

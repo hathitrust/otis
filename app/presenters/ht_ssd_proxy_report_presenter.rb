@@ -48,6 +48,17 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     DATA_FILTER_CONTROLS[field].to_s
   end
 
+  def self.header_class(field)
+    case field
+    when :title, :imprint
+      "min--250"
+    when :author
+      "min--150"
+    else
+      ""
+    end
+  end
+
   # Dynamically create simple #show_X methods for each hf column we display in the index.
   # Could also define these on the model.
   HF_FIELDS.each do |field|

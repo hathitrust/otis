@@ -1,22 +1,20 @@
 <script>
   function applyDateRangeFilter() {
-    var $table = $('#table');
-    var d1 = $('#d1').val();
-    var d2 = $('#d2').val();
-    $table.bootstrapTable('filterBy', {}, {
-      'filterAlgorithm': (row, filters) => {
-        return row.datetime >= d1 && row.datetime <= d2;
-      }
-    });
+    $('#table').bootstrapTable('refresh')
   }
 
   function clearDateRangeFilter() {
-    var $table = $('#table');
-    $table.bootstrapTable('filterBy', {}, {
-      'filterAlgorithm': (row, filters) => {
-        return true;
-      }
-    });
+    $('#d1').val("<%= @time_start %>");
+    $('#d2').val("<%= @time_end %>");
+    $('#table').bootstrapTable('refresh')
+  }
+
+  function queryParams(params) {
+    var d1 = $('#d1').val();
+    var d2 = $('#d2').val();
+    params.d1 = d1;
+    params.d2 = d2;
+    return params
   }
 </script>
 
@@ -28,15 +26,11 @@
     max-width: 90vw;
   }
 
-  td.nowrap {
-    white-space: nowrap;
-  }
-
-  td.min--350 {
-    min-width: 350px;
-  }
-  td.min--250 {
+  .min--250 {
     min-width: 250px;
+  }
+  .min--150 {
+    min-width: 150px;
   }
 
   /* Show/hide column control menu items */
@@ -58,9 +52,23 @@
       <div class="form-inline" id="form-daterange-filter">
         <div class="form-group">
           <label for="d1 d2"><%= t ".date_range" %> </label>
-          <input class="form-control" type="text" size="11" value="<%= @time_start %>" name="time-start" id="d1" />
+          <input class="form-control"
+            type="text"
+            size="11"
+            value="<%= @time_start %>"
+            name="time-start"
+            id="d1"
+            onchange="applyDateRangeFilter();"
+          />
           <span style="margin-left: 0.5rem"> - </span>
-          <input class="form-control" type="text" size="11" value="<%= @time_end %>" name="time-end" id="d2" />
+          <input class="form-control"
+            type="text"
+            size="11"
+            value="<%= @time_end %>"
+            name="time-end"
+            id="d2"
+            onchange="applyDateRangeFilter();"
+          />
         </div>
         <button class="btn btn-default"
           id="action-datetime-filter"
@@ -80,57 +88,47 @@
   </div>
 
   <div class="row">
-    <% fields = HTSSDProxyReportPresenter::ALL_FIELDS %>
     <table id="table"
       class="table table-striped table-bordered table-hover table-condensed"
+      data-export-data-type="all"
+      data-export-options='{"fileName": "SSDProxyReport"}'
+      data-export-types="['json', 'xml', 'csv', 'excel']"
       data-filter-control="true"
       data-filter-control-multiple-search="true"
       data-filter-default=""
       data-pagination="true"
       data-pagination-v-align="both"
-      data-search="true"
+      data-query-params="queryParams"
+      data-query-params-type=""
+      data-search="false"
       data-show-columns="true"
       data-show-export="true"
       data-show-extended-pagination="true"
       data-show-filter-control-switch="true"
-      data-show-search-clear-button="true"
+      data-show-search-clear-button="false"
+      data-side-pagination="server"
       data-sort-select-options="true"
       data-toggle="table"
       data-toolbar="#toolbar"
+      data-url="ht_ssd_proxy_reports?format=json"
     >
       <thead class="thead-dark">    
         <tr>
+          <% fields = HTSSDProxyReportPresenter::ALL_FIELDS %>
           <% fields.each do |field| %>
             <% control = HTSSDProxyReportPresenter.data_filter_control(field) %>
+            <% th_class = HTSSDProxyReportPresenter.header_class(field) %>
             <th data-field="<%= field %>"
+              class="<%= th_class %>"
               data-filter-control="<%= control %>"
               data-sortable="true"
               data-tableexport-value="<%= field.to_s.titleize %>"
-              <% if control == "datepicker" %>
-                data-filter-starts-with-search="true"
-              <% end %>
             >
               <%= HTSSDProxyReportPresenter.field_label field %>
             </th>
           <% end %>
         </tr>
       </thead>
-  
-      <% @reports.each do |c| %>
-        <tr>
-          <% fields.each do |field| %>
-            <td
-              <% if [:title, :imprint].include? field %>
-                class="min--350"
-              <% elsif [:institution_name, :author].include? field %>
-                class="min--250"
-              <% end %>
-            >
-              <%= c.field_value field %>
-            </td>
-          <% end %>
-        </tr>
-      <% end %>
     </table>
   </div>
 </div>

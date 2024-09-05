@@ -8,6 +8,14 @@ class HTSSDProxyReportTest < ActiveSupport::TestCase
     assert build(:ht_ssd_proxy_report).valid?
   end
 
+  test ".ransackable_attributes" do
+    assert_kind_of Array, HTSSDProxyReport.ransackable_attributes
+  end
+
+  test ".ransackable_associations" do
+    assert_kind_of Array, HTSSDProxyReport.ransackable_associations
+  end
+
   test "#institution_name" do
     build(:ht_ssd_proxy_report) do |rep|
       create(:ht_user) do |user|
