@@ -161,6 +161,10 @@ FactoryBot.define do
     sha { SecureRandom.urlsafe_base64(20) }
     ht_hathifile
     ht_institution
+
+    trait :no_hf do
+      ht_hathifile { nil }
+    end
   end
 
   factory :ht_hathifile do

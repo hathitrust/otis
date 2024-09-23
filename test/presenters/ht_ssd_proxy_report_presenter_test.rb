@@ -20,6 +20,14 @@ class HTSSDProxyReportPresenterTest < ActiveSupport::TestCase
     end
   end
 
+  test "hf show methods work for nonexistent hf entry" do
+    report = create(:ht_ssd_proxy_report, :no_hf)
+    report = HTSSDProxyReportPresenter.new(report, action: :index)
+    HTSSDProxyReportPresenter::HF_FIELDS.each do |field|
+      assert_equal report.send("show_#{field}"), ""
+    end
+  end
+
   test "show datetime" do
     report = HTSSDProxyReportPresenter.new(create(:ht_ssd_proxy_report), action: :index)
     assert_match(/\d\d\d\d-\d\d-\d\d/, report.field_value(:datetime))

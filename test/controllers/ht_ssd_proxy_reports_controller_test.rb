@@ -4,6 +4,7 @@ require "test_helper"
 
 class HTSSDProxyReportControllerTest < ActionDispatch::IntegrationTest
   def setup
+    HTSSDProxyReport.delete_all
     10.times { create(:ht_ssd_proxy_report) }
   end
 
@@ -19,6 +20,7 @@ class HTSSDProxyReportControllerTest < ActionDispatch::IntegrationTest
 
   class HTSSDProxyReportControllerJSONTest < ActionDispatch::IntegrationTest
     def setup
+      HTSSDProxyReport.delete_all
       10.times { create(:ht_ssd_proxy_report) }
     end
 
