@@ -15,8 +15,8 @@
       <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/#{locale.to_s}.js" %>
     <% end %>
     <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" %>
-    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.23.2/dist/extensions/filter-control/bootstrap-table-filter-control.css") %>
-    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.23.2/dist/bootstrap-table.min.css") %>
+    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.23.4/dist/extensions/filter-control/bootstrap-table-filter-control.css") %>
+    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.23.4/dist/bootstrap-table.min.css") %>
 
     <% # Keyboard-related overrides that trigger when a bootstrap-table search  %>
     <% # field has focus.                                                       %>
@@ -45,12 +45,12 @@
     </script>
     <% # Uses bootstrap-table  %>
     <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.30.0/tableExport.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.23.2/dist/bootstrap-table.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.23.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.23.4/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.23.4/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.4/dist/extensions/export/bootstrap-table-export.min.js"></script>
     <% locale_map = {"ja" => "ja-JP"} %>
     <% if locale_map[I18n.locale.to_s].present? %>
-      <script src="https://unpkg.com/bootstrap-table@1.23.2/dist/locale/bootstrap-table-<%= locale_map[I18n.locale.to_s] %>.min.js"></script>
+      <script src="https://unpkg.com/bootstrap-table@1.23.4/dist/locale/bootstrap-table-<%= locale_map[I18n.locale.to_s] %>.min.js"></script>
     <% end %>
   </head>
 
