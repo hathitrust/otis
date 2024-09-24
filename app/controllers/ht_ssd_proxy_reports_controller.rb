@@ -36,8 +36,11 @@ class HTSSDProxyReportsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        @time_start = HTSSDProxyReport.minimum(:datetime).to_date.to_s
-        @time_end = HTSSDProxyReport.maximum(:datetime).to_date.to_s
+        # Populate the date range fields with the latest datetime and
+        # then the start date a year earlier
+        @time_end = HTSSDProxyReport.maximum(:datetime).tap do |time_end|
+          @time_start = (time_end - 1.year).to_date.to_s
+        end.to_date.to_s
       end
       format.json do
         render json: json_query
@@ -66,12 +69,12 @@ class HTSSDProxyReportsController < ApplicationController
     {
       total: total,
       totalNotFiltered: HTSSDProxyReport.count,
-      rows: result.map { |line| report_to_json line }
+      rows: result.map { |line| line_to_json line }
     }
   end
 
   # Use presenter to translate HTSSDProxyReport into JSON hash
-  def report_to_json(report)
+  def line_to_json(report)
     report = presenter report
     HTSSDProxyReportPresenter::ALL_FIELDS.to_h do |field|
       [field, report.field_value(field)]
