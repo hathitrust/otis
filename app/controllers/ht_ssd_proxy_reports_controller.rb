@@ -77,7 +77,7 @@ class HTSSDProxyReportsController < ApplicationController
 
   # @return [Hash] value to be returned to Bootstrap Table as JSON
   def json_query
-    # Create a Ransack::Search
+    # Create a Ransack::Search with all of the filter fields translated into Ransack matchers.
     search = HTSSDProxyReport.includes(:ht_hathifile, :ht_institution)
       .ransack(matchers)
     # Apply the sort field and order, or default if not provided.
