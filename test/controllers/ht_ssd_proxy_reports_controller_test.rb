@@ -12,8 +12,8 @@ class HTSSDProxyReportControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get ht_ssd_proxy_reports_url
     assert_response :success
-    assert_not_nil assigns(:time_start)
-    assert_not_nil assigns(:time_end)
+    assert_not_nil assigns(:date_start)
+    assert_not_nil assigns(:date_end)
     assert_equal "index", @controller.action_name
     assert_match "SSD Proxy Reports", @response.body
   end

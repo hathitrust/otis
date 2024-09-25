@@ -4,16 +4,14 @@
   }
 
   function clearDateRangeFilter() {
-    $('#d1').val("<%= @time_start %>");
-    $('#d2').val("<%= @time_end %>");
+    $('#date-start').val("<%= @date_start %>");
+    $('#date-end').val("<%= @date_end %>");
     $('#table').bootstrapTable('refresh')
   }
 
   function queryParams(params) {
-    var d1 = $('#d1').val();
-    var d2 = $('#d2').val();
-    params.d1 = d1;
-    params.d2 = d2;
+    params.dateStart = $('#date-start').val();
+    params.dateEnd = $('#date-end').val();
     return params
   }
 </script>
@@ -51,22 +49,22 @@
     <div class="report-toolbar" id="toolbar">
       <div class="form-inline" id="form-daterange-filter">
         <div class="form-group">
-          <label for="d1 d2"><%= t ".date_range" %> </label>
+          <label for="date-start date-end"><%= t ".date_range" %> </label>
           <input class="form-control"
             type="text"
             size="11"
-            value="<%= @time_start %>"
-            name="time-start"
-            id="d1"
+            value="<%= @date_start %>"
+            name="date-start"
+            id="date-start"
             onchange="applyDateRangeFilter();"
           />
           <span style="margin-left: 0.5rem"> - </span>
           <input class="form-control"
             type="text"
             size="11"
-            value="<%= @time_end %>"
-            name="time-end"
-            id="d2"
+            value="<%= @date_end %>"
+            name="date-end"
+            id="date-end"
             onchange="applyDateRangeFilter();"
           />
         </div>
