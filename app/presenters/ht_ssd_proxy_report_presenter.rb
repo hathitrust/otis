@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class HTSSDProxyReportPresenter < ApplicationPresenter
+  # All the columns in the index page.
   ALL_FIELDS = %i[
     datetime
     htid
@@ -17,6 +18,7 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     rights_date_used
   ].freeze
 
+  # Type of filter control to specify for a given column.
   DATA_FILTER_CONTROLS = {
     datetime: :datepicker,
     htid: :input,
@@ -33,6 +35,7 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     rights_date_used: :select
   }.freeze
 
+  # Used below to create accessor methods for the relevant hathifiles.hf fields.
   HF_FIELDS = %i[
     author
     bib_num
@@ -48,6 +51,8 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     DATA_FILTER_CONTROLS[field].to_s
   end
 
+  # Some CSS in index.html.erb allows the title, imprint, and author fields to be a bit wider
+  # than the default.
   def self.header_class(field)
     case field
     when :title, :imprint
@@ -70,6 +75,10 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
   end
 
   private
+
+  # More or less standard `show_X` methods when we want to customize the display.
+  # We could check the `link_to` targets to make sure they actually exist, but it's unlikely
+  # we would ever get a 404 since we don't typically jettison users or institutions.
 
   def show_datetime
     datetime.to_formatted_s(:db)

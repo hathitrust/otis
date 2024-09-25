@@ -21,8 +21,10 @@ class HTSSDProxyReportsController < ApplicationController
   # The `filter` keys come from HTSSDProxyReportPresenter::ALL_FIELDS which combines relevant
   # columns from the three associated database tables.
 
-  # Used by `#matchers` to translate `filter` keys into an Array that the `#ransack` method
-  # can apply to the Active Record query.
+  # Used by `#matchers` to translate `filter` keys into values that the `#ransack` method
+  # can apply to the Active Record query. Many of these (the text input ones)
+  # are of the form `*_i_cont` which is a case-insensitive contains equivalent to "LIKE '%value%'".
+  # Those selectable by a dropdown menu can use an equality (`_eq`)  matcher.
   RANSACK_MATCHERS = {
     "author" => :ht_hathifile_author_i_cont,
     "bib_num" => :ht_hathifile_bib_num_cont,
