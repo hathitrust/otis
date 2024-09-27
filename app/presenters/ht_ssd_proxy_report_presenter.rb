@@ -20,7 +20,7 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
 
   # Type of filter control to specify for a given column.
   DATA_FILTER_CONTROLS = {
-    datetime: :datepicker,
+    datetime: :input,
     htid: :input,
     bib_num: :input,
     rights_code: :select,
@@ -81,7 +81,7 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
   # we would ever get a 404 since we don't typically jettison users or institutions.
 
   def show_datetime
-    datetime.to_formatted_s(:db)
+    "<span class=\"text-nowrap\">#{datetime.to_formatted_s(:db)}</span"
   end
 
   def show_email

@@ -6,6 +6,7 @@
   function clearDateRangeFilter() {
     $('#date-start').val("<%= @date_start %>");
     $('#date-end').val("<%= @date_end %>");
+    $('#table').bootstrapTable('clearFilterControl')
     $('#table').bootstrapTable('refresh')
   }
 

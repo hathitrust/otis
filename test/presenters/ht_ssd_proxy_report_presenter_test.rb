@@ -9,8 +9,10 @@ class HTSSDProxyReportPresenterTest < ActiveSupport::TestCase
     assert_not_nil HTSSDProxyReportPresenter::HF_FIELDS
   end
 
-  test "data filter controls" do
-    assert_equal HTSSDProxyReportPresenter.data_filter_control(:datetime), "datepicker"
+  test "each field has a data filter control" do
+    HTSSDProxyReportPresenter::ALL_FIELDS.each do |field|
+      assert_kind_of String, HTSSDProxyReportPresenter.data_filter_control(field)
+    end
   end
 
   test "hf fields have show methods" do
