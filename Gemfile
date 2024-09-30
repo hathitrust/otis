@@ -92,6 +92,8 @@ gem "flag-icons-rails"
 gem "rails-i18n", "~> 6.0.0"
 gem "maxmind-geoip2"
 gem "jira-ruby"
+gem "ransack"
+gem "kaminari"
 
 gem "canister"
 gem "ettin"

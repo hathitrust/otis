@@ -122,6 +122,7 @@ Contacts
 Contact Types
 Logs
 Registrations                 # for new users
+SSD Proxy Reports
 ```
 
 Most pages have the standard CRU(D) operations (not a lot of Deletes), Rails style.
@@ -129,9 +130,13 @@ Most pages have the standard CRU(D) operations (not a lot of Deletes), Rails sty
 ## Design
 
 There is very little branding, since it is not at all facing the public.
-There has been some adjustments to improve color contrast.
+There have been some adjustments to improve color contrast.
 Otis uses `select2.org` JavaScript library to make searchable lists of items (users, institutions).
 Also uses `Ckeditor` for rich text editing used in composing emails.
+
+All index pages use Bootstrap Table (https://bootstrap-table.com) for data display. SSD Proxy Reports
+has advanced search features server-side using Ransack (https://github.com/activerecord-hackery/ransack).
+This approach is expected to be a model for updating the other index pages.
 
 ## Functionality
 

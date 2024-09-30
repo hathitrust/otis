@@ -20,4 +20,5 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym "HT"
   inflect.acronym "IP"
   inflect.acronym "SAML"
+  inflect.acronym "SSD"
 end

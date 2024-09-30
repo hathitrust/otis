@@ -146,4 +146,37 @@ FactoryBot.define do
     time { Faker::Time.backward }
     data { '{"action"=>"ht_contacts#update", "ip_address"=>"127.0.0.1", "params"=>{"inst_id"=>"bartoletti-bins", "contact_type"=>"7", "email"=>"rosann@hettinger.edu"}, "user_agent"=>"WhizzyAgent", "client_ip"=>"127.0.0.1"}' }
   end
+
+  factory :ht_ssd_proxy_report do
+    sequence(:id) { |n| n.to_s }
+    datetime = Faker::Time.backward
+    in_copyright { [0, 1].sample }
+    yyyy { datetime.year }
+    yyyymm { datetime.strftime("%Y%m") }
+    datetime { datetime }
+    htid { Faker::Lorem.unique.characters(number: 10) }
+    is_partial { [0, 1].sample }
+    email { Faker::Internet.email }
+    inst_code { Faker::Internet.unique.domain_word }
+    sha { SecureRandom.urlsafe_base64(20) }
+    ht_hathifile
+    ht_institution
+
+    trait :no_hf do
+      ht_hathifile { nil }
+    end
+  end
+
+  factory :ht_hathifile do
+    htid { Faker::Alphanumeric.alpha(number: [2, 3]) + "." + Faker::Alphanumeric.alphanumeric(number: 14) }
+    access { [nil, true, false].sample }
+    rights_code { ["ic", "pd", "pdus", "icus", "und"].sample }
+    bib_num { Faker::Number.number(digits: 9) }
+    title { Faker::Book.title }
+    imprint { Faker::Book.publisher + ", " + Faker::Date.between(from: "1800-01-01", to: "2000-01-01").year.to_s }
+    author { Faker::Book.author }
+    content_provider_code { Faker::Alphanumeric.alpha(number: [2, 3]) }
+    digitization_agent_code { Faker::Alphanumeric.alpha(number: [2, 3]) }
+    rights_date_used { Faker::Date.between(from: "1800-01-01", to: "2000-01-01").year.to_s }
+  end
 end

@@ -8,6 +8,10 @@ class HTInstitutionTest < ActiveSupport::TestCase
     @disabled = create(:ht_institution, enabled: false)
   end
 
+  test ".ransackable_attributes" do
+    assert_kind_of Array, HTInstitution.ransackable_attributes
+  end
+
   test "validation passes" do
     assert build(:ht_institution).valid?
   end
