@@ -9,15 +9,15 @@ class HTInstitutionPresenter < ApplicationPresenter
   }.freeze
 
   BADGES = {
-    0 => Otis::Badge.new(value_scope + ".enabled.disabled", "label-danger"),
-    1 => Otis::Badge.new(value_scope + ".enabled.enabled", "label-success"),
-    2 => Otis::Badge.new(value_scope + ".enabled.private", "label-warning"),
-    3 => Otis::Badge.new(value_scope + ".enabled.social", "label-primary")
+    0 => Otis::Badge.new(value_scope + ".enabled.disabled", "bg-danger"),
+    1 => Otis::Badge.new(value_scope + ".enabled.enabled", "bg-success"),
+    2 => Otis::Badge.new(value_scope + ".enabled.private", "bg-warning text-dark"),
+    3 => Otis::Badge.new(value_scope + ".enabled.social", "bg-primary")
   }.freeze
 
   ETAS_BADGES = {
-    enabled: Otis::Badge.new(value_scope + ".emergency_status.etas_enabled", "label-success"),
-    disabled: Otis::Badge.new(value_scope + ".emergency_status.etas_not_enabled", "label-danger")
+    enabled: Otis::Badge.new(value_scope + ".emergency_status.etas_enabled", "bg-success"),
+    disabled: Otis::Badge.new(value_scope + ".emergency_status.etas_not_enabled", "bg-danger")
   }.freeze
 
   ALL_FIELDS = %i[

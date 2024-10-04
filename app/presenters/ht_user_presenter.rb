@@ -82,8 +82,8 @@ class HTUserPresenter < ApplicationPresenter
       fmt = I18n.l(self[:expires].to_date, format: :long) +
         "<p>#{expiration_badge}</p>"
       if expiring_soon?
-        fmt += "<p><span class=\"bg-danger text-danger\">" +
-          time_to_expiration + "</span></p>"
+        fmt += "<strong><span class=\"text-danger\">" +
+          time_to_expiration + "</spam></strong>"
       end
       fmt
     else

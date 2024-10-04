@@ -11,7 +11,7 @@ module Otis
     end
 
     def label_span
-      "<span class='label #{css_class}'>#{label_text}</span>".html_safe
+      "<span class='badge #{css_class}'>#{label_text}</span>".html_safe
     end
 
     alias_method :to_html, :label_span
