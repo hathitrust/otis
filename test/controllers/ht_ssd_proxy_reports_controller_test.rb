@@ -31,7 +31,7 @@ class HTSSDProxyReportControllerTest < ActionDispatch::IntegrationTest
         assert_match report.htid, @response.body
         assert_match report.email, @response.body
         assert_match report.ht_hathifile.author, @response.body
-        assert_match report.institution_name, @response.body
+        assert_match ERB::Util.json_escape(ERB::Util.html_escape(report.institution_name)), @response.body
       end
       assert_kind_of Hash, JSON.parse(@response.body)
     end
