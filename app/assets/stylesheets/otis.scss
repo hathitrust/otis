@@ -49,8 +49,9 @@ a:visited {
 }
 
 .btn-info {
-  // background-color:#20809d
-  background-color: $cyan-700;
+  background-color:#20809d
+  // FIXME: Looking for a way to get Bootstrap to understand this -- it is a bona fide BS color
+  // background-color: $cyan-700;
 }
 
 .btn-warning {
