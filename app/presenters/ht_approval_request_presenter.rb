@@ -6,10 +6,10 @@ class HTApprovalRequestPresenter < ApplicationPresenter
   INDEX_FIELDS = %i[approver user sent approved renewed]
 
   BADGES = {
-    approved: Otis::Badge.new("ht_approval_request.badges.approved", "label-success"),
-    expired: Otis::Badge.new("ht_approval_request.badges.expired", "label-danger"),
-    sent: Otis::Badge.new("ht_approval_request.badges.sent", "label-default"),
-    unsent: Otis::Badge.new("ht_approval_request.badges.unsent", "label-warning")
+    approved: Otis::Badge.new("ht_approval_request.badges.approved", "bg-success"),
+    expired: Otis::Badge.new("ht_approval_request.badges.expired", "bg-danger"),
+    sent: Otis::Badge.new("ht_approval_request.badges.sent", "bg-default"),
+    unsent: Otis::Badge.new("ht_approval_request.badges.unsent", "bg-warning text-dark")
   }.freeze
 
   def badge
