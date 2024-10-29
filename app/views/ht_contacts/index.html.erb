@@ -26,14 +26,16 @@
 
   <br />
 
-  <% if can?(:create, HTContact) %>
-    <%= link_to t(".add_new_contact"), new_ht_contact_path, class: 'btn btn-primary' %>
-  <% end %>
-  <% if @contacts.any? %>
-    <%= link_to t(".download_csv"),
-                ht_contacts_url(format: :csv, contact_type: params[:contact_type]),
-                class: 'btn btn-info' %>
-  <% end %>
+  <div class="col">
+    <% if can?(:create, HTContact) %>
+      <%= link_to t(".add_new_contact"), new_ht_contact_path, class: 'btn btn-primary my-4' %>
+    <% end %>
+    <% if @contacts.any? %>
+      <%= link_to t(".download_csv"),
+                  ht_contacts_url(format: :csv, contact_type: params[:contact_type]),
+                  class: 'btn btn-info text-light my-4' %>
+    <% end %>
+  </div>
 
 </div>
 

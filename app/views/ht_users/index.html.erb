@@ -48,10 +48,10 @@
   <br/>
 
   <% if can?(:create, HTApprovalRequest)  %>
-    <%= button_tag t(".create_approval_requests"), type: 'submit', name: 'submit_requests', class: 'btn btn-primary' %>
+    <%= button_tag t(".create_approval_requests"), type: 'submit', name: 'submit_requests', class: 'btn btn-primary my-2' %>
   <% end %>
   <% if can?(:edit, HTUser) %>
-    <%= button_tag t(".renew_selected_users"), type: 'submit', name: 'submit_renewals', class: 'btn btn-primary' %>
+    <%= button_tag t(".renew_selected_users"), type: 'submit', name: 'submit_renewals', class: 'btn btn-primary my-2' %>
   <% end %>
 
   <% end # form_tag %>

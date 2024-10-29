@@ -2,7 +2,7 @@
 
   <% fields = HTInstitutionPresenter::INDEX_FIELDS %>
 
-  <%= link_to t(".download_csv"), ht_institutions_url(format: :csv), class: 'btn btn-primary' %>
+  <%= link_to t(".download_csv"), ht_institutions_url(format: :csv), class: 'btn btn-info text-light my-2' %>
   <br/>
 
   <h2 class="pull-left"><%= t ".enabled_institutions" %></h2>
@@ -26,6 +26,7 @@
     <% end %>
   </table>
 
+  <br/>
   <% fields = HTInstitutionPresenter::INDEX_FIELDS_INACTIVE %>
   <h2 class="pull-left"><%= t ".other_institutions" %></h2>
 

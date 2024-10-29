@@ -51,10 +51,10 @@
   </table>
   <br/>
   <% if can?(:edit, HTUser) %>
-    <%= submit_tag t(".renew_selected"), name: 'submit_renewals', class: 'btn btn-primary' %>
+    <%= submit_tag t(".renew_selected"), name: 'submit_renewals', class: 'btn btn-primary my-2' %>
   <% end %>
   <% if can?(:destroy, HTApprovalRequest) && HTApprovalRequest.expired.any? %>
-    <%= submit_tag t(".delete_expired"), name: 'delete_expired', class: 'btn btn-danger',
+    <%= submit_tag t(".delete_expired"), name: 'delete_expired', class: 'btn btn-danger my-2',
                    data: { confirm: t(".confirm_delete", count: HTApprovalRequest.expired.count) } %>
   <% end %>
   <% end # form-tag %>

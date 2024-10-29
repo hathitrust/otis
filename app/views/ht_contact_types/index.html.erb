@@ -24,9 +24,11 @@
 
   <br />
 
-  <% if can?(:create, HTContactType) %>
-    <%= link_to t(".add_new_contact_type"), new_ht_contact_type_path, class: 'btn btn-primary' %>
-  <% end %>
+  <div class="col my-4">
+    <% if can?(:create, HTContactType) %>
+      <%= link_to t(".add_new_contact_type"), new_ht_contact_type_path, class: 'btn btn-primary' %>
+    <% end %>
+  </div>
 
 </div>
 
