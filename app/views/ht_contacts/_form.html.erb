@@ -3,10 +3,10 @@
   <%= form_with(model: @contact, local: true, id: 'edit_ht_contact_form') do |form| %>
     <div class="col-sm-6">
     
-      <dl class="dl-horizontal">
+      <dl class="row">
         <% @contact.all_fields.each do |field| %>
-          <dt><%= @contact.field_label field, form: form %></dt>
-          <dd><%= @contact.field_value field, form: form %></dd>
+          <dt class="col-sm-3"><%= @contact.field_label field, form: form %></dt>
+          <dd class="col-sm-9"><%= @contact.field_value field, form: form %></dd>
         <% end %>
       </dl>
 

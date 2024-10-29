@@ -1,11 +1,11 @@
   <h1><%= @contact_type.name %></h1>
 
   <%= form_with(model: @contact_type, local: true, id: 'edit_ht_contact_type_form') do |form| %>
-    <div class="col-sm-6">
-      <dl class="dl-horizontal">
+    <div class="col">
+      <dl class="row">
         <% @contact_type.all_fields.each do |field| %>
-          <dt><%= @contact_type.field_label field, form: form %></dt>
-          <dd><%= @contact_type.field_value field, form: form %></dd>
+          <dt class="col-sm-3"><%= @contact_type.field_label field, form: form %></dt>
+          <dd class="col-sm-9"><%= @contact_type.field_value field, form: form %></dd>
         <% end %>
       </dl>
 

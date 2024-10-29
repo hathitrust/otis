@@ -1,11 +1,11 @@
 <div id="maincontent" class="row">
   <h1><%= @contact.email %></h1>
 
-  <div class="col-sm-6">
-    <dl class="dl-horizontal">
+  <div class="col">
+    <dl class="row">
       <% @contact.all_fields.each do |field| %>
-        <dt><%= @contact.field_label field %></dt>
-        <dd><%= @contact.field_value field %></dd>
+        <dt class="col-sm-3"><%= @contact.field_label field %></dt>
+        <dd class="col-sm-9"><%= @contact.field_value field %></dd>
       <% end %>
     </dl>
     <br/>

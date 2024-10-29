@@ -1,20 +1,20 @@
 <div class="col-sm-12">
   <h1><%= @registration.applicant_name %></h1>
 
-  <dl class="dl-horizontal">
+  <dl class="row">
     <% @registration.all_fields.each do |field| %>
-      <dt><%= @registration.field_label field %></dt>
-      <dd><%= @registration.field_value field %></dd>
+      <dt class="col-sm-4"><%= @registration.field_label field %></dt>
+      <dd class="col-sm-8"><%= @registration.field_value field %></dd>
     <% end %>
   </dl>
   <br/>
 
   <% if @registration.ip_address.present? %>
     <h2><%= t(".login_details") %></h2>
-    <dl class="dl-horizontal">
+    <dl class="row">
       <% @registration.detail_fields.each do |field| %>
-        <dt><%= @registration.field_label field %></dt>
-        <dd><%= @registration.field_value field %></dd>
+        <dt class="col-sm-4"><%= @registration.field_label field %></dt>
+        <dd class="col-sm-8"><%= @registration.field_value field %></dd>
       <% end %>
     </dl>
     <br/>
@@ -41,7 +41,7 @@
   <% end %>
 
   <% if @registration.ip_address.present? %>
-    <h2><%= t(".whois_data") %></h2>
+    <h2 class="mt-4"><%= t(".whois_data") %></h2>
     <div>
       <%= @registration.whois_block %>
     </div>

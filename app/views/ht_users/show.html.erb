@@ -2,15 +2,17 @@
   <h1><%= @user.displayname %></h1>
 
   <div class="col-sm-6">
-    <dl class="dl-horizontal">
+    <dl class="row">
       <% @user.all_fields.each do |field| %>
-        <dt><%= @user.field_label field %></dt> <dd><%= @user.field_value field %></dd>
+        <dt class="col-sm-3"><%= @user.field_label field %></dt>
+        <dd class="col-sm-9"><%= @user.field_value field %></dd>
       <% end %>
     </dl>
     <hr/>
-    <dl class="dl-horizontal">
+    <dl class="row">
       <% @user.ht_counts_fields.each do |field| %>
-        <dt><%= @user.field_label field %></dt> <dd><%= @user.field_value field %></dd>
+        <dt class="col-sm-3"><%= @user.field_label field %></dt>
+        <dd class="col-sm-9"><%= @user.field_value field %></dd>
       <% end %>
     </dl>
 
