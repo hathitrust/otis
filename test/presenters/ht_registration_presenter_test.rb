@@ -59,7 +59,7 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
 
   test "#field_value :mfa_addendum displays as icon when set" do
     reg = HTRegistrationPresenter.new build(:ht_registration, mfa_addendum: true)
-    assert_match %r{glyphicon-lock}, reg.field_value(:mfa_addendum)
+    assert_match "bi-lock", reg.field_value(:mfa_addendum)
   end
 
   test "#field_value :mfa_addendum blank when unset" do

@@ -35,7 +35,7 @@ class HTUserPresenterTest < ActiveSupport::TestCase
 
   test "non-blank #mfa_icon" do
     user = HTUserPresenter.new(create(:ht_user_mfa))
-    assert_match "glyphicon", user.field_value(:mfa)
+    assert_match "bi-lock", user.field_value(:mfa)
   end
 
   test "plain #mfa_label" do

@@ -4,6 +4,10 @@
     <div class="col">
       <dl class="row">
         <% @contact_type.all_fields.each do |field| %>
+          <% # The `new` action need not display the as-yet-unassigned id %>
+          <% if @contact_type.controller.action_name == "new" && @contact_type.class::READ_ONLY_FIELDS.include?(field) %>
+            <% next %>
+          <% end %>
           <dt class="col-sm-3"><%= @contact_type.field_label field, form: form %></dt>
           <dd class="col-sm-9"><%= @contact_type.field_value field, form: form %></dd>
         <% end %>

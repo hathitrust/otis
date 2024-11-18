@@ -1,27 +1,27 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom py-1 mb-3">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <%= image_tag Otis.config.image.hathitrust.logo.name,
             size: Otis.config.image.hathitrust.logo.size,
             alt: I18n.t("global.hathitrust_logo"),
-            class: "d-inline-block align-top" %>
+            class: "d-inline-block" %>
     </a>
-   <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
             aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-    </button> -->
-    <% unless logged_in? %>
-      <span class="navbar-text" id="nav-not-logged-in"><%= I18n.t("global.not_logged_in") %></span>
-    <% else %>
-      <span class="navbar-text" id="nav-logged-in"><%= I18n.t("global.logged_in") %></span>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <% unless Rails.env.production? %>
-            <li class="nav-item">
-              <%= link_to I18n.t("global.log_out"), logout_path, class: "nav-link" %>
-            </li>
-          <% end %>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-lg-0 align-items-center gap-3">
+        <% unless logged_in? %>
+          <li class="nav-item" id="nav-not-logged-in">
+            <span class="nav-link"><%= I18n.t("global.not_logged_in") %></li></span>
+        <% else %>
+          <li class="nav-item" id="nav-logged-in">
+            <span class="nav-link"><%= I18n.t("global.logged_in") %></span>
+          </li>
+        
           <% nav_menu.tap do |nav| %>
             <% if nav.any? %>
               <li class="nav-item">
@@ -40,10 +40,10 @@
                   <% end %>
                 </ul>
               </li>
-             <% end %>
+            <% end %>
           <% end %>
-        </ul>
-      </div>
-    <% end %>
+        <% end %>
+      </ul>
+    </div>
   </div>
 </nav>

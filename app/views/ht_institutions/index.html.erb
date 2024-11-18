@@ -5,11 +5,11 @@
   <%= link_to t(".download_csv"), ht_institutions_url(format: :csv), class: 'btn btn-info text-light my-2' %>
   <br/>
 
-  <h2 class="pull-left"><%= t ".enabled_institutions" %></h2>
+  <h2 class="float-start"><%= t ".enabled_institutions" %></h2>
 
   <table id="active_institutions" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
-    <thead class="thead-dark">    
+    <thead class="thead-dark">
     <tr>
       <% fields.each do |field| %>
         <th data-sortable="true"><%= HTInstitutionPresenter.field_label field %></th>
@@ -28,7 +28,7 @@
 
   <br/>
   <% fields = HTInstitutionPresenter::INDEX_FIELDS_INACTIVE %>
-  <h2 class="pull-left"><%= t ".other_institutions" %></h2>
+  <h2 class="float-start"><%= t ".other_institutions" %></h2>
 
   <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true">
