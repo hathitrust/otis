@@ -167,7 +167,11 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_mfa_addendum
-    mfa_addendum ? "<span class='badge bg-success'><i class='bi bi-lock-fill text-light'></i></span>" : ""
+    mfa_addendum ? <<~HTML : ""
+      <span class="badge bg-success" aria-label="#{I18n.t("ht_registrations.index.mfa_addendum_received")}">
+      <i class="bi bi-lock-fill text-light" aria-hidden="true"></i>
+      </span>
+    HTML
   end
 
   def show_received

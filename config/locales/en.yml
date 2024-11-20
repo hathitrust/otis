@@ -326,6 +326,7 @@ en:
     index:
       current_registrations: Current Registrations
       new_registration: New Registration
+      mfa_addendum_received: MFA Addendum Received
     mail:
       success: Message sent.
     new:
@@ -349,7 +350,7 @@ en:
       success: Registration updated for %{name}.
   ht_ssd_proxy_reports:
     index:
-      clear_filter: Clear filters
+      clear_filter: Clear Filters
       date_range: Date Range
       filter: Filter
       ht_ssd_proxy_reports: SSD Proxy Reports

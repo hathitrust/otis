@@ -83,7 +83,7 @@ class HTUserPresenter < ApplicationPresenter
         "<p>#{expiration_badge}</p>"
       if expiring_soon?
         fmt += "<strong><span class=\"text-danger\">" +
-          time_to_expiration + "</spam></strong>"
+          time_to_expiration + "</span></strong>"
       end
       fmt
     else
@@ -110,7 +110,11 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def show_mfa
-    mfa ? "<span class='badge bg-success'><i class='bi bi-lock-fill text-light'></i></span>" : ""
+    mfa ? <<~HTML : ""
+      <span class="badge bg-success" aria-label="#{I18n.t("activerecord.attributes.ht_user.mfa")}">
+      <i class="bi bi-lock-fill text-light" aria-hidden="true"></i>
+      </span>
+    HTML
   end
 
   def show_renewal_status
