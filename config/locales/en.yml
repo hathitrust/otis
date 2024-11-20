@@ -325,8 +325,8 @@ en:
       submit_changes: Submit Changes
     index:
       current_registrations: Current Registrations
-      new_registration: New Registration
       mfa_addendum_received: MFA Addendum Received
+      new_registration: New Registration
     mail:
       success: Message sent.
     new:
