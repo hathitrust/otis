@@ -3,10 +3,10 @@
   <%= form_with(model: @institution, local: true, id: 'edit_ht_institution_form') do |form| %>
     <div class="col-sm-6">
 
-      <dl class="dl-horizontal">
+      <dl class="row">
         <% @institution.all_fields.each do |field| %>
-          <dt><%= @institution.field_label field, form: form %></dt>
-          <dd><%= @institution.field_value field, form: form %></dd>
+          <dt class="col-sm-3"><%= @institution.field_label field, form: form %></dt>
+          <dd class="col-sm-9"><%= @institution.field_value field, form: form %></dd>
         <% end %>
       </dl>
     
@@ -14,14 +14,14 @@
       <% member = HTBillingMemberPresenter.new member,
            controller: @institution.controller, action: @institution.action %>
       <%= form.fields_for :ht_billing_member, member do |billing_form| %>
-        <dl class="dl-horizontal">
+        <dl class="row">
         <% if @institution.can_create_billing_member? %>
-          <dt><label for="create_billing_member"><%= t(".add_billing_info") %></label></dt>
-          <dd><%= check_box_tag :create_billing_member %></dd>
+          <dt class="col-sm-3"><label for="create_billing_member"><%= t(".add_billing_info") %></label></dt>
+          <dd class="col-sm-9"><%= check_box_tag :create_billing_member %></dd>
         <% end %>
         <% member.all_fields.each do |field| %>
-          <dt><%= member.field_label field, form: billing_form %></dt>
-          <dd><%= member.field_value field, form: billing_form %></dd>
+          <dt class="col-sm-3"><%= member.field_label field, form: billing_form %></dt>
+          <dd class="col-sm-9"><%= member.field_value field, form: billing_form %></dd>
         <% end %>
         </dl>
       <% end %>

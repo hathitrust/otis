@@ -144,7 +144,6 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_not_empty flash[:notice]
     assert_redirected_to ht_user_path(@user1.email)
     follow_redirect!
-    assert_match "label-any", @response.body
     assert_equal "^.*$", HTUser.find(@user1.email)[:iprestrict]
   end
 
@@ -191,7 +190,8 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     sign_in!
     get ht_users_url
     # look for the class name
-    assert_match(/label-warning/m, @response.body)
+    assert_match("bg-warning", @response.body)
+    assert_match("Expiring Soon", @response.body)
   end
 
   test "Editable fields present" do

@@ -1,4 +1,4 @@
-<div id="maincontent" class="row">
+<div id="maincontent">
   <h1><%= t ".approval_requests" %></h1>
   <% if can?(:edit, HTApprovalRequest) %>
     <p><%= t ".instructions" %></p>
@@ -7,9 +7,9 @@
   <% fields = HTApprovalRequestPresenter::INDEX_FIELDS %>
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
 
-  <h2 class="pull-left"><%= t ".active_requests" %></h2>
+  <h2 class="float-start"><%= t ".active_requests" %></h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-show-search-clear-button="true" data-locale="ja">  
+         data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">
     <tr>
       <th data-sortable="false"><%= t ".select" %></th>
@@ -51,14 +51,14 @@
   </table>
   <br/>
   <% if can?(:edit, HTUser) %>
-    <%= submit_tag t(".renew_selected"), name: 'submit_renewals', class: 'btn btn-primary' %>
+    <%= submit_tag t(".renew_selected"), name: 'submit_renewals', class: 'btn btn-primary my-2' %>
   <% end %>
   <% if can?(:destroy, HTApprovalRequest) && HTApprovalRequest.expired.any? %>
-    <%= submit_tag t(".delete_expired"), name: 'delete_expired', class: 'btn btn-danger',
+    <%= submit_tag t(".delete_expired"), name: 'delete_expired', class: 'btn btn-danger my-2',
                    data: { confirm: t(".confirm_delete", count: HTApprovalRequest.expired.count) } %>
   <% end %>
   <% end # form-tag %>
-  <h2 class="pull-left"><%= t ".inactive_requests" %></h2>
+  <h2 class="float-start"><%= t ".inactive_requests" %></h2>
   <table id="inactive_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true">
     <thead class="thead-dark">

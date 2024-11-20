@@ -3,7 +3,7 @@ require "application_system_test_case"
 class HTRegistrationsTest < ApplicationSystemTestCase
   test "visit index" do
     visit_with_login ht_registrations_url
-    assert_selector "h1", text: "Current Registrations"
+    assert_selector "h2", text: "Current Registrations"
     assert_selector "a.btn", text: "New Registration"
   end
 

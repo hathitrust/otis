@@ -168,7 +168,6 @@ en:
     go: Go
     hathitrust_logo: HathiTrust Logo
     home: Home
-    log_out: Log Out
     logged_in: Logged In
     menus:
       approval_requests: Approval Requests
@@ -326,6 +325,7 @@ en:
       submit_changes: Submit Changes
     index:
       current_registrations: Current Registrations
+      mfa_addendum_received: MFA Addendum Received
       new_registration: New Registration
     mail:
       success: Message sent.
@@ -350,7 +350,7 @@ en:
       success: Registration updated for %{name}.
   ht_ssd_proxy_reports:
     index:
-      clear_filter: Clear filters
+      clear_filter: Clear Filters
       date_range: Date Range
       filter: Filter
       ht_ssd_proxy_reports: SSD Proxy Reports

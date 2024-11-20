@@ -10,12 +10,12 @@ class HTBillingMemberPresenterTest < ActiveSupport::TestCase
 
   test "#field_value :status enabled" do
     member = HTBillingMemberPresenter.new(create(:ht_billing_member, status: true))
-    assert_match "label-success", member.field_value(:status)
+    assert_match "bg-success", member.field_value(:status)
   end
 
   test "#field_value :status disabled" do
     member = HTBillingMemberPresenter.new(create(:ht_billing_member, status: false))
-    assert_match "label-danger", member.field_value(:status)
+    assert_match "bg-danger", member.field_value(:status)
   end
 
   test "#field_value :status edits as checkbox" do

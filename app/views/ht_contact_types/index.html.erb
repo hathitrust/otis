@@ -1,6 +1,6 @@
-<div id="maincontent" class="row">
+<div id="maincontent">
 
-  <h2 class="pull-left"><%= t ".contact_types" %></h2>
+  <h2 class="float-start"><%= t ".contact_types" %></h2>
 
   <% fields = HTContactTypePresenter::ALL_FIELDS %>
   <table id="contact_types" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
@@ -24,9 +24,11 @@
 
   <br />
 
-  <% if can?(:create, HTContactType) %>
-    <%= link_to t(".add_new_contact_type"), new_ht_contact_type_path, class: 'btn btn-primary' %>
-  <% end %>
+  <div class="col my-4">
+    <% if can?(:create, HTContactType) %>
+      <%= link_to t(".add_new_contact_type"), new_ht_contact_type_path, class: 'btn btn-primary' %>
+    <% end %>
+  </div>
 
 </div>
 

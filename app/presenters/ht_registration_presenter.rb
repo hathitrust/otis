@@ -22,15 +22,15 @@ class HTRegistrationPresenter < ApplicationPresenter
   VALID_AFFILIATIONS = %r{^(faculty|staff|member|employee)}
 
   BADGES = {
-    sent: Otis::Badge.new("activerecord.attributes.ht_registration.sent", "label-info"),
-    received: Otis::Badge.new("activerecord.attributes.ht_registration.received", "label-default"),
-    finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "label-success"),
-    institution_static_ip: Otis::Badge.new("activerecord.attributes.ht_registration.institution.static_ip", "label-danger"),
-    institution_mfa: Otis::Badge.new("activerecord.attributes.ht_registration.institution.mfa", "label-success"),
-    existing_user: Otis::Badge.new("activerecord.attributes.ht_registration.email.existing_user", "label-warning"),
-    ok: Otis::Badge.new("activerecord.attributes.ht_registration.detail.ok", "label-success"),
-    mismatch: Otis::Badge.new("activerecord.attributes.ht_registration.detail.mismatch", "label-danger"),
-    questionable: Otis::Badge.new("activerecord.attributes.ht_registration.detail.questionable", "label-warning")
+    sent: Otis::Badge.new("activerecord.attributes.ht_registration.sent", "bg-primary"),
+    received: Otis::Badge.new("activerecord.attributes.ht_registration.received", "bg-secondary"),
+    finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "bg-success"),
+    institution_static_ip: Otis::Badge.new("activerecord.attributes.ht_registration.institution.static_ip", "bg-danger"),
+    institution_mfa: Otis::Badge.new("activerecord.attributes.ht_registration.institution.mfa", "bg-success"),
+    existing_user: Otis::Badge.new("activerecord.attributes.ht_registration.email.existing_user", "bg-warning text-dark"),
+    ok: Otis::Badge.new("activerecord.attributes.ht_registration.detail.ok", "bg-success"),
+    mismatch: Otis::Badge.new("activerecord.attributes.ht_registration.detail.mismatch", "bg-danger"),
+    questionable: Otis::Badge.new("activerecord.attributes.ht_registration.detail.questionable", "bg-warning text-dark")
   }.freeze
 
   def detail_fields
@@ -120,7 +120,7 @@ class HTRegistrationPresenter < ApplicationPresenter
   def show_detail_reverse_lookup
     Resolv.getname ip_address
   rescue Resolv::ResolvError => _e
-    Otis::Badge.new("errors.resolv", "label-danger", ip_address: ip_address).label_span
+    Otis::Badge.new("errors.resolv", "bg-danger", ip_address: ip_address).label_span
   end
 
   def show_detail_scoped_affiliation
@@ -167,7 +167,11 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_mfa_addendum
-    mfa_addendum ? "<span class='label label-success'><i class='glyphicon glyphicon-lock'></i></span>" : ""
+    mfa_addendum ? <<~HTML : ""
+      <span class="badge bg-success" aria-label="#{I18n.t("ht_registrations.index.mfa_addendum_received")}">
+      <i class="bi bi-lock-fill text-light" aria-hidden="true"></i>
+      </span>
+    HTML
   end
 
   def show_received

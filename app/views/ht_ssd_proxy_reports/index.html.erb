@@ -42,15 +42,15 @@
   }
 </style>
 
-<div id="maincontent" class="row">
+<div id="maincontent">
 
-  <h1><%= t ".ht_ssd_proxy_reports" %></h1>
+  <h2><%= t ".ht_ssd_proxy_reports" %></h1>
 
   <div class="row">
     <div class="report-toolbar" id="toolbar">
-      <div class="form-inline" id="form-daterange-filter">
-        <div class="form-group">
-          <label for="date-start date-end"><%= t ".date_range" %> </label>
+      <div class="input-group" id="form-daterange-filter">
+        <div class="input-group">
+          <label class="input-group-text" for="date-start date-end"><%= t ".date_range" %> </label>
           <input class="form-control"
             type="text"
             size="11"
@@ -59,7 +59,7 @@
             id="date-start"
             onchange="applyDateRangeFilter();"
           />
-          <span style="margin-left: 0.5rem"> - </span>
+          <span class="input-group-text"> - </span>
           <input class="form-control"
             type="text"
             size="11"
@@ -68,20 +68,20 @@
             id="date-end"
             onchange="applyDateRangeFilter();"
           />
+          <button class="btn btn-outline-primary"
+            id="action-datetime-filter"
+            onclick="applyDateRangeFilter();"
+          >
+            <%= t ".filter" %>
+          </button>
+          <button class="btn btn-outline-secondary"
+            id="action-clear-datetime-filter"
+            onclick="clearDateRangeFilter();"
+          >
+            <%= t ".clear_filter" %>
+            <i class="bi bi-trash" aria-hidden="true"></i>
+          </button>
         </div>
-        <button class="btn btn-default"
-          id="action-datetime-filter"
-          onclick="applyDateRangeFilter();"
-        >
-          <%= t ".filter" %>
-        </button>
-        <button class="btn btn-default"
-          id="action-clear-datetime-filter"
-          onclick="clearDateRangeFilter();"
-          title="<%= t ".clear_filter" %>"
-        >
-          <i class="glyphicon glyphicon-trash"></i>
-        </button>
       </div>
     </div>
   </div>

@@ -168,7 +168,6 @@ ja:
     go: 行く
     hathitrust_logo: HathiTrustのロゴ
     home: ホーム
-    log_out: ログアウト
     logged_in: ログインしている
     menus:
       approval_requests: 承認リクエスト
@@ -326,6 +325,7 @@ ja:
       submit_changes: 変更を送信する
     index:
       current_registrations: 現在の登録
+      mfa_addendum_received: 多要素認証の補遺を受けた
       new_registration: 新しい登録
     mail:
       success: メッセージが送信されました。

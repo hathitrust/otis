@@ -82,8 +82,8 @@ class HTUserPresenter < ApplicationPresenter
       fmt = I18n.l(self[:expires].to_date, format: :long) +
         "<p>#{expiration_badge}</p>"
       if expiring_soon?
-        fmt += "<p><span class=\"bg-danger text-danger\">" +
-          time_to_expiration + "</span></p>"
+        fmt += "<strong><span class=\"text-danger\">" +
+          time_to_expiration + "</span></strong>"
       end
       fmt
     else
@@ -98,7 +98,7 @@ class HTUserPresenter < ApplicationPresenter
   def show_iprestrict
     return "" unless iprestrict.present?
     if iprestrict == ["any"]
-      return Otis::Badge.new("ht_user.values.iprestrict.any", "label-success label-any").label_span
+      return Otis::Badge.new("ht_user.values.iprestrict.any", "bg-success").label_span
     end
 
     iprestrict.to_sentence
@@ -110,7 +110,11 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def show_mfa
-    mfa ? "<span class='label label-success'><i class='glyphicon glyphicon-lock'></i></span>" : ""
+    mfa ? <<~HTML : ""
+      <span class="badge bg-success" aria-label="#{I18n.t("activerecord.attributes.ht_user.mfa")}">
+      <i class="bi bi-lock-fill text-light" aria-hidden="true"></i>
+      </span>
+    HTML
   end
 
   def show_renewal_status
@@ -181,7 +185,7 @@ class HTUserPresenter < ApplicationPresenter
     if edit_mfa?
       form.check_box(:mfa, onclick: "check_mfa();".html_safe)
     else
-      Otis::Badge.new("ht_user.values.mfa.unavailable", "label-warning").label_span
+      Otis::Badge.new("ht_user.values.mfa.unavailable", "bg-warning").label_span
     end
   end
 
@@ -210,8 +214,8 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def expiration_badge
-    return Otis::Badge.new("ht_user.badges.expired", "label-danger").label_span if expired?
-    return Otis::Badge.new("ht_user.badges.expiring_soon", "label-warning").label_span if expiring_soon?
+    return Otis::Badge.new("ht_user.badges.expired", "bg-danger").label_span if expired?
+    return Otis::Badge.new("ht_user.badges.expiring_soon", "text-dark bg-warning").label_span if expiring_soon?
 
     ""
   end

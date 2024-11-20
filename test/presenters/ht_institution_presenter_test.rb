@@ -19,7 +19,7 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
 
   test "#field_value :emergency_status with ETAS enabled on index page" do
     inst = build(:ht_institution, emergency_status: "^(member)@default.invalid")
-    assert_match "label-success", presenter(inst, action: :index).field_value(:emergency_status)
+    assert_match "bg-success", presenter(inst, action: :index).field_value(:emergency_status)
   end
 
   test "#field_value :emergency_status with ETAS disabled on index page" do
@@ -34,7 +34,7 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
 
   test "#field_value :emergency_status with ETAS disabled elsewhere" do
     inst = build(:ht_institution, emergency_status: nil)
-    assert_match "label-danger", presenter(inst).field_value(:emergency_status)
+    assert_match "bg-danger", presenter(inst).field_value(:emergency_status)
   end
 
   test "#field_value :enabled disabled" do

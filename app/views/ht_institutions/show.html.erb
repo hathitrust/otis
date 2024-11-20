@@ -1,11 +1,11 @@
 <div id="maincontent" class="row">
   <h1><%= @institution.name %></h1>
 
-  <div class="col-sm-6">
-    <dl class="dl-horizontal">
+  <div class="col">
+    <dl class="row">
       <% @institution.all_fields.each do |field| %>
-        <dt><%= @institution.field_label field %></dt>
-        <dd><%= @institution.field_value field %></dd>
+        <dt class="col-sm-3"><%= @institution.field_label field %></dt>
+        <dd class="col-sm-9"><%= @institution.field_value field %></dd>
       <% end %>
       
       
@@ -14,28 +14,30 @@
         <% member = HTBillingMemberPresenter.new member, controller: controller,
              action: @institution.action %>
         <% member.all_fields.each do |field| %>
-          <dt><%= member.field_label field %></dt>
-          <dd><%= member.field_value field %></dd>
+          <dt class="col-sm-3"><%= member.field_label field %></dt>
+          <dd class="col-sm-9"><%= member.field_value field %></dd>
         <% end %>
       <% end %>
     </dl>
 
     <hr/>
     <h2><%= t ".users" %></h2>
-    <dl class="dl-horizontal">
-      <dt><%= t ".active_users" %></dt> <dd><%= @institution.active_user_count %></dd>
-      <dt><%= t ".all_users" %></dt> <dd><%= @institution.user_count %></dd>
+    <dl class="row">
+      <dt class="col-sm-3"><%= t ".active_users" %></dt>
+      <dd class="col-sm-9"><%= @institution.active_user_count %></dd>
+      <dt class="col-sm-3"><%= t ".all_users" %></dt>
+      <dd class="col-sm-9"><%= @institution.user_count %></dd>
     </dl>
 
     <% contacts = @institution.contacts %>
     <% if contacts.any? %>
       <hr/>
       <h2><%= t ".contacts" %></h2>
-      <dl class="dl-horizontal">
+      <dl class="row">
         <% contacts.each do |contact| %>
           <% contact = HTContactPresenter.new contact, controller: controller %>
-          <dt><%= contact.field_value :contact_type %></dt>
-          <dd><%= contact.field_value :email %></dd>
+          <dt class="col-sm-3"><%= contact.field_value :contact_type %></dt>
+          <dd class="col-sm-9"><%= contact.field_value :email %></dd>
         <% end %>
       </dl>
     <% end %>
@@ -46,9 +48,9 @@
       <%= link_to t(".edit"), edit_ht_institution_path, class: 'btn btn-primary' %>
     <% end %>
 
-    <%= link_to t(".test_login"), @institution.login_test_url, class: 'btn btn-info' %>
+    <%= link_to t(".test_login"), @institution.login_test_url, class: 'btn btn-secondary' %>
     <% if @institution.mfa? %>
-      <%= link_to t(".test_login_mfa"), @institution.mfa_test_url, class: 'btn btn-info' %>
+      <%= link_to t(".test_login_mfa"), @institution.mfa_test_url, class: 'btn btn-secondary' %>
     <% end %>
 
   </div>

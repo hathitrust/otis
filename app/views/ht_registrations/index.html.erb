@@ -1,9 +1,11 @@
-<div id="maincontent" class="row">
+<div id="maincontent">
 
-  <%= link_to t(".new_registration"), new_ht_registration_path, class: 'btn btn-primary' %>
+  <div class="col my-2">
+    <%= link_to t(".new_registration"), new_ht_registration_path, class: 'btn btn-primary' %>
+  </div>
   <br/>
   
-  <h1 class="pull-left"><%= t(".current_registrations") %></h1>
+  <h2 class="float-start"><%= t(".current_registrations") %></h2>
   
   <% fields = HTRegistrationPresenter::INDEX_FIELDS %>
   <table id="registrations-table" class="table table-striped" data-toggle="table"
@@ -26,7 +28,8 @@
   </table>
 
   <% if @all_registrations.size > 10 %>
-    <br/>
-    <%= link_to t(".new_registration"), new_ht_registration_path, class: 'btn btn-primary' %>
+    <div class="col my-4">
+      <%= link_to t(".new_registration"), new_ht_registration_path, class: 'btn btn-primary' %>
+    </div>
   <% end %>
 </div>

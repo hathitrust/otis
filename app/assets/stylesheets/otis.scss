@@ -7,18 +7,13 @@
   color: #666666
 }
 
+#navbarSupportedContent ul > li {
+    font-size:14px;
+}
+
 a {
-  //color: #3344dd
   color: #265A87
 }
-
-/*a:hover, a:active, a:focus {
-  color: #bb1122
-}
-
-a:visited {
-  color: #884488
-}*/
 
 .text-muted {
   color:#757575
@@ -49,7 +44,13 @@ a:visited {
 }
 
 .btn-info {
-  background-color:#20809d
+  background-color: #087990; //$cyan-700
+  border-color: #087990; //$cyan-700
+  // Additions from https://stackoverflow.com/a/25933439 to accommondate dropdown menu in info button
+  &:hover, &:focus, &:active, .open>.dropdown-toggle.btn-info, &:active:focus, &:first-child:active {
+    background-color: #055160; //$cyan-800
+    border-color: #055160; //$cyan-800
+  }
 }
 
 .btn-warning {

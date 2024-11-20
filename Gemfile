@@ -81,8 +81,8 @@ gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 #
 ##############################################################################
 gem "autoprefixer-rails"
-gem "popper_js"
-gem "bootstrap-sass"
+gem "bootstrap", "~> 5.3"
+gem "bootstrap-icons"
 gem "jquery-rails"
 gem "ckeditor"
 gem "whois"

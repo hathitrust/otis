@@ -8,9 +8,9 @@ class HTBillingMemberPresenter < ApplicationPresenter
 
   def show_status
     if status
-      Otis::Badge.new(self.class.value_scope + ".status.enabled", "label-success")
+      Otis::Badge.new(self.class.value_scope + ".status.enabled", "bg-success")
     else
-      Otis::Badge.new(self.class.value_scope + ".status.disabled", "label-danger")
+      Otis::Badge.new(self.class.value_scope + ".status.disabled", "bg-danger")
     end.to_html
   end
 
