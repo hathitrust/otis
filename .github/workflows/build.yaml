@@ -38,7 +38,7 @@ jobs:
               uses: hathitrust/github_actions/build@v1
               with:
                 image: ghcr.io/${{ github.repository }}
-                dockerfile: Dockerfile.prod
+                dockerfile: Dockerfile
                 img_tag: ${{ inputs.img_tag }}
                 tag: ${{ inputs.ref }}
                 push_latest: ${{ inputs.push_latest}}
