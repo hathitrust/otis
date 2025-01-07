@@ -92,6 +92,8 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def show_institution
+    return institution if ht_institution.nil?
+
     link_to institution, ht_institution_path(ht_institution.inst_id)
   end
 
