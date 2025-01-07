@@ -10,7 +10,6 @@ class HTUsersController < ApplicationController
     users = HTUser.joins(:ht_institution).order("ht_institutions.name")
     @users = users.active.map { |u| presenter u }
     @expired_users = users.expired.map { |u| presenter u }
-    @all_users = users.map { |u| presenter u }
     respond_to do |format|
       format.html
       format.csv do
@@ -65,9 +64,10 @@ class HTUsersController < ApplicationController
 
   def users_csv
     require "csv"
+    all_users = @users + @expired_users
     CSV.generate do |csv|
-      csv << @all_users.first.csv_cols
-      @all_users.each do |user|
+      csv << all_users.first.csv_cols
+      all_users.each do |user|
         if params[:role_filter]&.include?(user.role)
           next
         end
