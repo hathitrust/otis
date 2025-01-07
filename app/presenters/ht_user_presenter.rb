@@ -130,7 +130,7 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def approval_request
-    @approval_request ||= HTApprovalRequest.most_recent(email).first
+    @approval_request ||= ht_approval_request.first
   end
 
   def renewal_status_badge

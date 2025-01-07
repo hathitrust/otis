@@ -7,7 +7,7 @@ class HTUsersController < ApplicationController
     usertype role access expires expire_type iprestrict mfa].freeze
 
   def index
-    users = HTUser.joins(:ht_institution).order("ht_institutions.name")
+    users = HTUser.includes(:ht_institution, :ht_approval_request).order("ht_institutions.name").order(HTApprovalRequest.most_recent_order)
     @users = users.active.map { |u| presenter u }
     @expired_users = users.expired.map { |u| presenter u }
     respond_to do |format|
