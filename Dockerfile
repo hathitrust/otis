@@ -19,7 +19,7 @@ ENV RAILS_LOG_TO_STDOUT true
 ENV RAILS_ENV production
 ENV BUNDLE_PATH /gems
 RUN bundle install
-COPY --chown=$UID:$GID . /usr/src/app
+COPY --chown=$UID:$GID --chmod=664 . /usr/src/app
 
 CMD ["sh", "-c", "bin/rails assets:precompile && bin/rails s"]
 
