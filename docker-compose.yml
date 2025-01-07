@@ -23,6 +23,8 @@ services:
     deploy:
       restart_policy:
         condition: none
+    environment:
+      - RAILS_ENV=test
 
   system-test:
     build: .
@@ -45,7 +47,7 @@ services:
       MYSQL_DATABASE: ht_repository
       MYSQL_USER: otis
       MYSQL_PASSWORD: otis
-    volumes: 
+    volumes:
       - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
 
   mariadb-test:
@@ -56,7 +58,7 @@ services:
       MYSQL_DATABASE: ht_repository
       MYSQL_USER: otis
       MYSQL_PASSWORD: otis
-    volumes: 
+    volumes:
       - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
 
   chrome-server:
