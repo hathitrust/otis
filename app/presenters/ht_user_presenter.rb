@@ -92,6 +92,8 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def show_institution
+    return institution if ht_institution.nil?
+
     link_to institution, ht_institution_path(ht_institution.inst_id)
   end
 
@@ -130,7 +132,7 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def approval_request
-    @approval_request ||= HTApprovalRequest.most_recent(email).first
+    @approval_request ||= ht_approval_request.first
   end
 
   def renewal_status_badge

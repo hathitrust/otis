@@ -7,6 +7,16 @@ class HTApprovalRequest < ApplicationRecord
   def self.expiration_date
     Date.today - 1.week
   end
+
+  # Make sure that the most recent and most "incomplete" request comes first when fetching request for user
+  # If we had created/updated timestamps we could use those.
+  def self.most_recent_order
+    {
+      Arel.sql("sent IS NULL") => :desc, :sent => :desc,
+      Arel.sql("received IS NULL") => :desc, :received => :desc,
+      Arel.sql("renewed IS NULL") => :desc, :renewed => :desc
+    }
+  end
   # "Active" requests that may be subject to further action
   scope :not_renewed, -> { where(renewed: nil) }
   # "Inactive" requests that are only of historical interest
@@ -15,11 +25,6 @@ class HTApprovalRequest < ApplicationRecord
   scope :active, -> { where(renewed: nil, received: nil).where.not(sent: nil).where("sent >= ?", HTApprovalRequest.expiration_date) }
   scope :for_approver, ->(approver) { where(approver: approver).order(:sent, :received, :renewed) }
   scope :for_user, ->(user) { where(userid: user).order(:sent, :received, :renewed) }
-  # Make sure that the most recent and most "incomplete" request comes first when fetching request for user
-  # If we had created/updated timestamps we could use those.
-  most_recent_order = {Arel.sql("sent IS NULL") => :desc, :sent => :desc,
-                       Arel.sql("received IS NULL") => :desc, :received => :desc,
-                       Arel.sql("renewed IS NULL") => :desc, :renewed => :desc}
   scope :most_recent, ->(user) { for_user(user).order(most_recent_order) }
   scope :not_approved, -> { where(received: nil) }
   scope :approved, -> { where.not(received: nil) }
