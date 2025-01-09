@@ -11,7 +11,6 @@ RUN gem install bundler
 RUN groupadd -g $GID -o $UNAME
 RUN useradd -m -d /usr/src/app -u $UID -g $GID -o -s /bin/bash $UNAME
 RUN mkdir -p /gems && chown $UID:$GID /gems
-USER $UNAME
 COPY --chown=$UID:$GID Gemfile* /usr/src/app/
 WORKDIR /usr/src/app
 ENV RAILS_SERVE_STATIC_FILES true
@@ -19,7 +18,8 @@ ENV RAILS_LOG_TO_STDOUT true
 ENV RAILS_ENV production
 ENV BUNDLE_PATH /gems
 RUN bundle install
-COPY --chown=$UID:$GID --chmod=777 . /usr/src/app
+COPY --chown=$UID:$GID --chmod=664 . /usr/src/app/*
+USER $UNAME
 
 CMD ["sh", "-c", "bin/rails assets:precompile && bin/rails s"]
 
