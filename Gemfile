@@ -119,7 +119,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "simplecov"
   gem "simplecov-lcov"
-  gem "i18n-tasks"
+  # gem "i18n-tasks"
 end
 
 group :test do
