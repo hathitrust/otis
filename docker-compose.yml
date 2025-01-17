@@ -1,3 +1,12 @@
+x-condition-healthy: &healthy
+  condition: service_healthy
+
+x-healthcheck-defaults: &healthcheck-defaults
+  interval: 5s
+  timeout: 10s
+  start_period: 10s
+  retries: 5
+
 services:
 
   web:
@@ -34,9 +43,9 @@ services:
       - .:/usr/src/app
       - gem_cache:/gems
     depends_on:
-      - mariadb-test
-      - chrome-server
-    command: bash -c "bin/wait-for mariadb-test:3306 && bin/run_system_tests.sh"
+      mariadb-test: *healthy
+      chrome-server: *healthy
+    command: bash -c "bin/run_system_tests.sh"
     deploy:
       restart_policy:
         condition: none
@@ -62,6 +71,9 @@ services:
       MYSQL_PASSWORD: otis
     volumes:
       - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
 
   chrome-server:
     image: selenium/standalone-chrome:latest
