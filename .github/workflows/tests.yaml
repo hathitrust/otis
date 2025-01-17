@@ -20,21 +20,21 @@ jobs:
           docker compose build
           docker compose run test bundle install
 
-      # - name: Run standardrb
-      #   run: docker compose run test bundle exec standardrb
+      - name: Run standardrb
+        run: docker compose run test bundle exec standardrb
 
-      # - name: Run i18n-tasks health
-      #   run: docker compose run test bundle exec i18n-tasks health
+      - name: Run i18n-tasks health
+        run: docker compose run test bundle exec i18n-tasks health
 
-      # - name: Run tests
-      #   run: docker compose run test
+      - name: Run tests
+        run: docker compose run test
 
-      # - name: Report to Coveralls
-      #   uses: coverallsapp/github-action@v2
-      #   with:
-      #     github-token: ${{ secrets.github_token }}
-      #     flag-name: unit
-      #     parallel: true
+      - name: Report to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.github_token }}
+          flag-name: unit
+          parallel: true
 
       - name: Run system tests
         run: docker compose run system-test
