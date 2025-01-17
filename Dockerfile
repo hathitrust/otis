@@ -30,7 +30,7 @@ WORKDIR /usr/src/app
 COPY Gemfile* /usr/src/app/
 RUN bundle install
 
-COPY . /usr/src/app
+COPY --chown=app:app . /usr/src/app
 
 CMD ["sh", "-c", "bin/rails assets:precompile && bin/rails s"]
 

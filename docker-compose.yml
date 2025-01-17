@@ -13,13 +13,16 @@ services:
     command: bash -c "rm -f /usr/src/app/tmp/pids/server.pid && bin/init_dev_db.sh && bundle exec rails s -b 0.0.0.0"
 
   test:
-    build: .
+    build:
+      context: .
+      target: development
     volumes:
       - .:/usr/src/app
       - gem_cache:/gems
     depends_on:
       - mariadb-test
-    command: bash -c "bin/wait-for mariadb-test:3306 && bundle exec rake test"
+    # command: bash -c "bin/wait-for mariadb-test:3306 && bundle exec rake test"
+    command: /bin/bash
     deploy:
       restart_policy:
         condition: none
