@@ -21,8 +21,7 @@ services:
       - gem_cache:/gems
     depends_on:
       - mariadb-test
-    # command: bash -c "bin/wait-for mariadb-test:3306 && bundle exec rake test"
-    command: /bin/bash
+    command: bash -c "bin/wait-for mariadb-test:3306 && bundle exec rake test"
     deploy:
       restart_policy:
         condition: none
