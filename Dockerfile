@@ -9,8 +9,7 @@ ENV BUNDLE_PATH /gems
 FROM base AS development
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
-  nodejs \
-  netcat-traditional
+  nodejs
 
 WORKDIR /usr/src/app
 RUN gem install bundler
