@@ -15,9 +15,10 @@ default: &default
   encoding: utf8
   pool: 5
 
+# For Otis we don't see the need to maintain separate development and test databases.
 development:
   <<: *default
-  host: mariadb-dev
+  host: mariadb-test
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

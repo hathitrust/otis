@@ -206,12 +206,6 @@ System tests, as usual, are not run by default. But if you do, it'd go a little 
 docker compose run --rm system-test
 ```
 
-For system tests on a Mac with ARM64 architecture you need to use SeleniARM instead of Selenium, so use an invocation that begins with:
-
-```
-docker compose --file docker-compose.yml.arm64 ...
-```
-
 A list of the mailer templates that can be previewed is at localhost:3000/useradmin/rails/mailers
 
 ## Hosting
