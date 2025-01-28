@@ -15,6 +15,7 @@ default: &default
   encoding: utf8
   pool: 5
 
+# This is the database that gets seeded.
 development:
   <<: *default
   host: mariadb-dev

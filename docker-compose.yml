@@ -10,16 +10,20 @@ x-healthcheck-defaults: &healthcheck-defaults
 services:
 
   web:
-    build: .
+    build:
+      context: .
+      target: development
     ports:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
       - gem_cache:/gems
     depends_on:
-      - mariadb-dev
-      - mariadb-test
+      mariadb-dev: *healthy
+      mariadb-test: *healthy
     command: bash -c "rm -f /usr/src/app/tmp/pids/server.pid && bin/init_dev_db.sh && bundle exec rails s -b 0.0.0.0"
+    environment:
+      - RAILS_ENV=development
 
   test:
     build:
@@ -29,7 +33,7 @@ services:
       - .:/usr/src/app
       - gem_cache:/gems
     depends_on:
-      - mariadb-test
+      mariadb-test: *healthy
     command: bash -c "bundle exec rake test"
     deploy:
       restart_policy:
@@ -62,6 +66,9 @@ services:
       MYSQL_PASSWORD: otis
     volumes:
       - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
 
   mariadb-test:
     image: mariadb
@@ -78,7 +85,7 @@ services:
       test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
 
   chrome-server:
-    image: selenium/standalone-chrome:latest
+    image: selenium/standalone-chromium:latest
     restart: always
     healthcheck:
       <<: *healthcheck-defaults
