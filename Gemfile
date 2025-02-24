@@ -53,6 +53,15 @@ gem "net-smtp"
 gem "net-pop"
 gem "net-imap"
 
+#NOTE: these were added for compatibility before Rails 8
+#ALso see the mail-related gems above
+gem "base64"
+gem "bigdecimal"
+gem "mutex_m"
+gem "observer"
+gem "drb"
+gem "csv"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   # gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
