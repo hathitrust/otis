@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "expiration_date"
 require "forwardable"
 
 class HTUserRenewalError < StandardError

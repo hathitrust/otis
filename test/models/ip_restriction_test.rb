@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "ip_restriction"
 
 class IPRestrictionTest < ActiveSupport::TestCase
   test "turns a single valid string-formatted IPv4 address into a regular expression" do

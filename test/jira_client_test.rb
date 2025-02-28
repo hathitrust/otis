@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "otis/jira_client"
 
 module Otis
   class JiraClientTest < ActiveSupport::TestCase
