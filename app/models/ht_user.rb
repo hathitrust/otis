@@ -8,7 +8,7 @@ class HTUserRenewalError < StandardError
 
   def initialize(msg = "Renewal Error", type:)
     @type = type
-    super msg
+    super(msg)
   end
 end
 

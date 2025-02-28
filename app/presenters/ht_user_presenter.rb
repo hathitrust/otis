@@ -64,7 +64,7 @@ class HTUserPresenter < ApplicationPresenter
   # to nothing.
   def field_label(field, form: nil)
     form = nil if field == :mfa && !edit_mfa?
-    super field, form: form
+    super
   end
 
   private
@@ -74,7 +74,7 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def show_email
-    action == :index ? email_link : email
+    (action == :index) ? email_link : email
   end
 
   def show_expires

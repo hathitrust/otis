@@ -103,8 +103,6 @@ class ExpirationDate
   # @return [ActiveSupport::TimeWithZone] The new expiration date
   def default_extension_date
     @date + EXPIRES_TYPE[@expires_type].duration
-  rescue NoMethodError => e
-    raise e
   end
 
   # For comparisons, just check the date

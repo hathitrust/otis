@@ -18,7 +18,7 @@ class HTSSDProxyReportPresenterTest < ActiveSupport::TestCase
   test "hf fields have show methods" do
     report = HTSSDProxyReportPresenter.new(create(:ht_ssd_proxy_report), action: :index)
     HTSSDProxyReportPresenter::HF_FIELDS.each do |field|
-      assert report.send("show_#{field}")
+      assert report.send(:"show_#{field}")
     end
   end
 
@@ -26,7 +26,7 @@ class HTSSDProxyReportPresenterTest < ActiveSupport::TestCase
     report = create(:ht_ssd_proxy_report, :no_hf)
     report = HTSSDProxyReportPresenter.new(report, action: :index)
     HTSSDProxyReportPresenter::HF_FIELDS.each do |field|
-      assert_equal report.send("show_#{field}"), ""
+      assert_equal report.send(:"show_#{field}"), ""
     end
   end
 
