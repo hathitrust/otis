@@ -14,7 +14,9 @@ module Otis
     end
 
     test "task runs without errors" do
-      Rake::Task["otis:send_daily_digest"].invoke
+      assert_nothing_raised do
+        Rake::Task["otis:send_daily_digest"].invoke
+      end
     end
 
     test "link uses default URL host from environment" do
