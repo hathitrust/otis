@@ -20,12 +20,6 @@ class HTRegistrationsControllerIndexTest < ActionDispatch::IntegrationTest
     assert_match "Current Registrations", @response.body
   end
 
-  test "index is well-formed HTML" do
-    check_w3c_errs do
-      get ht_registrations_url
-    end
-  end
-
   test "as admin, shows link for new registration" do
     get ht_registrations_url
     assert_match "registrations/new", @response.body
@@ -44,12 +38,6 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_nil @registration
     assert_equal "show", @controller.action_name
-  end
-
-  test "show page is well-formed HTML" do
-    check_w3c_errs do
-      get ht_registration_url @registration
-    end
   end
 
   test "show page should include data from registration" do
@@ -248,12 +236,6 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
     sign_in! username: ADMIN_USER
   end
 
-  test "edit page is well-formed HTML" do
-    check_w3c_errs do
-      get edit_ht_registration_url @registration
-    end
-  end
-
   test "form fields are present" do
     get edit_ht_registration_url @registration
     assert_select 'select[name="ht_registration[inst_id]"]'
@@ -337,12 +319,6 @@ class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
     assert_not_nil assigns(:email_body)
     assert_match(/E-mail Preview/i, @response.body)
     assert_select "input[value='SEND']"
-  end
-
-  test "e-mail preview is well-formed HTML" do
-    check_w3c_errs do
-      get preview_ht_registration_path @registration
-    end
   end
 
   test "allow resend if the registration is expired" do

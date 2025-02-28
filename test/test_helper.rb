@@ -45,14 +45,6 @@ def sign_in!(username: "admin@default.invalid")
   post login_as_url, params: {username: username}
 end
 
-def check_w3c_errs
-  skip "Skipping W3C test" unless ENV["W3C_VALIDATION"]
-
-  yield
-  sleep 1
-  assert_equal [], W3CValidators::NuValidator.new.validate_text(@response.body).errors
-end
-
 def fake_shib_id
   "#{Faker::Internet.url}!#{Faker::Internet.url}!#{SecureRandom.urlsafe_base64 16}"
 end

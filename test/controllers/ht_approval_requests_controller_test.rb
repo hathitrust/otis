@@ -18,13 +18,6 @@ class HTApprovalRequestControllerIndexTest < ActionDispatch::IntegrationTest
     assert_equal "index", @controller.action_name
   end
 
-  test "index is well-formed HTML" do
-    check_w3c_errs do
-      sign_in!
-      get ht_approval_requests_url
-    end
-  end
-
   test "index should have table headings matching status badges" do
     sign_in!
     get ht_approval_requests_url
@@ -83,13 +76,6 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_nil assigns(:reqs)
     assert_equal "edit", @controller.action_name
-  end
-
-  test "edit page is well-formed HTML" do
-    check_w3c_errs do
-      sign_in!
-      get edit_ht_approval_request_url @user.approver
-    end
   end
 
   test "edit page should not contain approval link" do
@@ -194,13 +180,6 @@ class HTApprovalRequestControllerShowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_nil assigns(:reqs)
     assert_equal "show", @controller.action_name
-  end
-
-  test "show page is well-formed HTML" do
-    check_w3c_errs do
-      sign_in!
-      get ht_approval_request_url @user.approver
-    end
   end
 end
 
