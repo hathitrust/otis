@@ -3,18 +3,6 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-######################################
-# SECURITY UPDATES                   #
-######################################
-
-# https://github.com/advisories/GHSA-5m2v-hc64-56h6
-gem "rubyzip", "~> 2.0"
-
-
-#gem "loofah"
-
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-#gem "rails", "~> 6.1.7.9"
 gem "rails", "~> 8.0"
 
 # Use Puma as the app server
@@ -23,24 +11,6 @@ gem "puma"
 gem "sassc-rails"
 # Use Terser as compressor for JavaScript assets, previously used Uglifier
 gem "terser"
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'mini_racer', platforms: :ruby
-
-
-
-# Removed as default gems in ruby 3.1
-#gem "net-smtp"
-#gem "net-pop"
-#gem "net-imap"
-
-#NOTE: these were added for compatibility before Rails 8
-#ALso see the mail-related gems above
-#gem "base64"
-#gem "bigdecimal"
-#gem "mutex_m"
-#gem "observer"
-#gem "drb"
-#gem "csv"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -61,9 +31,6 @@ group :test do
   # gem 'chromedriver-helper'
 end
 
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-#gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
 ##############################################################################
 #
 # Otis
@@ -78,8 +45,6 @@ gem "whois"
 gem "whois-parser"
 gem "accept_language"
 gem "flag-icons-rails"
-#Do we need rails-i18n?
-gem "rails-i18n"
 gem "maxmind-geoip2"
 gem "jira-ruby"
 gem "ransack"
@@ -101,16 +66,9 @@ gem "coffee-rails"
 gem "ostruct"
 gem "csv"
 
-
 group :development, :test do
-  #gem "byebug"
   gem "standard"
-  # parser should be >= the current Ruby version to avoid warnings
-  #gem "parser", ">= 3.1.6"
-  #gem "pry"
-  #gem "pry-byebug", ">= 3.9.0"
   gem "debug"
-  #gem "sqlite3"
   gem "faker"
   gem "factory_bot_rails"
   gem "simplecov"
@@ -120,5 +78,4 @@ end
 
 group :test do
   gem "rails-controller-testing"
-  gem "w3c_validators"
 end

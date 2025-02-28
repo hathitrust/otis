@@ -3,7 +3,6 @@
 require "simplecov"
 require "simplecov-lcov"
 require "rake"
-require "w3c_validators"
 require "capybara"
 require "selenium-webdriver"
 
