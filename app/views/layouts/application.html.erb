@@ -4,20 +4,11 @@
     <title>Otis Elevated Access Tool</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <meta name="turbolinks-cache-control" content="no-cache">
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link href="/useradmin/styles/styles.css" rel="stylesheet" />
 
-    <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" %>
-    <% # Select2 (select2.org) main distro, locale files, CSS %>
-    <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" %>
-    <% I18n.available_locales.each do |locale| %>
-      <%= javascript_include_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/#{locale.to_s}.js" %>
-    <% end %>
-    <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" %>
-    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.23.4/dist/extensions/filter-control/bootstrap-table-filter-control.css") %>
-    <%= stylesheet_link_tag("https://unpkg.com/bootstrap-table@1.23.4/dist/bootstrap-table.min.css") %>
+    <script src="/useradmin/scripts/scripts.js"></script>
+    
 
     <% # Keyboard-related overrides that trigger when a bootstrap-table search  %>
     <% # field has focus.                                                       %>
@@ -26,7 +17,7 @@
     <% # - Clear the field on escape key (27).                                  %>
     <% # event.stopPropagation() should not be needed, but if there are issues  %>
     <% # it should be revisited.                                                %>
-    <script>
+   <!-- <script>
       $(document).keypress(
         function(event) {
         if (event.which == '13' && $('.search-input:focus').length) {
@@ -44,23 +35,18 @@
         }
       });
     </script>
-    <% # Uses bootstrap-table  %>
-    <script src="https://cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.30.0/tableExport.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.23.4/dist/bootstrap-table.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.23.4/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.4/dist/extensions/export/bootstrap-table-export.min.js"></script>
-    <% locale_map = {"ja" => "ja-JP"} %>
-    <% if locale_map[I18n.locale.to_s].present? %>
-      <script src="https://unpkg.com/bootstrap-table@1.23.4/dist/locale/bootstrap-table-<%= locale_map[I18n.locale.to_s] %>.min.js"></script>
-    <% end %>
+    -->
+   
+   
   </head>
 
-  <body>
+  <body class="hello">
     <%= render 'shared/header' %>
     <div id="main-container" class="container">
         <%= render 'shared/flash_message' %>
       <%= yield %>
     </div>
+    <!--
     <script>
       // Add aria-label to bootstrap-table search box.
       // Doesn't silence warnings about lack of visible label, however.
@@ -75,6 +61,7 @@
         });
       });
     </script>
+    -->
     <div class="container">
       <footer>
       </footer>

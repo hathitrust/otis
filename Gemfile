@@ -8,10 +8,6 @@ gem "rails-i18n"
 
 # Use Puma as the app server
 gem "puma"
-# Use SCSS/SASS for stylesheets
-gem "sassc-rails"
-# Use Terser as compressor for JavaScript assets, previously used Uglifier
-gem "terser"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -37,15 +33,9 @@ end
 # Otis
 #
 ##############################################################################
-gem "autoprefixer-rails"
-gem "bootstrap", "~> 5.3"
-gem "bootstrap-icons"
-gem "jquery-rails"
-gem "ckeditor"
 gem "whois"
 gem "whois-parser"
 gem "accept_language"
-gem "flag-icons-rails"
 gem "maxmind-geoip2"
 gem "jira-ruby"
 gem "ransack"
@@ -63,7 +53,6 @@ gem "dotenv-rails"
 # Freeze Sequel version number because of Checkpoint prepared statement issues
 gem "sequel", "5.52.0"
 
-gem "coffee-rails"
 gem "ostruct"
 gem "csv"
 
