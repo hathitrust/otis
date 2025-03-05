@@ -6,9 +6,13 @@
     <%= csp_meta_tag %>
 
     <link href="/useradmin/styles/styles.css" rel="stylesheet" />
-
+    <link href="/useradmin/scripts/scripts.css" rel="stylesheet" />
     <script src="/useradmin/scripts/scripts.js"></script>
-    
+
+    <% if ckeditor? # application_helper.rb %>
+      <link href="/useradmin/scripts/ckeditor.css" rel="stylesheet" />
+      <script src="/useradmin/scripts/ckeditor.js"></script>
+    <% end %>
 
     <% # Keyboard-related overrides that trigger when a bootstrap-table search  %>
     <% # field has focus.                                                       %>
@@ -17,7 +21,7 @@
     <% # - Clear the field on escape key (27).                                  %>
     <% # event.stopPropagation() should not be needed, but if there are issues  %>
     <% # it should be revisited.                                                %>
-   <!-- <script>
+    <script>
       $(document).keypress(
         function(event) {
         if (event.which == '13' && $('.search-input:focus').length) {
@@ -35,18 +39,18 @@
         }
       });
     </script>
-    -->
-   
-   
   </head>
 
-  <body class="hello">
+  <body>
     <%= render 'shared/header' %>
     <div id="main-container" class="container">
-        <%= render 'shared/flash_message' %>
+      <%= render 'shared/flash_message' %>
+      <% # ======================================= %>
+      <% # ======== RENDER ALL THE THINGS ======== %>
       <%= yield %>
+      <% # ======================================= %>
     </div>
-    <!--
+
     <script>
       // Add aria-label to bootstrap-table search box.
       // Doesn't silence warnings about lack of visible label, however.
@@ -54,14 +58,15 @@
         $('.search-input').each(function (index) {
           $(this).attr('aria-label', 'Search');
         });
-      
-        $(".select-institution").select2({
-          language: "<%= I18n.locale %>",
-          width: "100%"
-        });
+        if ($(".select-institution").length > 0) {
+          $(".select-institution").select2({
+            language: $.fn.select2.amd.require("select2/i18n/<%= I18n.locale %>"),
+            width: "100%"
+          });
+        }
       });
     </script>
-    -->
+
     <div class="container">
       <footer>
       </footer>

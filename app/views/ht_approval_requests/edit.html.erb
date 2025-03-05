@@ -1,7 +1,21 @@
-<%= javascript_include_tag Ckeditor.cdn_url %>
 <script>
-  CKEDITOR.config.language = "<%= I18n.locale %>";
-  CKEDITOR.config.versionCheck = false;
+window.addEventListener("load", (e)=>{
+  ClassicEditor
+    .create( document.querySelector( '#email-editor' ), {
+        licenseKey: 'GPL',
+        plugins: [ Essentials, Bold, Italic, Font, Paragraph ],
+        toolbar: [
+            'undo', 'redo', '|', 'bold', 'italic', '|',
+            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+        ]
+    } )
+    .then( editor => {
+        console.log( editor );
+    } )
+    .catch( error => {
+        console.error( error );
+    } );
+});
 </script>
 
 <div id="maincontent" class="row">
@@ -28,7 +42,9 @@
             <div class="panel-body">
               <%= label_tag "subject", t(".subject") %>
               <%= text_field_tag "subject", ApprovalRequestMailer.subject, size: 60 %>
-              <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px' } %>
+              <textarea id="email-editor" data-editor="ClassicEditor">
+                <%= @email_body %>
+              </textarea>
             </div>
             <div class="panel-body">
               <!-- Turn off locale setting since this is part of mail preview -->

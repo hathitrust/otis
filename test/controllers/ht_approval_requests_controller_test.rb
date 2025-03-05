@@ -87,13 +87,13 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   test "edit page has textarea for email" do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select "form textarea[name='email_body']"
+    assert_select "form textarea#email-editor"
   end
 
   test "edit page textarea has default email" do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select "form textarea[name='email_body']" do |e|
+    assert_select "form textarea#email-editor" do |e|
       assert_match "reauthorize", e.text
     end
   end
@@ -101,7 +101,7 @@ class HTApprovalRequestControllerEditTest < ActionDispatch::IntegrationTest
   test "edit page textarea does not have user table" do
     sign_in!
     get edit_ht_approval_request_url @user.approver
-    assert_select "form textarea[name='email_body']" do |e|
+    assert_select "form textarea#email-editor" do |e|
       assert_no_match @user.email, e.text
     end
   end
