@@ -9,7 +9,7 @@ class HTInstitutionPresenterTest < ActiveSupport::TestCase
 
   test "#field_value :us for US institution" do
     inst = build(:ht_institution, us: true)
-    assert_match "flag-icon", presenter(inst).field_value(:us)
+    assert_match "us_flag", presenter(inst).field_value(:us)
   end
 
   test "#field_value :us for non-US institution" do

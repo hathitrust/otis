@@ -105,8 +105,10 @@ class HTInstitutionPresenter < ApplicationPresenter
     link_to(mapto_inst_id, ht_institution_path(mapto_inst_id)) if mapto_inst_id
   end
 
+  # should this be done in CSS?
+  # This is a bit larger than the Rails 6 version which was 21.333x16
   def show_us
-    us ? "<span class=\"flag-icon flag-icon-us\"></span>" : ""
+    us ? ActionController::Base.helpers.image_tag("us_flag.svg", size: "24x18", alt: "US Flag") : ""
   end
 
   def edit_enabled(form:)

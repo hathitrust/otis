@@ -16,7 +16,7 @@ class ApplicationMailer < ActionMailer::Base
   # Add the image file as an attachment
   # Typically called by a mailer subclass directly
   def add_email_signature_logo
-    signature_file = File.read("#{Rails.root}/app/assets/images/#{Otis.config.image.hathitrust.email_signature_logo.name}")
+    signature_file = File.read("#{Rails.root}/public/images/#{Otis.config.image.hathitrust.email_signature_logo.name}")
     attachments.inline[Otis.config.image.hathitrust.email_signature_logo.name] = signature_file
   end
 
