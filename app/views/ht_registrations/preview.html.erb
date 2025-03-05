@@ -23,16 +23,16 @@ window.addEventListener("load", (e)=>{
   <div class="row">
   <!-- MAIL PREVIEW -->
   <%= form_tag mail_ht_registration_path, method: :post do %>
-    <div class="panel panel-default">
-      <div class="panel-heading"><%= t ".email_preview" %></div>
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title"><%= t ".email_preview" %></div>
         <%= label_tag "subject", t(".subject") %>
         <%= text_field_tag "subject", RegistrationMailer.subject, size: 60 %>
         <textarea id="email-editor" data-editor="ClassicEditor">
           <%= @email_body %>
         </textarea>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <!-- Turn off locale setting since this is part of mail preview -->
         <!-- e-mail content language is orthogonal to UI language -->
         <% I18n.with_locale(I18n.default_locale) do %>
