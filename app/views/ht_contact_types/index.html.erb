@@ -4,7 +4,9 @@
 
   <% fields = HTContactTypePresenter::ALL_FIELDS %>
   <table id="contact_types" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-show-search-clear-button="true">
+         data-search="true" data-show-search-clear-button="true"
+         data-locale="<%= language_region_locale %>"
+  >
     <thead class="thead-dark">    
     <tr>
       <% fields.each do |field| %>
