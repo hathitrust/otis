@@ -13,7 +13,7 @@ module ApplicationHelper
   # @return [Boolean] ckeditor assets should be included
   def ckeditor?
     (params[:controller] == "ht_approval_requests" && params[:action] == "edit") ||
-    (params[:controller] == "ht_registrations" && params[:action] == "preview")
+      (params[:controller] == "ht_registrations" && params[:action] == "preview")
   end
 
   # Translate "language" locale (e.g., "en" from `I18n.locale`)
@@ -22,6 +22,6 @@ module ApplicationHelper
   # This is obviously just for our available locales.
   # Defaults to US English if something goes awry.
   def language_region_locale(locale = I18n.locale)
-    { en: "en-US", ja: "ja-JP" }.fetch(locale.to_sym, "en-US")
+    {en: "en-US", ja: "ja-JP"}.fetch(locale.to_sym, "en-US")
   end
 end
