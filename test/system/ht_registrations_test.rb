@@ -16,9 +16,8 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     fill_in "Applicant Name", with: "Test Registration Applicant"
     fill_in "Applicant E-mail", with: "test_reg_applicant@default.invalid"
     fill_in "Applicant Date", with: "01/01/2022"
-    # Select2 nastiness
-    first(".select2-container").click
-    first("li.select2-results__option--selectable").click
+    first(".select-institution").click
+    first(".select-institution option").click
     fill_in "Ticket", with: "XXX-001"
     select "Staff Developer", from: "Role"
     select "1 year", from: "Expire Type"
@@ -49,7 +48,7 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     # Visit show page for new registration
     visit ht_registration_path(reg_id)
     assert_selector "h1", text: "Test Registration Applicant"
-    assert_selector "a.btn-success", text: "Create User"
+    assert_selector "#create-update-user", text: "Create User"
     click_on "Create User"
     # Error for blank user ID since at this point we don't have any ENV stored for the finished registration
     assert_selector "div.alert-danger", text: "User ID can't be blank"
