@@ -52,8 +52,8 @@ Keycard::DB.migrate!
 Checkpoint::DB.migrate!
 
 # Loading them here seems to keep individual rake tests from clobbering coverage stats.
+# Note: do not load any further individual tasks or they will be run twice.
 Otis::Application.load_tasks
-load File.expand_path("lib/tasks/migrate_users.rake", Rails.root)
 Rake::Task.define_task(:environment)
 Rake::Task["otis:migrate_users"].invoke
 
