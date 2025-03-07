@@ -66,7 +66,7 @@ Nothing beyond the ordinary (git, repo access, Docker).
 $ git clone https://github.com/hathitrust/otis.git
 $ cd otis
 $ docker compose build
-$ docker compose run --rm dev bin/setup-dev.sh
+$ ./bin/setup-dev.sh
 ```
 
 Start web service:
