@@ -6,14 +6,14 @@ ARG GID=1000
 
 ENV BUNDLE_PATH=/gems
 
+RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
+  nodejs \
+  npm
+
 ################################################################################
 # DEVELOPMENT                                           								       # 
 ################################################################################
 FROM base AS development
-
-RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
-  nodejs \
-  npm
 
 WORKDIR /usr/src/app
 RUN gem install bundler
@@ -34,10 +34,8 @@ RUN mkdir -p /gems && chown $UID:$GID /gems
 USER $UNAME
 WORKDIR /usr/src/app
 
-COPY Gemfile* /usr/src/app/
-RUN bundle install
-
 COPY --chown=app:app . /usr/src/app
+RUN bundle install
 
 RUN npm ci
 RUN npm run build
