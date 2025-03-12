@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "npm run build:css && npm run build:js",
-    "build:css": "cp node_modules/bootstrap-icons/font/fonts/* public/fonts && sass $* assets/styles:public/styles --style=compressed --load-path=node_modules",
+    "build:css": "cp node_modules/bootstrap-icons/font/fonts/* public/styles/fonts && sass $* assets/styles:public/styles --style=compressed --load-path=node_modules",
     "build:js": "assets/build.sh",
     "watch:css": "npm run build:css -- --watch",
     "watch:js": "npm run build:js -- --watch=forever"
