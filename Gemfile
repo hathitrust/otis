@@ -33,37 +33,32 @@ end
 # Otis
 #
 ##############################################################################
-gem "whois"
-gem "whois-parser"
 gem "accept_language"
-gem "maxmind-geoip2"
-gem "jira-ruby"
-gem "ransack"
-gem "kaminari"
-
 gem "canister"
-gem "ettin"
-gem "keycard", github: "mlibrary/keycard"
 gem "checkpoint"
-
-# Use MySQL as the database for Active Record
-gem "mysql2"
+gem "csv"
 gem "dotenv-rails"
-
+gem "ettin"
+gem "jira-ruby"
+gem "kaminari"
+gem "keycard", github: "mlibrary/keycard"
+gem "maxmind-geoip2"
+gem "mysql2"
+gem "ostruct"
+gem "ransack"
 # Freeze Sequel version number because of Checkpoint prepared statement issues
 gem "sequel", "5.52.0"
-
-gem "ostruct"
-gem "csv"
+gem "whois"
+gem "whois-parser"
 
 group :development, :test do
-  gem "standard"
   gem "debug"
-  gem "faker"
   gem "factory_bot_rails"
+  gem "faker"
+  gem "i18n-tasks"
   gem "simplecov"
   gem "simplecov-lcov"
-  gem "i18n-tasks"
+  gem "standard"
 end
 
 group :test do
