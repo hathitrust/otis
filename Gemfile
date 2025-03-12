@@ -48,6 +48,7 @@ gem "ostruct"
 gem "ransack"
 # Freeze Sequel version number because of Checkpoint prepared statement issues
 gem "sequel", "5.52.0"
+gem "strip_attributes"
 gem "whois"
 gem "whois-parser"
 

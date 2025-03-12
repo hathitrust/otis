@@ -7,6 +7,24 @@ class HTUserTest < ActiveSupport::TestCase
     assert build(:ht_user).valid?
   end
 
+  test "whitespace stripped by default" do
+    user = create(
+      :ht_user,
+      approver: " user2@default.invalid ",
+      email: " user1@default.invalid ",
+      displayname: " User Name ",
+      activitycontact: " activitycontact@default.invalid ",
+      authorizer: " authorizer@default.invalid "
+    )
+    assert user.valid?
+    user.reload
+    assert_equal "user2@default.invalid", user[:approver]
+    assert_equal "user1@default.invalid", user[:email]
+    assert_equal "User Name", user[:displayname]
+    assert_equal "activitycontact@default.invalid", user[:activitycontact]
+    assert_equal "authorizer@default.invalid", user[:authorizer]
+  end
+
   test "iprestrict validation fails" do
     assert_not build(:ht_user, iprestrict: "127.0.0.1.1").valid?
   end
