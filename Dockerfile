@@ -40,6 +40,6 @@ RUN bundle install
 RUN npm ci
 RUN npm run build
 
-CMD ["sh", "-c", "bin/rails assets:precompile && bin/rails s"]
+CMD ["sh", "-c", "bin/rails s"]
 
 LABEL org.opencontainers.image.source="https://github.com/hathitrust/otis"
