@@ -10,7 +10,7 @@
   <h2 class="float-start"><%= t ".active_requests" %></h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true"
-         <%= language_region_locale %>
+         data-locale="<%= language_region_locale %>"
   >
     <thead class="thead-dark">
     <tr>
@@ -63,7 +63,7 @@
   <h2 class="float-start"><%= t ".inactive_requests" %></h2>
   <table id="inactive_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
          data-search="true" data-show-search-clear-button="true"
-         <%= language_region_locale %>
+         data-locale="<%= language_region_locale %>"
   >
     <thead class="thead-dark">
     <tr>
