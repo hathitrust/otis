@@ -16,7 +16,7 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     fill_in "Applicant Name", with: "Test Registration Applicant"
     fill_in "Applicant E-mail", with: "test_reg_applicant@default.invalid"
     fill_in "Applicant Date", with: "01/01/2022"
-    first(".select-institution").click
+    first(".selection").click
     first(".select-institution option").click
     fill_in "Ticket", with: "XXX-001"
     select "Staff Developer", from: "Role"
