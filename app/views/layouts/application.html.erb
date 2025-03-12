@@ -5,13 +5,13 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <link href="/useradmin/styles/styles.css" rel="stylesheet" />
-    <link href="/useradmin/scripts/scripts.css" rel="stylesheet" />
-    <script src="/useradmin/scripts/scripts.js"></script>
+    <%= stylesheet_link_tag "/styles/styles.css" %>
+    <%= stylesheet_link_tag "/scripts/scripts.css" %>
+    <%= javascript_include_tag "/scripts/scripts.js" %>
 
     <% if ckeditor? # application_helper.rb %>
-      <link href="/useradmin/scripts/ckeditor.css" rel="stylesheet" />
-      <script src="/useradmin/scripts/ckeditor.js"></script>
+      <%= stylesheet_link_tag "/scripts/ckeditor.css" %>
+      <%= javascript_include_tag src="/scripts/ckeditor.js" %>
     <% end %>
 
     <% # Keyboard-related overrides that trigger when a bootstrap-table search  %>
