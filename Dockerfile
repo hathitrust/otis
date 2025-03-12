@@ -26,8 +26,6 @@ FROM base AS production
 ENV RAILS_SERVE_STATIC_FILES true
 ENV RAILS_LOG_TO_STDOUT true
 ENV RAILS_ENV production
-# FIXME: duplicate, see line 7
-ENV BUNDLE_PATH /gems
 
 RUN groupadd -g $GID -o $UNAME
 RUN useradd -m -d /usr/src/app -u $UID -g $GID -o -s /bin/bash $UNAME
