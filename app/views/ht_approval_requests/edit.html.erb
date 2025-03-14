@@ -1,7 +1,21 @@
-<%= javascript_include_tag Ckeditor.cdn_url %>
 <script>
-  CKEDITOR.config.language = "<%= I18n.locale %>";
-  CKEDITOR.config.versionCheck = false;
+window.addEventListener("load", (e)=>{
+  ClassicEditor
+    .create( document.querySelector( '#email-editor' ), {
+        licenseKey: 'GPL',
+        plugins: [ Essentials, Bold, Italic, Font, Paragraph ],
+        toolbar: [
+            'undo', 'redo', '|', 'bold', 'italic', '|',
+            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+        ]
+    } )
+    .then( editor => {
+        console.log( editor );
+    } )
+    .catch( error => {
+        console.error( error );
+    } );
+});
 </script>
 
 <div id="maincontent" class="row">
@@ -10,33 +24,35 @@
   <% if @reqs.count == 0 %>
     <%= t ".no_requests", approver: params[:id] %>
   <% else %>
-  <ul class="list-group">
-    <% @reqs.each do |req| %>
-      <li class="list-group-item">
-        <%= req.userid %>
-        <%= req.badge %>
-      </li>
-    <% end %>
+    <ul class="list-group">
+      <% @reqs.each do |req| %>
+        <li class="list-group-item">
+          <%= req.userid %>
+          <%= req.badge %>
+        </li>
+      <% end %>
     </ul>
 
     <!-- MAIL PREVIEW -->
     <% counts = controller.status_counts %>
     <% if counts[:unsent]&.positive? || counts[:expired]&.positive? %>
       <%= form_tag ht_approval_request_path, method: :put do %>
-        <div class="panel panel-default">
-          <div class="panel-heading"><%= t ".email_preview" %></div>
-            <div class="panel-body">
-              <%= label_tag "subject", t(".subject") %>
-              <%= text_field_tag "subject", ApprovalRequestMailer.subject, size: 60 %>
-              <%= cktext_area_tag :email_body, @email_body, ckeditor: { height: '325px' } %>
-            </div>
-            <div class="panel-body">
-              <!-- Turn off locale setting since this is part of mail preview -->
-              <!-- e-mail content language is orthogonal to UI language -->
-              <% I18n.with_locale(I18n.default_locale) do %>
-                <%= render 'shared/approval_request_user_table' %>
-              <% end %>
-            </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title"><%= t ".email_preview" %></div>
+            <%= label_tag "subject", t(".subject") %>
+            <%= text_field_tag "subject", ApprovalRequestMailer.subject, size: 60 %>
+            <textarea id="email-editor" data-editor="ClassicEditor">
+              <%= @email_body %>
+            </textarea>
+          </div>
+          <div class="card-body">
+            <!-- Turn off locale setting since this is part of mail preview -->
+            <!-- e-mail content language is orthogonal to UI language -->
+            <% I18n.with_locale(I18n.default_locale) do %>
+              <%= render 'shared/approval_request_user_table' %>
+            <% end %>
+          </div>
         </div>
         <% label = counts[:expired]&.positive? ? t(".resend") : t(".send") %>
         <%= submit_tag label, class: 'btn btn-primary' %>

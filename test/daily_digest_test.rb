@@ -66,7 +66,9 @@ module Otis
     end
 
     test "send Daily Digest" do
-      DailyDigest.send
+      assert_nothing_raised do
+        DailyDigest.send
+      end
     end
   end
 end

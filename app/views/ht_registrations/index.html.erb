@@ -10,7 +10,9 @@
   <% fields = HTRegistrationPresenter::INDEX_FIELDS %>
   <table id="registrations-table" class="table table-striped" data-toggle="table"
          data-height="800" data-virtual-scroll="true" data-search="true"
-         data-show-search-clear-button="true">
+         data-show-search-clear-button="true"
+         data-locale="<%= language_region_locale %>"
+  >
     <thead>
       <tr>
         <% fields.each do |field| %>

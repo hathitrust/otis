@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "otis/registration_mover"
 
 module Otis
   class RegistrationMoverTest < ActiveSupport::TestCase

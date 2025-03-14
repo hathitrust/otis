@@ -58,7 +58,7 @@ class HTUsersController < ApplicationController
   def user_params
     @user_params ||= begin
       p = params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
-      p[:mfa] == "1" ? p.merge({iprestrict: nil}) : p
+      (p[:mfa] == "1") ? p.merge({iprestrict: nil}) : p
     end
   end
 

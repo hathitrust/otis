@@ -86,7 +86,7 @@ class HTRegistrationPresenter < ApplicationPresenter
     name = env["HTTP_X_SHIB_EDUPERSONPRINCIPALNAME"] || ""
     # Check if principal name or email matches the given DSP email.
     # Not all IDPs send this info, so no full-blown warning.
-    badge = name == applicant_email ? :ok : :questionable
+    badge = (name == applicant_email) ? :ok : :questionable
     name + " " + BADGES[badge].label_span
   end
 
@@ -94,7 +94,7 @@ class HTRegistrationPresenter < ApplicationPresenter
     email = env["HTTP_X_SHIB_MAIL"] || ""
     # Check if principal name or email matches the given DSP email.
     # Not all IDPs send this info, so as with eppn no need for full-blown warning.
-    badge = email == applicant_email ? :ok : :questionable
+    badge = (email == applicant_email) ? :ok : :questionable
     email + " " + BADGES[badge].label_span
   end
 
@@ -111,7 +111,7 @@ class HTRegistrationPresenter < ApplicationPresenter
     inst = HTInstitution.where(entityID: idp).first
     badge = ""
     unless Otis.config.registration.auth_exceptions.member?(inst_id)
-      badge_id = idp == ht_institution.entityID ? :ok : :mismatch
+      badge_id = (idp == ht_institution.entityID) ? :ok : :mismatch
       badge = BADGES[badge_id].label_span
     end
     ERB::Util.html_escape(inst&.name || idp) + " " + badge
@@ -129,7 +129,7 @@ class HTRegistrationPresenter < ApplicationPresenter
     # AND matches the allowed affiliations for the IdP the user logged in with
     badge = ""
     unless Otis.config.registration.auth_exceptions.member? inst_id
-      badge_id = scoped_affiliation_valid? && scoped_affiliation_match? ? :ok : :mismatch
+      badge_id = (scoped_affiliation_valid? && scoped_affiliation_match?) ? :ok : :mismatch
       badge = BADGES[badge_id].label_span
     end
     affiliation + " " + badge
@@ -189,7 +189,7 @@ class HTRegistrationPresenter < ApplicationPresenter
   def show_status
     return BADGES[:finished].label_span if finished?
     return BADGES[:received].label_span if received?
-    return BADGES[:sent].label_span if sent?
+    BADGES[:sent].label_span if sent?
   end
 
   # See comments about localization and date entry in ht_user_presenter.rb

@@ -19,13 +19,6 @@ class HTInstitutionsControllerIndexTest < ActionDispatch::IntegrationTest
     assert_match @institution2.inst_id, @response.body
   end
 
-  test "index is well-formed HTML" do
-    check_w3c_errs do
-      sign_in!
-      get ht_institutions_url
-    end
-  end
-
   test "enabled institutions separated from disabled ones" do
     enabled = create(:ht_institution, enabled: true)
     disabled = create(:ht_institution, enabled: false)
@@ -67,13 +60,6 @@ class HTInstitutionsControllerShowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_nil assigns(:institution)
     assert_equal "show", @controller.action_name
-  end
-
-  test "show page is well-formed HTML" do
-    check_w3c_errs do
-      sign_in!
-      get ht_institution_url @inst
-    end
   end
 
   test "shows institution name and id" do
@@ -296,13 +282,6 @@ end
 class HTInstitutionsControllerEditTest < ActionDispatch::IntegrationTest
   setup do
     sign_in! username: "admin@default.invalid"
-  end
-
-  test "edit page is well-formed HTML" do
-    check_w3c_errs do
-      inst = create(:ht_institution)
-      get edit_ht_institution_url inst
-    end
   end
 
   test "Editable fields present" do

@@ -1,3 +1,8 @@
+@import 'bootstrap/scss/bootstrap';
+
+$bootstrap-icons-font-dir: 'fonts';
+@import 'bootstrap-icons/font/bootstrap-icons';
+
 // https://infoguides.wtamu.edu/bootstrap/accessibility
 .navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a {
   color: #666666
@@ -44,8 +49,8 @@ a {
 }
 
 .btn-info {
-  background-color: #087990; //$cyan-700
-  border-color: #087990; //$cyan-700
+  background-color: #395B6E;
+  border-color: #395B6E;
   // Additions from https://stackoverflow.com/a/25933439 to accommondate dropdown menu in info button
   &:hover, &:focus, &:active, .open>.dropdown-toggle.btn-info, &:active:focus, &:first-child:active {
     background-color: #055160; //$cyan-800
@@ -59,6 +64,10 @@ a {
 
 label a {
   font-weight:400
+}
+
+code {
+  color: $red-700;
 }
 
 .complete-registration-link {

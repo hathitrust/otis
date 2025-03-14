@@ -7,7 +7,7 @@ class HTLog < ApplicationRecord
   validates :objid, presence: true
   validates :data, presence: true
 
-  serialize :data, JSON
+  serialize :data, coder: JSON
   attribute :time, default: -> { Time.zone.now }
 
   default_scope { order(:time) }

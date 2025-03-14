@@ -21,23 +21,25 @@
   <% end %>
 
   <% unless @registration.finished? %>
-    <% if can?(:edit, HTRegistration) %>
-      <%= link_to t(".edit"), edit_ht_registration_path, class: 'btn btn-primary' %>
-    <% end %>
+    <div class="btn-group" role="group" aria-label="Registration Actions">
+      <% if can?(:edit, HTRegistration) %>
+        <%= link_to t(".edit"), edit_ht_registration_path, class: 'btn btn-primary' %>
+      <% end %>
 
-    <% if can?(:preview, HTRegistration) %>
-      <%= link_to t(".email_preview"), preview_ht_registration_path, class: 'btn btn-primary' %>
-    <% end %>
+      <% if can?(:preview, HTRegistration) %>
+        <%= link_to t(".email_preview"), preview_ht_registration_path, class: 'btn btn-primary' %>
+      <% end %>
 
-    <% if can?(:destroy, HTRegistration) && !@registration.received? && !@registration.finished? %>
-      <%= link_to t(".delete"), ht_registration_path, method: :delete, class: 'btn btn-danger',
-            data: { confirm: t(".confirm_delete", name: @registration.applicant_name) } %>
-    <% end %>
+      <% if can?(:destroy, HTRegistration) && !@registration.received? && !@registration.finished? %>
+        <%= link_to t(".delete"), ht_registration_path, method: :delete, class: 'btn btn-danger',
+              data: { confirm: t(".confirm_delete", name: @registration.applicant_name) } %>
+      <% end %>
 
-    <% if can?(:create, HTUser) && @registration.received? && !@registration.finished? %>
-      <% link_name = @registration.existing_user.nil? ? t(".create_user") : t(".update_user") %>
-      <%= link_to link_name, finish_ht_registration_path, method: :post, class: 'btn btn-success' %>
-    <% end %>
+      <% if can?(:create, HTUser) && @registration.received? && !@registration.finished? %>
+        <% link_name = @registration.existing_user.nil? ? t(".create_user") : t(".update_user") %>
+        <%= button_to link_name, finish_ht_registration_path, method: :post, id: "create-update-user", class: 'btn btn-success' %>
+      <% end %>
+    </div>
   <% end %>
 
   <% if @registration.ip_address.present? %>

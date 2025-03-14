@@ -6,7 +6,9 @@ class SAMLMetadataTest < ActiveSupport::TestCase
   TEST_ENTITY_ID = "https://east.westland.test/idp/shibboleth"
 
   def test_metadata_path
-    Rails.root.join("test", "fixtures", "test_metadata.xml")
+    assert_nothing_raised do
+      Rails.root.join("test", "fixtures", "test_metadata.xml")
+    end
   end
 
   def test_metadata

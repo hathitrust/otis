@@ -24,6 +24,8 @@
 /yarn-error.log
 
 /public/assets
+/public/scripts
+/public/styles
 .byebug_history
 
 # Ignore master key for decrypting credentials and more.
@@ -50,3 +52,5 @@ db/keycard.yml
 db/checkpoint.log
 db/checkpoint.yml
 .bash_history
+
+/public/fonts

@@ -8,19 +8,32 @@ x-healthcheck-defaults: &healthcheck-defaults
   retries: 5
 
 services:
+  dev:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - gem_cache:/gems
+    command: bash -c "sleep infinity"
+    environment:
+      - RAILS_ENV=development
 
   web:
     build:
       context: .
       target: development
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - .:/usr/src/app
       - gem_cache:/gems
     depends_on:
       mariadb-dev: *healthy
-      mariadb-test: *healthy
+      js:
+        condition: service_started
+      css:
+        condition: service_started
     command: bash -c "rm -f /usr/src/app/tmp/pids/server.pid && bin/init_dev_db.sh && bundle exec rails s -b 0.0.0.0"
     environment:
       - RAILS_ENV=development
@@ -68,7 +81,7 @@ services:
       - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
     healthcheck:
       <<: *healthcheck-defaults
-      test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
+      test: ['CMD', 'healthcheck.sh', '--su-mysql', '--connect', '--innodb_initialized']
 
   mariadb-test:
     image: mariadb
@@ -82,15 +95,36 @@ services:
       - ./db/ht_web.sql:/docker-entrypoint-initdb.d/ht_web.sql
     healthcheck:
       <<: *healthcheck-defaults
-      test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
+      test: ['CMD', 'healthcheck.sh', '--su-mysql', '--connect', '--innodb_initialized']
 
   chrome-server:
     image: selenium/standalone-chromium:latest
     restart: always
     healthcheck:
       <<: *healthcheck-defaults
-      test: ["CMD", "curl", "-f", "http://localhost:4444"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:4444']
 
+  js:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+    command:
+      - npm
+      - run
+      - watch:js
+
+  css:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+    command:
+      - npm
+      - run
+      - watch:css
 
 volumes:
   gem_cache:

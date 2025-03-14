@@ -47,7 +47,7 @@ ja:
       ht_registration:
         access: アクセス
         applicant: 申請者
-        applicant_date: 申請者の年月日s
+        applicant_date: 申請者の年月日
         applicant_email: 申請者のEメール
         applicant_name: 申請者の表示名
         auth_rep: 認証担当者

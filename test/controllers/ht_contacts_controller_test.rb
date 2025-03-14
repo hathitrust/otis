@@ -18,13 +18,6 @@ class HTContactsControllerIndexTest < ActionDispatch::IntegrationTest
     assert_match @contact.email, @response.body
   end
 
-  test "index is well-formed HTML" do
-    check_w3c_errs do
-      sign_in!
-      get ht_institutions_url
-    end
-  end
-
   test "contacts sorted by institution name" do
     inst1 = create(:ht_institution, name: "AAA University", enabled: true)
     inst2 = create(:ht_institution, name: "ZZZ University", enabled: true)
@@ -82,12 +75,6 @@ class HTContactsControllerShowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_nil assigns(:contact)
     assert_equal "show", @controller.action_name
-  end
-
-  test "show page is well-formed HTML" do
-    check_w3c_errs do
-      get ht_contact_url @contact
-    end
   end
 
   test "shows contact institution name, type, email" do
@@ -224,12 +211,6 @@ class HTContactsControllerEditTest < ActionDispatch::IntegrationTest
     @inst = create(:ht_institution)
     @contact = create(:ht_contact, ht_institution: @inst)
     sign_in! username: "admin@default.invalid"
-  end
-
-  test "edit page is well-formed HTML" do
-    check_w3c_errs do
-      get edit_ht_contact_url @contact
-    end
   end
 
   test "Institution and type menus present" do

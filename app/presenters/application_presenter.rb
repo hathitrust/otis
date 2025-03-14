@@ -35,7 +35,7 @@ class ApplicationPresenter < SimpleDelegator
   end
 
   def initialize(obj, controller: nil, action: :show)
-    super obj
+    super(obj)
     @controller = controller
     @action = action
   end

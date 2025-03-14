@@ -31,7 +31,7 @@ module Otis
 
     # ssdproxy role grants normal access, all other roles grant total access
     def access
-      @registration.role == "ssdproxy" ? "normal" : "total"
+      (@registration.role == "ssdproxy") ? "normal" : "total"
     end
 
     def iprestrict

@@ -8,7 +8,7 @@ class HTContactTypePresenter < ApplicationPresenter
   private
 
   def show_name
-    action == :index ? link_to(name, ht_contact_type_path(self)) : name
+    (action == :index) ? link_to(name, ht_contact_type_path(self)) : name
   end
 
   def edit_description(form:)

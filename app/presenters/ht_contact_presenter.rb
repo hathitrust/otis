@@ -10,7 +10,7 @@ class HTContactPresenter < ApplicationPresenter
   def show_email
     return "" unless email.present?
 
-    link_to(email, action == :index ? ht_contact_path(self) : "mailto:#{email}")
+    link_to(email, (action == :index) ? ht_contact_path(self) : "mailto:#{email}")
   end
 
   def show_inst_id

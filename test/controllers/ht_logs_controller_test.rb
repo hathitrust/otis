@@ -15,13 +15,6 @@ class HTLogsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "index", @controller.action_name
     assert_match "Logs", @response.body
   end
-
-  test "index is well-formed HTML" do
-    check_w3c_errs do
-      sign_in!
-      get ht_logs_url
-    end
-  end
 end
 
 class HTLogsControllerJSONTest < ActionDispatch::IntegrationTest

@@ -7,7 +7,7 @@ class IPRestrictionError < StandardError
   def initialize(msg = "IP Restriction Error", type:, address:)
     @type = type
     @address = address
-    super msg
+    super(msg)
   end
 end
 
@@ -36,7 +36,7 @@ class IPRestriction
   end
 
   def self.unescape(regex)
-    regex.gsub(/^\^/, "").gsub(/\$$/, "").gsub(/\\\./, ".")
+    regex.gsub(/^\^/, "").gsub(/\$$/, "").gsub("\\.", ".")
   end
 
   def self.from_string(addrs)

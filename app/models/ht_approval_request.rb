@@ -58,7 +58,7 @@ class HTApprovalRequest < ApplicationRecord
 
   # Display datetime without UTC suffix or just date
   def sent(short: false)
-    short ? self[:sent]&.strftime("%Y-%m-%d") : self[:sent]&.to_s(:db)
+    short ? self[:sent]&.strftime("%Y-%m-%d") : self[:sent]&.to_fs(:db)
   end
 
   def sent=(value)
@@ -102,7 +102,7 @@ class HTApprovalRequest < ApplicationRecord
     if short
       self[field]&.strftime("%Y-%m-%d")
     else
-      self[field]&.to_s(:db)
+      self[field]&.to_fs(:db)
     end
   end
 end

@@ -22,7 +22,9 @@
 
   <h2 class="float-start"><%= t ".active_users" %></h2>
   <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-show-search-clear-button="true">
+         data-search="true" data-show-search-clear-button="true"
+         data-locale="<%= language_region_locale %>"
+  >
     <thead class="thead-dark">
     <tr>
       <% if can?(:create, HTApprovalRequest) || can?(:edit, HTUser) %>
@@ -58,7 +60,9 @@
 
   <h2 class="float-start"><%= t ".expired_users" %></h2>
   <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true">
+         data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true"
+         data-locale="<%= language_region_locale %>"
+  >
     <thead>
     <tr>
       <% fields.each do |field| %>

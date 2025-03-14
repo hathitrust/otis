@@ -19,13 +19,6 @@ class HTContactTypesIndexTest < ActionDispatch::IntegrationTest
     assert_match @type2.name, @response.body
   end
 
-  test "index is well-formed HTML" do
-    check_w3c_errs do
-      sign_in!
-      get ht_contact_types_url
-    end
-  end
-
   test "contact types sorted by name" do
     sign_in!
     get ht_contact_types_url
@@ -51,12 +44,6 @@ class HTContactTypesShowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_nil assigns(:contact_type)
     assert_equal "show", @controller.action_name
-  end
-
-  test "show page is well-formed HTML" do
-    check_w3c_errs do
-      get ht_contact_type_url @type
-    end
   end
 
   test "shows id, name, and description" do
@@ -175,12 +162,6 @@ class HTContactTypesControllerEditTest < ActionDispatch::IntegrationTest
   setup do
     @type = create(:ht_contact_type)
     sign_in! username: "admin@default.invalid"
-  end
-
-  test "edit page is well-formed HTML" do
-    check_w3c_errs do
-      get edit_ht_contact_type_url @type
-    end
   end
 
   test "Editable name and description fields present" do

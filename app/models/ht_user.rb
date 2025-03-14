@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "expiration_date"
 require "forwardable"
 
 class HTUserRenewalError < StandardError
@@ -9,7 +8,7 @@ class HTUserRenewalError < StandardError
 
   def initialize(msg = "Renewal Error", type:)
     @type = type
-    super msg
+    super(msg)
   end
 end
 

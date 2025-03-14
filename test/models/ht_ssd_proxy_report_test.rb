@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "ht_ssd_proxy_report"
 
 class HTSSDProxyReportTest < ActiveSupport::TestCase
   test "validation passes" do

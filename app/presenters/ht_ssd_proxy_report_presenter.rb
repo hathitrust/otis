@@ -67,7 +67,7 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
   # Dynamically create simple #show_X methods for each hf column we display in the index.
   # Could also define these on the model.
   HF_FIELDS.each do |field|
-    define_method("show_#{field}") do
+    define_method(:"show_#{field}") do
       return "" if hf.nil?
 
       hf.send field

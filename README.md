@@ -36,10 +36,10 @@ Users with elevated access are granted the ability to view and/or download page 
 
 ## Built With
 
-* Otis is a dockerized (Ruby on) Rails 6 application. 
-* It uses Bootstrap 3 for UI. (A big TODO is to update Bootstrap.)
+* Otis is a dockerized (Ruby on) Rails 8 application.
+* It uses Bootstrap 5 for UI.
 * Mariadb database.
-* Keycard and checkpoint gems for authentication & authorization.
+* `keycard` and `checkpoint` gems for authentication & authorization.
 
 ## Phases
 
@@ -66,7 +66,7 @@ Nothing beyond the ordinary (git, repo access, Docker).
 $ git clone https://github.com/hathitrust/otis.git
 $ cd otis
 $ docker compose build
-$ docker compose run --rm web bundle install
+$ ./bin/setup-dev.sh
 ```
 
 Start web service:
@@ -185,13 +185,6 @@ To run all tests locally:
 ```
 docker compose run --rm test bundle install
 docker compose run --rm test
-```
-
-To enable W3C HTML validation of Otis pages, use the following.
-These tests are not run by default since they rely on an external service.
-
-```
-docker compose run --rm -e W3C_VALIDATION=1 test
 ```
 
 To run a single test class use an invocation along these lines:
