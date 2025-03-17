@@ -107,7 +107,6 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.text :allowed_affiliations
     t.string :shib_authncontext_class
     t.text :emergency_status
-    t.string :emergency_contact
     t.timestamp :last_update
   end
 
