@@ -26,7 +26,6 @@ en:
       ht_institution:
         allowed_affiliations: Affiliations
         domain: Domain
-        emergency_contact: ETAS Contact
         emergency_status: ETAS Status
         enabled: Enabled for Login
         entityID: Entity ID

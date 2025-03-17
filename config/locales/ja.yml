@@ -26,7 +26,6 @@ ja:
       ht_institution:
         allowed_affiliations: 所属
         domain: ドメイン
-        emergency_contact: ETAS連絡先
         emergency_status: ETAS所属
         enabled: ログイン可能
         entityID: エンティティID
