@@ -149,7 +149,16 @@ class HTUser < ApplicationRecord
     save!
   end
 
-  def add_or_update_renewal(approver:, force: false)
+  # Called when an approval request is renewed, and when a user's expiration is edited.
+  # If `force`, makes sure there is an appropriate approval request in place,
+  # creating one out of thin air if necessary.
+  # If `renew_user` then the user's renewal date is updated. Call with `renew_user: false`
+  # when updating the expiration manually, otherwise the edited date will be
+  # further bumped by the renewal period.
+  # Note that the `force` and `renew_user` parameters are expected to be called
+  # with values opposite each other. The defaults represent the path from the
+  # approval request subsystem.
+  def add_or_update_renewal(approver:, force: false, renew_user: true)
     req = ht_approval_request.approved.not_renewed.first
 
     if force
@@ -161,7 +170,7 @@ class HTUser < ApplicationRecord
 
     req.renewed = Time.zone.now
     req.save!
-    renew!
+    renew! if renew_user
   end
 
   def csv_cols

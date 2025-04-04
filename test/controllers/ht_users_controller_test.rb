@@ -225,6 +225,14 @@ class HTUsersControllerRenewalTest < ActionDispatch::IntegrationTest
     assert_equal "admin@default.invalid", @req2.approver
     assert_equal Date.parse(@req2.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
   end
+
+  test "renewing user manually sets expiration to the submitted date" do
+    sign_in!
+    new_date = (Time.zone.now + 3.years)
+    patch ht_user_url @user2, params: {"ht_user" => {"expires" => new_date.to_s}}
+    @user2.reload
+    assert_equal new_date.to_date, @user2.expires.to_date
+  end
 end
 
 class HTUsersControllerCSVTest < ActionDispatch::IntegrationTest
