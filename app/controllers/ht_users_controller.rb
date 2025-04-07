@@ -26,7 +26,7 @@ class HTUsersController < ApplicationController
     renewing = user_params[:expires].present? && user_params[:expires] > @user.expires.to_date.to_s
 
     if @user.update(user_params)
-      @user.add_or_update_renewal(approver: current_user.id, force: true, renew_user: false) if renewing
+      @user.add_or_update_renewal(approver: current_user.id, force: true) if renewing
       log_action(@user, user_params)
       update_user_success
     else

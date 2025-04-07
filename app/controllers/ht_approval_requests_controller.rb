@@ -115,7 +115,9 @@ class HTApprovalRequestsController < ApplicationController
     end
     adds = []
     emails.each do |e|
-      HTUser.find(e).add_or_update_renewal(approver: current_user.id)
+      ht_user = HTUser.find(e)
+      ht_user.add_or_update_renewal(approver: current_user.id)
+      ht_user.renew!
       adds << e
     rescue HTUserRenewalError => err
       flash[:alert] = t ".errors.#{err.type}", user: e
