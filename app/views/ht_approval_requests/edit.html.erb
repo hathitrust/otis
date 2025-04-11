@@ -42,7 +42,7 @@ window.addEventListener("load", (e)=>{
             <div class="card-title"><%= t ".email_preview" %></div>
             <%= label_tag "subject", t(".subject") %>
             <%= text_field_tag "subject", ApprovalRequestMailer.subject, size: 60 %>
-            <textarea id="email-editor" data-editor="ClassicEditor">
+            <textarea id="email-editor" data-editor="ClassicEditor" name="email_body">
               <%= @email_body %>
             </textarea>
           </div>
