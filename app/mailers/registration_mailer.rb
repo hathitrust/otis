@@ -8,10 +8,10 @@ class RegistrationMailer < ApplicationMailer
   def registration_email
     @registration = params[:registration]
     @base_url = params[:base_url]
-    @body = params[:body]
+    @email_body = params[:email_body]
     raise StandardError, "Cannot send email without a registration" unless @registration.present?
     raise StandardError, "Cannot send email without a base URL" unless @base_url.present?
-    raise StandardError, "Cannot send email without email body" unless @body.present?
+    raise StandardError, "Cannot send email without email body" unless @email_body.present?
 
     @subject = params[:subject] || RegistrationMailer.subject
     add_email_signature_logo

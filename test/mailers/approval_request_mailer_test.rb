@@ -15,7 +15,7 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
 
   def email(reqs: [@req1], base_url: @base_url, body: "test body")
     ApprovalRequestMailer
-      .with(reqs: reqs, base_url: base_url, body: body)
+      .with(reqs: reqs, base_url: base_url, email_body: body)
       .approval_request_email
   end
 

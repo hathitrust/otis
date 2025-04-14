@@ -9,7 +9,7 @@ class RegistrationMailerPreview < ActionMailer::Preview
     body = controller.render_to_string(partial: "shared/registration_body",
       locals: {"@registration": reg})
       .gsub("__NAME__", reg.applicant_name)
-    RegistrationMailer.with(registration: reg, body: body, base_url: base_url)
+    RegistrationMailer.with(registration: reg, email_body: body, base_url: base_url)
       .registration_email
   end
 end
