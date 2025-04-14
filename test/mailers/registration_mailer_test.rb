@@ -8,7 +8,7 @@ class RegistrationMailerTest < ActionMailer::TestCase
   end
 
   def email(reg: @reg)
-    RegistrationMailer.with(registration: reg, base_url: "example.com")
+    RegistrationMailer.with(registration: reg, base_url: "example.com", body: "test body")
       .registration_email
   end
 
@@ -42,5 +42,11 @@ class RegistrationMailerTest < ActionMailer::TestCase
 
   test "mail has HathiTrust logo PNG attachment" do
     assert_match %r{image/png}, email.attachments[0].content_type
+  end
+
+  test "mailer raises if body is not present" do
+    assert_raise StandardError do
+      RegistrationMailer.with(registration: reg, base_url: "example.com")
+    end
   end
 end

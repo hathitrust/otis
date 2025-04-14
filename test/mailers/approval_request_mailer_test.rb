@@ -13,7 +13,7 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
     @req3 = create(:ht_approval_request, userid: @user3.email, approver: @user3.approver)
   end
 
-  def email(reqs: [@req1], base_url: @base_url, body: "")
+  def email(reqs: [@req1], base_url: @base_url, body: "test body")
     ApprovalRequestMailer
       .with(reqs: reqs, base_url: base_url, body: body)
       .approval_request_email
@@ -91,5 +91,11 @@ class ApprovalRequestMailerTest < ActionMailer::TestCase
 
   test "mail has HathiTrust logo PNG attachment" do
     assert_match %r{image/png}, email.attachments[0].content_type
+  end
+
+  test "mailer raises if body is not present" do
+    assert_raise StandardError do
+      ApprovalRequestMailer.with(reqs: reqs, base_url: base_url)
+    end
   end
 end

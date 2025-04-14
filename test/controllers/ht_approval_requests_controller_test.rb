@@ -121,6 +121,8 @@ class HTApprovalRequestControllerUpdateTest < ActionDispatch::IntegrationTest
 
   def patch_approval_request(approver = @user.approver, params: {})
     sign_in!
+    # Required lest mailer raise
+    params[:email_body] ||= "test body"
     patch ht_approval_request_url approver, params: params
     assert_response :redirect
     assert_equal "update", @controller.action_name
@@ -191,7 +193,7 @@ class HTApprovalRequestControllerResendTest < ActionDispatch::IntegrationTest
 
   test "resending e-mail resets sent timestamp" do
     sign_in!
-    patch ht_approval_request_url @user.approver
+    patch ht_approval_request_url @user.approver, params: {email_body: "test body"}
     follow_redirect!
     assert_equal Date.parse(@req.reload.sent).to_s, Date.parse(Time.zone.now.to_s).to_s
   end

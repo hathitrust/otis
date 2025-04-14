@@ -351,6 +351,8 @@ class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
 
   def mail_registration(registration: @registration, params: {})
     sign_in!
+    # Required param for mailer
+    params[:email_body] ||= "test body"
     post(mail_ht_registration_path(registration), params: params)
     assert_response :redirect
     assert_equal "mail", @controller.action_name
