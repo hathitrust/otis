@@ -8,7 +8,9 @@ class ApprovalRequestMailer < ApplicationMailer
   def approval_request_email
     @reqs = params[:reqs]
     @base_url = params[:base_url]
-    @body = params[:body]
+    @email_body = params[:email_body]
+    raise StandardError, "Cannot send email without email body" unless @email_body.present?
+
     @subject = params[:subject] || ApprovalRequestMailer.subject
     raise StandardError, "Cannot send an email without at least one approval request" unless @reqs.count.positive?
 

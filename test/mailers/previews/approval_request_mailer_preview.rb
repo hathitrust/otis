@@ -9,6 +9,6 @@ class ApprovalRequestMailerPreview < ActionMailer::Preview
     end
     controller = ActionController::Base.new
     body = controller.render_to_string partial: "shared/approval_request_body"
-    ApprovalRequestMailer.with(reqs: reqs, body: body, base_url: "http://default.invalid").approval_request_email
+    ApprovalRequestMailer.with(reqs: reqs, email_body: body, base_url: "http://default.invalid").approval_request_email
   end
 end

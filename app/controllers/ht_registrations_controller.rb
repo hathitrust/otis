@@ -132,7 +132,7 @@ class HTRegistrationsController < ApplicationController
 
   def send_mail
     RegistrationMailer.with(registration: @registration, base_url: request.base_url,
-      body: params[:email_body], subject: params[:subject])
+      email_body: params[:email_body], subject: params[:subject])
       .registration_email.deliver_now
     add_jira_comment template: :registration_sent
     flash[:notice] = t("ht_registrations.mail.success")
