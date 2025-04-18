@@ -140,6 +140,19 @@ This approach is expected to be a model for updating the other index pages.
 
 ## Functionality
 
+### Provisioning Users
+
+Use the `bin/grants` utility to manage access. When called without parameters it emits a minimalist usage summary.
+The usage screen summarizes the available actions (e.g., "view", "admin") and resource types (e.g., "ht_institution", "all")
+for grant/revoke commands.
+
+Examples:
+```
+bin/grants list
+bin/grants grant user@example.com view all
+bin/grants revoke user@example.com view all
+```
+
 ### Jira
 
 Uses the `jira-ruby` gem to add comments to tickets linked to new user registration.
