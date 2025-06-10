@@ -13,7 +13,7 @@ class HTUserRenewalError < StandardError
 end
 
 class HTUser < ApplicationRecord
-  ROLES = %i[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd].freeze
+  ROLES = %i[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd resource_sharing].freeze
   USERTYPES = %i[staff external student].freeze
   ACCESSES = %i[total normal].freeze
   EXPIRES_TYPES = ExpirationDate::EXPIRES_TYPE.collect { |k, _v| k }.freeze

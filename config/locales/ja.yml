@@ -306,6 +306,7 @@ ja:
       role:
         crms: 著作権レビュー
         quality: 品質レビュー
+        resource_sharing: リソースの共有
         ssd: アクセシブルなテキストリクエストサービスパトロン
         ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
         staffdeveloper: スタッフ開発者
@@ -369,6 +370,7 @@ ja:
       inprintstatus: HathiTrustのボリュームの印刷中のステータスレビューを実行します
       quality: HathiTrustのデジタルボリュームの品質を評価する
       replacement: HathiTrustでボリュームの個々のページの置換コピーを作成します
+      resource_sharing: リソースの共有 __PLACEHOLDER__
       ssd: 印刷障害のあるユーザー
       ssdproxy: 印刷障害を持つユーザーのプロキシとして機能する
       staffdeveloper: HathiTrustのサービスまたは運用のためのソフトウェアを開発する
@@ -397,6 +399,7 @@ ja:
         inprintstatus: 印刷中のステータスレビューア
         quality: 品質レビューア
         replacement: ページ置換サポート
+        resource_sharing: リソースの共有
         ssd: アクセシブルなテキストリクエストサービスパトロン
         ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
         staffdeveloper: スタッフ開発者

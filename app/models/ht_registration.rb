@@ -5,7 +5,7 @@ class HTRegistration < ApplicationRecord
   self.table_name = "ht_web.otis_registrations"
   # FIXME: the roles in HTUser are expected to be simplified to look more like this.
   # Once that happens this list should be replaced with the one from HTUser
-  ROLES = %i[crms quality ssd ssdproxy staffdeveloper].freeze
+  ROLES = %i[crms quality resource_sharing ssd ssdproxy staffdeveloper].freeze
 
   def self.expiration_date
     Date.today - 1.week
