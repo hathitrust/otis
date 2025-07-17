@@ -370,7 +370,7 @@ en:
       inprintstatus: Perform in-print status review of volumes in HathiTrust
       quality: Evaluate the quality of digital volumes in HathiTrust
       replacement: Create replacement copies of individual pages of volumes in HathiTrust
-      resource_sharing: Resource Sharing __PLACEHOLDER__
+      resource_sharing: Use full-view texts to fulfill ILL and document delivery requests
       ssd: Users who have print disabilities
       ssdproxy: Act as a proxy for users who have print disabilities
       staffdeveloper: Develop software for HathiTrust services or operations
