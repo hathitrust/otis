@@ -5,9 +5,9 @@ require "test_helper"
 class ExpirationDateTest < ActiveSupport::TestCase
   def setup
     @jan1 = ExpirationDate.new("2020-01-01 11:11:11", :expiresannually)
-    @plus10 = ExpirationDate.new((Date.today + 10), :expiresannually)
-    @minus10 = ExpirationDate.new((Date.today - 10), :expiresannually)
-    @yearsaway = ExpirationDate.new((Date.today + 700), :expiresannuyally)
+    @plus10 = ExpirationDate.new(Date.today + 10, :expiresannually)
+    @minus10 = ExpirationDate.new(Date.today - 10, :expiresannually)
+    @yearsaway = ExpirationDate.new(Date.today + 700, :expiresannuyally)
 
     @annual = @jan1
     @custom60 = ExpirationDate.new(Date.today, :expirescustom60)

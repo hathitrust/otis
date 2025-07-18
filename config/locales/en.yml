@@ -306,6 +306,7 @@ en:
       role:
         crms: Copyright Review
         quality: Quality Review
+        resource_sharing: Resource Sharing
         ssd: Accessible Text Request Service Patron
         ssdproxy: Accessible Text Request Service Provider
         staffdeveloper: Staff Developer
@@ -369,6 +370,7 @@ en:
       inprintstatus: Perform in-print status review of volumes in HathiTrust
       quality: Evaluate the quality of digital volumes in HathiTrust
       replacement: Create replacement copies of individual pages of volumes in HathiTrust
+      resource_sharing: Use full-view texts to fulfill ILL and document delivery requests
       ssd: Users who have print disabilities
       ssdproxy: Act as a proxy for users who have print disabilities
       staffdeveloper: Develop software for HathiTrust services or operations
@@ -397,6 +399,7 @@ en:
         inprintstatus: In-print Status Reviewer
         quality: Quality Reviewer
         replacement: Page Replacement Support
+        resource_sharing: Resource Sharing
         ssd: Accessible Text Request Service Patron
         ssdproxy: Accessible Text Request Service Provider
         staffdeveloper: Staff Developer
