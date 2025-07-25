@@ -50,6 +50,7 @@ class FinalizeController < ApplicationController
     # Currently, there are no parameters for the controller other than the
     # token, which we do not wish to log.
     log_action(@registration, params.permit)
+    # ETT-220 TODO: replace this with a call to a new Jira Client method adds comment and updates the appropriate fields
     add_jira_comment
   end
 

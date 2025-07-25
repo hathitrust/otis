@@ -28,7 +28,10 @@ export_files_directory: "/usr/src/app/public/"
 jira:
   site: https://hathitrust.atlassian.net/
   context_path: ""
-  project: GS
+  # We will usually not interact with GS tickets as of the Resource Sharing project
+  general_support_project: GS
+  # New RS and other elevated access tickets will be created here
+  elevated_access_project: EA
 
 # inst_ids with which we relax Shib credential checking in completed registrations.
 registration:

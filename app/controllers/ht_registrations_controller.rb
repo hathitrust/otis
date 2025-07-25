@@ -130,6 +130,9 @@ class HTRegistrationsController < ApplicationController
     log_action(@registration, params)
   end
 
+  # ETT-291 TODO: replace this with a call to create_new_ea_ticket!
+  # registration#sent= triggers saving the token hash to the database,
+  # so we should make sure to call it or something like it.
   def send_mail
     RegistrationMailer.with(registration: @registration, base_url: request.base_url,
       email_body: params[:email_body], subject: params[:subject])
