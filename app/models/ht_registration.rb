@@ -23,7 +23,6 @@ class HTRegistration < ApplicationRecord
   has_many :ht_logs, -> { HTLog.ht_registration }, foreign_key: :objid, primary_key: :id
 
   validates :id, uniqueness: true
-  validates :jira_ticket, presence: true
   validates :inst_id, presence: true
   validates :role, presence: true
   validates :expire_type, presence: true

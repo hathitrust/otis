@@ -29,6 +29,8 @@ require_relative "../config/environment"
 require_relative "fake_form"
 require "rails/test_help"
 
+Rails.application.routes.default_url_options[:host] = "localhost:3000"
+
 Services.register(:whois) do
   Class.new do
     def lookup(ip)

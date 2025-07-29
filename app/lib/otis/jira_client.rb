@@ -35,6 +35,7 @@ module Otis
     def self.create_client
       if Rails.env.production?
         # :nocov:
+        # Can set pass `http_debug: true` for a bit of debugging if needed
         JIRA::Client.new({
           username: Rails.application.credentials.jira[:username],
           password: Rails.application.credentials.jira[:password],
@@ -83,35 +84,53 @@ module Otis
     # "Related GS ticket number" field
     EA_REGISTRATION_GS_TICKET_FIELD = :customfield_10363
 
-    def create_new_ea_ticket!(ticket, registration)
-      issue = ticket.nil? ? @client.Issue.build : @client.Issue.find(ticket)
+    def update_ea_ticket!(registration)
+      issue = ea_issue(registration)
+      issue.save(ea_fields(registration))
+      if !has_ea_ticket?(registration)
+        registration.jira_ticket = issue.key
+      end
+      Rails.logger.info "new or updated ticket for #{registration.applicant_email}: #{issue.key}"
+    end
+
+    # False if blank or GS, true if EA
+    def has_ea_ticket?(registration)
+      registration.jira_ticket&.start_with?(Otis.config.jira.elevated_access_project)
+    end
+
+    # If there's a GS ticket, or no ticket, in the registration, always create a new EA ticket.
+    # If there's an EA ticket then we keep using that one.
+    def ea_issue(registration)
+      if has_ea_ticket?(registration)
+        @client.Issue.find(registration.jira_ticket)
+      else
+        @client.Issue.build
+      end
+    end
+
+    def ea_fields(registration)
       ea_type = ROLE_TO_REGISTRATION_TYPE[registration.role]
-      fields = {
+      data = {
         fields: {
           :summary => "#{ea_type} Registration for #{registration.applicant_email}",
-          # {{Issue.description.substringBetween("<",">")}}
-          # Automation can extract the reporter email from inside <...>,
-          # but will most likely use EA_REGISTRATION_EMAIL_FIELD
           :description => "#{ea_type} Registration for <#{registration.applicant_email}>",
           :project => {key: Otis.config.jira.elevated_access_project},
           :labels => [ea_type],
           :issuetype => {id: EA_REGISTRATION_ISSUETYPE_ID},
-          EA_REGISTRATION_LINK_FIELD => finalize_url(registration.token, locale: nil),
+          EA_REGISTRATION_LINK_FIELD => Rails.application.routes.url_helpers.finalize_url(registration.token, locale: nil),
           EA_REGISTRATION_EA_TYPE_FIELD => {value: ea_type},
           # MS will use this to kick off the email, don't set it here unless we want to send the email automatically
           # EA_REGISTRATION_EA_WORKFLOW_FIELD => {value: "Registration email pending"},
-          EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email,
-          EA_REGISTRATION_GS_TICKET_FIELD => registration.jira_ticket
+          EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email
         }
       }
-      issue.save(fields)
-      registration.jira_ticket = issue.key
-      Rails.logger.info "new ticket for #{registration.applicant_email}: #{issue.key}"
+      if !has_ea_ticket?(registration)
+        data[:fields][EA_REGISTRATION_GS_TICKET_FIELD] = registration.jira_ticket
+      end
     end
 
-    private
-
-    # Fake JIRA::Client used outside production. Responds to most methods by returning self.
+    # Fake JIRA::Client used outside production. Responds to most methods by returning self,
+    # which means NullClient.Issue => NullClient
     class NullClient
       def method_missing(method_name, *arguments, &block)
         self
@@ -119,6 +138,17 @@ module Otis
 
       def respond_to_missing?(method_name, include_private = false)
         true
+      end
+
+      def key
+        "EA-0"
+      end
+
+      def find(ticket)
+        if ticket == "does not exist"
+          raise JIRA::HTTPError, "Does not exist"
+        end
+        self
       end
     end
 
