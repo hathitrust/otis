@@ -120,7 +120,8 @@ class HTRegistrationsController < ApplicationController
   end
 
   def update_ea_ticket!
-    new_ticket = Otis::JiraClient::Registration.new(@registration).update_ea_ticket!
+    url = finalize_url(@registration.token, locale: nil)
+    new_ticket = Otis::JiraClient::Registration.new(@registration, url).update_ea_ticket!
     # This is for debugging and system testing only
     unless Rails.env.production?
       flash[:alert] = "EA ticket: #{finalize_url @registration.token, locale: nil}"
@@ -135,6 +136,6 @@ class HTRegistrationsController < ApplicationController
   # Adds comment from {:registration_sent, :registration_finished}
   def add_jira_comment(template:)
     comment = Otis::JiraClient::Registration.comment template: template, user: @registration.applicant_email
-    Otis::JiraClient::Registration.new(@registration).comment! issue: @registration.jira_ticket, comment: comment
+    Otis::JiraClient::Registration.new(@registration, nil).comment! issue: @registration.jira_ticket, comment: comment
   end
 end

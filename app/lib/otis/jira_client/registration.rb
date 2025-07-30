@@ -4,7 +4,7 @@ require "jira-ruby"
 
 module Otis
   class JiraClient::Registration < JiraClient
-    attr_reader :registration
+    attr_reader :registration, :finalize_url
 
     # ETT-220 TODO: this may be removed
     COMMENT_TEMPLATES = {
@@ -45,9 +45,11 @@ module Otis
     # "Related GS ticket number" field
     EA_REGISTRATION_GS_TICKET_FIELD = :customfield_10363
 
-    def initialize(registration)
+    # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
+    def initialize(registration, finalize_url)
       raise "no registration??" unless registration.present?
       @registration = registration
+      @finalize_url = finalize_url
       super()
     end
 
@@ -87,7 +89,7 @@ module Otis
           :project => {key: Otis.config.jira.elevated_access_project},
           :labels => [ea_type],
           :issuetype => {id: EA_REGISTRATION_ISSUETYPE_ID},
-          EA_REGISTRATION_LINK_FIELD => Rails.application.routes.url_helpers.finalize_url(registration.token, locale: nil),
+          EA_REGISTRATION_LINK_FIELD => finalize_url,
           EA_REGISTRATION_EA_TYPE_FIELD => {value: ea_type},
           # MS will use this to kick off the email, don't set it here unless we want to send the email automatically
           # EA_REGISTRATION_EA_WORKFLOW_FIELD => {value: "Registration email pending"},
