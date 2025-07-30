@@ -186,8 +186,8 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
 
     HTRegistration.delete_all
     post ht_registrations_url, params: {ht_registration: params}
-    assert_redirected_to %r{preview}
     assert_equal 1, HTRegistration.count
+    assert_redirected_to ht_registration_url(HTRegistration.first.id)
     # Shows up in log
     log = HTRegistration.first.ht_logs.first
     assert_not_nil(log.data["params"])
@@ -253,10 +253,11 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
   test "can update fields" do
     new_txt_val = "updated by test"
     new_email_val = "upd@ted.biz"
+    new_ticket_val = "EA-54321"
 
     patch ht_registration_url @registration, params: {
       ht_registration: {
-        "jira_ticket" => new_txt_val,
+        "jira_ticket" => new_ticket_val,
         "contact_info" => new_email_val,
         "auth_rep_name" => new_txt_val,
         "auth_rep_email" => new_email_val,
@@ -268,7 +269,8 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
     relookup = HTRegistration.find(@registration.id)
 
     assert_response :redirect
-    assert_equal new_txt_val, relookup.jira_ticket
+    # The Jira ticket will be assigned internally unless an EA ticket is submitted
+    assert_equal new_ticket_val, relookup.jira_ticket
     assert_equal new_txt_val, relookup.auth_rep_name
     assert_equal new_email_val, relookup.auth_rep_email
     assert_equal new_txt_val, relookup.applicant_name
@@ -340,68 +342,6 @@ class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
     get preview_ht_registration_path sent_registration
     assert_select "input[value='SEND']", false
     assert_select "input[value='RESEND']", false
-  end
-end
-
-class HTRegistrationsControllerMailTest < ActionDispatch::IntegrationTest
-  def setup
-    ActionMailer::Base.deliveries.clear
-    @registration = create(:ht_registration)
-  end
-
-  def mail_registration(registration: @registration, params: {})
-    sign_in!
-    # Required param for mailer
-    params[:email_body] ||= "test body"
-    post(mail_ht_registration_path(registration), params: params)
-    assert_response :redirect
-    assert_equal "mail", @controller.action_name
-    follow_redirect!
-  end
-
-  test "should use provided email body" do
-    test_text = Faker::Lorem.paragraph
-
-    mail_registration params: {email_body: test_text}
-    assert ActionMailer::Base.deliveries.first.body.parts.any? do |part|
-      part.to_s.match? test_text
-    end
-  end
-
-  test "should use provided email subject line" do
-    test_subject = Faker::Lorem.sentence
-    mail_registration params: {subject: test_subject}
-    assert_match test_subject, ActionMailer::Base.deliveries.first.subject
-  end
-
-  test "should send mail" do
-    mail_registration
-
-    assert ActionMailer::Base.deliveries.size
-  end
-
-  test "should update request status" do
-    mail_registration
-
-    assert_not_nil @registration.reload.sent
-    assert_not_nil @registration.reload[:token_hash]
-    assert_equal "show", @controller.action_name
-  end
-
-  test "e-mailed token matches saved hash" do
-    mail_registration
-
-    token = ActionMailer::Base.deliveries.first.html_part.body.to_s.match(%r{finalize/([A-Za-z0-9\-_]+)})[1]
-    assert_equal @registration.reload.token_hash, HTRegistration.digest(token)
-  end
-
-  test "mail substitutes applicant_name value for __NAME__ template" do
-    reg = create(:ht_registration, applicant_email: "user@example.com",
-      applicant_name: "Reggie McRegistrationface")
-    mail_registration(registration: reg)
-    assert ActionMailer::Base.deliveries.first.body.parts.any? do |part|
-      part.to_s.match? reg.applicant_name
-    end
   end
 end
 

@@ -30,9 +30,10 @@ class HTRegistrationsController < ApplicationController
   def create
     @registration = presenter HTRegistration.new(reg_params)
     if @registration.save
+      update_ea_ticket!
       log
       flash[:notice] = t(".success", name: @registration.applicant_name)
-      redirect_to preview_ht_registration_path(@registration.id)
+      redirect_to @registration
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "new"
@@ -50,6 +51,7 @@ class HTRegistrationsController < ApplicationController
   def update
     fetch_presenter
     if @registration.update(reg_params)
+      update_ea_ticket!
       log
       flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to action: :show
@@ -64,12 +66,6 @@ class HTRegistrationsController < ApplicationController
     @base_url = request.base_url
     @email_body = render_to_string(partial: "shared/registration_body")
       .gsub("__NAME__", @registration.applicant_name)
-  end
-
-  def mail
-    fetch_registration
-    send_mail
-    redirect_to action: :show
   end
 
   def destroy
@@ -130,20 +126,13 @@ class HTRegistrationsController < ApplicationController
     log_action(@registration, params)
   end
 
-  # ETT-291 TODO: replace this with a call to create_new_ea_ticket!
-  # registration#sent= triggers saving the token hash to the database,
-  # so we should make sure to call it or something like it.
-  def send_mail
-    RegistrationMailer.with(registration: @registration, base_url: request.base_url,
-      email_body: params[:email_body], subject: params[:subject])
-      .registration_email.deliver_now
-    add_jira_comment template: :registration_sent
-    flash[:notice] = t("ht_registrations.mail.success")
+  def update_ea_ticket!
+    Rails.logger.info "update_ea_ticket!"
+    Otis::JiraClient.new.update_ea_ticket! @registration
     # This is for debugging and system testing only
     unless Rails.env.production?
-      flash[:notice] = "Message sent: #{finalize_url @registration.token, locale: nil}"
+      flash[:alert] = "EA ticket: #{finalize_url @registration.token, locale: nil}"
     end
-    log params.transform_values! { |v| v.present? ? v : nil }.permit!
     @registration.sent = Time.zone.now
     @registration.save!
   rescue => e

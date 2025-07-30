@@ -327,8 +327,6 @@ en:
       current_registrations: Current Registrations
       mfa_addendum_received: MFA Addendum Received
       new_registration: New Registration
-    mail:
-      success: Message sent.
     new:
       new_registration: New Registration
     preview:

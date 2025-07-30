@@ -158,6 +158,8 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_jira_ticket
+    return "" unless jira_ticket.present?
+
     link_to jira_ticket, self.class::JIRA_BASE_URL + jira_ticket
   end
 

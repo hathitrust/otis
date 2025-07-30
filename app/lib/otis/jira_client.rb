@@ -4,6 +4,8 @@ require "jira-ruby"
 
 module Otis
   class JiraClient
+    include Rails.application.routes.url_helpers
+
     # ETT-220 TODO: this may be removed
     COMMENT_TEMPLATES = {
       registration_sent: "OTIS status update: registration e-mail sent to __USER__.",

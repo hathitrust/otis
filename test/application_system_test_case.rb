@@ -18,7 +18,10 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   def visit_with_login(url)
     visit url
     # Look for "not logged in" <p> in header and log in if necessary.
-    if page.find("#nav-not-logged-in")
+    begin
+      page.find("#nav-not-logged-in")
+    rescue Capybara::ElementNotFound
+    else
       fill_in "username", with: "admin@default.invalid"
       click_on "Log In"
     end
