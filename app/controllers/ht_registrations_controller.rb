@@ -120,7 +120,6 @@ class HTRegistrationsController < ApplicationController
   end
 
   def update_ea_ticket!
-    Rails.logger.info "update_ea_ticket!"
     Otis::JiraClient.new.update_ea_ticket! @registration
     # This is for debugging and system testing only
     unless Rails.env.production?
