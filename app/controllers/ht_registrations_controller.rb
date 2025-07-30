@@ -61,13 +61,6 @@ class HTRegistrationsController < ApplicationController
     end
   end
 
-  def preview
-    fetch_presenter
-    @base_url = request.base_url
-    @email_body = render_to_string(partial: "shared/registration_body")
-      .gsub("__NAME__", @registration.applicant_name)
-  end
-
   def destroy
     fetch_registration
     log params.permit!

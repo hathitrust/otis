@@ -329,18 +329,11 @@ en:
       new_registration: New Registration
     new:
       new_registration: New Registration
-    preview:
-      cancel: Cancel
-      email_preview: E-mail Preview
-      resend: RESEND
-      send: SEND
-      subject: Subject
     show:
       confirm_delete: Please confirm deletion of registration "%{name}"
       create_user: Create User
       delete: Delete Registration
       edit: Edit
-      email_preview: E-mail Preview
       login_details: Login Details
       update_user: Update User
       whois_data: WHOIS Data

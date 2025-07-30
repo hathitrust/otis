@@ -329,18 +329,11 @@ ja:
       new_registration: 新しい登録
     new:
       new_registration: 新しい登録
-    preview:
-      cancel: キャンセル
-      email_preview: Eメールプレビュー
-      resend: 再送
-      send: 送信
-      subject: 件名
     show:
       confirm_delete: 登録「%{name}」の削除を確認してください。
       create_user: ユーザーを作成する
       delete: 登録を削除する
       edit: 編集
-      email_preview: Eメールプレビュー
       login_details: ログインの詳細
       update_user: ユーザーを更新する
       whois_data: WHOISデータ

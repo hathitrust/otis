@@ -117,31 +117,28 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "sent registration shows edit, preview, and delete buttons" do
+  test "sent registration shows edit and delete buttons" do
     sent_registration = create(:ht_registration, sent: Time.zone.now - 1.day,
       received: nil, finished: nil)
     get ht_registration_url sent_registration
     assert_match edit_ht_registration_path(sent_registration), @response.body
-    assert_match preview_ht_registration_path(sent_registration), @response.body
     assert_select "a[data-method='delete']"
     assert_no_match finish_ht_registration_path(sent_registration), @response.body
   end
 
-  test "received but not finished registration shows only edit, preview, and create user buttons" do
+  test "received but not finished registration shows only edit and create user buttons" do
     sent_registration = create(:ht_registration, sent: Time.zone.now - 1.day,
       received: Time.zone.now - 1.day, finished: nil)
     get ht_registration_url sent_registration
     assert_match edit_ht_registration_path(sent_registration), @response.body
-    assert_match preview_ht_registration_path(sent_registration), @response.body
     assert_select "a[data-method='delete']", false
     assert_match finish_ht_registration_path(sent_registration), @response.body
   end
 
-  test "finished registration no longer shows edit, preview, delete, or create user buttons" do
+  test "finished registration no longer shows edit, delete, or create user buttons" do
     finished_registration = create(:ht_registration, finished: Time.zone.now - 1.day)
     get ht_registration_url finished_registration
     assert_no_match edit_ht_registration_path(finished_registration), @response.body
-    assert_no_match preview_ht_registration_path(finished_registration), @response.body
     assert_select "a[data-method='delete']", false
     assert_no_match finish_ht_registration_path(finished_registration), @response.body
   end
@@ -303,45 +300,6 @@ class HTRegistrationsControllerDeleteTest < ActionDispatch::IntegrationTest
     assert_raises ActiveRecord::RecordNotFound do
       HTRegistration.find reg_id
     end
-  end
-end
-
-class HTRegistrationsControllerPreviewTest < ActionDispatch::IntegrationTest
-  def setup
-    ActionMailer::Base.deliveries.clear
-    @registration = create(:ht_registration, sent: nil, received: nil)
-    sign_in! username: ADMIN_USER
-  end
-
-  test "should get e-mail preview" do
-    get preview_ht_registration_path @registration
-    assert_response :success
-    assert_equal "preview", @controller.action_name
-    assert_not_nil assigns(:base_url)
-    assert_not_nil assigns(:email_body)
-    assert_match(/E-mail Preview/i, @response.body)
-    assert_select "input[value='SEND']"
-  end
-
-  test "allow resend if the registration is expired" do
-    expired_registration = create(:ht_registration, sent: Time.now - 2.week, received: nil)
-    get preview_ht_registration_path expired_registration
-    assert_select "input[value='SEND']", false
-    assert_select "input[value='RESEND']"
-  end
-
-  test "do not give option to resend if the registration is complete" do
-    complete_registration = create(:ht_registration, sent: Time.now, received: Time.now)
-    get preview_ht_registration_path complete_registration
-    assert_select "input[value='SEND']", false
-    assert_select "input[value='RESEND']", false
-  end
-
-  test "do not give option to send if already sent and not expired" do
-    sent_registration = create(:ht_registration, sent: Time.now, received: nil)
-    get preview_ht_registration_path sent_registration
-    assert_select "input[value='SEND']", false
-    assert_select "input[value='RESEND']", false
   end
 end
 
