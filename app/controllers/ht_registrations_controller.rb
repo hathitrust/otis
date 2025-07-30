@@ -120,20 +120,21 @@ class HTRegistrationsController < ApplicationController
   end
 
   def update_ea_ticket!
-    Otis::JiraClient.new.update_ea_ticket! @registration
+    new_ticket = Otis::JiraClient::Registration.new(@registration).update_ea_ticket!
     # This is for debugging and system testing only
     unless Rails.env.production?
       flash[:alert] = "EA ticket: #{finalize_url @registration.token, locale: nil}"
     end
     @registration.sent = Time.zone.now
     @registration.save!
+    flash[:info] = new_ticket ? "Created new ticket #{@registration.jira_ticket}" : "Updated ticket #{@registration.jira_ticket}"
   rescue => e
     flash[:alert] = e.message
   end
 
   # Adds comment from {:registration_sent, :registration_finished}
   def add_jira_comment(template:)
-    comment = Otis::JiraClient.comment template: template, user: @registration.applicant_email
-    Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
+    comment = Otis::JiraClient::Registration.comment template: template, user: @registration.applicant_email
+    Otis::JiraClient::Registration.new(@registration).comment! issue: @registration.jira_ticket, comment: comment
   end
 end

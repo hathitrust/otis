@@ -67,7 +67,7 @@ class FinalizeController < ApplicationController
   end
 
   def add_jira_comment
-    comment = Otis::JiraClient.comment template: :registration_received, user: @registration.applicant_email
-    Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
+    comment = Otis::JiraClient::Registration.comment template: :registration_received, user: @registration.applicant_email
+    Otis::JiraClient::Registration.new(@registration).comment! issue: @registration.jira_ticket, comment: comment
   end
 end
