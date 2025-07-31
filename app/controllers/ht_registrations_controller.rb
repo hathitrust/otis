@@ -30,9 +30,10 @@ class HTRegistrationsController < ApplicationController
   def create
     @registration = presenter HTRegistration.new(reg_params)
     if @registration.save
+      update_ea_ticket!
       log
       flash[:notice] = t(".success", name: @registration.applicant_name)
-      redirect_to preview_ht_registration_path(@registration.id)
+      redirect_to @registration
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "new"
@@ -50,6 +51,7 @@ class HTRegistrationsController < ApplicationController
   def update
     fetch_presenter
     if @registration.update(reg_params)
+      update_ea_ticket!
       log
       flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to action: :show
@@ -57,19 +59,6 @@ class HTRegistrationsController < ApplicationController
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "edit"
     end
-  end
-
-  def preview
-    fetch_presenter
-    @base_url = request.base_url
-    @email_body = render_to_string(partial: "shared/registration_body")
-      .gsub("__NAME__", @registration.applicant_name)
-  end
-
-  def mail
-    fetch_registration
-    send_mail
-    redirect_to action: :show
   end
 
   def destroy
@@ -130,26 +119,23 @@ class HTRegistrationsController < ApplicationController
     log_action(@registration, params)
   end
 
-  def send_mail
-    RegistrationMailer.with(registration: @registration, base_url: request.base_url,
-      email_body: params[:email_body], subject: params[:subject])
-      .registration_email.deliver_now
-    add_jira_comment template: :registration_sent
-    flash[:notice] = t("ht_registrations.mail.success")
+  def update_ea_ticket!
+    url = finalize_url(@registration.token, locale: nil)
+    new_ticket = Otis::JiraClient::Registration.new(@registration, url).update_ea_ticket!
     # This is for debugging and system testing only
     unless Rails.env.production?
-      flash[:notice] = "Message sent: #{finalize_url @registration.token, locale: nil}"
+      flash[:alert] = "EA ticket: #{finalize_url @registration.token, locale: nil}"
     end
-    log params.transform_values! { |v| v.present? ? v : nil }.permit!
     @registration.sent = Time.zone.now
     @registration.save!
+    flash[:info] = new_ticket ? "Created new ticket #{@registration.jira_ticket}" : "Updated ticket #{@registration.jira_ticket}"
   rescue => e
     flash[:alert] = e.message
   end
 
   # Adds comment from {:registration_sent, :registration_finished}
   def add_jira_comment(template:)
-    comment = Otis::JiraClient.comment template: template, user: @registration.applicant_email
-    Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
+    comment = Otis::JiraClient::Registration.comment template: template, user: @registration.applicant_email
+    Otis::JiraClient::Registration.new(@registration, nil).comment! issue: @registration.jira_ticket, comment: comment
   end
 end

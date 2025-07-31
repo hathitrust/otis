@@ -18,7 +18,7 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     fill_in "Applicant Date", with: "01/01/2022"
     first(".selection").click
     first(".select-institution option").click
-    fill_in "Ticket", with: "XXX-001"
+    fill_in "Ticket", with: "GS-001"
     select "Staff Developer", from: "Role"
     select "1 year", from: "Expire Type"
     fill_in "Auth Rep Name", with: "Test Registration Auth Rep"
@@ -29,16 +29,11 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     # Capybara is unable to find and click a checkbox directly
     check "ht_registration_mfa_addendum"
     click_on "Submit Changes"
-    # HT staff edits and sends email
-    assert_selector "div.alert-success"
-    assert_selector "h1", text: "Test Registration Applicant"
-    assert_content "E-mail Preview"
-    click_on "SEND"
     # Show page
     assert_selector "h1", text: "Test Registration Applicant"
     # Extract finalize URL from alert (only show in development/test environments)
     assert_selector "div.alert-success"
-    link = first("div.alert-success").text.match(/http.+/)[0]
+    link = first("div.alert-danger").text.match(/http.+/)[0]
 
     # Registrant follows link in the registration e-mail
     visit link

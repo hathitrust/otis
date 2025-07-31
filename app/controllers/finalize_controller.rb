@@ -50,6 +50,7 @@ class FinalizeController < ApplicationController
     # Currently, there are no parameters for the controller other than the
     # token, which we do not wish to log.
     log_action(@registration, params.permit)
+    # ETT-220 TODO: replace this with a call to a new Jira Client method adds comment and updates the appropriate fields
     add_jira_comment
   end
 
@@ -66,7 +67,7 @@ class FinalizeController < ApplicationController
   end
 
   def add_jira_comment
-    comment = Otis::JiraClient.comment template: :registration_received, user: @registration.applicant_email
-    Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
+    comment = Otis::JiraClient::Registration.comment template: :registration_received, user: @registration.applicant_email
+    Otis::JiraClient::Registration.new(@registration, nil).comment! issue: @registration.jira_ticket, comment: comment
   end
 end

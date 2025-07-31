@@ -327,22 +327,13 @@ en:
       current_registrations: Current Registrations
       mfa_addendum_received: MFA Addendum Received
       new_registration: New Registration
-    mail:
-      success: Message sent.
     new:
       new_registration: New Registration
-    preview:
-      cancel: Cancel
-      email_preview: E-mail Preview
-      resend: RESEND
-      send: SEND
-      subject: Subject
     show:
       confirm_delete: Please confirm deletion of registration "%{name}"
       create_user: Create User
       delete: Delete Registration
       edit: Edit
-      email_preview: E-mail Preview
       login_details: Login Details
       update_user: Update User
       whois_data: WHOIS Data

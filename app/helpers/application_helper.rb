@@ -12,8 +12,7 @@ module ApplicationHelper
   # heavyweight assets when needed.
   # @return [Boolean] ckeditor assets should be included
   def ckeditor?
-    (params[:controller] == "ht_approval_requests" && params[:action] == "edit") ||
-      (params[:controller] == "ht_registrations" && params[:action] == "preview")
+    params[:controller] == "ht_approval_requests" && params[:action] == "edit"
   end
 
   # Translate "language" locale (e.g., "en" from `I18n.locale`)
