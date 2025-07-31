@@ -81,7 +81,7 @@ module Otis
     end
 
     def ea_fields
-      ea_type = ROLE_TO_REGISTRATION_TYPE[registration.role]
+      ea_type = ROLE_TO_REGISTRATION_TYPE[registration.role.to_sym]
       data = {
         fields: {
           :summary => "#{ea_type} Registration for #{registration.applicant_email}",
