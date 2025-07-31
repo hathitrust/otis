@@ -99,6 +99,7 @@ module Otis
       if !has_ea_ticket?
         data[:fields][EA_REGISTRATION_GS_TICKET_FIELD] = registration.jira_ticket
       end
+      data
     end
   end
 end

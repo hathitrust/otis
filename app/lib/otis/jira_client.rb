@@ -11,13 +11,13 @@ module Otis
     def self.create_client
       if Rails.env.production?
         # :nocov:
-        # Can set pass `http_debug: true` for a bit of debugging if needed
         JIRA::Client.new({
           username: Rails.application.credentials.jira[:username],
           password: Rails.application.credentials.jira[:password],
           site: Otis.config.jira.site,
           context_path: Otis.config.jira.context_path,
-          auth_type: :basic
+          auth_type: :basic,
+          http_debug: true
         })
         # :nocov:
       else
