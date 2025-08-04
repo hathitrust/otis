@@ -69,5 +69,12 @@ module Otis
       @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL)
       assert_equal("Resource Sharing", @jc.ea_type_full)
     end
+
+    test "#finalize!" do
+      @registration = create(:ht_registration, role: "resource_sharing")
+      assert_nothing_raised do
+        @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).finalize!
+      end
+    end
   end
 end

@@ -4,7 +4,7 @@ require "jira-ruby"
 
 module Otis
   class JiraClient
-    COMMENT_PROPERTIES = [
+    INTERNAL_COMMENT_PROPERTIES = [
       {"key" => "sd.public.comment", "value" => {"internal" => true}}
     ].freeze
 
@@ -30,6 +30,8 @@ module Otis
     end
 
     # Returns JIRA::Resource::Issue if it exists, otherwise nil.
+    # FIXME: this should probably fail more noisily since we are relying on the Otis-Jira
+    # communication in order to communicate with registrant.
     def find(issue)
       @client.Issue.find issue
     rescue JIRA::HTTPError => _e
@@ -42,7 +44,7 @@ module Otis
       issue_obj = find issue
       return if issue_obj.nil?
 
-      issue_obj.comments.build.save! body: comment, properties: COMMENT_PROPERTIES
+      issue_obj.comments.build.save! body: comment, properties: INTERNAL_COMMENT_PROPERTIES
     end
 
     # Fake JIRA::Client used outside production. Responds to most methods by returning self,

@@ -50,8 +50,7 @@ class FinalizeController < ApplicationController
     # Currently, there are no parameters for the controller other than the
     # token, which we do not wish to log.
     log_action(@registration, params.permit)
-    # ETT-220 TODO: replace this with a call to a new Jira Client method adds comment and updates the appropriate fields
-    add_jira_comment
+    Otis::JiraClient::Registration.new(@registration, nil).finalize!
   end
 
   # For development and (maybe) testing, visiting this page will taint
@@ -64,10 +63,5 @@ class FinalizeController < ApplicationController
 
   def extract_shib_env
     request.env.select { |k, _v| k.match(/^HTTP_X_SHIB/) || k == "HTTP_X_REMOTE_USER" }.to_json
-  end
-
-  def add_jira_comment
-    comment = Otis::JiraClient::Registration.comment template: :registration_received, user: @registration.applicant_email
-    Otis::JiraClient::Registration.new(@registration, nil).comment! issue: @registration.jira_ticket, comment: comment
   end
 end

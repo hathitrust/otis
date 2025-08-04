@@ -46,6 +46,10 @@ module Otis
     EA_REGISTRATION_GS_TICKET_FIELD = :customfield_10363
     # "EA registrant name" field
     EA_REGISTRATION_NAME_FIELD = :customfield_10427
+    # "Registration completed" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
+    EA_REGISTRATION_COMPLETED_WORKFLOW_ID = "10553"
+    # Transition to "consulting with staff" status
+    EA_REGISTRATION_ESCALATE_TRANSITION_ID = "911"
 
     # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
     def initialize(registration, finalize_url)
@@ -116,6 +120,32 @@ module Otis
           data[:fields][EA_REGISTRATION_GS_TICKET_FIELD] = registration.jira_ticket
         end
       end
+    end
+
+    # ETT-220
+    # After registrant has visited verification URL (i.e., `registration.received` is filled):
+    # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to "Registration completed" (EA_REGISTRATION_COMPLETED_WORKFLOW_ID)
+    # - Set ticket status to "Consulting with staff" via the "escalate" transition (EA_REGISTRATION_ESCALATE_TRANSITION_ID)
+    # - Add internal comment "registration submitted by #{registration.applicant_email}"
+    def finalize!
+      issue = ea_issue
+      fields = {
+        fields: {
+          EA_REGISTRATION_EA_WORKFLOW_FIELD => {id: EA_REGISTRATION_COMPLETED_WORKFLOW_ID}
+        }
+      }
+      issue.save fields
+      issue_transition = issue.transitions.build
+      issue_transition.save!(transition: {id: EA_REGISTRATION_ESCALATE_TRANSITION_ID})
+      issue.comments.build.save!(
+        body: "registration submitted by #{registration.applicant_email}",
+        properties: INTERNAL_COMMENT_PROPERTIES
+      )
+    end
+
+    # ETT-292 TODO
+    # To be called when new ht_user is created. (
+    def finish!
     end
   end
 end
