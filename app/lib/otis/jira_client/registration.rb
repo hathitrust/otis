@@ -82,12 +82,25 @@ module Otis
       end
     end
 
+    # Translate registration.role into ATRS/CAA/RS
+    # @return String
+    def ea_type
+      @ea_type ||= ROLE_TO_REGISTRATION_TYPE[registration.role.to_sym]
+    end
+
+    # Expands "RS" into "Resource Sharing" for ticket summary and description.
+    # Leaves "ATRS" and "CAA" alone.
+    # For now this is the only acronym that gets expanded but we may want to do the others.
+    # @return String
+    def ea_type_full
+      @ea_type_full ||= ((ea_type == "RS") ? "Resource Sharing" : ea_type)
+    end
+
     def ea_fields
-      ea_type = ROLE_TO_REGISTRATION_TYPE[registration.role.to_sym]
-      data = {
+      {
         fields: {
-          :summary => "#{ea_type} Registration for #{registration.applicant_email}",
-          :description => "#{ea_type} Registration for <#{registration.applicant_email}>",
+          :summary => "#{ea_type_full} Registration for #{registration.applicant_email}",
+          :description => "#{ea_type_full} Registration for #{registration.applicant_name} <#{registration.applicant_email}>",
           :project => {key: Otis.config.jira.elevated_access_project},
           :labels => [ea_type],
           :issuetype => {id: EA_REGISTRATION_ISSUETYPE_ID},
@@ -98,11 +111,11 @@ module Otis
           EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email,
           EA_REGISTRATION_NAME_FIELD => registration.applicant_name
         }
-      }
-      if !has_ea_ticket?
-        data[:fields][EA_REGISTRATION_GS_TICKET_FIELD] = registration.jira_ticket
+      }.tap do |data|
+        if !has_ea_ticket?
+          data[:fields][EA_REGISTRATION_GS_TICKET_FIELD] = registration.jira_ticket
+        end
       end
-      data
     end
   end
 end

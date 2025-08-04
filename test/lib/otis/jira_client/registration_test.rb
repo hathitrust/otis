@@ -57,5 +57,17 @@ module Otis
       assert_kind_of(Hash, fields)
       assert_equal("GS-99", fields[:fields][JiraClient::Registration::EA_REGISTRATION_GS_TICKET_FIELD])
     end
+
+    test "#ea_type" do
+      @registration = create(:ht_registration, role: "resource_sharing")
+      @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL)
+      assert_equal("RS", @jc.ea_type)
+    end
+
+    test "#ea_type_full" do
+      @registration = create(:ht_registration, role: "resource_sharing")
+      @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL)
+      assert_equal("Resource Sharing", @jc.ea_type_full)
+    end
   end
 end
