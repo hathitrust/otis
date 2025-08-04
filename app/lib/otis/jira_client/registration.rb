@@ -44,6 +44,8 @@ module Otis
     EA_REGISTRATION_EA_TYPE_FIELD = :customfield_10362
     # "Related GS ticket number" field
     EA_REGISTRATION_GS_TICKET_FIELD = :customfield_10363
+    # "EA registrant name" field
+    EA_REGISTRATION_NAME_FIELD = :customfield_10427
 
     # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
     def initialize(registration, finalize_url)
@@ -93,7 +95,8 @@ module Otis
           EA_REGISTRATION_EA_TYPE_FIELD => {value: ea_type},
           # MS will use this to kick off the email, don't set it here unless we want to send the email automatically
           # EA_REGISTRATION_EA_WORKFLOW_FIELD => {value: "Registration email pending"},
-          EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email
+          EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email,
+          EA_REGISTRATION_NAME_FIELD => registration.applicant_name
         }
       }
       if !has_ea_ticket?
