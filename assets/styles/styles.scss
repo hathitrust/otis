@@ -63,12 +63,10 @@ a {
 }
 
 .btn-ht-orange {
-  background-color:#bc5112;
+  background-color:#C35400;
   color:#FFFFFF;
-  // FIXME: ask GR/CW about the correct behavior
-  // This does not give any visual feedback
   &:hover {
-    background-color:#bc5112;
+    background-color:#A14E11;
     color:#FFFFFF;
   }
 }
