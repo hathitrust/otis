@@ -25,9 +25,9 @@ class FinalizeController < ApplicationController
       :success_static_ip
     end
     if @registration.received.present? || @registration.expired?
-      render :show
+      render :show, layout: "external_landing"
     else
-      render :edit
+      render :edit, layout: "external_landing"
     end
   end
 

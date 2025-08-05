@@ -152,11 +152,11 @@ ja:
     whois: WHOISデータは利用できません（%{err}）
   finalize:
     edit:
-      confirm_html: 昇格されたアクセス登録を確認するには、ボタンをクリックしてください。
+      confirm_html: "%{user}の%{service_name}登録を確認するには、ボタンをクリックしてください。"
       confirm_registration: 登録を確認する
     show:
       expired_html: "<strong>%{user}の登録が期限切れになりました。 %{mailto}までご連絡ください。</strong>"
-      success_html: "<p>ありがとうございます。</p> <p><strong>%{user}</strong>の昇格されたアクセス登録が確認されました。 HathiTrustのスタッフが登録を承認し、すぐに電子メールで返信します。</p>"
+      success_html: "<p>ありがとうございます。</p> <p><strong>%{user}</strong>の%{service_name}登録が確認されました。 HathiTrustのスタッフが登録を承認し、すぐに電子メールで返信します。</p>"
       success_mfa_addendum_html: "<p>登録は、多要素認証（MFA）にアクセスできることを示しています。 HathiTrustのスタッフは、あなたの機関との相互運用性を確保するための措置を講じます 認証システム。</p>"
       success_mfa_html: "<p>登録は、多要素認証（MFA）にアクセスできることを示しています。 <i>念のため、これはHathiTrustへの安全なアクセスを行う必要があることを意味します 教育機関のMFA対応のサインインポータルを介して。</i></p>"
       success_static_ip_html: "<p><code>%{ip}</code>が静的IPアドレスであることを確認してください。 よくわからない場合は、ネットワーク管理者に問い合わせることをお勧めします。</p> これは、サービスを使用できる唯一のIPアドレスです。 将来IPアドレスが変更された場合は、HathiTrustに連絡する必要があります またはネットワーク管理者。</p>"
@@ -310,6 +310,11 @@ ja:
         ssd: アクセシブルなテキストリクエストサービスパトロン
         ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
         staffdeveloper: スタッフ開発者
+      service_name:
+        atrs: アクセシブルなテキストリクエストサービス
+        caa: コレクション管理アクセス
+        rs: リソースの共有
+        ssd: アクセシブルなテキストリクエストサービスパトロン
   ht_registrations:
     create:
       success: "%{name}の登録が作成されました。"

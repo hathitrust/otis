@@ -1,9 +1,11 @@
 <div id="maincontent" class="row">
   <%= form_with(model: @registration, url: finalize_url, local: true, method: :get) do |form| %>
 
-  <%= t(".confirm_html") %>
+  <% service_name = t "ht_registration.values.service_name." + @registration.service_name.downcase %>
+  <%= t ".confirm_html", user: @registration.applicant_email, service_name: service_name %>
+
   <br/><br/>
-  <%= form.submit t(".confirm_registration"), class: 'btn btn-primary' %>
+  <%= form.submit t(".confirm_registration"), class: "btn btn-ht-orange" %>
 
   <% end %>
 </div>

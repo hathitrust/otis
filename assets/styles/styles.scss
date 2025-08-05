@@ -62,6 +62,17 @@ a {
   background-color:#f0ad4e
 }
 
+.btn-ht-orange {
+  background-color:#bc5112;
+  color:#FFFFFF;
+  // FIXME: ask GR/CW about the correct behavior
+  // This does not give any visual feedback
+  &:hover {
+    background-color:#bc5112;
+    color:#FFFFFF;
+  }
+}
+
 label a {
   font-weight:400
 }
