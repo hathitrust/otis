@@ -13,18 +13,6 @@ module Otis
       registration_finished: "OTIS status update: registration finished for __USER__."
     }.freeze
 
-    ROLE_TO_REGISTRATION_TYPE = {
-      crms: "CAA",
-      quality: "CAA",
-      resource_sharing: "RS",
-      # We don't have any batch registration or Jira automation support for the SSD role,
-      # so for now this is only included for completeness.
-      ssd: "SSD",
-      ssdproxy: "ATRS",
-      # Just using CAA as the default
-      staffdeveloper: "CAA"
-    }.freeze
-
     # ETT-220 TODO: this may be removed
     def self.comment(template:, user:)
       COMMENT_TEMPLATES[template].gsub("__USER__", user)
@@ -89,15 +77,12 @@ module Otis
     # Translate registration.role into ATRS/CAA/RS
     # @return String
     def ea_type
-      @ea_type ||= ROLE_TO_REGISTRATION_TYPE[registration.role.to_sym]
+      @registration.service_name
     end
 
-    # Expands "RS" into "Resource Sharing" for ticket summary and description.
-    # Leaves "ATRS" and "CAA" alone.
-    # For now this is the only acronym that gets expanded but we may want to do the others.
     # @return String
     def ea_type_full
-      @ea_type_full ||= ((ea_type == "RS") ? "Resource Sharing" : ea_type)
+      @registration.service_name(expand: true)
     end
 
     def ea_fields
@@ -144,7 +129,7 @@ module Otis
     end
 
     # ETT-292 TODO
-    # To be called when new ht_user is created. (
+    # To be called when new ht_user is created.
     def finish!
     end
   end
