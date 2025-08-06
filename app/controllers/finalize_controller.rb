@@ -50,7 +50,7 @@ class FinalizeController < ApplicationController
     # Currently, there are no parameters for the controller other than the
     # token, which we do not wish to log.
     log_action(@registration, params.permit)
-    Otis::JiraClient::Registration.new(@registration, nil).finalize!
+    Otis::JiraClient::Registration.new(@registration).finalize!
   end
 
   # For development and (maybe) testing, visiting this page will taint

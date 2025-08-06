@@ -39,12 +39,9 @@ module Otis
     end
 
     # Example:
-    #   comment! issue: "EA-33", comment: "This is a comment"
-    def comment!(issue:, comment:)
-      issue_obj = find issue
-      return if issue_obj.nil?
-
-      issue_obj.comments.build.save! body: comment, properties: INTERNAL_COMMENT_PROPERTIES
+    #   internal_comment! issue: find("EA-33"), comment: "This is a comment"
+    def internal_comment!(issue:, comment:)
+      issue.comments.build.save! body: comment, properties: INTERNAL_COMMENT_PROPERTIES
     end
 
     # Fake JIRA::Client used outside production. Responds to most methods by returning self,

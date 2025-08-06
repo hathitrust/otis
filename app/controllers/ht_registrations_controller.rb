@@ -80,7 +80,7 @@ class HTRegistrationsController < ApplicationController
     if user.valid?
       @registration.finished = Time.zone.now
       @registration.save!
-      add_jira_comment template: :registration_finished
+      finish_ticket!
       log params.permit!
       flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to edit_ht_user_path user
@@ -133,9 +133,8 @@ class HTRegistrationsController < ApplicationController
     flash[:alert] = e.message
   end
 
-  # Adds comment from {:registration_sent, :registration_finished}
-  def add_jira_comment(template:)
-    comment = Otis::JiraClient::Registration.comment template: template, user: @registration.applicant_email
-    Otis::JiraClient::Registration.new(@registration, nil).comment! issue: @registration.jira_ticket, comment: comment
+  # Do whatever needs to be done on the Jira side, generally this will send a final email and close.
+  def finish_ticket!
+    Otis::JiraClient::Registration.new(@registration).finish!
   end
 end

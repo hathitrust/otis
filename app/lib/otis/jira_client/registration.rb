@@ -6,18 +6,6 @@ module Otis
   class JiraClient::Registration < JiraClient
     attr_reader :registration, :finalize_url
 
-    # ETT-220 TODO: this may be removed
-    COMMENT_TEMPLATES = {
-      registration_sent: "OTIS status update: registration e-mail sent to __USER__.",
-      registration_received: "OTIS status update: registration submitted by __USER__.",
-      registration_finished: "OTIS status update: registration finished for __USER__."
-    }.freeze
-
-    # ETT-220 TODO: this may be removed
-    def self.comment(template:, user:)
-      COMMENT_TEMPLATES[template].gsub("__USER__", user)
-    end
-
     # "Elevated access registration" issuetype
     EA_REGISTRATION_ISSUETYPE_ID = "10715"
     # "EA workflow" field
@@ -36,11 +24,17 @@ module Otis
     EA_REGISTRATION_NAME_FIELD = :customfield_10427
     # "Registration completed" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
     EA_REGISTRATION_COMPLETED_WORKFLOW_ID = "10553"
+    # "Registration completed" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
+    EA_REGISTRATION_APPROVED_WORKFLOW_ID = "10554"
     # Transition to "consulting with staff" status
-    EA_REGISTRATION_ESCALATE_TRANSITION_ID = "911"
+    EA_REGISTRATION_ESCALATE_TRANSITION_ID = "921"
+    # Transition to "closed" status
+    EA_REGISTRATION_RESOLVE_TRANSITION_ID = "761"
 
     # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
-    def initialize(registration, finalize_url)
+    # This must be set when creating/updating the initial ticket, not needed if just calling
+    # `finish!` or `finalize!`
+    def initialize(registration, finalize_url = nil)
       raise "no registration??" unless registration.present?
       @registration = registration
       @finalize_url = finalize_url
@@ -49,7 +43,6 @@ module Otis
 
     # Returns true if a new ticket was created, false otherwise
     def update_ea_ticket!
-      issue = ea_issue
       issue.save ea_fields
       if has_ea_ticket?
         false
@@ -66,35 +59,36 @@ module Otis
 
     # If there's a GS ticket, or no ticket, in the registration, always create a new EA ticket.
     # If there's an EA ticket then we keep using that one.
-    def ea_issue
-      if has_ea_ticket?
+    def issue
+      @issue ||= if has_ea_ticket?
         @client.Issue.find(registration.jira_ticket)
       else
         @client.Issue.build
       end
     end
 
-    # Translate registration.role into ATRS/CAA/RS
+    # registration.role translated into ATRS/CAA/RS
     # @return String
-    def ea_type
-      @registration.service_name
+    def service_name
+      @service_name ||= @registration.service_name
     end
 
+    # registration.role translated into ATRS/CAA/Resource Sharing
     # @return String
-    def ea_type_full
-      @registration.service_name(expand: true)
+    def full_service_name
+      @full_service_name ||= @registration.service_name(expand: true)
     end
 
     def ea_fields
       {
         fields: {
-          :summary => "#{ea_type_full} Registration for #{registration.applicant_email}",
-          :description => "#{ea_type_full} Registration for #{registration.applicant_name} <#{registration.applicant_email}>",
+          :summary => "#{full_service_name} Registration for #{registration.applicant_email}",
+          :description => "#{full_service_name} Registration for #{registration.applicant_name} <#{registration.applicant_email}>",
           :project => {key: Otis.config.jira.elevated_access_project},
-          :labels => [ea_type],
+          :labels => [service_name],
           :issuetype => {id: EA_REGISTRATION_ISSUETYPE_ID},
           EA_REGISTRATION_LINK_FIELD => finalize_url,
-          EA_REGISTRATION_EA_TYPE_FIELD => {value: ea_type},
+          EA_REGISTRATION_EA_TYPE_FIELD => {value: service_name},
           # MS will use this to kick off the email, don't set it here unless we want to send the email automatically
           # EA_REGISTRATION_EA_WORKFLOW_FIELD => {value: "Registration email pending"},
           EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email,
@@ -113,7 +107,6 @@ module Otis
     # - Set ticket status to "Consulting with staff" via the "escalate" transition (EA_REGISTRATION_ESCALATE_TRANSITION_ID)
     # - Add internal comment "registration submitted by #{registration.applicant_email}"
     def finalize!
-      issue = ea_issue
       fields = {
         fields: {
           EA_REGISTRATION_EA_WORKFLOW_FIELD => {id: EA_REGISTRATION_COMPLETED_WORKFLOW_ID}
@@ -122,15 +115,25 @@ module Otis
       issue.save fields
       issue_transition = issue.transitions.build
       issue_transition.save!(transition: {id: EA_REGISTRATION_ESCALATE_TRANSITION_ID})
-      issue.comments.build.save!(
-        body: "registration submitted by #{registration.applicant_email}",
-        properties: INTERNAL_COMMENT_PROPERTIES
-      )
+      internal_comment!(issue: issue, comment: "registration submitted by #{registration.applicant_email}")
     end
 
-    # ETT-292 TODO
-    # To be called when new ht_user is created.
+    # ETT-292
+    # Called when new ht_user is created from registration.
+    # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to “Registration approved” (EA_REGISTRATION_APPROVED_WORKFLOW_ID)
+    # - Add internal note to EA ticket: “registration finished for [otisRegistrantEmail]”
+    # - If ETT-221 is to trigger when the issue is transitioned to Done, do it here (EA_REGISTRATION_RESOLVE_TRANSITION_ID)
     def finish!
+      fields = {
+        fields: {
+          EA_REGISTRATION_EA_WORKFLOW_FIELD => {id: EA_REGISTRATION_APPROVED_WORKFLOW_ID}
+        }
+      }
+      issue.save fields
+      # This part (transition, next two lines) is not set in stone.
+      issue_transition = issue.transitions.build
+      issue_transition.save!(transition: {id: EA_REGISTRATION_RESOLVE_TRANSITION_ID})
+      internal_comment!(issue: issue, comment: "registration finished for #{registration.applicant_email}")
     end
   end
 end

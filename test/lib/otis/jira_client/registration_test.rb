@@ -6,11 +6,6 @@ module Otis
   class JiraClient::RegistrationTest < ActiveSupport::TestCase
     EXAMPLE_URL = "https://www.example.com"
 
-    test "comment template substitutes __USER__ placeholder" do
-      comment = Otis::JiraClient::Registration.comment template: :registration_sent, user: "nobody@default.invalid"
-      assert_match "nobody@default.invalid", comment
-    end
-
     test "#update_ea_ticket! creates ticket if missing" do
       @inst = create(:ht_institution)
       @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: nil)
@@ -58,22 +53,29 @@ module Otis
       assert_equal("GS-99", fields[:fields][JiraClient::Registration::EA_REGISTRATION_GS_TICKET_FIELD])
     end
 
-    test "#ea_type" do
+    test "#service_name" do
       @registration = create(:ht_registration, role: "resource_sharing")
       @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL)
-      assert_equal("RS", @jc.ea_type)
+      assert_equal("RS", @jc.service_name)
     end
 
-    test "#ea_type_full" do
+    test "#full_service_name" do
       @registration = create(:ht_registration, role: "resource_sharing")
       @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL)
-      assert_equal("Resource Sharing", @jc.ea_type_full)
+      assert_equal("Resource Sharing", @jc.full_service_name)
     end
 
     test "#finalize!" do
       @registration = create(:ht_registration, role: "resource_sharing")
       assert_nothing_raised do
         @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).finalize!
+      end
+    end
+
+    test "#finish!" do
+      @registration = create(:ht_registration, role: "resource_sharing")
+      assert_nothing_raised do
+        @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).finish!
       end
     end
   end
