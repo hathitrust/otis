@@ -25,9 +25,9 @@ class FinalizeController < ApplicationController
       :success_static_ip
     end
     if @registration.received.present? || @registration.expired?
-      render :show
+      render :show, layout: "external_landing"
     else
-      render :edit
+      render :edit, layout: "external_landing"
     end
   end
 
@@ -50,7 +50,7 @@ class FinalizeController < ApplicationController
     # Currently, there are no parameters for the controller other than the
     # token, which we do not wish to log.
     log_action(@registration, params.permit)
-    add_jira_comment
+    Otis::JiraClient::Registration.new(@registration).finalize!
   end
 
   # For development and (maybe) testing, visiting this page will taint
@@ -63,10 +63,5 @@ class FinalizeController < ApplicationController
 
   def extract_shib_env
     request.env.select { |k, _v| k.match(/^HTTP_X_SHIB/) || k == "HTTP_X_REMOTE_USER" }.to_json
-  end
-
-  def add_jira_comment
-    comment = Otis::JiraClient.comment template: :registration_received, user: @registration.applicant_email
-    Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
   end
 end

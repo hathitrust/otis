@@ -62,6 +62,15 @@ a {
   background-color:#f0ad4e
 }
 
+.btn-ht-orange {
+  background-color:#C35400;
+  color:#FFFFFF;
+  &:hover {
+    background-color:#A14E11;
+    color:#FFFFFF;
+  }
+}
+
 label a {
   font-weight:400
 }

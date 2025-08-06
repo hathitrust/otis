@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title>HathiTrust Service Registration</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "/scripts/scripts.css" %>
+    <%= stylesheet_link_tag "/styles/styles.css" %>
+    <%= javascript_include_tag "/scripts/scripts.js" %>
+
+  </head>
+
+  <body>
+    <%= render 'shared/external_landing_header' %>
+    <div id="main-container" class="container">
+      <% # ======================================= %>
+      <% # ======== RENDER ALL THE THINGS ======== %>
+      <%= yield %>
+      <% # ======================================= %>
+    </div>
+
+    
+
+    <div class="container">
+      <footer>
+      </footer>
+    </div>
+  </body>
+</html>

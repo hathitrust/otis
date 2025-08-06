@@ -5,7 +5,8 @@
              mailto: mail_to(ApplicationMailer.default[:from]) %></p>
     </p>
   <% else %>
-    <%= t ".success_html", user: @registration.applicant_email %>
+    <% service_name = t "ht_registration.values.service_name." + @registration.service_name.downcase %>
+    <%= t ".success_html", user: @registration.applicant_email, service_name: service_name %>
     <% case @message_type %>
     <% when :success_mfa %>
       <%= t ".success_mfa_html" %>
