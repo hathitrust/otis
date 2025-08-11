@@ -25,8 +25,9 @@ module Otis
       end
     end
 
-    def initialize
-      @client = self.class.create_client
+    # The `client` parameter is for debugging
+    def initialize(client = nil)
+      @client = client || self.class.create_client
     end
 
     # Returns JIRA::Resource::Issue if it exists, otherwise nil.

@@ -13,7 +13,7 @@ module Otis
     # Not used in ticket creation but may be used to update status to kick off subsequent workflows.
     EA_REGISTRATION_EA_WORKFLOW_FIELD = :customfield_10328
     # "EA registration link" field
-    EA_REGISTRATION_LINK_FIELD = :customfield_10329
+    EA_REGISTRATION_LINK_FIELD = :customfield_10460
     # "EA registrant email" field
     EA_REGISTRATION_EMAIL_FIELD = :customfield_10361
     # "EA type" field
@@ -34,11 +34,11 @@ module Otis
     # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
     # This must be set when creating/updating the initial ticket, not needed if just calling
     # `finish!` or `finalize!`
-    def initialize(registration, finalize_url = nil)
+    def initialize(registration, finalize_url = nil, client = nil)
       raise "no registration??" unless registration.present?
       @registration = registration
       @finalize_url = finalize_url
-      super()
+      super(client)
     end
 
     # Returns true if a new ticket was created, false otherwise
