@@ -10,7 +10,7 @@ module Otis
     EA_REGISTRATION_ISSUETYPE_ID = "10715"
     # "EA workflow" field
     # Possible values: "Registration email pending" etc.
-    # Not used in ticket creation but may be used to update status to kick off subsequent workflows.
+    # Not used in ticket creation but used to kick off subsequent workflows.
     EA_REGISTRATION_EA_WORKFLOW_FIELD = :customfield_10328
     # "EA registration link" field
     EA_REGISTRATION_LINK_FIELD = :customfield_10460
@@ -101,7 +101,6 @@ module Otis
       end
     end
 
-    # ETT-220
     # After registrant has visited verification URL (i.e., `registration.received` is filled):
     # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to "Registration completed" (EA_REGISTRATION_COMPLETED_WORKFLOW_ID)
     # - Set ticket status to "Consulting with staff" via the "escalate" transition (EA_REGISTRATION_ESCALATE_TRANSITION_ID)
@@ -118,11 +117,10 @@ module Otis
       internal_comment!(issue: issue, comment: "registration submitted by #{registration.applicant_email}")
     end
 
-    # ETT-292
     # Called when new ht_user is created from registration.
     # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to “Registration approved” (EA_REGISTRATION_APPROVED_WORKFLOW_ID)
-    # - Add internal note to EA ticket: “registration finished for [otisRegistrantEmail]”
-    # - If ETT-221 is to trigger when the issue is transitioned to Done, do it here (EA_REGISTRATION_RESOLVE_TRANSITION_ID)
+    # - Set ticket status to "Done" via the "resolve" transition (EA_REGISTRATION_RESOLVE_TRANSITION_ID)
+    # - Add internal comment “registration finished for #{registration.applicant_email}”
     def finish!
       fields = {
         fields: {
@@ -130,7 +128,6 @@ module Otis
         }
       }
       issue.save fields
-      # This part (transition, next two lines) is not set in stone.
       issue_transition = issue.transitions.build
       issue_transition.save!(transition: {id: EA_REGISTRATION_RESOLVE_TRANSITION_ID})
       internal_comment!(issue: issue, comment: "registration finished for #{registration.applicant_email}")
