@@ -27,7 +27,7 @@ module Otis
     # "Registration completed" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
     EA_REGISTRATION_APPROVED_WORKFLOW_ID = "10554"
     # Transition to "consulting with staff" status
-    EA_REGISTRATION_ESCALATE_TRANSITION_ID = "921"
+    EA_REGISTRATION_ESCALATE_TRANSITION_ID = "911"
     # Transition to "closed" status
     EA_REGISTRATION_RESOLVE_TRANSITION_ID = "761"
 
