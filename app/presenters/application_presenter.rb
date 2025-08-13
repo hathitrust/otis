@@ -44,6 +44,12 @@ class ApplicationPresenter < SimpleDelegator
     self.class::ALL_FIELDS
   end
 
+  # These might be suppressed on a "new X" page as we do with the sent/received fields
+  # in HTRegistration
+  def read_only_fields
+    self.class::READ_ONLY_FIELDS
+  end
+
   # By default form cancel button goes to show page if persisted,
   # index page otherwise.
   def cancel_path
