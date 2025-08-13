@@ -62,10 +62,27 @@ a {
   background-color:#f0ad4e
 }
 
+.btn {
+  &:focus-visible {
+    outline: 3px solid #086AB4 !important;
+    outline-offset: 4px;
+    box-shadow: 0 0 0 6px white;
+    z-index: 3 !important;
+    transition: unset;
+  }
+  &:focus {
+    outline: 3px solid transparent;
+  }
+}
+
+a:focus-visible {
+  border-radius: 6px;
+}
+
 .btn-ht-orange {
   background-color:#C35400;
   color:#FFFFFF;
-  &:hover {
+  &:hover, &:focus {
     background-color:#A14E11;
     color:#FFFFFF;
   }

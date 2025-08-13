@@ -17,7 +17,7 @@ class HTRegistrationPresenter < ApplicationPresenter
 
   INDEX_FIELDS = %i[applicant inst_id jira_ticket auth_rep mfa_addendum status].freeze
   READ_ONLY_FIELDS = %i[sent received finished ip_address env].freeze
-  JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/jira/", "browse/").to_s.freeze
+  JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/browse/").to_s.freeze
   FIELD_SIZE = 45
   VALID_AFFILIATIONS = %r{^(faculty|staff|member|employee)}
 

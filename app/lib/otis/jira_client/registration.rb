@@ -26,10 +26,6 @@ module Otis
     EA_REGISTRATION_COMPLETED_WORKFLOW_ID = "10553"
     # "Registration completed" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
     EA_REGISTRATION_APPROVED_WORKFLOW_ID = "10554"
-    # Transition to "consulting with staff" status
-    EA_REGISTRATION_ESCALATE_TRANSITION_ID = "911"
-    # Transition to "closed" status
-    EA_REGISTRATION_RESOLVE_TRANSITION_ID = "1041"
 
     # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
     # This must be set when creating/updating the initial ticket, not needed if just calling
@@ -103,7 +99,7 @@ module Otis
 
     # After registrant has visited verification URL (i.e., `registration.received` is filled):
     # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to "Registration completed" (EA_REGISTRATION_COMPLETED_WORKFLOW_ID)
-    # - Set ticket status to "Consulting with staff" via the "escalate" transition (EA_REGISTRATION_ESCALATE_TRANSITION_ID)
+    # - Set ticket status to "Consulting with staff"
     # - Add internal comment "registration submitted by #{registration.applicant_email}"
     def finalize!
       fields = {
@@ -112,14 +108,13 @@ module Otis
         }
       }
       issue.save fields
-      issue_transition = issue.transitions.build
-      issue_transition.save!(transition: {id: EA_REGISTRATION_ESCALATE_TRANSITION_ID})
+      transition_to! "Consulting with staff"
       internal_comment!(issue: issue, comment: "registration submitted by #{registration.applicant_email}")
     end
 
     # Called when new ht_user is created from registration.
     # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to “Registration approved” (EA_REGISTRATION_APPROVED_WORKFLOW_ID)
-    # - Set ticket status to "Done" via the "resolve" transition (EA_REGISTRATION_RESOLVE_TRANSITION_ID)
+    # - Set ticket status to "Waiting for support" (automation will close it)
     # - Add internal comment “registration finished for #{registration.applicant_email}”
     def finish!
       fields = {
@@ -128,12 +123,24 @@ module Otis
         }
       }
       issue.save fields
-      issue_transition = issue.transitions.build
-      # Could also iterate the available transitions looking for "resolve" in the name
-      # in case there is too much long term churn in the transition ids,
-      # see https://stackoverflow.com/a/23297391
-      issue_transition.save!(transition: {id: EA_REGISTRATION_RESOLVE_TRANSITION_ID})
-      internal_comment!(issue: issue, comment: "registration finished for #{registration.applicant_email}")
+      transition_to! "Waiting for support"
+    end
+
+    # Search for the issue's available transitions to find a destination status
+    # case-insensitively matching the provided name, and transition to it.
+    def transition_to!(name)
+      # There's just so much we can do with NullClient
+      return unless Rails.env.production?
+
+      all_transitions = issue.transitions.all
+      transition = all_transitions.find do |trans|
+        trans.to.name.downcase == name.downcase
+      end
+      if transition.nil?
+        raise "could not find #{name} in #{all_transitions.collect { |trans| trans.to.name }}"
+      end
+      transition = issue.transitions.build
+      transition.save!(transition: {id: transition.id})
     end
   end
 end
