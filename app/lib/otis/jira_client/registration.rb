@@ -29,7 +29,7 @@ module Otis
     # Transition to "consulting with staff" status
     EA_REGISTRATION_ESCALATE_TRANSITION_ID = "911"
     # Transition to "closed" status
-    EA_REGISTRATION_RESOLVE_TRANSITION_ID = "761"
+    EA_REGISTRATION_RESOLVE_TRANSITION_ID = "1041"
 
     # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
     # This must be set when creating/updating the initial ticket, not needed if just calling
@@ -129,6 +129,9 @@ module Otis
       }
       issue.save fields
       issue_transition = issue.transitions.build
+      # Could also iterate the available transitions looking for "resolve" in the name
+      # in case there is too much long term churn in the transition ids,
+      # see https://stackoverflow.com/a/23297391
       issue_transition.save!(transition: {id: EA_REGISTRATION_RESOLVE_TRANSITION_ID})
       internal_comment!(issue: issue, comment: "registration finished for #{registration.applicant_email}")
     end
