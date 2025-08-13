@@ -136,5 +136,7 @@ class HTRegistrationsController < ApplicationController
   # Do whatever needs to be done on the Jira side, generally this will send a final email and close.
   def finish_ticket!
     Otis::JiraClient::Registration.new(@registration).finish!
+  rescue => e
+    flash[:alert] = "Failure to communicate with Jira: " + e.message
   end
 end
