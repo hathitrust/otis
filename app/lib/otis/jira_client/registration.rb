@@ -99,8 +99,8 @@ module Otis
 
     # After registrant has visited verification URL (i.e., `registration.received` is filled):
     # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to "Registration completed" (EA_REGISTRATION_COMPLETED_WORKFLOW_ID)
-    # - Set ticket status to "Consulting with staff"
     # - Add internal comment "registration submitted by #{registration.applicant_email}"
+    # - Set ticket status to "Consulting with staff"
     def finalize!
       fields = {
         fields: {
@@ -108,14 +108,14 @@ module Otis
         }
       }
       issue.save fields
-      transition_to! "Consulting with staff"
       internal_comment!(issue: issue, comment: "registration submitted by #{registration.applicant_email}")
+      transition_to! "Consulting with staff"
     end
 
     # Called when new ht_user is created from registration.
     # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to “Registration approved” (EA_REGISTRATION_APPROVED_WORKFLOW_ID)
-    # - Set ticket status to "Waiting for support" (automation will close it)
     # - Add internal comment “registration finished for #{registration.applicant_email}”
+    # - Set ticket status to "Waiting for support" (automation will close it)
     def finish!
       fields = {
         fields: {
@@ -123,6 +123,7 @@ module Otis
         }
       }
       issue.save fields
+      internal_comment!(issue: issue, comment: "registration finished by #{registration.applicant_email}")
       transition_to! "Waiting for support"
     end
 
