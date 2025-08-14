@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/jarthod/whois-parser.git
+  revision: f5b6539ab703c4a7359483f44e7e0e2f51937c93
+  specs:
+    whois-parser (2.0.0)
+      activesupport (>= 4)
+      ostruct
+      whois (>= 4.1.0)
+
+GIT
   remote: https://github.com/mlibrary/keycard.git
   revision: ffc2720d9c612acc9609cfb1d951677479aa8166
   specs:
@@ -383,9 +392,6 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     whois (6.0.1)
-    whois-parser (2.0.0)
-      activesupport (>= 4)
-      whois (>= 4.1.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.3)
@@ -426,7 +432,7 @@ DEPENDENCIES
   strip_attributes
   web-console (>= 3.3.0)
   whois
-  whois-parser
+  whois-parser!
 
 BUNDLED WITH
    2.6.5

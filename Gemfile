@@ -41,9 +41,11 @@ gem "ostruct"
 gem "ransack"
 # Freeze Sequel version number because of Checkpoint prepared statement issues
 gem "sequel", "5.52.0"
+# ActiveModel extension that automatically strips all attributes of leading and trailing whitespace before validation
 gem "strip_attributes"
 gem "whois"
-gem "whois-parser"
+# Unofficial but more up-to-date fork, check status at https://github.com/jarthod/whois-parser
+gem "whois-parser", github: "jarthod/whois-parser"
 
 group :development, :test do
   gem "debug"
