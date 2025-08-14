@@ -178,6 +178,7 @@ ja:
       ssd_proxy_reports: SSD Proxy 報告
       users: ユーザー
     not_logged_in: ログインしていない
+    opens_in_new_window: 新しいウィンドウで開きます
   ht_approval_request:
     badges:
       approved: 承認済み

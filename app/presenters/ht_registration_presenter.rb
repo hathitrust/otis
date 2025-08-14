@@ -160,7 +160,14 @@ class HTRegistrationPresenter < ApplicationPresenter
   def show_jira_ticket
     return "" unless jira_ticket.present?
 
-    link_to jira_ticket, self.class::JIRA_BASE_URL + jira_ticket
+    link_html = <<~HTML
+      #{jira_ticket}
+      <span class="visually-hidden">#{I18n.t "global.opens_in_new_window"}></span>
+      <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+    HTML
+    link_to(self.class::JIRA_BASE_URL + jira_ticket, target: :_blank, rel: "noopener") do
+      raw link_html
+    end
   end
 
   def show_inst_id

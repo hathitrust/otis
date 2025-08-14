@@ -178,6 +178,7 @@ en:
       ssd_proxy_reports: SSD Proxy Reports
       users: Users
     not_logged_in: Not Logged In
+    opens_in_new_window: opens in new window
   ht_approval_request:
     badges:
       approved: Approved
