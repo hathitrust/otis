@@ -139,8 +139,7 @@ module Otis
       if transition.nil?
         raise "could not find #{name} in #{all_transitions.collect { |trans| trans.to.name }}"
       end
-      transition = issue.transitions.build
-      transition.save!(transition: {id: transition.id})
+      issue.transitions.build.save!(transition: {id: transition.id})
     end
   end
 end
