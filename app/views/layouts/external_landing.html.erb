@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
-    <title>HathiTrust Service Registration</title>
+    <title>
+      <%= I18n.t "global.title.external_landing" %>
+    </title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "/scripts/scripts.css" %>
@@ -9,7 +11,7 @@
   </head>
 
   <body>
-    <%= render 'shared/external_landing_header' %>
+    <%= render "shared/external_landing_header" %>
     <div id="main-container" class="container">
       <% # ======================================= %>
       <% # ======== RENDER ALL THE THINGS ======== %>

@@ -179,6 +179,9 @@ en:
       users: Users
     not_logged_in: Not Logged In
     opens_in_new_window: opens in new window
+    title:
+      application: Otis Elevated Access Tool
+      external_landing: HathiTrust Service Registration
   ht_approval_request:
     badges:
       approved: Approved

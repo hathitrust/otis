@@ -145,7 +145,7 @@ ja:
       already_used_html: "<strong>このリンクは無効になりました。すでに使用されている可能性があります。</strong>"
       expired_html: "<strong>%{user}の承認リクエストが期限切れになりました。 %{mailto}までご連絡ください。</strong>"
       not_found_html: "<strong>トークン%{token}の承認リクエストが見つかりません。</strong>"
-      recorded_html: "<strong>%{approver}</strong>から<strong>%{user}</strong>の高架アクセス承認が記録されました。"
+      recorded_html: "<strong>%{approver}</strong>から<strong>%{user}</strong>の昇格アクセス承認が記録されました。"
       thanks: ありがとうございます。
   errors:
     resolv: "%{ip_address}を検索できません"
@@ -179,6 +179,9 @@ ja:
       users: ユーザー
     not_logged_in: ログインしていない
     opens_in_new_window: 新しいウィンドウで開きます
+    title:
+      application: Otis昇格アクセスツール
+      external_landing: HathiTrustサービス登録
   ht_approval_request:
     badges:
       approved: 承認済み
