@@ -123,7 +123,7 @@ module Otis
         }
       }
       issue.save fields
-      internal_comment!(issue: issue, comment: "registration finished by #{registration.applicant_email}")
+      internal_comment!(issue: issue, comment: "registration finished for #{registration.applicant_email}")
       transition_to! "Waiting for support"
     end
 
