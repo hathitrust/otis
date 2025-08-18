@@ -120,6 +120,16 @@ class ApplicationPresenter < SimpleDelegator
   end
 
   def edit_field_value_default(field, form:)
-    form.text_field field, size: self.class::FIELD_SIZE
+    html = form.text_field(field, size: self.class::FIELD_SIZE)
+    # Display help if it exists
+    # e.g. ht_registrations.form.jira_ticket_help
+    begin
+      i18n_key = [controller.controller_name, "form", field.to_s + "_help"].join(".")
+      if I18n.exists?(i18n_key)
+        html += content_tag(:span, I18n.t(i18n_key), class: "fst-italic")
+      end
+    rescue
+    end
+    html
   end
 end

@@ -331,6 +331,7 @@ en:
       success: Registration completed for %{name}.
     form:
       cancel: Cancel
+      jira_ticket_help: Leave blank or submit a GS ticket to create a new EA ticket optionally linked to the GS ticket.
       submit_changes: Submit Changes
     index:
       current_registrations: Current Registrations

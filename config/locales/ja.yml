@@ -331,6 +331,7 @@ ja:
       success: "%{name}の登録が完了しました。"
     form:
       cancel: キャンセル
+      jira_ticket_help: 空白のままにするか、GS チケットを送信して、オプションで GS チケットにリンクされた新しい EA チケットを作成します。
       submit_changes: 変更を送信する
     index:
       current_registrations: 現在の登録
