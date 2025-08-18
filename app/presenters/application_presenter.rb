@@ -112,24 +112,29 @@ class ApplicationPresenter < SimpleDelegator
   end
 
   def edit_field_value(field, form:)
-    if respond_to?(("edit_" + field.to_s).to_sym, true)
+    html = if respond_to?(("edit_" + field.to_s).to_sym, true)
       send ("edit_" + field.to_s).to_sym, form: form
     else
       edit_field_value_default field, form: form
     end
+    html + edit_field_value_help(field)
   end
 
   def edit_field_value_default(field, form:)
-    html = form.text_field(field, size: self.class::FIELD_SIZE)
-    # Display help if it exists
-    # e.g. ht_registrations.form.jira_ticket_help
+    form.text_field(field, size: self.class::FIELD_SIZE)
+  end
+
+  # Display help if it exists
+  # e.g. ht_registrations.form.jira_ticket_help
+  def edit_field_value_help(field)
     begin
       i18n_key = [controller.controller_name, "form", field.to_s + "_help"].join(".")
       if I18n.exists?(i18n_key)
-        html += content_tag(:span, I18n.t(i18n_key), class: "fst-italic")
+        return content_tag(:div, I18n.t(i18n_key).html_safe, class: "fst-italic")
       end
-    rescue
+    rescue => e
+      Rails.logger.error "edit_field_value_default: #{e}"
     end
-    html
+    ""
   end
 end

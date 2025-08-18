@@ -25,6 +25,7 @@ class HTRegistrationPresenter < ApplicationPresenter
     sent: Otis::Badge.new("activerecord.attributes.ht_registration.sent", "bg-primary"),
     received: Otis::Badge.new("activerecord.attributes.ht_registration.received", "bg-secondary"),
     finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "bg-success"),
+    expired: Otis::Badge.new("ht_registration.badges.expired", "bg-danger"),
     institution_static_ip: Otis::Badge.new("activerecord.attributes.ht_registration.institution.static_ip", "bg-danger"),
     institution_mfa: Otis::Badge.new("activerecord.attributes.ht_registration.institution.mfa", "bg-success"),
     existing_user: Otis::Badge.new("activerecord.attributes.ht_registration.email.existing_user", "bg-warning text-dark"),
@@ -192,12 +193,17 @@ class HTRegistrationPresenter < ApplicationPresenter
   def show_sent
     return "" unless sent.present?
 
-    I18n.l sent.to_date, format: :long
+    html = I18n.l sent.to_date, format: :long
+    if expired? && !received?
+      html += " " + BADGES[:expired].label_span
+    end
+    html
   end
 
   def show_status
     return BADGES[:finished].label_span if finished?
     return BADGES[:received].label_span if received?
+    return BADGES[:expired].label_span if expired? && !received?
     BADGES[:sent].label_span if sent?
   end
 

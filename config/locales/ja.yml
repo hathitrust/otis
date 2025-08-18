@@ -306,6 +306,8 @@ ja:
       download_json: JSONをダウンロード
       logs: ログ
   ht_registration:
+    badges:
+      expired: 期限切れ
     values:
       role:
         crms: 著作権レビュー
@@ -331,7 +333,7 @@ ja:
       success: "%{name}の登録が完了しました。"
     form:
       cancel: キャンセル
-      jira_ticket_help: 空白のままにするか、GS チケットを送信して、オプションで GS チケットにリンクされた新しい EA チケットを作成します。
+      jira_ticket_help: "<ul><li>空白のままにするか、GS チケットを送信して、オプションで GS チケットにリンクされた新しい EA チケットを作成します。</li><li>EA チケットがすでに割り当てられている登録を保存すると、新しいリンクが生成され、確認メールが再送信されます。</li></ul>"
       submit_changes: 変更を送信する
     index:
       current_registrations: 現在の登録

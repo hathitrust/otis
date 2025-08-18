@@ -306,6 +306,8 @@ en:
       download_json: Download JSON
       logs: Logs
   ht_registration:
+    badges:
+      expired: Expired
     values:
       role:
         crms: Copyright Review
@@ -331,7 +333,7 @@ en:
       success: Registration completed for %{name}.
     form:
       cancel: Cancel
-      jira_ticket_help: Leave blank or submit a GS ticket to create a new EA ticket optionally linked to the GS ticket.
+      jira_ticket_help: "<ul><li>Leave blank or submit a GS ticket to create a new EA ticket optionally linked to the GS ticket.</li><li>Saving a registration that already has an EA ticket assigned will generate a new link and re-send the confirmation e-mail.</li></ul>"
       submit_changes: Submit Changes
     index:
       current_registrations: Current Registrations
