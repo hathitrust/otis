@@ -24,7 +24,7 @@ module Otis
     EA_REGISTRATION_NAME_FIELD = :customfield_10427
     # "Registration completed" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
     EA_REGISTRATION_COMPLETED_WORKFLOW_ID = "10553"
-    # "Registration completed" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
+    # "Registration approved" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
     EA_REGISTRATION_APPROVED_WORKFLOW_ID = "10554"
 
     # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
