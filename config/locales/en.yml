@@ -155,7 +155,7 @@ en:
       confirm_html: Click on the button to confirm %{service_name} registration for <strong>%{user}</strong>.
       confirm_registration: Confirm Registration
     show:
-      expired_html: "<strong>Registration for %{user} has expired. Please contact %{mailto}.</strong>"
+      expired_html: "<strong>Registration for %{user} has expired. Please contact HathiTrust staff via the email you had been previously sent.</strong>"
       success_html: "<p>Thank you.</p> <p>%{service_name} registration confirmed for <strong>%{user}</strong>. A HathiTrust staff member will approve your registration and respond shortly by e-mail.</p>"
       success_mfa_addendum_html: "<p>Your registration indicates you have access to multi-factor authentication (MFA). HathiTrust staff will take measures to ensure interoperability with your institution's authentication system.</p>"
       success_mfa_html: "<p>Your registration indicates you have access to multi-factor authentication (MFA). <i>As a reminder, this means that any secure access to HathiTrust must be done through your institution's MFA-enabled sign-in portal.</i></p>"

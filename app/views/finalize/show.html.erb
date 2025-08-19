@@ -1,8 +1,7 @@
 <div id="maincontent" class="row">
 
   <% if @registration.expired? %>
-    <p><%= t ".expired_html", user: @registration.applicant_email,
-             mailto: mail_to(ApplicationMailer.default[:from]) %></p>
+    <p><%= t ".expired_html", user: @registration.applicant_email %></p>
     </p>
   <% else %>
     <% service_name = t "ht_registration.values.service_name." + @registration.service_name.downcase %>
