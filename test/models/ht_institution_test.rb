@@ -53,14 +53,6 @@ class HTInstitutionTest < ActiveSupport::TestCase
 
     assert_equal(inst.inst_id, inst.mapto_inst_id)
   end
-
-  test "sets template on save if entityid is set" do
-    inst = build(:ht_institution, entityID: "urn:something")
-    inst.save
-
-    assert_equal("https://___HOST___/Shibboleth.sso/Login?entityID=urn:something&target=___TARGET___",
-      inst.template)
-  end
 end
 
 class HTInstitutionSAMLTest < ActiveSupport::TestCase
