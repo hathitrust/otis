@@ -97,7 +97,6 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :inst_id, primary_key: true
     t.string :grin_instance
     t.string :name
-    t.string :template
     t.string :domain
     t.boolean :us
     t.string :mapto_inst_id
