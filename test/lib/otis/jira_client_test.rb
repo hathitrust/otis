@@ -8,8 +8,10 @@ module Otis
       assert_not_nil Otis::JiraClient.new
     end
 
-    test "#find with nonexistent ticket returns nil instead of raising" do
-      assert_nil Otis::JiraClient.new.find("does not exist")
+    test "#find with nonexistent ticket raises StandardError" do
+      assert_raises StandardError do
+        Otis::JiraClient.new.find("EA-000")
+      end
     end
   end
 end

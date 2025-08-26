@@ -35,8 +35,6 @@ module Otis
     # communication in order to communicate with registrant.
     def find(issue)
       @client.Issue.find issue
-    rescue JIRA::HTTPError => _e
-      nil
     end
 
     # Example:
@@ -61,7 +59,10 @@ module Otis
       end
 
       def find(ticket)
-        if ticket == "does not exist"
+        # This can be used when testing error handling under Docker
+        if ticket == "EA-000"
+          # JIRA::HTTPError takes an HTTP response, so do not depend on the contents
+          # of the "Does not exist" message.
           raise JIRA::HTTPError, "Does not exist"
         end
         self
