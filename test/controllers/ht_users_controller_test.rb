@@ -211,7 +211,7 @@ class HTUsersControllerRenewalTest < ActionDispatch::IntegrationTest
 
   test "renewing user renews approval request" do
     sign_in!
-    patch ht_user_url @user1, params: {"ht_user" => {"expires" => (Date.today + 365).to_s}}
+    patch ht_user_url @user1, params: {"ht_user" => {"expires" => (Date.today + 3.years).to_s}}
     assert_redirected_to ht_user_path(@user1.email)
     assert_not_nil @req1.reload.renewed
     assert_equal Date.parse(@req1.reload.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
@@ -219,7 +219,7 @@ class HTUsersControllerRenewalTest < ActionDispatch::IntegrationTest
 
   test "renewing user creates new renewal request with staff approver if none existing" do
     sign_in!
-    patch ht_user_url @user2, params: {"ht_user" => {"expires" => (Date.today + 365).to_s}}
+    patch ht_user_url @user2, params: {"ht_user" => {"expires" => (Date.today + 3.years).to_s}}
     @req2 = HTApprovalRequest.where(userid: @user2.email).first
     assert_not_nil @req2
     assert_equal "admin@default.invalid", @req2.approver
