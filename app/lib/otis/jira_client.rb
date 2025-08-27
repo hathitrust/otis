@@ -46,6 +46,8 @@ module Otis
     # Fake JIRA::Client used outside production. Responds to most methods by returning self,
     # which means NullClient.Issue => NullClient
     class NullClient
+      DEFAULT_TICKET = "EA-1"
+      BOGUS_TICKET = "EA-000"
       def method_missing(method_name, *arguments, &block)
         self
       end
@@ -55,12 +57,12 @@ module Otis
       end
 
       def key
-        "EA-0"
+        DEFAULT_TICKET
       end
 
       def find(ticket)
         # This can be used when testing error handling under Docker
-        if ticket == "EA-000"
+        if ticket == BOGUS_TICKET
           # JIRA::HTTPError takes an HTTP response, so do not depend on the contents
           # of the "Does not exist" message.
           raise JIRA::HTTPError, "Does not exist"
@@ -68,7 +70,5 @@ module Otis
         self
       end
     end
-
-    private_constant :NullClient
   end
 end

@@ -11,7 +11,7 @@ module Otis
       @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: nil)
       Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).update_ea_ticket!
       # Registration will have new EA ticket
-      assert_equal("EA-0", @registration.jira_ticket)
+      assert_equal(Otis::JiraClient::NullClient::DEFAULT_TICKET, @registration.jira_ticket)
     end
 
     test "#update_ea_ticket! creates ticket if GS ticket is entered" do
@@ -19,7 +19,7 @@ module Otis
       @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: "GS-0")
       Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).update_ea_ticket!
       # Registration will have new EA ticket
-      assert_equal("EA-0", @registration.jira_ticket)
+      assert_equal(Otis::JiraClient::NullClient::DEFAULT_TICKET, @registration.jira_ticket)
     end
 
     test "#update_ea_ticket! does not create ticket if it already has one" do

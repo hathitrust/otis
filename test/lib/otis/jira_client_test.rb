@@ -10,7 +10,7 @@ module Otis
 
     test "#find with nonexistent ticket raises StandardError" do
       assert_raises StandardError do
-        Otis::JiraClient.new.find("EA-000")
+        Otis::JiraClient.new.find(Otis::JiraClient::NullClient::BOGUS_TICKET)
       end
     end
   end

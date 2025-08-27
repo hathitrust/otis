@@ -119,6 +119,8 @@ class HTRegistrationsController < ApplicationController
     log_action(@registration, params)
   end
 
+  # Typically the registration is submitted with a GS ticket.
+  # The Jira client will create a new EA ticket with the GS ticket stored in a custom field.
   def update_ea_ticket!
     url = submit_registration_url(@registration.token, locale: nil)
     new_ticket = Otis::JiraClient::Registration.new(@registration, url).update_ea_ticket!
