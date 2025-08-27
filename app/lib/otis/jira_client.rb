@@ -7,6 +7,7 @@ module Otis
     INTERNAL_COMMENT_PROPERTIES = [
       {"key" => "sd.public.comment", "value" => {"internal" => true}}
     ].freeze
+    JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/browse/").to_s.freeze
 
     def self.create_client
       if Rails.env.production?
@@ -23,6 +24,10 @@ module Otis
       else
         NullClient.new
       end
+    end
+
+    def self.jira_url(ticket)
+      JIRA_BASE_URL + ticket
     end
 
     # The `client` parameter is for debugging

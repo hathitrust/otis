@@ -17,7 +17,6 @@ class HTRegistrationPresenter < ApplicationPresenter
 
   INDEX_FIELDS = %i[applicant inst_id jira_ticket auth_rep mfa_addendum status].freeze
   READ_ONLY_FIELDS = %i[sent submitted approved ip_address env].freeze
-  JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/browse/").to_s.freeze
   FIELD_SIZE = 45
   VALID_AFFILIATIONS = %r{^(faculty|staff|member|employee)}
 
@@ -170,7 +169,7 @@ class HTRegistrationPresenter < ApplicationPresenter
       <span class="visually-hidden">#{I18n.t "global.opens_in_new_window"}></span>
       <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
     HTML
-    link_to(self.class::JIRA_BASE_URL + jira_ticket, target: :_blank, rel: "noopener") do
+    link_to(Otis::JiraClient.jira_url(jira_ticket), target: :_blank, rel: "noopener") do
       raw link_html
     end
   end

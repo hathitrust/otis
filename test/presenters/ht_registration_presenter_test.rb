@@ -47,9 +47,8 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
 
   test "#field_value :jira_ticket displays as link" do
     assert_not_nil @reg.field_value(:jira_ticket)
-    assert_not_nil HTRegistrationPresenter::JIRA_BASE_URL
     assert_match "href", @reg.field_value(:jira_ticket)
-    assert_match HTRegistrationPresenter::JIRA_BASE_URL, @reg.field_value(:jira_ticket)
+    assert_match Otis::JiraClient::JIRA_BASE_URL, @reg.field_value(:jira_ticket)
     assert_match @reg.jira_ticket, @reg.field_value(:jira_ticket)
   end
 
