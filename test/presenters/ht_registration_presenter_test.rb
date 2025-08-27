@@ -79,6 +79,11 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
     assert_equal "SELECT", @reg.field_value(:role, form: FakeForm.new)
   end
 
+  test "#field_value :sent displays badge when expired" do
+    reg = HTRegistrationPresenter.new build(:ht_registration, :expired)
+    assert_match "Expired", reg.field_value(:sent)
+  end
+
   test "#cancel_path for new object goes to index" do
     assert_not_nil @reg.cancel_path
     assert_no_match "/ht_registrations/#{@reg.id}", @reg.cancel_path

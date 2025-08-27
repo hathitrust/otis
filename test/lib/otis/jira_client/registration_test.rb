@@ -68,14 +68,14 @@ module Otis
     test "#finalize!" do
       @registration = create(:ht_registration, role: "resource_sharing")
       assert_nothing_raised do
-        @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).finalize!
+        @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).submit!
       end
     end
 
-    test "#finish!" do
+    test "#approve!!" do
       @registration = create(:ht_registration, role: "resource_sharing")
       assert_nothing_raised do
-        @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).finish!
+        @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).approve!
       end
     end
   end

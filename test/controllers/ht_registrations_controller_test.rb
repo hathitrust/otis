@@ -123,24 +123,24 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     get ht_registration_url sent_registration
     assert_match edit_ht_registration_path(sent_registration), @response.body
     assert_select "a[data-method='delete']"
-    assert_no_match finish_ht_registration_path(sent_registration), @response.body
+    assert_no_match approve_ht_registration_path(sent_registration), @response.body
   end
 
-  test "received but not finished registration shows only edit and create user buttons" do
+  test "received but not approved registration shows only edit and create user buttons" do
     sent_registration = create(:ht_registration, sent: Time.zone.now - 1.day,
       received: Time.zone.now - 1.day, finished: nil)
     get ht_registration_url sent_registration
     assert_match edit_ht_registration_path(sent_registration), @response.body
     assert_select "a[data-method='delete']", false
-    assert_match finish_ht_registration_path(sent_registration), @response.body
+    assert_match approve_ht_registration_path(sent_registration), @response.body
   end
 
-  test "finished registration no longer shows edit, delete, or create user buttons" do
+  test "approved registration no longer shows edit, delete, or create user buttons" do
     finished_registration = create(:ht_registration, finished: Time.zone.now - 1.day)
     get ht_registration_url finished_registration
     assert_no_match edit_ht_registration_path(finished_registration), @response.body
     assert_select "a[data-method='delete']", false
-    assert_no_match finish_ht_registration_path(finished_registration), @response.body
+    assert_no_match approve_ht_registration_path(finished_registration), @response.body
   end
 
   test "show failure notice when WHOIS lookup fails" do
@@ -303,16 +303,16 @@ class HTRegistrationsControllerDeleteTest < ActionDispatch::IntegrationTest
   end
 end
 
-class HTRegistrationFinishTest < ActionDispatch::IntegrationTest
+class ApproveHTRegistrationTest < ActionDispatch::IntegrationTest
   def setup
     @received_registration = create(:ht_registration, received: Time.now,
       ip_address: Faker::Internet.public_ip_v4_address,
       env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json)
   end
 
-  test "finishing registration creates and displays a new user" do
+  test "approving registration creates and displays a new user" do
     sign_in! username: ADMIN_USER
-    post(finish_ht_registration_path(@received_registration))
+    post(approve_ht_registration_path(@received_registration))
     assert_response :redirect
     @received_registration.reload
     assert @received_registration.finished?
@@ -321,11 +321,11 @@ class HTRegistrationFinishTest < ActionDispatch::IntegrationTest
     assert_equal "edit", @controller.action_name
   end
 
-  test "finishing registration a second time displays an error" do
+  test "approving registration a second time displays an error" do
     sign_in! username: ADMIN_USER
-    post(finish_ht_registration_path(@received_registration))
+    post(approve_ht_registration_path(@received_registration))
     follow_redirect!
-    post(finish_ht_registration_path(@received_registration))
+    post(approve_ht_registration_path(@received_registration))
     follow_redirect!
     assert_not_empty flash[:alert]
   end

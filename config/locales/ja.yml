@@ -49,6 +49,7 @@ ja:
         applicant_date: 申請者の年月日
         applicant_email: 申請者のEメール
         applicant_name: 申請者の表示名
+        approved: 承認された
         auth_rep: 認証担当者
         auth_rep_date: 認証担当者の年月日
         auth_rep_email: 認証担当者のEメール
@@ -69,7 +70,6 @@ ja:
           existing_user: 既存のユーザー
         env: 認証データ
         expire_type: 有効期限タイプ
-        finished: 終了した
         hathitrust_authorizer: HathiTrustの認証担当者
         inst_id: 機関
         institution:
@@ -78,10 +78,10 @@ ja:
         ip_address: IPアドレス
         jira_ticket: チケット
         mfa_addendum: 多要素認証の補遺
-        received: 受信した
         role: 役割
         sent: 送信された
         status: 状態
+        submitted: 送信された
         usertype: ユーザータイプ
       ht_ssd_proxy_report:
         author: 著者
@@ -150,16 +150,6 @@ ja:
   errors:
     resolv: "%{ip_address}を検索できません"
     whois: WHOISデータは利用できません（%{err}）
-  finalize:
-    edit:
-      confirm_html: "%{user}の%{service_name}登録を確認するには、ボタンをクリックしてください。"
-      confirm_registration: 登録を確認する
-    show:
-      expired_html: "<strong>%{user}の登録が期限切れになりました。事前にお送りしたメールを使用して、HathiTrust のスタッフまでご連絡ください。</strong>"
-      success_html: "<p>ありがとうございます。</p> <p><strong>%{user}</strong>の%{service_name}登録が確認されました。 HathiTrustのスタッフが登録を承認し、すぐに電子メールで返信します。</p>"
-      success_mfa_addendum_html: "<p>登録は、多要素認証（MFA）にアクセスできることを示しています。 HathiTrustのスタッフは、あなたの機関との相互運用性を確保するための措置を講じます 認証システム。</p>"
-      success_mfa_html: "<p>登録は、多要素認証（MFA）にアクセスできることを示しています。 <i>念のため、これはHathiTrustへの安全なアクセスを行う必要があることを意味します 教育機関のMFA対応のサインインポータルを介して。</i></p>"
-      success_static_ip_html: "<p><code>%{ip}</code>が静的IPアドレスであることを確認してください。 よくわからない場合は、ネットワーク管理者に問い合わせることをお勧めします。</p> これは、サービスを使用できる唯一のIPアドレスです。 将来IPアドレスが変更された場合は、HathiTrustに連絡する必要があります またはネットワーク管理者。</p>"
   global:
     fake_shib_controller:
       email: Eメール
@@ -322,15 +312,15 @@ ja:
         rs: リソースの共有
         ssd: アクセシブルなテキストリクエストサービスパトロン
   ht_registrations:
+    approve:
+      already_approved: 登録はすでに完了しています。
+      success: "%{name}の登録が完了しました。"
     create:
       success: "%{name}の登録が作成されました。"
     destroy:
       success: 登録が削除されました。
     edit:
       edit: 登録を編集する
-    finish:
-      already_finished: 登録はすでに完了しています。
-      success: "%{name}の登録が完了しました。"
     form:
       cancel: キャンセル
       jira_ticket_help: "<ul><li>空白のままにするか、GS チケットを送信して、自動的に GS チケットにリンクされた新しい EA チケットを作成します。</li><li>EA チケットがすでに割り当てられている登録を保存すると、新しいリンクが生成され、確認メールが再送信されます。</li></ul>"
@@ -430,3 +420,13 @@ ja:
       edit: 編集
     update:
       success: ユーザーが更新されました。
+  submit_registration:
+    edit:
+      confirm_html: "%{user}の%{service_name}登録を確認するには、ボタンをクリックしてください。"
+      confirm_registration: 登録を確認する
+    show:
+      expired_html: "<strong>%{user}の登録が期限切れになりました。事前にお送りしたメールを使用して、HathiTrust のスタッフまでご連絡ください。</strong>"
+      success_html: "<p>ありがとうございます。</p> <p><strong>%{user}</strong>の%{service_name}登録が確認されました。 HathiTrustのスタッフが登録を承認し、すぐに電子メールで返信します。</p>"
+      success_mfa_addendum_html: "<p>登録は、多要素認証（MFA）にアクセスできることを示しています。 HathiTrustのスタッフは、あなたの機関との相互運用性を確保するための措置を講じます 認証システム。</p>"
+      success_mfa_html: "<p>登録は、多要素認証（MFA）にアクセスできることを示しています。 <i>念のため、これはHathiTrustへの安全なアクセスを行う必要があることを意味します 教育機関のMFA対応のサインインポータルを介して。</i></p>"
+      success_static_ip_html: "<p><code>%{ip}</code>が静的IPアドレスであることを確認してください。 よくわからない場合は、ネットワーク管理者に問い合わせることをお勧めします。</p> これは、サービスを使用できる唯一のIPアドレスです。 将来IPアドレスが変更された場合は、HathiTrustに連絡する必要があります またはネットワーク管理者。</p>"

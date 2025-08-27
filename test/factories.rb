@@ -138,6 +138,12 @@ FactoryBot.define do
     mfa_addendum { [true, false].sample }
     contact_info { Faker::Internet.email }
     association :ht_institution, strategy: :create
+
+    trait :expired do
+      sent { Time.now - 10.days }
+      submitted { nil }
+      token_hash { Base64.encode64(Faker::String.random(length: 32)) }
+    end
   end
 
   factory :ht_log do

@@ -7,7 +7,7 @@ class HTRegistrationPresenter < ApplicationPresenter
     applicant_name applicant_email applicant_date inst_id jira_ticket
     role expire_type auth_rep_name auth_rep_email auth_rep_date
     contact_info hathitrust_authorizer mfa_addendum
-    sent received finished ip_address
+    sent submitted approved ip_address
   ].freeze
 
   DETAIL_FIELDS = %i[
@@ -16,18 +16,22 @@ class HTRegistrationPresenter < ApplicationPresenter
   ].freeze
 
   INDEX_FIELDS = %i[applicant inst_id jira_ticket auth_rep mfa_addendum status].freeze
-  READ_ONLY_FIELDS = %i[sent received finished ip_address env].freeze
+  READ_ONLY_FIELDS = %i[sent submitted approved ip_address env].freeze
   JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/browse/").to_s.freeze
   FIELD_SIZE = 45
   VALID_AFFILIATIONS = %r{^(faculty|staff|member|employee)}
 
   BADGES = {
+    # Status
     sent: Otis::Badge.new("activerecord.attributes.ht_registration.sent", "bg-primary"),
-    received: Otis::Badge.new("activerecord.attributes.ht_registration.received", "bg-secondary"),
-    finished: Otis::Badge.new("activerecord.attributes.ht_registration.finished", "bg-success"),
+    submitted: Otis::Badge.new("activerecord.attributes.ht_registration.submitted", "bg-secondary"),
+    approved: Otis::Badge.new("activerecord.attributes.ht_registration.approved", "bg-success"),
+    # Unexpected status
     expired: Otis::Badge.new("ht_registration.badges.expired", "bg-danger"),
+    # Institution
     institution_static_ip: Otis::Badge.new("activerecord.attributes.ht_registration.institution.static_ip", "bg-danger"),
     institution_mfa: Otis::Badge.new("activerecord.attributes.ht_registration.institution.mfa", "bg-success"),
+    # Submitted ENV detail
     existing_user: Otis::Badge.new("activerecord.attributes.ht_registration.email.existing_user", "bg-warning text-dark"),
     ok: Otis::Badge.new("activerecord.attributes.ht_registration.detail.ok", "bg-success"),
     mismatch: Otis::Badge.new("activerecord.attributes.ht_registration.detail.mismatch", "bg-danger"),
@@ -152,10 +156,10 @@ class HTRegistrationPresenter < ApplicationPresenter
     affiliations.any? { |affiliation| inst_affiliations_re.match? affiliation }
   end
 
-  def show_finished
-    return "" unless finished.present?
+  def show_approved
+    return "" unless approved?
 
-    I18n.l finished.to_date, format: :long
+    I18n.l approved.to_date, format: :long
   end
 
   def show_jira_ticket
@@ -184,12 +188,6 @@ class HTRegistrationPresenter < ApplicationPresenter
     HTML
   end
 
-  def show_received
-    return "" unless received.present?
-
-    I18n.l received.to_date, format: :long
-  end
-
   def show_sent
     return "" unless sent.present?
 
@@ -201,10 +199,16 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def show_status
-    return BADGES[:finished].label_span if finished?
-    return BADGES[:received].label_span if received?
+    return BADGES[:approved].label_span if approved?
+    return BADGES[:submitted].label_span if submitted?
     return BADGES[:expired].label_span if expired? && !received?
     BADGES[:sent].label_span if sent?
+  end
+
+  def show_submitted
+    return "" unless submitted?
+
+    I18n.l submitted.to_date, format: :long
   end
 
   # See comments about localization and date entry in ht_user_presenter.rb

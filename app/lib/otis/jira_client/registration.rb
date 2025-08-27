@@ -4,13 +4,14 @@ require "jira-ruby"
 
 module Otis
   class JiraClient::Registration < JiraClient
-    attr_reader :registration, :finalize_url
+    attr_reader :registration, :submit_url
 
     # "Elevated access registration" issuetype
     EA_REGISTRATION_ISSUETYPE_ID = "10715"
     # "EA workflow" field
     # Possible values: "Registration email pending" etc.
     # Not used in ticket creation but used to kick off subsequent workflows.
+    # Possuble values are 10551 thru 10554 (see below)
     EA_REGISTRATION_EA_WORKFLOW_FIELD = :customfield_10328
     # "EA registration link" field
     EA_REGISTRATION_LINK_FIELD = :customfield_10460
@@ -23,17 +24,17 @@ module Otis
     # "EA registrant name" field
     EA_REGISTRATION_NAME_FIELD = :customfield_10427
     # "Registration completed" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
-    EA_REGISTRATION_COMPLETED_WORKFLOW_ID = "10553"
+    EA_REGISTRATION_SUBMITTED_WORKFLOW_ID = "10553"
     # "Registration approved" value for EA_REGISTRATION_EA_WORKFLOW_FIELD
     EA_REGISTRATION_APPROVED_WORKFLOW_ID = "10554"
 
-    # Controller passes in the finalize URL, otherwise we risk getting "Missing host to link to!" exceptions.
+    # Controller passes in the submit URL, otherwise we risk getting "Missing host to link to!" exceptions.
     # This must be set when creating/updating the initial ticket, not needed if just calling
-    # `finish!` or `finalize!`
-    def initialize(registration, finalize_url = nil, client = nil)
+    # `submit!` or `approve!`
+    def initialize(registration, submit_url = nil, client = nil)
       raise "no registration??" unless registration.present?
       @registration = registration
-      @finalize_url = finalize_url
+      @submit_url = submit_url
       super(client)
     end
 
@@ -83,7 +84,7 @@ module Otis
           :project => {key: Otis.config.jira.elevated_access_project},
           :labels => [service_name],
           :issuetype => {id: EA_REGISTRATION_ISSUETYPE_ID},
-          EA_REGISTRATION_LINK_FIELD => finalize_url,
+          EA_REGISTRATION_LINK_FIELD => submit_url,
           EA_REGISTRATION_EA_TYPE_FIELD => {value: service_name},
           # MS will use this to kick off the email, don't set it here unless we want to send the email automatically
           # EA_REGISTRATION_EA_WORKFLOW_FIELD => {value: "Registration email pending"},
@@ -98,13 +99,13 @@ module Otis
     end
 
     # After registrant has visited verification URL (i.e., `registration.received` is filled):
-    # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to "Registration completed" (EA_REGISTRATION_COMPLETED_WORKFLOW_ID)
+    # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to "Registration completed" (EA_REGISTRATION_SUBMITTED_WORKFLOW_ID)
     # - Add internal comment "registration submitted by #{registration.applicant_email}"
     # - Set ticket status to "Consulting with staff"
-    def finalize!
+    def submit!
       fields = {
         fields: {
-          EA_REGISTRATION_EA_WORKFLOW_FIELD => {id: EA_REGISTRATION_COMPLETED_WORKFLOW_ID}
+          EA_REGISTRATION_EA_WORKFLOW_FIELD => {id: EA_REGISTRATION_SUBMITTED_WORKFLOW_ID}
         }
       }
       issue.save fields
@@ -114,16 +115,16 @@ module Otis
 
     # Called when new ht_user is created from registration.
     # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to “Registration approved” (EA_REGISTRATION_APPROVED_WORKFLOW_ID)
-    # - Add internal comment “registration finished for #{registration.applicant_email}”
+    # - Add internal comment “registration approved for #{registration.applicant_email}”
     # - Set ticket status to "Waiting for support" (automation will close it)
-    def finish!
+    def approve!
       fields = {
         fields: {
           EA_REGISTRATION_EA_WORKFLOW_FIELD => {id: EA_REGISTRATION_APPROVED_WORKFLOW_ID}
         }
       }
       issue.save fields
-      internal_comment!(issue: issue, comment: "registration finished for #{registration.applicant_email}")
+      internal_comment!(issue: issue, comment: "registration approved for #{registration.applicant_email}")
       transition_to! "Waiting for support"
     end
 

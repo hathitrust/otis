@@ -2,25 +2,25 @@
 
 require "test_helper"
 
-class FinalizeControllerTest < ActionDispatch::IntegrationTest
+class SubmitRegistrationControllerTest < ActionDispatch::IntegrationTest
   def setup
     @reg = create(:ht_registration, sent: Date.today - 1.day)
   end
 
   def submit_confirmation(registration: @reg)
     sign_in! username: Faker::Internet.email
-    get finalize_url registration.token, params: {commit: true}
+    get submit_registration_url registration.token, params: {commit: true}
   end
 
-  test "finalize landing page has a confirmation button" do
+  test "landing page has a confirmation button" do
     sign_in! username: Faker::Internet.email
-    get finalize_url @reg.token
+    get submit_registration_url @reg.token
     assert_response :success
     assert_equal "new", @controller.action_name
     assert_select "input[value='Confirm Registration']"
   end
 
-  test "finalization succeeds when form is submitted" do
+  test "succeeds when form is submitted" do
     submit_confirmation
     assert_response :success
     assert_equal "new", @controller.action_name
@@ -57,7 +57,7 @@ class FinalizeControllerTest < ActionDispatch::IntegrationTest
 
       sign_in!
 
-      process(:get, finalize_url(@reg.token), params: {commit: true}, headers: {"HTTP_X_SHIB_EDUPERSONPRINCIPALNAME" => email})
+      process(:get, submit_registration_url(@reg.token), params: {commit: true}, headers: {"HTTP_X_SHIB_EDUPERSONPRINCIPALNAME" => email})
 
       log_data = @reg.ht_logs.first.data
 
@@ -97,7 +97,7 @@ class FinalizeControllerTest < ActionDispatch::IntegrationTest
   end
 end
 
-class FinalizeControllerFailureTest < ActionDispatch::IntegrationTest
+class SubmitRegistrationControllerFailureTest < ActionDispatch::IntegrationTest
   def setup
     @reg = create(:ht_registration, sent: Date.today - 2.day)
     @unsent = create(:ht_registration)
@@ -106,25 +106,25 @@ class FinalizeControllerFailureTest < ActionDispatch::IntegrationTest
 
   test "gets 404 with nonsense token" do
     sign_in!
-    get finalize_url "asdfghjkl"
+    get submit_registration_url "asdfghjkl"
     assert_response :not_found
   end
 
   test "gets 404 with unsent approval" do
     sign_in!
-    get finalize_url @unsent.token
+    get submit_registration_url @unsent.token
     assert_response :not_found
   end
 
   test "fails approval of expired request" do
     sign_in!
-    get finalize_url @expired.token
+    get submit_registration_url @expired.token
     assert_response :success
     assert_match "expired", @response.body
   end
 end
 
-class FinalizeControllerShibbolethHeadersTest < ActionDispatch::IntegrationTest
+class SubmitRegistrationControllerShibbolethHeadersTest < ActionDispatch::IntegrationTest
   def setup
     @reg = create(:ht_registration, sent: Date.today - 1.day)
   end
@@ -152,7 +152,7 @@ class FinalizeControllerShibbolethHeadersTest < ActionDispatch::IntegrationTest
         "SERVER_PROTOCOL" => "HTTP/1.1"
       }
       sign_in! username: Faker::Internet.email
-      process(:get, finalize_url(@reg.token), params: {commit: true}, headers: interesting_headers.merge(response.headers))
+      process(:get, submit_registration_url(@reg.token), params: {commit: true}, headers: interesting_headers.merge(response.headers))
       assert_response :success
       headers = @reg.reload.env
       interesting_headers.keys.each do |key|

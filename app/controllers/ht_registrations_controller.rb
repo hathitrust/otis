@@ -70,17 +70,17 @@ class HTRegistrationsController < ApplicationController
   end
 
   # Create user from registration and redirect to its edit or show page
-  def finish
+  def approve
     fetch_registration
-    if @registration.finished?
-      flash[:alert] = t(".already_finished")
+    if @registration.approved?
+      flash[:alert] = t(".already_approved")
       return redirect_to @registration
     end
     user = Otis::RegistrationMover.new(@registration).ht_user
     if user.valid?
-      @registration.finished = Time.zone.now
+      @registration.approve!
       @registration.save!
-      finish_ticket!
+      approve_ticket!
       log params.permit!
       flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to edit_ht_user_path user
@@ -120,11 +120,11 @@ class HTRegistrationsController < ApplicationController
   end
 
   def update_ea_ticket!
-    url = finalize_url(@registration.token, locale: nil)
+    url = submit_registration_url(@registration.token, locale: nil)
     new_ticket = Otis::JiraClient::Registration.new(@registration, url).update_ea_ticket!
     # This is for debugging and system testing only
     unless Rails.env.production?
-      flash[:alert] = "EA ticket: #{finalize_url @registration.token, locale: nil}"
+      flash[:alert] = "EA ticket: #{submit_registration_url @registration.token, locale: nil}"
     end
     @registration.sent = Time.zone.now
     @registration.save!
@@ -134,8 +134,8 @@ class HTRegistrationsController < ApplicationController
   end
 
   # Do whatever needs to be done on the Jira side, generally this will send a final email and close.
-  def finish_ticket!
-    Otis::JiraClient::Registration.new(@registration).finish!
+  def approve_ticket!
+    Otis::JiraClient::Registration.new(@registration).approve!
   rescue => e
     flash[:alert] = "Failure to communicate with Jira: #{e.message}"
   end

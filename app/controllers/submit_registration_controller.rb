@@ -4,7 +4,7 @@
 # As with approval requests, this controller's new page should be
 # the only part of the app that such external users have access to.
 
-class FinalizeController < ApplicationController
+class SubmitRegistrationController < ApplicationController
   def new
     @token = params[:token]
     fetch_registration
@@ -12,9 +12,9 @@ class FinalizeController < ApplicationController
 
     @ip_address = ip_address
     @institution = HTInstitutionPresenter.new @registration.ht_institution
-    # If the user is submitting the form, finalize registration.
+    # If the user is submitting the form, submit registration.
     if params[:commit].present?
-      finalize
+      submit!
     end
 
     @message_type = if @institution.entityID && @institution.shib_authncontext_class
@@ -42,15 +42,15 @@ class FinalizeController < ApplicationController
     @registration = HTRegistration.find_by_token(params[:token])
   end
 
-  def finalize
-    @registration.received = Time.zone.now
+  def submit!
+    @registration.submit!
     @registration.ip_address = @ip_address
     @registration.env = extract_shib_env
     @registration.save!
     # Currently, there are no parameters for the controller other than the
     # token, which we do not wish to log.
     log_action(@registration, params.permit)
-    Otis::JiraClient::Registration.new(@registration).finalize!
+    Otis::JiraClient::Registration.new(@registration).submit!
   end
 
   # For development and (maybe) testing, visiting this page will taint
