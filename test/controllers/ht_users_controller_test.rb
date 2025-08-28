@@ -164,12 +164,18 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match("bg-warning", @response.body)
     assert_match("Expiring Soon", @response.body)
   end
+end
+
+class HTUsersControllerEditTest < ActionDispatch::IntegrationTest
+  def setup
+    HTUser.delete_all
+    HTInstitution.delete_all
+    sign_in!
+  end
 
   test "Editable fields present" do
-    create(:ht_user, id: "test", email: "user@nowhere.com", expires: (Date.today + 10).to_s)
-    sign_in!
-    get edit_ht_user_url id: "test"
-
+    user = create(:ht_user, expires: (Date.today + 10).to_s)
+    get edit_ht_user_url user
     editable_fields = %w[approver iprestrict expires]
     editable_fields.each do |ef|
       assert_match(/name="ht_user\[#{ef}\]"/, @response.body)
@@ -177,9 +183,8 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "iprestrict disabled for MFA user" do
-    create(:ht_user_mfa, id: "test")
-    sign_in!
-    get edit_ht_user_url id: "test"
+    user = create(:ht_user_mfa)
+    get edit_ht_user_url user
     assert_select "input#ht_user_iprestrict" do |input|
       assert input.attr("disabled").present?
     end
@@ -187,7 +192,6 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
   test "mfa not editable for user from institution without mfa available" do
     user = create(:ht_user)
-    sign_in!
     patch ht_user_url user, params: {"ht_user" => {"mfa" => true}}
     assert_response :success
     assert_match %r{must be blank}i, flash[:alert]
@@ -195,9 +199,8 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "mfa checkbox not present for institituion without MFA available" do
-    create(:ht_user, id: "test")
-    sign_in!
-    get edit_ht_user_url id: "test"
+    user = create(:ht_user)
+    get edit_ht_user_url user
     assert_select "input#mfa_checkbox", 0
   end
 end
