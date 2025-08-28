@@ -3,6 +3,32 @@
 require "jira-ruby"
 
 module Otis
+  # Handles the three phases of the registration workflow where Otis communicates with Jira.
+  # In sequential order:
+  # - Registration creation (and update)
+  #   - Otis creates/updates a Jira ticket in the "EA" project with:
+  #     - Summary
+  #     - Project ("EA")
+  #     - Labels (just "EA")
+  #     - Issuetype (EA_REGISTRATION_ISSUETYPE_ID)
+  #     - Registration link (custom field)
+  #     - EA type (custom field)
+  #     - GS ticket (custom field - if supplied)
+  #     - Email (custom field)
+  #     - Name (custom field)
+  # - Registration submission (`submit!`)
+  #   - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to “Registration approved” (EA_REGISTRATION_APPROVED_WORKFLOW_ID)
+  #   - Add internal comment “registration approved for #{registration.applicant_email}”
+  #   - Set ticket status to "Waiting for support" (automation will close it)
+  # - Registration approval (`approve!`)
+  #   - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to "Registration completed" (EA_REGISTRATION_SUBMITTED_WORKFLOW_ID)
+  #   - Add internal comment "registration submitted by #{registration.applicant_email}"
+  #   - Set ticket status to "Consulting with staff"
+  # Note no effort is made to localize the various text values we are submitting.
+  #
+  # There are several Jira automations which handle sending e-mail to registrant and
+  # other housekeeping chores:
+  # See https://hathitrust.atlassian.net/jira/servicedesk/projects/EA/settings/automate
   class JiraClient::Registration < JiraClient
     attr_reader :registration, :submit_url
 
@@ -10,7 +36,7 @@ module Otis
     EA_REGISTRATION_ISSUETYPE_ID = "10715"
     # "EA workflow" field
     # Possible values: "Registration email pending" etc.
-    # Not used in ticket creation but used to kick off subsequent workflows.
+    # Not used in ticket creation but used to kick off subsequent sutomations.
     # Possuble values are 10551 thru 10554 (see below)
     EA_REGISTRATION_EA_WORKFLOW_FIELD = :customfield_10328
     # "EA registration link" field
@@ -85,10 +111,7 @@ module Otis
       end
     end
 
-    # After registrant has visited verification URL (i.e., `registration.received` is filled):
-    # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to "Registration completed" (EA_REGISTRATION_SUBMITTED_WORKFLOW_ID)
-    # - Add internal comment "registration submitted by #{registration.applicant_email}"
-    # - Set ticket status to "Consulting with staff"
+    # After registrant has visited URL and clicked the button (we have a `registration.submitted` value):
     def submit!
       fields = {
         fields: {
@@ -100,10 +123,7 @@ module Otis
       transition_to! "Consulting with staff"
     end
 
-    # Called when new ht_user is created from registration.
-    # - Set "EA workflow" (EA_REGISTRATION_EA_WORKFLOW_FIELD) to “Registration approved” (EA_REGISTRATION_APPROVED_WORKFLOW_ID)
-    # - Add internal comment “registration approved for #{registration.applicant_email}”
-    # - Set ticket status to "Waiting for support" (automation will close it)
+    # Called when new ht_user is created from registration by HathiTrust staff.
     def approve!
       fields = {
         fields: {
