@@ -15,19 +15,6 @@ class HTRegistration < ApplicationRecord
   # Once that happens this list should be replaced with the one from HTUser
   ROLES = %i[crms quality resource_sharing ssd ssdproxy staffdeveloper].freeze
 
-  # These are used in Jira EA tickets and in the landing/confirmation pages for registrants.
-  ROLE_TO_SERVICE_NAME = {
-    crms: "CAA",
-    quality: "CAA",
-    resource_sharing: "RS",
-    # We don't have any batch registration or Jira automation support for the SSD role,
-    # so for now this is only included for completeness.
-    ssd: "SSD",
-    ssdproxy: "ATRS",
-    # Just using CAA as the default
-    staffdeveloper: "CAA"
-  }.freeze
-
   def self.expiration_date
     Date.today - 1.week
   end
@@ -113,17 +100,7 @@ class HTRegistration < ApplicationRecord
     :ht_registration
   end
 
-  # For creating EA tickets and to a lesser extent the landing page for registrants.
-  # This sidesteps localization or coexists with it in uncomfortable ways.
-  # If `expand`, expands "RS" into "Resource Sharing" for ticket summary and description.
-  # Leaves "ATRS" and "CAA" alone.
-  # For now this is the only acronym that gets expanded but we may want to do the others.
-  # @return String
-  def service_name(expand: false)
-    name = ROLE_TO_SERVICE_NAME[role.to_sym]
-    if expand && name == "RS"
-      name = "Resource Sharing"
-    end
-    name
+  def service_role
+    @service_role ||= Otis::ServiceRole.new(role)
   end
 end

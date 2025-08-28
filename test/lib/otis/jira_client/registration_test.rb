@@ -53,19 +53,7 @@ module Otis
       assert_equal("GS-99", fields[:fields][JiraClient::Registration::EA_REGISTRATION_GS_TICKET_FIELD])
     end
 
-    test "#service_name" do
-      @registration = create(:ht_registration, role: "resource_sharing")
-      @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL)
-      assert_equal("RS", @jc.service_name)
-    end
-
-    test "#full_service_name" do
-      @registration = create(:ht_registration, role: "resource_sharing")
-      @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL)
-      assert_equal("Resource Sharing", @jc.full_service_name)
-    end
-
-    test "#finalize!" do
+    test "#submit!" do
       @registration = create(:ht_registration, role: "resource_sharing")
       assert_nothing_raised do
         @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).submit!

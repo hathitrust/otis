@@ -4,7 +4,7 @@
     <p><%= t ".expired_html", user: @registration.applicant_email %></p>
     </p>
   <% else %>
-    <% service_name = t "ht_registration.values.service_name." + @registration.service_name.downcase %>
+    <% service_name = t "ht_registration.values.service_name." + @registration.service_role.name.downcase %>
     <%= t ".success_html", user: @registration.applicant_email, service_name: service_name %>
     <% case @message_type %>
     <% when :success_mfa %>

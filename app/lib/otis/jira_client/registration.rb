@@ -64,28 +64,15 @@ module Otis
       end
     end
 
-    # registration.role translated into ATRS/CAA/RS
-    # @return String
-    def service_name
-      @service_name ||= @registration.service_name
-    end
-
-    # registration.role translated into ATRS/CAA/Resource Sharing
-    # @return String
-    def full_service_name
-      @full_service_name ||= @registration.service_name(expand: true)
-    end
-
     def ea_fields
       {
         fields: {
-          :summary => "#{full_service_name} Registration for #{registration.applicant_email}",
-          :description => "#{full_service_name} Registration for #{registration.applicant_name} <#{registration.applicant_email}>",
+          :summary => "#{registration.service_role.full_name} Registration for #{registration.applicant_name} <#{registration.applicant_email}>",
           :project => {key: Otis.config.jira.elevated_access_project},
-          :labels => [service_name],
+          :labels => [registration.service_role.name],
           :issuetype => {id: EA_REGISTRATION_ISSUETYPE_ID},
           EA_REGISTRATION_LINK_FIELD => submit_url,
-          EA_REGISTRATION_EA_TYPE_FIELD => {value: service_name},
+          EA_REGISTRATION_EA_TYPE_FIELD => {value: registration.service_role.name},
           # MS will use this to kick off the email, don't set it here unless we want to send the email automatically
           # EA_REGISTRATION_EA_WORKFLOW_FIELD => {value: "Registration email pending"},
           EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email,
