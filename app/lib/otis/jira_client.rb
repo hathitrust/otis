@@ -30,14 +30,11 @@ module Otis
       JIRA_BASE_URL + ticket
     end
 
-    # The `client` parameter is for debugging
-    def initialize(client = nil)
-      @client = client || self.class.create_client
+    def initialize
+      @client = self.class.create_client
     end
 
-    # Returns JIRA::Resource::Issue if it exists, otherwise nil.
-    # FIXME: this should probably fail more noisily since we are relying on the Otis-Jira
-    # communication in order to communicate with registrant.
+    # Returns JIRA::Resource::Issue if it exists, otherwise raises `JIRA::HTTPError`.
     def find(issue)
       @client.Issue.find issue
     end

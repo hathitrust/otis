@@ -57,11 +57,11 @@ module Otis
     # Controller passes in the submit URL, otherwise we risk getting "Missing host to link to!" exceptions.
     # This must be set when creating/updating the initial ticket, not needed if just calling
     # `submit!` or `approve!`
-    def initialize(registration, submit_url = nil, client = nil)
+    def initialize(registration, submit_url = nil)
       raise "no registration??" unless registration.present?
       @registration = registration
       @submit_url = submit_url
-      super(client)
+      super()
     end
 
     # Returns true if a new ticket was created, false otherwise
