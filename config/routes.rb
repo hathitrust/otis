@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         get "preview"
         post "mail"
         post "finish"
+        post "approve"
       end
     end
   end
@@ -51,7 +52,7 @@ Rails.application.routes.draw do
 
   get "/approve/:token", to: "approval#new", as: :approve
 
-  get "/finalize/:token", to: "finalize#new", as: :finalize
+  get "/submit_registration/:token", to: "submit_registration#new", as: :submit_registration
 
   unless Rails.env.production?
     get "Shibboleth.sso/Login", controller: :fake_shib, as: :fake_shib, action: :new

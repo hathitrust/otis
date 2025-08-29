@@ -20,24 +20,20 @@
     <br/>
   <% end %>
 
-  <% unless @registration.finished? %>
+  <% unless @registration.approved? %>
     <div class="btn-group" role="group" aria-label="Registration Actions">
       <% if can?(:edit, HTRegistration) %>
         <%= link_to t(".edit"), edit_ht_registration_path, class: 'btn btn-primary' %>
       <% end %>
 
-      <% if can?(:preview, HTRegistration) %>
-        <%= link_to t(".email_preview"), preview_ht_registration_path, class: 'btn btn-primary' %>
-      <% end %>
-
-      <% if can?(:destroy, HTRegistration) && !@registration.received? && !@registration.finished? %>
+      <% if can?(:destroy, HTRegistration) && !@registration.submitted? && !@registration.approved? %>
         <%= link_to t(".delete"), ht_registration_path, method: :delete, class: 'btn btn-danger',
               data: { confirm: t(".confirm_delete", name: @registration.applicant_name) } %>
       <% end %>
 
-      <% if can?(:create, HTUser) && @registration.received? && !@registration.finished? %>
+      <% if can?(:create, HTUser) && @registration.submitted? && !@registration.approved? %>
         <% link_name = @registration.existing_user.nil? ? t(".create_user") : t(".update_user") %>
-        <%= button_to link_name, finish_ht_registration_path, method: :post, id: "create-update-user", class: 'btn btn-success' %>
+        <%= button_to link_name, approve_ht_registration_path, method: :post, id: "create-update-user", class: 'btn btn-success' %>
       <% end %>
     </div>
   <% end %>

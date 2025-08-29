@@ -44,6 +44,12 @@ class ApplicationPresenter < SimpleDelegator
     self.class::ALL_FIELDS
   end
 
+  # These might be suppressed on a "new X" page as we do with the sent/received fields
+  # in HTRegistration
+  def read_only_fields
+    self.class::READ_ONLY_FIELDS
+  end
+
   # By default form cancel button goes to show page if persisted,
   # index page otherwise.
   def cancel_path
@@ -106,14 +112,29 @@ class ApplicationPresenter < SimpleDelegator
   end
 
   def edit_field_value(field, form:)
-    if respond_to?(("edit_" + field.to_s).to_sym, true)
+    html = if respond_to?(("edit_" + field.to_s).to_sym, true)
       send ("edit_" + field.to_s).to_sym, form: form
     else
       edit_field_value_default field, form: form
     end
+    html + edit_field_value_help(field)
   end
 
   def edit_field_value_default(field, form:)
-    form.text_field field, size: self.class::FIELD_SIZE
+    form.text_field(field, size: self.class::FIELD_SIZE)
+  end
+
+  # Display help if it exists
+  # e.g. ht_registrations.form.jira_ticket_help
+  def edit_field_value_help(field)
+    begin
+      i18n_key = [controller.controller_name, "form", field.to_s + "_help"].join(".")
+      if I18n.exists?(i18n_key)
+        return content_tag(:div, I18n.t(i18n_key).html_safe, class: "fst-italic")
+      end
+    rescue => e
+      Rails.logger.error "edit_field_value_default: #{e}"
+    end
+    ""
   end
 end

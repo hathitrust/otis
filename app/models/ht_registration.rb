@@ -3,6 +3,14 @@
 class HTRegistration < ApplicationRecord
   self.primary_key = "id"
   self.table_name = "ht_web.otis_registrations"
+
+  # NOTE: `received` and `finished` are more or less set in stone by our schema,
+  # but with the advent of Jira automation for Resource Sharing we have adjusted the names
+  # to be less confusing and more in line with what appears in the Jira EA project.
+  # Usage of `finished` or `received` outside this class should be considered deprecated.
+  alias_attribute :approved, :finished
+  alias_attribute :submitted, :received
+
   # FIXME: the roles in HTUser are expected to be simplified to look more like this.
   # Once that happens this list should be replaced with the one from HTUser
   ROLES = %i[crms quality resource_sharing ssd ssdproxy staffdeveloper].freeze
@@ -23,7 +31,6 @@ class HTRegistration < ApplicationRecord
   has_many :ht_logs, -> { HTLog.ht_registration }, foreign_key: :objid, primary_key: :id
 
   validates :id, uniqueness: true
-  validates :jira_ticket, presence: true
   validates :inst_id, presence: true
   validates :role, presence: true
   validates :expire_type, presence: true
@@ -64,16 +71,13 @@ class HTRegistration < ApplicationRecord
     sent? && self[:sent] < HTRegistration.expiration_date
   end
 
-  def sent?
-    self[:sent].present?
+  # SubmitRegistrationController calls this when registrant visits
+  def submit!
+    self[:received] = Time.zone.now
   end
 
-  def received?
-    self[:received].present?
-  end
-
-  def finished?
-    self[:finished].present?
+  def approve!
+    self[:finished] = Time.zone.now
   end
 
   def env
@@ -94,5 +98,9 @@ class HTRegistration < ApplicationRecord
 
   def resource_type
     :ht_registration
+  end
+
+  def service_role
+    @service_role ||= Otis::ServiceRole.new(role)
   end
 end

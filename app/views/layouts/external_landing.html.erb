@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title>
+      <%= I18n.t "global.title.external_landing" %>
+    </title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "/scripts/scripts.css" %>
+    <%= stylesheet_link_tag "/styles/styles.css" %>
+  </head>
+
+  <body>
+    <%= render "shared/external_landing_header" %>
+    <div id="main-container" class="container">
+      <% # ======================================= %>
+      <% # ======== RENDER ALL THE THINGS ======== %>
+      <%= yield %>
+      <% # ======================================= %>
+    </div>
+
+    <div class="container">
+      <footer>
+      </footer>
+    </div>
+  </body>
+</html>

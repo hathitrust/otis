@@ -164,12 +164,18 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
     assert_match("bg-warning", @response.body)
     assert_match("Expiring Soon", @response.body)
   end
+end
+
+class HTUsersControllerEditTest < ActionDispatch::IntegrationTest
+  def setup
+    HTUser.delete_all
+    HTInstitution.delete_all
+    sign_in!
+  end
 
   test "Editable fields present" do
-    create(:ht_user, id: "test", email: "user@nowhere.com", expires: (Date.today + 10).to_s)
-    sign_in!
-    get edit_ht_user_url id: "test"
-
+    user = create(:ht_user, expires: (Date.today + 10).to_s)
+    get edit_ht_user_url user
     editable_fields = %w[approver iprestrict expires]
     editable_fields.each do |ef|
       assert_match(/name="ht_user\[#{ef}\]"/, @response.body)
@@ -177,9 +183,8 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "iprestrict disabled for MFA user" do
-    create(:ht_user_mfa, id: "test")
-    sign_in!
-    get edit_ht_user_url id: "test"
+    user = create(:ht_user_mfa)
+    get edit_ht_user_url user
     assert_select "input#ht_user_iprestrict" do |input|
       assert input.attr("disabled").present?
     end
@@ -187,7 +192,6 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
 
   test "mfa not editable for user from institution without mfa available" do
     user = create(:ht_user)
-    sign_in!
     patch ht_user_url user, params: {"ht_user" => {"mfa" => true}}
     assert_response :success
     assert_match %r{must be blank}i, flash[:alert]
@@ -195,9 +199,8 @@ class HTUsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "mfa checkbox not present for institituion without MFA available" do
-    create(:ht_user, id: "test")
-    sign_in!
-    get edit_ht_user_url id: "test"
+    user = create(:ht_user)
+    get edit_ht_user_url user
     assert_select "input#mfa_checkbox", 0
   end
 end
@@ -211,7 +214,7 @@ class HTUsersControllerRenewalTest < ActionDispatch::IntegrationTest
 
   test "renewing user renews approval request" do
     sign_in!
-    patch ht_user_url @user1, params: {"ht_user" => {"expires" => (Date.today + 365).to_s}}
+    patch ht_user_url @user1, params: {"ht_user" => {"expires" => (Date.today + 3.years).to_s}}
     assert_redirected_to ht_user_path(@user1.email)
     assert_not_nil @req1.reload.renewed
     assert_equal Date.parse(@req1.reload.renewed).to_s, Date.parse(Time.zone.now.to_s).to_s
@@ -219,7 +222,7 @@ class HTUsersControllerRenewalTest < ActionDispatch::IntegrationTest
 
   test "renewing user creates new renewal request with staff approver if none existing" do
     sign_in!
-    patch ht_user_url @user2, params: {"ht_user" => {"expires" => (Date.today + 365).to_s}}
+    patch ht_user_url @user2, params: {"ht_user" => {"expires" => (Date.today + 3.years).to_s}}
     @req2 = HTApprovalRequest.where(userid: @user2.email).first
     assert_not_nil @req2
     assert_equal "admin@default.invalid", @req2.approver

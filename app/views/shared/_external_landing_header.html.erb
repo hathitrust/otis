@@ -1,0 +1,13 @@
+<% # This header is for landing pages, i.e., registration and approval request landing pages %>
+<% # Just the most basic branding %>
+
+<nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom py-1 mb-3">
+  <div class="container-fluid">
+    <div class="navbar-brand">
+      <%= image_tag Otis.config.image.hathitrust.logo.name,
+            size: Otis.config.image.hathitrust.logo.size,
+            alt: I18n.t("global.hathitrust_logo"),
+            class: "d-inline-block" %>
+    </div>
+  </div>
+</nav>

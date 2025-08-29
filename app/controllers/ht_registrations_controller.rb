@@ -30,9 +30,10 @@ class HTRegistrationsController < ApplicationController
   def create
     @registration = presenter HTRegistration.new(reg_params)
     if @registration.save
+      update_ea_ticket!
       log
       flash[:notice] = t(".success", name: @registration.applicant_name)
-      redirect_to preview_ht_registration_path(@registration.id)
+      redirect_to @registration
     else
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "new"
@@ -50,6 +51,7 @@ class HTRegistrationsController < ApplicationController
   def update
     fetch_presenter
     if @registration.update(reg_params)
+      update_ea_ticket!
       log
       flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to action: :show
@@ -57,19 +59,6 @@ class HTRegistrationsController < ApplicationController
       flash.now[:alert] = @registration.errors.full_messages.to_sentence
       render "edit"
     end
-  end
-
-  def preview
-    fetch_presenter
-    @base_url = request.base_url
-    @email_body = render_to_string(partial: "shared/registration_body")
-      .gsub("__NAME__", @registration.applicant_name)
-  end
-
-  def mail
-    fetch_registration
-    send_mail
-    redirect_to action: :show
   end
 
   def destroy
@@ -81,17 +70,17 @@ class HTRegistrationsController < ApplicationController
   end
 
   # Create user from registration and redirect to its edit or show page
-  def finish
+  def approve
     fetch_registration
-    if @registration.finished?
-      flash[:alert] = t(".already_finished")
+    if @registration.approved?
+      flash[:alert] = t(".already_approved")
       return redirect_to @registration
     end
     user = Otis::RegistrationMover.new(@registration).ht_user
     if user.valid?
-      @registration.finished = Time.zone.now
+      @registration.approve!
       @registration.save!
-      add_jira_comment template: :registration_finished
+      approve_ticket!
       log params.permit!
       flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to edit_ht_user_path user
@@ -130,26 +119,26 @@ class HTRegistrationsController < ApplicationController
     log_action(@registration, params)
   end
 
-  def send_mail
-    RegistrationMailer.with(registration: @registration, base_url: request.base_url,
-      email_body: params[:email_body], subject: params[:subject])
-      .registration_email.deliver_now
-    add_jira_comment template: :registration_sent
-    flash[:notice] = t("ht_registrations.mail.success")
+  # Typically the registration is submitted with a GS ticket.
+  # The Jira client will create a new EA ticket with the GS ticket stored in a custom field.
+  def update_ea_ticket!
+    url = submit_registration_url(@registration.token, locale: nil)
+    new_ticket = Otis::JiraClient::Registration.new(@registration, url).update_ea_ticket!
     # This is for debugging and system testing only
     unless Rails.env.production?
-      flash[:notice] = "Message sent: #{finalize_url @registration.token, locale: nil}"
+      flash[:alert] = "EA ticket: #{submit_registration_url @registration.token, locale: nil}"
     end
-    log params.transform_values! { |v| v.present? ? v : nil }.permit!
     @registration.sent = Time.zone.now
     @registration.save!
+    flash[:info] = new_ticket ? "Created new ticket #{@registration.jira_ticket}" : "Updated ticket #{@registration.jira_ticket}"
   rescue => e
-    flash[:alert] = e.message
+    flash[:alert] = "Failure to communicate with Jira: #{e.message}"
   end
 
-  # Adds comment from {:registration_sent, :registration_finished}
-  def add_jira_comment(template:)
-    comment = Otis::JiraClient.comment template: template, user: @registration.applicant_email
-    Otis::JiraClient.new.comment! issue: @registration.jira_ticket, comment: comment
+  # Do whatever needs to be done on the Jira side, generally this will send a final email and close.
+  def approve_ticket!
+    Otis::JiraClient::Registration.new(@registration).approve!
+  rescue => e
+    flash[:alert] = "Failure to communicate with Jira: #{e.message}"
   end
 end

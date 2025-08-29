@@ -1,0 +1,70 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+module Otis
+  class JiraClient::RegistrationTest < ActiveSupport::TestCase
+    EXAMPLE_URL = "https://www.example.com"
+
+    test "#update_ea_ticket! creates ticket if missing" do
+      @inst = create(:ht_institution)
+      @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: nil)
+      Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).update_ea_ticket!
+      # Registration will have new EA ticket
+      assert_equal(Otis::JiraClient::NullClient::DEFAULT_TICKET, @registration.jira_ticket)
+    end
+
+    test "#update_ea_ticket! creates ticket if GS ticket is entered" do
+      @inst = create(:ht_institution)
+      @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: "GS-0")
+      Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).update_ea_ticket!
+      # Registration will have new EA ticket
+      assert_equal(Otis::JiraClient::NullClient::DEFAULT_TICKET, @registration.jira_ticket)
+    end
+
+    test "#update_ea_ticket! does not create ticket if it already has one" do
+      @inst = create(:ht_institution)
+      @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: "EA-99")
+      Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).update_ea_ticket!
+      # Registration will have existing ticket
+      assert_equal("EA-99", @registration.jira_ticket)
+    end
+
+    test "#ea_fields always returns a Hash" do
+      @inst = create(:ht_institution)
+      @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: "EA-99")
+      fields = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).ea_fields
+      assert_kind_of(Hash, fields)
+    end
+
+    test "#ea_fields returns a Hash" do
+      @inst = create(:ht_institution)
+      @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: "EA-99")
+      fields = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).ea_fields
+      assert_kind_of(Hash, fields)
+      assert_not_nil(fields[:fields])
+    end
+
+    test "#ea_fields returns a Hash with the GS ticket custom field if supplied" do
+      @inst = create(:ht_institution)
+      @registration = create(:ht_registration, inst_id: @inst.inst_id, jira_ticket: "GS-99")
+      fields = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).ea_fields
+      assert_kind_of(Hash, fields)
+      assert_equal("GS-99", fields[:fields][JiraClient::Registration::EA_REGISTRATION_GS_TICKET_FIELD])
+    end
+
+    test "#submit!" do
+      @registration = create(:ht_registration, role: "resource_sharing")
+      assert_nothing_raised do
+        @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).submit!
+      end
+    end
+
+    test "#approve!!" do
+      @registration = create(:ht_registration, role: "resource_sharing")
+      assert_nothing_raised do
+        @jc = Otis::JiraClient::Registration.new(@registration, EXAMPLE_URL).approve!
+      end
+    end
+  end
+end

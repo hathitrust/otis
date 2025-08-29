@@ -4,6 +4,11 @@
 
   <dl class="row">
     <% @registration.all_fields.each do |field| %>
+
+    <% if action_name == "new" && @registration.read_only_fields.include?(field) %>
+      <% next %>
+    <% end %>
+
       <dt class="col-sm-3"><%= @registration.field_label field, form: form %></dt>
       <dd class="col-sm-9"><%= @registration.field_value field, form: form %></dd>
     <% end %>
