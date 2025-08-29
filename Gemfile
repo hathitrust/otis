@@ -55,6 +55,7 @@ group :development, :test do
   gem "simplecov"
   gem "simplecov-lcov"
   gem "standard"
+  gem "webmock"
 end
 
 group :test do

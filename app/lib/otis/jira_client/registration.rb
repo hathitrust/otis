@@ -57,15 +57,16 @@ module Otis
     # Controller passes in the submit URL, otherwise we risk getting "Missing host to link to!" exceptions.
     # This must be set when creating/updating the initial ticket, not needed if just calling
     # `submit!` or `approve!`
-    def initialize(registration, submit_url = nil, client = nil)
+    def initialize(registration, submit_url = nil)
       raise "no registration??" unless registration.present?
       @registration = registration
       @submit_url = submit_url
-      super(client)
+      super()
     end
 
     # Returns true if a new ticket was created, false otherwise
     def update_ea_ticket!
+      #puts "update_ea_ticket! about to save"
       issue.save ea_fields
       if has_ea_ticket?
         false
@@ -130,7 +131,9 @@ module Otis
           EA_REGISTRATION_EA_WORKFLOW_FIELD => {id: EA_REGISTRATION_APPROVED_WORKFLOW_ID}
         }
       }
+      #puts "approve! CALLING issue.save with #{issue}"
       issue.save fields
+      #puts "approve! DONE issue.save"
       internal_comment!(issue: issue, comment: "registration approved for #{registration.applicant_email}")
       transition_to! "Waiting for support"
     end
