@@ -47,15 +47,21 @@ gem "strip_attributes"
 gem "whois"
 # Unofficial but more up-to-date fork, check status at https://github.com/jarthod/whois-parser
 gem "whois-parser", github: "jarthod/whois-parser"
+gem "zinzout"
 
 group :development, :test do
+  # Futz with ENV in a block
+  gem "climate_control"
   gem "debug"
   gem "factory_bot_rails"
   gem "faker"
   gem "i18n-tasks"
+  gem "rspec-rails"
   gem "simplecov"
   gem "simplecov-lcov"
   gem "standard"
+  # Flux capacitor goodies for testing code that uses `Time.now`
+  gem "timecop"
 end
 
 group :test do

@@ -36,6 +36,16 @@ jobs:
           flag-name: unit
           parallel: true
 
+      - name: Run rspec
+        run: docker compose run --rm test bundle exec rspec
+
+      - name: Report to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.github_token }}
+          flag-name: rspec
+          parallel: true
+
       - name: Run system tests
         run: docker compose run system-test
 

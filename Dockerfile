@@ -8,7 +8,8 @@ ENV BUNDLE_PATH=/gems
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   nodejs \
-  npm
+  npm \
+  rclone
 
 ################################################################################
 # DEVELOPMENT                                           								       # 
@@ -26,6 +27,7 @@ FROM base AS production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
 ENV RAILS_ENV=production
+ENV RCLONE_CONFIG_PATH=/usr/src/app/config/rclone.conf
 
 RUN groupadd -g $GID -o $UNAME
 RUN useradd -m -d /usr/src/app -u $UID -g $GID -o -s /bin/bash $UNAME
