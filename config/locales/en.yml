@@ -36,7 +36,6 @@ en:
         mapto_name: Mapped Name
         name: Name
         shib_authncontext_class: MFA Auth Context
-        template: Template
         us: US
       ht_log:
         data: Data

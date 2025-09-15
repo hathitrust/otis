@@ -21,7 +21,7 @@ class HTInstitutionPresenter < ApplicationPresenter
   }.freeze
 
   ALL_FIELDS = %i[
-    inst_id domain name mapto_name entityID mapto_inst_id template us
+    inst_id domain name mapto_name entityID mapto_inst_id us
     grin_instance shib_authncontext_class allowed_affiliations emergency_status enabled
     last_update
   ].freeze

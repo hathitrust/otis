@@ -29,9 +29,6 @@ class HTInstitution < ApplicationRecord
 
   def set_defaults
     self.mapto_inst_id ||= inst_id
-    return unless entityID
-
-    self.template ||= "https://___HOST___/Shibboleth.sso/Login?entityID=#{entityID}&target=___TARGET___"
   end
 
   def set_defaults_for_entity(entity_id, metadata = SAMLMetadata.new(entity_id))
