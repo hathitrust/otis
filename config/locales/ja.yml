@@ -164,7 +164,8 @@ ja:
       institutions: 機関
       logs: ログ
       registrations: 登録
-      download_reports: ダウンロード報告
+      ssdproxy_download_reports: SSD Proxy ダウンロード報告
+      resource_sharing_download_reports: リソースの共有ダウンロード報告
       users: ユーザー
     not_logged_in: ログインしていない
     opens_in_new_window: 新しいウィンドウで開きます

@@ -78,7 +78,9 @@ class HTDownloadsController < ApplicationController
   # @return [Hash] value to be returned to Bootstrap Table as JSON
   def json_query
     # Create a Ransack::Search with all of the filter fields translated into Ransack matchers.
-    search = HTDownload.includes(:ht_hathifile, :ht_institution)
+    search = HTDownload
+      .for_role(params[:role])
+      .includes(:ht_hathifile, :ht_institution)
       .ransack(matchers)
     # Apply the sort field and order, or default if not provided.
     # Ransack requires lower case sort direction.
@@ -99,7 +101,7 @@ class HTDownloadsController < ApplicationController
     # Translate each row of the result into JSON and stick it into struct with totals.
     {
       total: total,
-      totalNotFiltered: HTDownload.count,
+      totalNotFiltered: HTDownload.for_role(params[:role]).count,
       rows: result.map { |line| line_to_json line }
     }
   end

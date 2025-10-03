@@ -164,7 +164,8 @@ en:
       institutions: Institutions
       logs: Logs
       registrations: Registrations
-      downloads: Download Reports
+      ssdproxy_downloads: SSD Proxy Download Reports
+      resource_sharing_downloads: Resource Sharing Download Reports
       users: Users
     not_logged_in: Not Logged In
     opens_in_new_window: opens in new window
