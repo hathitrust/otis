@@ -342,12 +342,16 @@ en:
       whois_data: WHOIS Data
     update:
       success: Registration updated for %{name}.
-  ht_downloads:
+  ht_download:
     index:
       clear_filter: Clear Filters
       date_range: Date Range
       filter: Filter
       download_reports: Download Reports
+    values:
+      role:
+        resource_sharing: Resource Sharing
+        ssdproxy: Accessible Text Request Service Provider
   ht_user:
     badges:
       expired: Expired

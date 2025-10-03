@@ -342,12 +342,16 @@ ja:
       whois_data: WHOISデータ
     update:
       success: "%{name}の登録が更新されました。"
-  ht_downloads:
+  ht_download:
     index:
       clear_filter: フィルターをクリアする
       date_range: 日付範囲
       filter: フィルタリングする
-      ht_downloads: ダウンロード報告
+      download_reports: ダウンロード報告
+    values:
+      role:
+        resource_sharing: リソースの共有
+        ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
   ht_user:
     badges:
       expired: 期限切れ
