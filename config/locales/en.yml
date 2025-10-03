@@ -97,6 +97,7 @@ en:
         rights_date_used: Rights Date
         title: Title
         pages: Pages
+        role: Role
       ht_user:
         access: Access
         accesses: Accesses
@@ -165,8 +166,7 @@ en:
       institutions: Institutions
       logs: Logs
       registrations: Registrations
-      ssdproxy_downloads: SSD Proxy Download Reports
-      resource_sharing_downloads: Resource Sharing Download Reports
+      downloads: Download Reports
       users: Users
     not_logged_in: Not Logged In
     opens_in_new_window: opens in new window

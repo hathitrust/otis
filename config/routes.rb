@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     resources :ht_contact_types
   end
 
-  get "/ht_downloads/:role", to: "ht_downloads#index", as: :ht_downloads
+  get "/ht_downloads", to: "ht_downloads#index", as: :ht_downloads
 
   scope constraints: {id: /.+/} do
     resources :ht_logs

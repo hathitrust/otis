@@ -46,6 +46,11 @@ class HTDownloadPresenterTest < ActiveSupport::TestCase
     assert_match "href=", report.field_value(:email)
   end
 
+  test "show role" do
+    report = HTDownloadPresenter.new(create(:ht_download, role: "resource_sharing"), action: :index)
+    assert_match "resource_sharing", report.field_value(:role)
+  end
+
   test "show institution name" do
     create(:ht_download) do |rep|
       create(:ht_institution) do |inst|

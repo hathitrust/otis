@@ -3,6 +3,7 @@
 class HTDownloadPresenter < ApplicationPresenter
   # All the columns in the index page.
   ALL_FIELDS = %i[
+    role
     datetime
     htid
     bib_num
@@ -21,6 +22,7 @@ class HTDownloadPresenter < ApplicationPresenter
 
   # Type of filter control to specify for a given column.
   DATA_FILTER_CONTROLS = {
+    role: :select,
     datetime: :input,
     htid: :input,
     bib_num: :input,

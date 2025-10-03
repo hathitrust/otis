@@ -2,17 +2,9 @@
 
 module ApplicationHelper
   def nav_menu
-    %w[users approval_requests institutions contacts contact_types logs registrations]
+    %w[users approval_requests institutions contacts contact_types logs registrations downloads]
       .select { |item| can?(:index, "ht_#{item}") }
       .map { |item| {item: item, path: send(:"ht_#{item}_path")} }
-      .concat(download_nav_items)
-  end
-
-  def download_nav_items
-    return [] unless can?(:index, :ht_downloads)
-
-    %w[ssdproxy resource_sharing]
-      .map { |role| {item: "#{role}_downloads", path: ht_downloads_path(role)} }
   end
 
   # Are we on a page that requires the CKEditor 5 JS and CSS?

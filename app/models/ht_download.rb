@@ -10,7 +10,7 @@ class HTDownload < ApplicationRecord
   scope :for_role, ->(role) { where(role: role) }
 
   def self.ransackable_attributes(auth_object = nil)
-    ["datetime", "email", "htid", "id", "in_copyright", "inst_code", "is_partial", "sha", "yyyy", "yyyymm"]
+    ["role", "datetime", "email", "htid", "id", "in_copyright", "inst_code", "is_partial", "sha", "yyyy", "yyyymm", "pages"]
   end
 
   def self.ransackable_associations(auth_object = nil)
