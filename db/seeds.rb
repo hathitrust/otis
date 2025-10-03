@@ -168,7 +168,7 @@ def create_ht_registration
   end
 end
 
-def create_reports_downloads_ssdproxy
+def create_download
   datetime = Faker::Time.backward
   rep = HTDownload.create(
     in_copyright: [0, 1].sample,
@@ -267,5 +267,5 @@ end
 end
 
 100.times do
-  create_reports_downloads_ssdproxy
+  create_download
 end

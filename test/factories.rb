@@ -156,15 +156,17 @@ FactoryBot.define do
   factory :ht_download do
     sequence(:id) { |n| n.to_s }
     datetime = Faker::Time.backward
-    in_copyright { [0, 1].sample }
+    in_copyright { [false, true].sample }
     yyyy { datetime.year }
     yyyymm { datetime.strftime("%Y%m") }
     datetime { datetime }
     htid { Faker::Lorem.unique.characters(number: 10) }
-    is_partial { [0, 1].sample }
+    is_partial { [false, true].sample }
+    pages { is_partial ? rand(100) : nil }
     email { Faker::Internet.email }
     inst_code { Faker::Internet.unique.domain_word }
     sha { SecureRandom.urlsafe_base64(20) }
+    role { %w[resource_sharing ssdproxy].sample }
     ht_hathifile
     ht_institution
 

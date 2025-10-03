@@ -2,13 +2,12 @@
 
 # Only used read-only in Otis for reporting
 class HTDownload < ApplicationRecord
-
-  # TODO change table name: ht_maintenance.otis_downloads
-  # TODO scope by role, partial?, pages
-  self.table_name = "ht_web.reports_downloads_ssdproxy"
+  self.table_name = "otis_downloads"
   # default_scope { order(:datetime) }
   has_one :ht_hathifile, foreign_key: :htid, primary_key: :htid
   has_one :ht_institution, foreign_key: :inst_id, primary_key: :inst_code
+
+  scope :for_role, ->(role) { where(role: role) }
 
   def self.ransackable_attributes(auth_object = nil)
     ["datetime", "email", "htid", "id", "in_copyright", "inst_code", "is_partial", "sha", "yyyy", "yyyymm"]
@@ -28,6 +27,10 @@ class HTDownload < ApplicationRecord
 
   def hf
     ht_hathifile
+  end
+
+  def partial?
+    is_partial
   end
 
   ransacker :datetime do
