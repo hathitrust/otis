@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 # Only used read-only in Otis for reporting
-class HTSSDProxyReport < ApplicationRecord
-  self.table_name = "ht_web.reports_downloads_ssdproxy"
+class HTDownload < ApplicationRecord
+  self.table_name = "otis_downloads"
   # default_scope { order(:datetime) }
   has_one :ht_hathifile, foreign_key: :htid, primary_key: :htid
   has_one :ht_institution, foreign_key: :inst_id, primary_key: :inst_code
   validates :sha, presence: true, uniqueness: true
+
+  scope :for_role, ->(role) { where(role: role) }
 
   def self.ransackable_attributes(auth_object = nil)
     ["datetime", "email", "htid", "id", "in_copyright", "inst_code", "is_partial", "sha", "yyyy", "yyyymm"]
@@ -26,6 +28,10 @@ class HTSSDProxyReport < ApplicationRecord
 
   def hf
     ht_hathifile
+  end
+
+  def partial?
+    is_partial
   end
 
   ransacker :datetime do

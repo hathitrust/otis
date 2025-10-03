@@ -43,7 +43,7 @@
 </style>
 
 <div id="maincontent">
-  <h2><%= t ".ht_ssd_proxy_reports" %></h1>
+  <h2><%= t ".download_reports" %></h1>
 
   <div class="row">
     <div class="report-toolbar" id="toolbar">
@@ -109,21 +109,21 @@
       data-sort-select-options="true"
       data-toggle="table"
       data-toolbar="#toolbar"
-      data-url="ht_ssd_proxy_reports?format=json"
+      data-url="download_reports?format=json"
     >
       <thead class="thead-dark">    
         <tr>
-          <% fields = HTSSDProxyReportPresenter::ALL_FIELDS %>
+          <% fields = HTDownloadPresenter::ALL_FIELDS %>
           <% fields.each do |field| %>
-            <% control = HTSSDProxyReportPresenter.data_filter_control(field) %>
-            <% th_class = HTSSDProxyReportPresenter.header_class(field) %>
+            <% control = HTDownloadPresenter.data_filter_control(field) %>
+            <% th_class = HTDownloadPresenter.header_class(field) %>
             <th data-field="<%= field %>"
               class="<%= th_class %>"
               data-filter-control="<%= control %>"
               data-sortable="true"
               data-tableexport-value="<%= field.to_s.titleize %>"
             >
-              <%= HTSSDProxyReportPresenter.field_label field %>
+              <%= HTDownloadPresenter.field_label field %>
             </th>
           <% end %>
         </tr>

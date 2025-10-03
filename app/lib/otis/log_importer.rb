@@ -133,12 +133,9 @@ module Otis
         Time.parse(entry["datetime"]) >= last_import
     end
 
-    # TODO: should be renamed when HTSSDProxyReport is renamed
-    # Create a new `HTSSDProxyReport` object based on JSON log structure
-    # and save it to DB if possible
     def create_report(entry)
       datetime = Time.parse entry["datetime"]
-      report = HTSSDProxyReport.new(
+      report = HTDownload.new(
         in_copyright: entry["ic"],
         yyyy: datetime.year,
         yyyymm: datetime.strftime("%Y%m"),

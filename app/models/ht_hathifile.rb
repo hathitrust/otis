@@ -5,7 +5,7 @@
 class HTHathifile < ApplicationRecord
   self.table_name = "hathifiles.hf"
   self.primary_key = "htid"
-  has_many :ht_ssd_proxy_report, foreign_key: :htid, primary_key: :htid
+  has_many :ht_download, foreign_key: :htid, primary_key: :htid
 
   # SSD Proxy Reports uses Ransack gem to search by association
   def self.ransackable_attributes(auth_object = nil)
@@ -16,7 +16,7 @@ class HTHathifile < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    %w[ht_ssd_proxy_report]
+    %w[ht_download]
   end
 
   private

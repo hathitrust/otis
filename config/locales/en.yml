@@ -82,7 +82,7 @@ en:
         status: Status
         submitted: Submitted
         usertype: User Type
-      ht_ssd_proxy_report:
+      ht_download:
         author: Author
         bib_num: Bib Number
         content_provider_code: Content Provider
@@ -164,7 +164,7 @@ en:
       institutions: Institutions
       logs: Logs
       registrations: Registrations
-      ssd_proxy_reports: SSD Proxy Reports
+      downloads: Download Reports
       users: Users
     not_logged_in: Not Logged In
     opens_in_new_window: opens in new window
@@ -340,12 +340,12 @@ en:
       whois_data: WHOIS Data
     update:
       success: Registration updated for %{name}.
-  ht_ssd_proxy_reports:
+  ht_downloads:
     index:
       clear_filter: Clear Filters
       date_range: Date Range
       filter: Filter
-      ht_ssd_proxy_reports: SSD Proxy Reports
+      download_reports: Download Reports
   ht_user:
     badges:
       expired: Expired

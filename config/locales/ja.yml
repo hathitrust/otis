@@ -82,7 +82,7 @@ ja:
         status: 状態
         submitted: 送信された
         usertype: ユーザータイプ
-      ht_ssd_proxy_report:
+      ht_download:
         author: 著者
         bib_num: 書誌番号
         content_provider_code: コンテンツプロバイダー
@@ -164,7 +164,7 @@ ja:
       institutions: 機関
       logs: ログ
       registrations: 登録
-      ssd_proxy_reports: SSD Proxy 報告
+      download_reports: ダウンロード報告
       users: ユーザー
     not_logged_in: ログインしていない
     opens_in_new_window: 新しいウィンドウで開きます
@@ -340,12 +340,12 @@ ja:
       whois_data: WHOISデータ
     update:
       success: "%{name}の登録が更新されました。"
-  ht_ssd_proxy_reports:
+  ht_downloads:
     index:
       clear_filter: フィルターをクリアする
       date_range: 日付範囲
       filter: フィルタリングする
-      ht_ssd_proxy_reports: SSD Proxy 報告
+      ht_downloads: ダウンロード報告
   ht_user:
     badges:
       expired: 期限切れ

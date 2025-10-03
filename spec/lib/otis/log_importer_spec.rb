@@ -9,7 +9,7 @@ RSpec.describe Otis::LogImporter do
   let(:gzip_log) { Rails.root.join(*fixtures_dir, "access-imgsrv_downloads.log-20250902.gz") }
 
   around(:each) do |example|
-    HTSSDProxyReport.delete_all
+    HTDownload.delete_all
     # This is mainly to isolate journals from subsequent tests
     Dir.mktmpdir("otis-log-importer") do |tmpdir|
       @tmpdir = tmpdir
@@ -23,13 +23,13 @@ RSpec.describe Otis::LogImporter do
     it "populates the table with two entries" do
       expect do
         importer.run
-      end.to change { HTSSDProxyReport.count }.by(2)
+      end.to change { HTDownload.count }.by(2)
     end
 
     it "creates full-populated records" do
       importer.run
       # Spot-check one of the new records
-      report = HTSSDProxyReport.first
+      report = HTDownload.first
       expect(report[:in_copyright]).not_to be_nil
       expect(report[:yyyy]).to be > 0
       expect(report[:yyyymm].length).to be > 0
@@ -111,7 +111,7 @@ RSpec.describe Otis::LogImporter do
       it "adds one entry to the database" do
         expect do
           importer.process_file(source_file: text_log, log_file: text_log)
-        end.to change { HTSSDProxyReport.count }.by(1)
+        end.to change { HTDownload.count }.by(1)
       end
     end
 
@@ -119,7 +119,7 @@ RSpec.describe Otis::LogImporter do
       it "adds one entry to the database" do
         expect do
           importer.process_file(source_file: gzip_log, log_file: gzip_log)
-        end.to change { HTSSDProxyReport.count }.by(1)
+        end.to change { HTDownload.count }.by(1)
       end
     end
 
@@ -128,7 +128,7 @@ RSpec.describe Otis::LogImporter do
         importer.process_file(source_file: text_log, log_file: text_log)
         expect do
           importer.process_file(source_file: text_log, log_file: text_log)
-        end.to change { HTSSDProxyReport.count }.by(0)
+        end.to change { HTDownload.count }.by(0)
       end
     end
   end
