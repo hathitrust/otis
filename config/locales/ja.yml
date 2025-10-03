@@ -23,6 +23,22 @@ ja:
         description: 説明
         id: ID
         name: 表示名
+      ht_download:
+        author: 著者
+        bib_num: 書誌番号
+        content_provider_code: コンテンツプロバイダー
+        datetime: 時間
+        digitization_agent_code: デジタル化エージェント
+        email: Eメール
+        htid: HTID
+        imprint: 奥付
+        inst_code: 機関コード
+        institution_name: 機関名
+        pages: ページ
+        rights_code: 著作権コード
+        rights_date_used: 著作権の日付
+        role: 役割
+        title: タイトル
       ht_institution:
         allowed_affiliations: 所属
         domain: ドメイン
@@ -82,22 +98,6 @@ ja:
         status: 状態
         submitted: 送信された
         usertype: ユーザータイプ
-      ht_download:
-        author: 著者
-        bib_num: 書誌番号
-        content_provider_code: コンテンツプロバイダー
-        datetime: 時間
-        digitization_agent_code: デジタル化エージェント
-        email: Eメール
-        htid: HTID
-        imprint: 奥付
-        inst_code: 機関コード
-        institution_name: 機関名
-        rights_code: 著作権コード
-        rights_date_used: 著作権の日付
-        title: タイトル
-        pages: ページ
-        role: 役割
       ht_user:
         access: アクセス
         accesses: アクセス数
@@ -163,10 +163,10 @@ ja:
       approval_requests: 承認リクエスト
       contact_types: 連絡先種類
       contacts: 連絡先
+      downloads: ダウンロード報告
       institutions: 機関
       logs: ログ
       registrations: 登録
-      download_reports: ダウンロード報告
       users: ユーザー
     not_logged_in: ログインしていない
     opens_in_new_window: 新しいウィンドウで開きます
@@ -254,6 +254,17 @@ ja:
       edit: 編集
     update:
       success: 連絡先が更新されました。
+  ht_download:
+    values:
+      role:
+        resource_sharing: リソースの共有
+        ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
+  ht_downloads:
+    index:
+      clear_filter: フィルターをクリアする
+      date_range: 日付範囲
+      download_reports: ダウンロード報告
+      filter: フィルタリングする
   ht_institution:
     values:
       emergency_status:
@@ -342,16 +353,6 @@ ja:
       whois_data: WHOISデータ
     update:
       success: "%{name}の登録が更新されました。"
-  ht_download:
-    index:
-      clear_filter: フィルターをクリアする
-      date_range: 日付範囲
-      filter: フィルタリングする
-      download_reports: ダウンロード報告
-    values:
-      role:
-        resource_sharing: リソースの共有
-        ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
   ht_user:
     badges:
       expired: 期限切れ
