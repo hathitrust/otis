@@ -15,6 +15,12 @@ class HTDownloadPresenterTest < ActiveSupport::TestCase
     end
   end
 
+  test "show page count" do
+    report = HTDownloadPresenter.new(create(:ht_download, pages: rand(50..99)), action: :index)
+    assert_includes HTDownloadPresenter::ALL_FIELDS, :pages
+    assert_match(/\d+/, report.field_value(:pages))
+  end
+
   test "hf fields have show methods" do
     report = HTDownloadPresenter.new(create(:ht_download), action: :index)
     HTDownloadPresenter::HF_FIELDS.each do |field|
@@ -38,6 +44,11 @@ class HTDownloadPresenterTest < ActiveSupport::TestCase
   test "show email" do
     report = HTDownloadPresenter.new(create(:ht_download), action: :index)
     assert_match "href=", report.field_value(:email)
+  end
+
+  test "show role" do
+    report = HTDownloadPresenter.new(create(:ht_download, role: "resource_sharing"), action: :index)
+    assert_match "Resource Sharing", report.field_value(:role)
   end
 
   test "show institution name" do

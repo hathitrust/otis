@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class HTDownloadControllerTest < ActionDispatch::IntegrationTest
+class HTDownloadsControllerTest < ActionDispatch::IntegrationTest
   def setup
     HTDownload.delete_all
     10.times { create(:ht_download) }
@@ -18,7 +18,7 @@ class HTDownloadControllerTest < ActionDispatch::IntegrationTest
     assert_match "Download Reports", @response.body
   end
 
-  class HTDownloadControllerJSONTest < ActionDispatch::IntegrationTest
+  class HTDownloadsControllerJSONTest < ActionDispatch::IntegrationTest
     def setup
       HTDownload.delete_all
       10.times { create(:ht_download) }
@@ -26,14 +26,27 @@ class HTDownloadControllerTest < ActionDispatch::IntegrationTest
 
     test "export list of all reports as JSON" do
       sign_in!
-      get ht_downloads_url format: :json
+      get ht_downloads_url(format: :json)
       HTDownload.all.each do |report|
         assert_match report.htid, @response.body
         assert_match report.email, @response.body
         assert_match report.ht_hathifile.author, @response.body
         assert_match ERB::Util.json_escape(ERB::Util.html_escape(report.institution_name)), @response.body
       end
-      assert_kind_of Hash, JSON.parse(@response.body)
+
+      json_body = JSON.parse(@response.body)
+      assert_kind_of Hash, json_body
+      assert_equal 10, json_body["rows"].length
+    end
+
+    test "export list of pages=all reports as JSON" do
+      sign_in!
+      get ht_downloads_url(format: :json, filter: "{\"pages\":\"all\"}")
+
+      json_body = JSON.parse(@response.body)
+      assert_kind_of Hash, json_body
+      expected = HTDownload.where(pages: nil, is_partial: 0).count
+      assert_equal expected, json_body["rows"].length
     end
   end
 end

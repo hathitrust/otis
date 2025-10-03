@@ -26,6 +26,7 @@ class HTDownloadsController < ApplicationController
   # are of the form `*_i_cont` which is a case-insensitive contains equivalent to "LIKE '%value%'".
   # Those selectable by a dropdown menu can use an equality (`_eq`)  matcher.
   RANSACK_MATCHERS = {
+    "role" => :role_eq,
     "author" => :ht_hathifile_author_i_cont,
     "bib_num" => :ht_hathifile_bib_num_cont,
     "content_provider_code" => :ht_hathifile_content_provider_code_eq,
@@ -38,11 +39,13 @@ class HTDownloadsController < ApplicationController
     "institution_name" => :ht_institution_name_i_cont,
     "rights_code" => :ht_hathifile_rights_code_eq,
     "rights_date_used" => :ht_hathifile_rights_date_used_eq,
-    "title" => :ht_hathifile_title_i_cont
+    "title" => :ht_hathifile_title_i_cont,
+    "pages" => :pages_eq
   }
 
   # Translation table from params[:sortName] to a form Ransack can understand.
   RANSACK_ORDER = {
+    "role" => :role,
     "author" => :ht_hathifile_author,
     "bib_num" => :ht_hathifile_bib_num,
     "content_provider_code" => :ht_hathifile_content_provider_code,
@@ -55,7 +58,8 @@ class HTDownloadsController < ApplicationController
     "institution_name" => :ht_institution_name,
     "rights_code" => :ht_hathifile_rights_code,
     "rights_date_used" => :ht_hathifile_rights_date_used,
-    "title" => :ht_hathifile_title
+    "title" => :ht_hathifile_title,
+    "pages" => :pages
   }
 
   def index
@@ -78,7 +82,8 @@ class HTDownloadsController < ApplicationController
   # @return [Hash] value to be returned to Bootstrap Table as JSON
   def json_query
     # Create a Ransack::Search with all of the filter fields translated into Ransack matchers.
-    search = HTDownload.includes(:ht_hathifile, :ht_institution)
+    search = HTDownload
+      .includes(:ht_hathifile, :ht_institution)
       .ransack(matchers)
     # Apply the sort field and order, or default if not provided.
     # Ransack requires lower case sort direction.

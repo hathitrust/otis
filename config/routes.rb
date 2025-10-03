@@ -25,10 +25,7 @@ Rails.application.routes.draw do
     resources :ht_contact_types
   end
 
-  scope format: false, constraints: {id: /.+/} do
-    # shouldn't be a resource, just get route
-    resources :ht_downloads
-  end
+  get "/ht_downloads", to: "ht_downloads#index", as: :ht_downloads
 
   scope constraints: {id: /.+/} do
     resources :ht_logs

@@ -11,7 +11,7 @@ class HTDownload < ApplicationRecord
   scope :for_role, ->(role) { where(role: role) }
 
   def self.ransackable_attributes(auth_object = nil)
-    ["datetime", "email", "htid", "id", "in_copyright", "inst_code", "is_partial", "sha", "yyyy", "yyyymm"]
+    ["role", "datetime", "email", "htid", "id", "in_copyright", "inst_code", "is_partial", "sha", "yyyy", "yyyymm", "pages"]
   end
 
   def self.ransackable_associations(auth_object = nil)
@@ -36,6 +36,10 @@ class HTDownload < ApplicationRecord
 
   ransacker :datetime do
     Arel.sql("DATE(#{table_name}.datetime)")
+  end
+
+  ransacker :pages do
+    Arel.sql("COALESCE(#{table_name}.pages, CASE WHEN #{table_name}.is_partial = '0' THEN 'all' ELSE 'unknown' END)")
   end
 
   def sha

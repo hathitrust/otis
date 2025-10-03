@@ -41,7 +41,7 @@ RSpec.describe Otis::LogImporter do
       expect(download[:sha].length).to be > 0
       expect(download[:role].length).to be > 0
       expect(download[:pages]).to be > 0
-   end
+    end
 
     it "records page count for partial records" do
       importer.run

@@ -109,7 +109,7 @@
       data-sort-select-options="true"
       data-toggle="table"
       data-toolbar="#toolbar"
-      data-url="download_reports?format=json"
+      data-url="ht_downloads?format=json&locale=<%= I18n.locale %>"
     >
       <thead class="thead-dark">    
         <tr>
@@ -117,9 +117,15 @@
           <% fields.each do |field| %>
             <% control = HTDownloadPresenter.data_filter_control(field) %>
             <% th_class = HTDownloadPresenter.header_class(field) %>
+            <% filter_data = HTDownloadPresenter.data_filter_data(field) %>
             <th data-field="<%= field %>"
               class="<%= th_class %>"
               data-filter-control="<%= control %>"
+
+              <% if filter_data %>
+                <%= "data-filter-data='#{filter_data}'".html_safe %>
+              <% end %>
+
               data-sortable="true"
               data-tableexport-value="<%= field.to_s.titleize %>"
             >

@@ -169,8 +169,6 @@ FactoryBot.define do
     ht_hathifile
     ht_institution
 
-    # TODO role, partial?, pages
-
     trait :no_hf do
       ht_hathifile { nil }
     end
