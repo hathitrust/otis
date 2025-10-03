@@ -33,7 +33,8 @@ class HTDownloadPresenter < ApplicationPresenter
     title: :input,
     imprint: :input,
     author: :input,
-    rights_date_used: :select
+    rights_date_used: :select,
+    pages: :select
   }.freeze
 
   # Used below to create accessor methods for the relevant hathifiles.hf fields.
