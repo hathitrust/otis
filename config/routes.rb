@@ -26,7 +26,8 @@ Rails.application.routes.draw do
   end
 
   scope format: false, constraints: {id: /.+/} do
-    resources :ht_ssd_proxy_reports
+    # shouldn't be a resource, just get route
+    resources :ht_downloads
   end
 
   scope constraints: {id: /.+/} do

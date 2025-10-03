@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # Only used read-only in Otis for reporting
-class HTSSDProxyReport < ApplicationRecord
-  self.table_name = "ht_web.reports_downloads_ssdproxy"
+class HTDownloadReport < ApplicationRecord
+  self.table_name = "download_reports"
   # default_scope { order(:datetime) }
   has_one :ht_hathifile, foreign_key: :htid, primary_key: :htid
   has_one :ht_institution, foreign_key: :inst_id, primary_key: :inst_code

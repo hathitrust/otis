@@ -170,7 +170,7 @@ end
 
 def create_reports_downloads_ssdproxy
   datetime = Faker::Time.backward
-  rep = HTSSDProxyReport.create(
+  rep = HTDownload.create(
     in_copyright: [0, 1].sample,
     yyyy: datetime.year,
     yyyymm: datetime.strftime("%Y%m"),

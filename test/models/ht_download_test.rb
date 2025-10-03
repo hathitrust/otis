@@ -2,21 +2,21 @@
 
 require "test_helper"
 
-class HTSSDProxyReportTest < ActiveSupport::TestCase
+class HTDownloadTest < ActiveSupport::TestCase
   test "validation passes" do
-    assert build(:ht_ssd_proxy_report).valid?
+    assert build(:ht_download).valid?
   end
 
   test ".ransackable_attributes" do
-    assert_kind_of Array, HTSSDProxyReport.ransackable_attributes
+    assert_kind_of Array, HTDownload.ransackable_attributes
   end
 
   test ".ransackable_associations" do
-    assert_kind_of Array, HTSSDProxyReport.ransackable_associations
+    assert_kind_of Array, HTDownload.ransackable_associations
   end
 
   test "#institution_name" do
-    build(:ht_ssd_proxy_report) do |rep|
+    build(:ht_download) do |rep|
       create(:ht_user) do |user|
         rep.email = user.email
         rep.inst_code = user.ht_institution.inst_id
@@ -26,8 +26,12 @@ class HTSSDProxyReportTest < ActiveSupport::TestCase
   end
 
   test "#hf" do
-    build(:ht_ssd_proxy_report) do |rep|
+    build(:ht_download) do |rep|
       assert rep.hf
     end
   end
+
+  # TODO scope for role
+  # has partial?
+  # has pages
 end

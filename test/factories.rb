@@ -153,7 +153,7 @@ FactoryBot.define do
     data { '{"action"=>"ht_contacts#update", "ip_address"=>"127.0.0.1", "params"=>{"inst_id"=>"bartoletti-bins", "contact_type"=>"7", "email"=>"rosann@hettinger.edu"}, "user_agent"=>"WhizzyAgent", "client_ip"=>"127.0.0.1"}' }
   end
 
-  factory :ht_ssd_proxy_report do
+  factory :ht_download do
     sequence(:id) { |n| n.to_s }
     datetime = Faker::Time.backward
     in_copyright { [0, 1].sample }
@@ -167,6 +167,8 @@ FactoryBot.define do
     sha { SecureRandom.urlsafe_base64(20) }
     ht_hathifile
     ht_institution
+
+    # TODO role, partial?, pages
 
     trait :no_hf do
       ht_hathifile { nil }

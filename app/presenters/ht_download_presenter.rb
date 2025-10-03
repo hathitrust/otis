@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HTSSDProxyReportPresenter < ApplicationPresenter
+class HTDownloadPresenter < ApplicationPresenter
   # All the columns in the index page.
   ALL_FIELDS = %i[
     datetime
