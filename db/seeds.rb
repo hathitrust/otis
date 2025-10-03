@@ -180,6 +180,7 @@ def create_download
     htid: UNIQUE_HTIDS.keys.sample,
     is_partial: is_partial,
     pages: is_partial ? rand(100) : nil,
+    role: %w[ssdproxy resource_sharing].sample,
     # FIXME: how about we make sure the email and institution code match?
     email: UNIQUE_EMAILS.keys.sample,
     inst_code: UNIQUE_INST_IDS.keys.sample,

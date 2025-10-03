@@ -16,6 +16,7 @@ class HTDownloadPresenter < ApplicationPresenter
     imprint
     author
     rights_date_used
+    pages
   ].freeze
 
   # Type of filter control to specify for a given column.
@@ -81,7 +82,7 @@ class HTDownloadPresenter < ApplicationPresenter
   # we would ever get a 404 since we don't typically jettison users or institutions.
 
   def show_datetime
-    "<span class=\"text-nowrap\">#{datetime.to_formatted_s(:db)}</span"
+    "<span class=\"text-nowrap\">#{datetime.to_formatted_s(:db)}</span>"
   end
 
   def show_email
@@ -92,5 +93,16 @@ class HTDownloadPresenter < ApplicationPresenter
     return "" if institution_name.nil?
 
     link_to institution_name, ht_institution_path(inst_code)
+  end
+
+  def show_pages
+    if pages
+      pages
+    elsif !partial?
+      "all"
+    else
+      # partial download but no page count recorded
+      "unknown"
+    end
   end
 end

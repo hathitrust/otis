@@ -63,6 +63,7 @@ class HTDownloadsController < ApplicationController
       format.html do
         # Populate the date range fields with the latest datetime and
         # then the start date a year earlier
+        @role = params[:role]
         @date_end = HTDownload.maximum(:datetime).tap do |dt_end|
           @date_start = (dt_end - 1.year).to_date.to_s
         end.to_date.to_s

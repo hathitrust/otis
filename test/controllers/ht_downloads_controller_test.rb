@@ -18,6 +18,13 @@ class HTDownloadsControllerTest < ActionDispatch::IntegrationTest
     assert_match "Download Reports", @response.body
   end
 
+  test "includes the corresponding data url" do
+    sign_in!
+    get ht_downloads_url("resource_sharing")
+    assert_response :success
+    assert_match "resource_sharing?format=json", @response.body
+  end
+
   class HTDownloadsControllerJSONTest < ActionDispatch::IntegrationTest
     RESOURCE_SHARING_COUNT = 10
     SSDPROXY_COUNT = 5

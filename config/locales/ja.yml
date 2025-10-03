@@ -96,6 +96,7 @@ ja:
         rights_code: 著作権コード
         rights_date_used: 著作権の日付
         title: タイトル
+        pages: ページ
       ht_user:
         access: アクセス
         accesses: アクセス数
