@@ -2,6 +2,7 @@
 
 class ApplicationMailer < ActionMailer::Base
   include ActionView::Helpers::AssetTagHelper
+
   default from: Otis.config.manager_email
   default bcc: Otis.config.manager_email
   default reply_to: Otis.config.reply_to_email
