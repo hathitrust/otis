@@ -164,7 +164,6 @@ FactoryBot.define do
     is_partial { [0, 1].sample }
     email { Faker::Internet.email }
     inst_code { Faker::Internet.unique.domain_word }
-    sha { SecureRandom.urlsafe_base64(20) }
     ht_hathifile
     ht_institution
 

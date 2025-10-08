@@ -15,6 +15,8 @@ services:
     volumes:
       - .:/usr/src/app
       - gem_cache:/gems
+    depends_on:
+      mariadb-dev: *healthy
     command: bash -c "sleep infinity"
     environment:
       - RAILS_ENV=development
@@ -47,6 +49,7 @@ services:
       - gem_cache:/gems
     depends_on:
       mariadb-test: *healthy
+      versitygw: *healthy
     command: bash -c "bundle exec rake test"
     deploy:
       restart_policy:
@@ -103,6 +106,23 @@ services:
     healthcheck:
       <<: *healthcheck-defaults
       test: ['CMD', 'curl', '-f', 'http://localhost:4444']
+
+  # S3 -> filesystem gateway
+  versitygw:
+    image: versity/versitygw
+    ports:
+      - '7070:7070'
+    restart: always
+    environment:
+      ROOT_ACCESS_KEY: TESTINGACCESSKEY
+      ROOT_SECRET_KEY: testingsecretkey
+      VGW_REGION: "us-east-1"
+    volumes:
+      - ./spec/fixtures/ulib-logs:/vgw/ulib-logs
+    command: --health /health posix --nometa /vgw
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "-O", "/dev/null", "http://127.0.0.1:7070/health" ]
 
   js:
     build:

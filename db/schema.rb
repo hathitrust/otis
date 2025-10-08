@@ -118,30 +118,14 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.boolean :auth_requested, default: false
   end
 
-# MariaDB [ht_web]> describe reports_downloads_ssdproxy;
-# +--------------+------------------+------+-----+---------+----------------+
-# | Field        | Type             | Null | Key | Default | Extra          |
-# +--------------+------------------+------+-----+---------+----------------+
-# | id           | int(11) unsigned | NO   | PRI | NULL    | auto_increment |
-# | in_copyright | int(1)           | YES  |     | NULL    |                |
-# | yyyy         | int(11)          | NO   | MUL | NULL    |                |
-# | yyyymm       | varchar(20)      | NO   |     |         |                |
-# | datetime     | datetime         | NO   | MUL | NULL    |                |
-# | htid         | varchar(255)     | NO   | MUL |         |                |
-# | is_partial   | int(1)           | YES  |     | 0       |                |
-# | email        | varchar(255)     | NO   |     |         |                |
-# | inst_code    | varchar(255)     | YES  | MUL | NULL    |                |
-# | sha          | binary(20)       | YES  | MUL | NULL    |                |
-# +--------------+------------------+------+-----+---------+----------------+
-
   create_table "ht_web.reports_downloads_ssdproxy", if_not_exists: true do |t|
-    t.boolean :in_copyright
+    t.boolean :in_copyright, null: false
     t.integer :yyyy, default: 0
-    t.string :yyyymm
-    t.timestamp :datetime
-    t.string :htid
+    t.string :yyyymm, null: false
+    t.timestamp :datetime, null: false
+    t.string :htid, null: false
     t.boolean :is_partial
-    t.string :email
+    t.string :email, null: false
     t.string :inst_code
     t.binary :sha
   end

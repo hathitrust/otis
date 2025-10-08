@@ -179,13 +179,9 @@ def create_reports_downloads_ssdproxy
     is_partial: [nil, 0, 1].sample,
     # FIXME: how about we make sure the email and institution code match?
     email: UNIQUE_EMAILS.keys.sample,
-    inst_code: UNIQUE_INST_IDS.keys.sample,
-    # The sha field is stored as
-    # UNHEX(SHA1(CONCAT_WS(' ', `datetime`, `htid`, `in_copyright`, `is_partial`, `email`, `inst_code`)))
-    # So this is just not even an approximation
-    sha: SecureRandom.urlsafe_base64(20)
+    inst_code: UNIQUE_INST_IDS.keys.sample
   )
-  rep.save!
+  rep.save
 end
 
 def create_hathifile_entry
