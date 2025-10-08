@@ -88,6 +88,10 @@ class HTDownloadPresenter < ApplicationPresenter
     "<span class=\"text-nowrap\">#{datetime.to_formatted_s(:db)}</span>"
   end
 
+  def show_role
+    "<span class=\"text-nowrap\">#{localize_value(:role)}</span>"
+  end
+
   def show_email
     link_to email, ht_user_path(email)
   end

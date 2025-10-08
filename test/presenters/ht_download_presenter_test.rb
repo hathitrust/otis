@@ -48,7 +48,7 @@ class HTDownloadPresenterTest < ActiveSupport::TestCase
 
   test "show role" do
     report = HTDownloadPresenter.new(create(:ht_download, role: "resource_sharing"), action: :index)
-    assert_match "resource_sharing", report.field_value(:role)
+    assert_match "Resource Sharing", report.field_value(:role)
   end
 
   test "show institution name" do
