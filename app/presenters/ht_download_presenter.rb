@@ -55,6 +55,22 @@ class HTDownloadPresenter < ApplicationPresenter
     DATA_FILTER_CONTROLS[field].to_s
   end
 
+  # Only needed for role because displayed value != database value.
+  # Maps display value and query values.
+  # Should not be memoized, locale is variable.
+  def self.data_filter_data(field)
+    return unless field == :role
+
+    map = {}
+    # TODO: this is a little clunky, could extract a class method from
+    # `ApplicationPresenter#field_value` to handle this kind of mucking
+    # about with scopes.
+    [:ssdproxy, :resource_sharing].each do |value|
+      map[value] = I18n.t(value_scope + ".#{field}.#{value}", raise: false)
+    end
+    ("json:" + map.to_json).html_safe
+  end
+
   # Some CSS in index.html.erb allows the title, imprint, and author fields to be a bit wider
   # than the default.
   def self.header_class(field)
