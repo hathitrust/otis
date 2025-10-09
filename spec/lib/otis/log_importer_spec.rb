@@ -29,16 +29,36 @@ RSpec.describe Otis::LogImporter do
     it "creates full-populated records" do
       importer.run
       # Spot-check one of the new records
-      report = HTDownload.first
-      expect(report[:in_copyright]).not_to be_nil
-      expect(report[:yyyy]).to be > 0
-      expect(report[:yyyymm].length).to be > 0
-      expect(report[:datetime]).to be_a(Time)
-      expect(report[:htid].length).to be > 0
-      expect(report[:is_partial]).not_to be_nil
-      expect(report[:email].length).to be > 0
-      expect(report[:inst_code].length).to be > 0
-      expect(report[:sha].length).to be > 0
+      download = HTDownload.first
+      expect(download[:in_copyright]).not_to be_nil
+      expect(download[:yyyy]).to be > 0
+      expect(download[:yyyymm].length).to be > 0
+      expect(download[:datetime]).to be_a(Time)
+      expect(download[:htid].length).to be > 0
+      expect(download[:is_partial]).not_to be_nil
+      expect(download[:email].length).to be > 0
+      expect(download[:inst_code].length).to be > 0
+      expect(download[:sha].length).to be > 0
+      expect(download[:role].length).to be > 0
+      expect(download[:pages]).to be > 0
+   end
+
+    it "records page count for partial records" do
+      importer.run
+
+      # Both the qualifying records in the fixtures are partial downloads with
+      # 42 pages
+      download = HTDownload.first
+      expect(download.partial?).to be true
+      expect(download.pages).to eq 42
+    end
+
+    it "records role" do
+      importer.run
+
+      # Both the qualifying records in the fixtures are from ssdproxy
+      download = HTDownload.first
+      expect(download.role).to eq "ssdproxy"
     end
 
     it "records useful stats" do

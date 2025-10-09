@@ -143,7 +143,9 @@ module Otis
         htid: entry["id"],
         is_partial: entry["is_partial"],
         email: translate_remote_user(entry["remote_user_processed"]),
-        inst_code: entry["inst_code"]
+        inst_code: entry["inst_code"],
+        role: entry["role"],
+        pages: entry["seq"].split(",").count
       )
       # Call `.save` and not `.save!` on this object because its SHA may
       # violate uniqueness, which is perfectly okay.
