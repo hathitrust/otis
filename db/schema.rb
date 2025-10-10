@@ -118,8 +118,8 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.boolean :auth_requested, default: false
   end
 
-  create_table "ht_web.reports_downloads_ssdproxy", if_not_exists: true do |t|
-    t.boolean :in_copyright, null: false
+  create_table :otis_downloads, if_not_exists: true do |t|
+    t.boolean :in_copyright
     t.integer :yyyy, default: 0
     t.string :yyyymm, null: false
     t.timestamp :datetime, null: false
@@ -128,6 +128,8 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :email, null: false
     t.string :inst_code
     t.binary :sha
+    t.string :role
+    t.integer :pages
   end
 
   create_table "hathifiles.hf", id: false, if_not_exists: true do |t|

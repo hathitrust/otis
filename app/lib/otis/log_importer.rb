@@ -133,12 +133,9 @@ module Otis
         Time.parse(entry["datetime"]) >= last_import
     end
 
-    # TODO: should be renamed when HTSSDProxyReport is renamed
-    # Create a new `HTSSDProxyReport` object based on JSON log structure
-    # and save it to DB if possible
     def create_report(entry)
       datetime = Time.parse entry["datetime"]
-      report = HTSSDProxyReport.new(
+      report = HTDownload.new(
         in_copyright: entry["ic"],
         yyyy: datetime.year,
         yyyymm: datetime.strftime("%Y%m"),
@@ -146,7 +143,9 @@ module Otis
         htid: entry["id"],
         is_partial: entry["is_partial"],
         email: translate_remote_user(entry["remote_user_processed"]),
-        inst_code: entry["inst_code"]
+        inst_code: entry["inst_code"],
+        role: entry["role"],
+        pages: entry["seq"].split(",").count
       )
       # Call `.save` and not `.save!` on this object because its SHA may
       # violate uniqueness, which is perfectly okay.

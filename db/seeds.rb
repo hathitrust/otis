@@ -13,7 +13,7 @@ raise StandardError, "Not for production use" if Rails.env.production?
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_approval_requests")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_logs")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_registrations")
-ActiveRecord::Base.connection.execute("DELETE FROM ht_web.reports_downloads_ssdproxy")
+ActiveRecord::Base.connection.execute("DELETE FROM otis_downloads")
 ActiveRecord::Base.connection.execute("DELETE FROM hathifiles.hf")
 
 require "faker"
@@ -168,15 +168,19 @@ def create_ht_registration
   end
 end
 
-def create_reports_downloads_ssdproxy
+def create_download
   datetime = Faker::Time.backward
-  rep = HTSSDProxyReport.create(
-    in_copyright: [0, 1].sample,
+  is_partial = [nil, false, true].sample
+
+  rep = HTDownload.create(
+    in_copyright: [false, true].sample,
     yyyy: datetime.year,
     yyyymm: datetime.strftime("%Y%m"),
     datetime: datetime,
     htid: UNIQUE_HTIDS.keys.sample,
-    is_partial: [nil, 0, 1].sample,
+    is_partial: is_partial,
+    pages: is_partial ? rand(100) : nil,
+    role: %w[ssdproxy resource_sharing].sample,
     # FIXME: how about we make sure the email and institution code match?
     email: UNIQUE_EMAILS.keys.sample,
     inst_code: UNIQUE_INST_IDS.keys.sample
@@ -263,5 +267,5 @@ end
 end
 
 100.times do
-  create_reports_downloads_ssdproxy
+  create_download
 end

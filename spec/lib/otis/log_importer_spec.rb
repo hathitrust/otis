@@ -9,7 +9,7 @@ RSpec.describe Otis::LogImporter do
   let(:gzip_log) { Rails.root.join(*fixtures_dir, "access-imgsrv_downloads.log-20250902.gz") }
 
   around(:each) do |example|
-    HTSSDProxyReport.delete_all
+    HTDownload.delete_all
     # This is mainly to isolate journals from subsequent tests
     Dir.mktmpdir("otis-log-importer") do |tmpdir|
       @tmpdir = tmpdir
@@ -23,22 +23,42 @@ RSpec.describe Otis::LogImporter do
     it "populates the table with two entries" do
       expect do
         importer.run
-      end.to change { HTSSDProxyReport.count }.by(2)
+      end.to change { HTDownload.count }.by(2)
     end
 
     it "creates full-populated records" do
       importer.run
       # Spot-check one of the new records
-      report = HTSSDProxyReport.first
-      expect(report[:in_copyright]).not_to be_nil
-      expect(report[:yyyy]).to be > 0
-      expect(report[:yyyymm].length).to be > 0
-      expect(report[:datetime]).to be_a(Time)
-      expect(report[:htid].length).to be > 0
-      expect(report[:is_partial]).not_to be_nil
-      expect(report[:email].length).to be > 0
-      expect(report[:inst_code].length).to be > 0
-      expect(report[:sha].length).to be > 0
+      download = HTDownload.first
+      expect(download[:in_copyright]).not_to be_nil
+      expect(download[:yyyy]).to be > 0
+      expect(download[:yyyymm].length).to be > 0
+      expect(download[:datetime]).to be_a(Time)
+      expect(download[:htid].length).to be > 0
+      expect(download[:is_partial]).not_to be_nil
+      expect(download[:email].length).to be > 0
+      expect(download[:inst_code].length).to be > 0
+      expect(download[:sha].length).to be > 0
+      expect(download[:role].length).to be > 0
+      expect(download[:pages]).to be > 0
+    end
+
+    it "records page count for partial records" do
+      importer.run
+
+      # Both the qualifying records in the fixtures are partial downloads with
+      # 42 pages
+      download = HTDownload.first
+      expect(download.partial?).to be true
+      expect(download.pages).to eq 42
+    end
+
+    it "records role" do
+      importer.run
+
+      # Both the qualifying records in the fixtures are from ssdproxy
+      download = HTDownload.first
+      expect(download.role).to eq "ssdproxy"
     end
 
     it "records useful stats" do
@@ -111,7 +131,7 @@ RSpec.describe Otis::LogImporter do
       it "adds one entry to the database" do
         expect do
           importer.process_file(source_file: text_log, log_file: text_log)
-        end.to change { HTSSDProxyReport.count }.by(1)
+        end.to change { HTDownload.count }.by(1)
       end
     end
 
@@ -119,7 +139,7 @@ RSpec.describe Otis::LogImporter do
       it "adds one entry to the database" do
         expect do
           importer.process_file(source_file: gzip_log, log_file: gzip_log)
-        end.to change { HTSSDProxyReport.count }.by(1)
+        end.to change { HTDownload.count }.by(1)
       end
     end
 
@@ -128,7 +148,7 @@ RSpec.describe Otis::LogImporter do
         importer.process_file(source_file: text_log, log_file: text_log)
         expect do
           importer.process_file(source_file: text_log, log_file: text_log)
-        end.to change { HTSSDProxyReport.count }.by(0)
+        end.to change { HTDownload.count }.by(0)
       end
     end
   end

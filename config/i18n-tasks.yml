@@ -113,6 +113,7 @@ ignore_unused:
   - 'ht_approval_request.*'
   - 'ht_approval_requests.create.errors.*'
   - 'ht_billing_member.values.*'
+  - 'ht_download.values.*'
   - 'ht_institution.values.*'
   - 'ht_registration.badges.*'
   - 'ht_registration.values.service_name.*'

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-class HTSSDProxyReportPresenter < ApplicationPresenter
+class HTDownloadPresenter < ApplicationPresenter
   # All the columns in the index page.
   ALL_FIELDS = %i[
+    role
     datetime
     htid
     bib_num
@@ -16,10 +17,12 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     imprint
     author
     rights_date_used
+    pages
   ].freeze
 
   # Type of filter control to specify for a given column.
   DATA_FILTER_CONTROLS = {
+    role: :select,
     datetime: :input,
     htid: :input,
     bib_num: :input,
@@ -32,7 +35,8 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     title: :input,
     imprint: :input,
     author: :input,
-    rights_date_used: :select
+    rights_date_used: :select,
+    pages: :select
   }.freeze
 
   # Used below to create accessor methods for the relevant hathifiles.hf fields.
@@ -49,6 +53,22 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
 
   def self.data_filter_control(field)
     DATA_FILTER_CONTROLS[field].to_s
+  end
+
+  # Only needed for role because displayed value != database value.
+  # Maps display value and query values.
+  # Should not be memoized, locale is variable.
+  def self.data_filter_data(field)
+    return unless field == :role
+
+    map = {}
+    # TODO: this is a little clunky, could extract a class method from
+    # `ApplicationPresenter#field_value` to handle this kind of mucking
+    # about with scopes.
+    [:ssdproxy, :resource_sharing].each do |value|
+      map[value] = I18n.t(value_scope + ".#{field}.#{value}", raise: false)
+    end
+    ("json:" + map.to_json).html_safe
   end
 
   # Some CSS in index.html.erb allows the title, imprint, and author fields to be a bit wider
@@ -81,7 +101,11 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
   # we would ever get a 404 since we don't typically jettison users or institutions.
 
   def show_datetime
-    "<span class=\"text-nowrap\">#{datetime.to_formatted_s(:db)}</span"
+    "<span class=\"text-nowrap\">#{datetime.to_formatted_s(:db)}</span>"
+  end
+
+  def show_role
+    "<span class=\"text-nowrap\">#{localize_value(:role)}</span>"
   end
 
   def show_email
@@ -92,5 +116,16 @@ class HTSSDProxyReportPresenter < ApplicationPresenter
     return "" if institution_name.nil?
 
     link_to institution_name, ht_institution_path(inst_code)
+  end
+
+  def show_pages
+    if pages
+      pages
+    elsif !partial?
+      "all"
+    else
+      # partial download but no page count recorded
+      "unknown"
+    end
   end
 end

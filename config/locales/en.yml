@@ -23,6 +23,22 @@ en:
         description: Description
         id: ID
         name: Name
+      ht_download:
+        author: Author
+        bib_num: Bib Number
+        content_provider_code: Content Provider
+        datetime: Time
+        digitization_agent_code: Digitization Agent
+        email: E-mail
+        htid: HTID
+        imprint: Imprint
+        inst_code: Institution Code
+        institution_name: Institution Name
+        pages: Pages
+        rights_code: Rights Code
+        rights_date_used: Rights Date
+        role: Role
+        title: Title
       ht_institution:
         allowed_affiliations: Affiliations
         domain: Domain
@@ -82,20 +98,6 @@ en:
         status: Status
         submitted: Submitted
         usertype: User Type
-      ht_ssd_proxy_report:
-        author: Author
-        bib_num: Bib Number
-        content_provider_code: Content Provider
-        datetime: Time
-        digitization_agent_code: Digitization Agent
-        email: E-mail
-        htid: HTID
-        imprint: Imprint
-        inst_code: Institution Code
-        institution_name: Institution Name
-        rights_code: Rights Code
-        rights_date_used: Rights Date
-        title: Title
       ht_user:
         access: Access
         accesses: Accesses
@@ -161,10 +163,10 @@ en:
       approval_requests: Approval Requests
       contact_types: Contact Types
       contacts: Contacts
+      downloads: Download Reports
       institutions: Institutions
       logs: Logs
       registrations: Registrations
-      ssd_proxy_reports: SSD Proxy Reports
       users: Users
     not_logged_in: Not Logged In
     opens_in_new_window: opens in new window
@@ -252,6 +254,17 @@ en:
       edit: Edit
     update:
       success: Contact updated.
+  ht_download:
+    values:
+      role:
+        resource_sharing: Resource Sharing
+        ssdproxy: ATRS Provider
+  ht_downloads:
+    index:
+      clear_filter: Clear Filters
+      date_range: Date Range
+      download_reports: Download Reports
+      filter: Filter
   ht_institution:
     values:
       emergency_status:
@@ -340,12 +353,6 @@ en:
       whois_data: WHOIS Data
     update:
       success: Registration updated for %{name}.
-  ht_ssd_proxy_reports:
-    index:
-      clear_filter: Clear Filters
-      date_range: Date Range
-      filter: Filter
-      ht_ssd_proxy_reports: SSD Proxy Reports
   ht_user:
     badges:
       expired: Expired

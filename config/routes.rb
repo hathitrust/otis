@@ -25,9 +25,7 @@ Rails.application.routes.draw do
     resources :ht_contact_types
   end
 
-  scope format: false, constraints: {id: /.+/} do
-    resources :ht_ssd_proxy_reports
-  end
+  get "/ht_downloads", to: "ht_downloads#index", as: :ht_downloads
 
   scope constraints: {id: /.+/} do
     resources :ht_logs

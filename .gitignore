@@ -54,3 +54,5 @@ db/checkpoint.yml
 .bash_history
 
 /public/fonts
+
+**/.*.sw?
