@@ -12,7 +12,7 @@ gem "puma"
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem "web-console", ">= 3.3.0"
-  gem "listen", "< 3.2", ">= 3.0.5"
+  gem "listen", ">= 3.0.5", "< 3.10"
 end
 
 group :test do
@@ -32,16 +32,16 @@ gem "checkpoint"
 gem "csv"
 gem "dotenv-rails"
 gem "ettin"
-gem "jira-ruby", "~> 2.3"
+gem "jira-ruby", "~> 3.0"
 gem "kaminari"
 gem "keycard", github: "mlibrary/keycard"
 gem "maxmind-geoip2"
 # 0.5.7 causes segfaults in tests
-gem "mysql2", "0.5.6"
+gem "mysql2", "0.5.7"
 gem "ostruct"
 gem "ransack"
 # Freeze Sequel version number because of Checkpoint prepared statement issues
-gem "sequel", "5.52.0"
+gem "sequel", "5.97.0"
 # ActiveModel extension that automatically strips all attributes of leading and trailing whitespace before validation
 gem "strip_attributes"
 gem "whois"

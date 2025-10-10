@@ -18,8 +18,8 @@
     "@eslint/js": "^9.20.0",
     "esbuild": "^0.25.0",
     "eslint": "^9.20.1",
-    "globals": "^15.15.0",
-    "sass": "1.77.6"
+    "globals": "^16.4.0",
+    "sass": "1.93.2"
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "bootstrap-table": "^1.24.1",
-    "ckeditor5": "^46.0.3",
+    "ckeditor5": "^47.0.0",
     "jquery": "^3.7.1",
     "select2": "^4.1.0-rc.0",
     "tableexport.jquery.plugin": "^1.33.0",
