@@ -119,6 +119,15 @@ module Otis
       end
     end
 
+    # Translates a "seq" log field into a count of comma-delimited seq numbers.
+    # Returns a nonzero page count or nil
+    def extract_pages_from_seq(seq)
+      return nil if seq.nil?
+
+      count = seq.split(",").count
+      count.zero? ? nil : count
+    end
+
     private
 
     # Returns true iff all of these are true:
@@ -145,7 +154,7 @@ module Otis
         email: translate_remote_user(entry["remote_user_processed"]),
         inst_code: entry["inst_code"],
         role: entry["role"],
-        pages: entry["seq"].split(",").count
+        pages: extract_pages_from_seq(entry["seq"])
       )
       # Call `.save` and not `.save!` on this object because its SHA may
       # violate uniqueness, which is perfectly okay.

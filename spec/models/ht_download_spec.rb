@@ -77,6 +77,7 @@ RSpec.describe HTDownload do
   end
 
   describe "#pages" do
+    # Note: this is testing the factory
     it "has positive pages when partial" do
       build(:ht_download, is_partial: 1) do |download|
         expect(download.pages).to be >= 1

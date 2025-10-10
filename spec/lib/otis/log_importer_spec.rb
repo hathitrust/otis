@@ -167,4 +167,18 @@ RSpec.describe Otis::LogImporter do
       end
     end
   end
+
+  describe "#extract_pages_from_seq" do
+    it "returns the count when there are seq numbers" do
+      expect(importer.extract_pages_from_seq("1,2,3")).to eq(3)
+    end
+
+    it "returns `nil` when there are no seq numbers" do
+      expect(importer.extract_pages_from_seq("")).to be_nil
+    end
+
+    it "returns `nil` when `seq` is `nil`" do
+      expect(importer.extract_pages_from_seq("")).to be_nil
+    end
+  end
 end
