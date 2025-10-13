@@ -68,10 +68,16 @@ RSpec.describe HTDownload do
     end
   end
 
-  describe "#partial?" do
-    it "responds to partial?" do |download|
-      build(:ht_download, is_partial: 1) do |download|
-        expect(download.partial?).to be(true)
+  describe "#full_download" do
+    it "is false when is_partial is true" do |download|
+      build(:ht_download, is_partial: true) do |download|
+        expect(download.full_download).to be(false)
+      end
+    end
+
+    it "is true when is_partial is false" do |download|
+      build(:ht_download, is_partial: false) do |download|
+        expect(download.full_download).to be(true)
       end
     end
   end

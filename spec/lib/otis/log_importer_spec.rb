@@ -52,7 +52,7 @@ RSpec.describe Otis::LogImporter do
       # Both the qualifying ssdproxy records in the fixtures are partial downloads with
       # 42 pages
       download = HTDownload.where(role: "ssdproxy").first
-      expect(download.partial?).to be true
+      expect(download.is_partial).to be true
       expect(download.pages).to eq 42
     end
 

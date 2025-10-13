@@ -39,9 +39,9 @@ class HTDownloadsControllerTest < ActionDispatch::IntegrationTest
       assert_equal 10, json_body["rows"].length
     end
 
-    test "export list of pages=all reports as JSON" do
+    test "export list of full_download=yes reports as JSON" do
       sign_in!
-      get ht_downloads_url(format: :json, filter: "{\"pages\":\"all\"}")
+      get ht_downloads_url(format: :json, filter: "{\"full_download\":\"yes\"}")
 
       json_body = JSON.parse(@response.body)
       assert_kind_of Hash, json_body

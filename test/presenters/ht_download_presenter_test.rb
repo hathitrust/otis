@@ -51,6 +51,16 @@ class HTDownloadPresenterTest < ActiveSupport::TestCase
     assert_match "Resource Sharing", report.field_value(:role)
   end
 
+  test "show full download - is_partial: false" do
+    report = HTDownloadPresenter.new(create(:ht_download, is_partial: false), action: :index)
+    assert_equal "yes", report.field_value(:full_download)
+  end
+
+  test "show full download - is_partial: true" do
+    report = HTDownloadPresenter.new(create(:ht_download, is_partial: true), action: :index)
+    assert_equal "no", report.field_value(:full_download)
+  end
+
   test "show institution name" do
     create(:ht_download) do |rep|
       create(:ht_institution) do |inst|
