@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-# Only used read-only in Otis for reporting
+# Read-only in the web interface.
+# Written by log_import rake task.
 class HTDownload < ApplicationRecord
+  self.primary_key = "id"
   self.table_name = "otis_downloads"
+
   # default_scope { order(:datetime) }
   has_one :ht_hathifile, foreign_key: :htid, primary_key: :htid
   has_one :ht_institution, foreign_key: :inst_id, primary_key: :inst_code
