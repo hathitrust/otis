@@ -3,8 +3,8 @@
 # Read-only in the web interface.
 # Written by log_import rake task.
 class HTDownload < ApplicationRecord
+  self.table_name = "ht_repository.otis_downloads"
   self.primary_key = "id"
-  self.table_name = "otis_downloads"
 
   # default_scope { order(:datetime) }
   has_one :ht_hathifile, foreign_key: :htid, primary_key: :htid

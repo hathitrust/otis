@@ -2,7 +2,8 @@
 
 # Map of institution email contact and type
 class HTContact < ApplicationRecord
-  self.table_name = "otis_contacts"
+  self.table_name = "ht_repository.otis_contacts"
+  self.primary_key = "id"
 
   belongs_to :ht_institution, foreign_key: :inst_id, primary_key: :inst_id, required: true
   belongs_to :ht_contact_type, foreign_key: :contact_type, primary_key: :id, required: true
@@ -13,6 +14,4 @@ class HTContact < ApplicationRecord
   validates :inst_id, presence: true
   validates :contact_type, presence: true
   validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
-
-  self.primary_key = "id"
 end
