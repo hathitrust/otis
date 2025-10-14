@@ -7,6 +7,9 @@ RSpec.describe Otis::LogImporter do
   }
   let(:text_log) { Rails.root.join(*fixtures_dir, "access-imgsrv_downloads.log-20250901") }
   let(:gzip_log) { Rails.root.join(*fixtures_dir, "access-imgsrv_downloads.log-20250902.gz") }
+  let(:expected_ssdproxy_delta) { 2 }
+  let(:expected_resource_sharing_delta) { 1 }
+  let(:expected_delta) { expected_ssdproxy_delta + expected_resource_sharing_delta }
 
   around(:each) do |example|
     HTDownload.delete_all
@@ -20,10 +23,10 @@ RSpec.describe Otis::LogImporter do
   end
 
   describe "#run" do
-    it "populates the table with two entries" do
+    it "populates the table with the expected number of entries" do
       expect do
         importer.run
-      end.to change { HTDownload.count }.by(2)
+      end.to change { HTDownload.count }.by(expected_delta)
     end
 
     it "creates full-populated records" do
@@ -46,9 +49,9 @@ RSpec.describe Otis::LogImporter do
     it "records page count for partial records" do
       importer.run
 
-      # Both the qualifying records in the fixtures are partial downloads with
+      # Both the qualifying ssdproxy records in the fixtures are partial downloads with
       # 42 pages
-      download = HTDownload.first
+      download = HTDownload.where(role: "ssdproxy").first
       expect(download.partial?).to be true
       expect(download.pages).to eq 42
     end
@@ -56,16 +59,19 @@ RSpec.describe Otis::LogImporter do
     it "records role" do
       importer.run
 
-      # Both the qualifying records in the fixtures are from ssdproxy
-      download = HTDownload.first
+      # Both the qualifying records with is_partial=1 in the fixtures are from ssdproxy
+      download = HTDownload.where(is_partial: 1).first
       expect(download.role).to eq "ssdproxy"
+      # The resource sharing example is not partial
+      download = HTDownload.where(is_partial: 0).first
+      expect(download.role).to eq "resource_sharing"
     end
 
     it "records useful stats" do
       importer.run
       expect(importer.stats[:files_scanned]).to eq(2)
-      expect(importer.stats[:entries_found]).to eq(2)
-      expect(importer.stats[:entries_added]).to eq(2)
+      expect(importer.stats[:entries_found]).to eq(expected_delta)
+      expect(importer.stats[:entries_added]).to eq(expected_delta)
     end
 
     it "ignores entries earlier than the last run file" do
@@ -135,11 +141,11 @@ RSpec.describe Otis::LogImporter do
       end
     end
 
-    context "with a gzipped log file having one relevant entry and one malformed entry" do
+    context "with a gzipped log file having two relevant entries and one malformed entry" do
       it "adds one entry to the database" do
         expect do
           importer.process_file(source_file: gzip_log, log_file: gzip_log)
-        end.to change { HTDownload.count }.by(1)
+        end.to change { HTDownload.count }.by(2)
       end
     end
 
@@ -165,6 +171,20 @@ RSpec.describe Otis::LogImporter do
         user = create(:ht_user)
         expect(importer.translate_remote_user(user.userid)).to eq user.email
       end
+    end
+  end
+
+  describe "#extract_pages_from_seq" do
+    it "returns the count when there are seq numbers" do
+      expect(importer.extract_pages_from_seq("1,2,3")).to eq(3)
+    end
+
+    it "returns `nil` when there are no seq numbers" do
+      expect(importer.extract_pages_from_seq("")).to be_nil
+    end
+
+    it "returns `nil` when `seq` is `nil`" do
+      expect(importer.extract_pages_from_seq("")).to be_nil
     end
   end
 end
