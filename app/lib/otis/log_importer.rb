@@ -131,12 +131,12 @@ module Otis
     private
 
     # Returns true iff all of these are true:
-    # role is "ssdproxy"
+    # role is "ssdproxy" or "resource_sharing"
     # access is "success"
     # mode is "download"
     # datetime is on or after last import
     def relevant_log_entry?(entry)
-      entry["role"] == "ssdproxy" &&
+      (entry["role"] == "ssdproxy" || entry["role"] == "resource_sharing") &&
         entry["access"] == "success" &&
         entry["mode"] == "download" &&
         Time.parse(entry["datetime"]) >= last_import
