@@ -17,6 +17,7 @@ class HTDownloadPresenter < ApplicationPresenter
     imprint
     author
     rights_date_used
+    full_download
     pages
   ].freeze
 
@@ -36,6 +37,7 @@ class HTDownloadPresenter < ApplicationPresenter
     imprint: :input,
     author: :input,
     rights_date_used: :select,
+    full_download: :select,
     pages: :select
   }.freeze
 
@@ -118,14 +120,7 @@ class HTDownloadPresenter < ApplicationPresenter
     link_to institution_name, ht_institution_path(inst_code)
   end
 
-  def show_pages
-    if pages
-      pages
-    elsif !partial?
-      "all"
-    else
-      # partial download but no page count recorded
-      "unknown"
-    end
+  def show_full_download
+    full_download ? "yes" : "no"
   end
 end

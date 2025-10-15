@@ -30,6 +30,7 @@ en:
         datetime: Time
         digitization_agent_code: Digitization Agent
         email: E-mail
+        full_download: Full Download
         htid: HTID
         imprint: Imprint
         inst_code: Institution Code

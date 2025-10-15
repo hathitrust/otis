@@ -40,7 +40,8 @@ class HTDownloadsController < ApplicationController
     "rights_code" => :ht_hathifile_rights_code_eq,
     "rights_date_used" => :ht_hathifile_rights_date_used_eq,
     "title" => :ht_hathifile_title_i_cont,
-    "pages" => :pages_eq
+    "pages" => :pages_eq,
+    "full_download" => :full_download_eq
   }
 
   # Translation table from params[:sortName] to a form Ransack can understand.
@@ -59,7 +60,8 @@ class HTDownloadsController < ApplicationController
     "rights_code" => :ht_hathifile_rights_code,
     "rights_date_used" => :ht_hathifile_rights_date_used,
     "title" => :ht_hathifile_title,
-    "pages" => :pages
+    "pages" => :pages,
+    "full_download" => :full_download
   }
 
   def index

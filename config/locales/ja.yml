@@ -30,6 +30,7 @@ ja:
         datetime: 時間
         digitization_agent_code: デジタル化エージェント
         email: Eメール
+        full_download: フルダウンロード
         htid: HTID
         imprint: 奥付
         inst_code: 機関コード
