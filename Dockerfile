@@ -31,6 +31,7 @@ ENV RCLONE_CONFIG_PATH=/usr/src/app/config/rclone.conf
 
 RUN groupadd -g $GID -o $UNAME
 RUN useradd -m -d /usr/src/app -u $UID -g $GID -o -s /bin/bash $UNAME
+RUN chmod 755 /usr/src/app
 RUN mkdir -p /gems && chown $UID:$GID /gems
 
 USER $UNAME
