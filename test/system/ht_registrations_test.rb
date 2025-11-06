@@ -7,7 +7,7 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     assert_selector "a.btn", text: "New Registration"
   end
 
-  test "registration workflow" do
+  test "Unsuccessful registration workflow" do
     # HT staff creates new registration
     visit_with_login ht_registrations_url
     click_on "New Registration", match: :first
@@ -47,5 +47,50 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     click_on "Create User"
     # Error for blank user ID since at this point we don't have any ENV stored for the finished registration
     assert_selector "div.alert-danger", text: "User ID can't be blank"
+  end
+
+  test "Successful registration workflow for Resource Sharing" do
+    applicant = "rs_applicant@default.invalid"
+    # HT staff creates new registration
+    visit_with_login ht_registrations_url
+    click_on "New Registration", match: :first
+    assert_selector "h1", text: "New Registration"
+    # HT staff enters user registration details
+    fill_in "Applicant Name", with: "RS Registration Applicant"
+    fill_in "Applicant E-mail", with: applicant
+    fill_in "Applicant Date", with: "01/01/2025"
+    first(".selection").click
+    first(".select-institution option").click
+    fill_in "Ticket", with: "GS-001"
+    select "Resource Sharing", from: "Role"
+    select "1 year", from: "Expire Type"
+    fill_in "Auth Rep Name", with: "Test Registration Auth Rep"
+    fill_in "Auth Rep E-mail", with: "rs_auth_rep@default.invalid"
+    fill_in "Auth Rep Date", with: "01/01/2025"
+    fill_in "Contact Info", with: "contact_info@default.invalid"
+    fill_in "HathiTrust Authorizer", with: "nobody@hathitrust.org"
+    # Capybara is unable to find and click a checkbox directly
+    check "ht_registration_mfa_addendum"
+    click_on "Submit Changes"
+    # Show page
+    assert_selector "h1", text: "RS Registration Applicant"
+    # Extract finalize URL from alert (only show in development/test environments)
+    assert_selector "div.alert-success"
+    link = first("div.alert-danger").text.match(/http.+/)[0]
+
+    # Registrant follows link in the registration e-mail
+    visit link
+    click_on "Confirm Registration"
+    assert_content "confirmed for rs_applicant@default.invalid"
+    reg = HTRegistration.where(applicant_email: applicant).first
+    reg.env = {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json
+    reg.save!
+    # Visit show page for new registration
+    visit ht_registration_path(reg.id)
+    assert_selector "h1", text: "RS Registration Applicant"
+    assert_selector "#create-update-user", text: "Create User"
+    click_on "Create User"
+    # Expect feedback that user was successfully created
+    assert_selector "div.alert-success", text: /Registration approved/
   end
 end
