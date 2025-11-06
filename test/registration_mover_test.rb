@@ -105,24 +105,31 @@ module Otis
     end
   end
 
+  # This class has been migrated to rspec
   class RegistrationMoverAccessTest < ActiveSupport::TestCase
-    test "finalized ssdproxy user has normal access" do
-      registration = create(:ht_registration, received: Time.now,
-        ip_address: Faker::Internet.public_ip_v4_address,
-        role: :ssdproxy,
-        env: {"HTTP_X_REMOTE_USER" => "https://shibboleth.umich.edu/idp/shibboleth!http://www.hathitrust.org/shibboleth-sp!gobbledygook"}
-        .to_json)
-      ht_user = RegistrationMover.new(registration).ht_user
-      assert_equal "normal", ht_user.access
-    end
-
-    test "finalized non-ssdproxy user has total access" do
-      (HTUser::ROLES - [:ssdproxy]).each do |role|
-        registration = create(:ht_registration, received: Time.now,
+    test "approved ssdproxy and resource_sharing users have normal access" do
+      [:ssdproxy, :resource_sharing].each do |role|
+        registration = create(
+          :ht_registration,
+          received: Time.now,
           ip_address: Faker::Internet.public_ip_v4_address,
           role: role,
-          env: {"HTTP_X_REMOTE_USER" => fake_shib_id}
-          .to_json)
+          env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json
+        )
+        ht_user = RegistrationMover.new(registration).ht_user
+        assert_equal "normal", ht_user.access
+      end
+    end
+
+    test "approved non-ssdproxy non-resource_sharing users have total access" do
+      (HTUser::ROLES - [:ssdproxy, :resource_sharing]).each do |role|
+        registration = create(
+          :ht_registration,
+          received: Time.now,
+          ip_address: Faker::Internet.public_ip_v4_address,
+          role: role,
+          env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json
+        )
         ht_user = RegistrationMover.new(registration).ht_user
         assert_equal "total", ht_user.access
       end
