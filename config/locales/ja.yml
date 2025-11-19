@@ -438,6 +438,6 @@ ja:
     show:
       expired_html: "<strong>%{user}の登録が期限切れになりました。事前にお送りしたメールを使用して、HathiTrust のスタッフまでご連絡ください。</strong>"
       submitted_followup_html: HathiTrust のスタッフが登録を承認すると、追加の情報とリソースが記載された確認メールが<strong>%{email}</strong>に届きます。
-      submitted_heading: "ご確認ありがとうございます！"
+      submitted_heading: ご確認ありがとうございます！
       submitted_success_html: "<strong>HathiTrust %{service}</strong>への登録が完了しました。"
       submitted_you_may_close: このウィンドウを閉じても構いません。

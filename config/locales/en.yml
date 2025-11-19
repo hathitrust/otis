@@ -438,6 +438,6 @@ en:
     show:
       expired_html: "<strong>Registration for %{user} has expired. Please contact HathiTrust staff via the email you had been previously sent.</strong>"
       submitted_followup_html: Once a HathiTrust staff member approves your registration, you will receive a confirmation email at <strong>%{email}</strong>, with additional information and resources.
-      submitted_heading: "Thank you for your confirmation!"
+      submitted_heading: Thank you for your confirmation!
       submitted_success_html: Your registration for <strong>HathiTrust %{service}</strong> was successful.
       submitted_you_may_close: You may now close this window.
