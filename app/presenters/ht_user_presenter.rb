@@ -187,7 +187,7 @@ class HTUserPresenter < ApplicationPresenter
     if edit_mfa?
       form.check_box(:mfa, onclick: "check_mfa();".html_safe)
     else
-      Otis::Badge.new("ht_user.values.mfa.unavailable", "bg-warning").label_span
+      Otis::Badge.new("ht_user.values.mfa.unavailable", "text-dark bg-warning").label_span
     end
   end
 
