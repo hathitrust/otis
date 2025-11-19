@@ -81,7 +81,6 @@ input.bg-danger {
   color:#FFFFFF !important;
 }
 
-//main.error::before {
 .landing::before {
   content: '';
   display: block;
@@ -92,9 +91,9 @@ input.bg-danger {
   height: 75%;
   opacity: 0.2;
   --pb: 3.75rem;
-  background-image: url(/useradmin/images/bg404desktop.svg);
+  background-image: url(/useradmin/images/elephant.svg);
   background-position: right bottom;
-  background-size: auto calc(100% - var(--pb));
+  //background-size: auto 36rem;
   background-repeat: no-repeat;
   z-index: -1;
 }
