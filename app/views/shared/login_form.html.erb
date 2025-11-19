@@ -3,7 +3,13 @@
     <form method="post" action="<%= login_as_path %>">
       <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
       <label for="usernameField"><%= t "global.fake_shib_controller.email" %></label>
-      <input id="usernameField" type="text" name="username" />
+      
+      <select id="usernameField" name="username">
+        <option value="admin@default.invalid">admin@default.invalid</option>
+        <option value="staff@default.invalid">staff@default.invalid</option>
+        <option value="institution@default.invalid">institution@default.invalid</option>
+      </select>
+
       <input type="submit" name="login" value="<%= t "global.fake_shib_controller.log_in" %>"/>
     </form>
   </body>
