@@ -5,16 +5,14 @@
     </p>
   <% else %>
     <% service_name = t "ht_registration.values.service_name." + @registration.service_role.name.downcase %>
-    <%= t ".success_html", user: @registration.applicant_email, service_name: service_name %>
-    <% case @message_type %>
-    <% when :success_mfa %>
-      <%= t ".success_mfa_html" %>
-    <% when :success_mfa_addendum %>
-      <%= t ".success_mfa_addendum_html" %>
-    <% when :success_static_ip %>
-      <%= t ".success_static_ip_html", ip: @ip_address %>
-    <% else %>
-      <% # Fall-through should never happen. Display nothing additional %>
-    <% end %>
+    <h2>
+      <span class="registration-landing-check align-items-center justify-content-center border rounded-circle">
+        <i class="bi bi-check" aria-hidden="true"></i>
+      </span>
+      <%= t ".submitted_heading" %>
+    </h2>
+    <p><%= t ".submitted_success_html", service: service_name %></p>
+    <p><%= t ".submitted_followup_html", email: @registration.applicant_email %></p>
+    <p><%= t ".submitted_you_may_close" %></p>
   <% end %>
 </div>

@@ -1,4 +1,4 @@
-@import 'bootstrap/scss/bootstrap';
+@import 'firebird-common/src/scss/styles.scss';
 
 $bootstrap-icons-font-dir: 'fonts';
 @import 'bootstrap-icons/font/bootstrap-icons';
@@ -16,14 +16,6 @@ $bootstrap-icons-font-dir: 'fonts';
     font-size:14px;
 }
 
-a {
-  color: #265A87
-}
-
-.text-muted {
-  color:#757575
-}
-
 .bg-primary {
   background-color:#265A87
 }
@@ -36,7 +28,7 @@ a {
   background-color:#20809D
 }
 
-.label-success,.btn-success {
+.label-success, .btn-success {
   background-color:#3A833A
 }
 
@@ -58,10 +50,6 @@ a {
   }
 }
 
-.btn-warning {
-  background-color:#f0ad4e
-}
-
 .btn {
   &:focus-visible {
     outline: 3px solid #086AB4 !important;
@@ -79,13 +67,36 @@ a:focus-visible {
   border-radius: 6px;
 }
 
-.btn-ht-orange {
-  background-color:#C35400;
+// For the user edit page expiration date input in "expires soon" mode
+// Might be better to get away from coloring the input and making visible
+// a triangle warning icon or a badge when about to expire.
+// This style just makes it so tbe text isn't black on red which is awful.
+// Also, setting the date to a not-expiring-soon state does not remove the red color.
+input.bg-danger {
   color:#FFFFFF;
-  &:hover, &:focus {
-    background-color:#A14E11;
-    color:#FFFFFF;
-  }
+}
+
+.registration-landing-check {
+  background-color: var(--color-primary-600) !important;
+  color:#FFFFFF !important;
+}
+
+//main.error::before {
+.landing::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 75%;
+  height: 75%;
+  opacity: 0.2;
+  --pb: 3.75rem;
+  background-image: url(/useradmin/images/bg404desktop.svg);
+  background-position: right bottom;
+  background-size: auto calc(100% - var(--pb));
+  background-repeat: no-repeat;
+  z-index: -1;
 }
 
 label a {
