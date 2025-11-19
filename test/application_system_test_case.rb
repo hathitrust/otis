@@ -22,7 +22,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       page.find("#nav-not-logged-in")
     rescue Capybara::ElementNotFound
     else
-      fill_in "username", with: "admin@default.invalid"
+      select "admin@default.invalid", from: "usernameField"
       click_on "Log In"
     end
   end
