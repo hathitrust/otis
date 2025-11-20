@@ -12,12 +12,14 @@
 
   <body>
     <%= render "shared/external_landing_header" %>
-    <div id="main-container" class="container landing">
-      <% # ======================================= %>
-      <% # ======== RENDER ALL THE THINGS ======== %>
-      <%= yield %>
-      <% # ======================================= %>
-    </div>
+    <main class="registration">
+      <div id="main-container" class="container landing">
+        <% # ======================================= %>
+        <% # ======== RENDER ALL THE THINGS ======== %>
+        <%= yield %>
+        <% # ======================================= %>
+      </div>
+    </main>
 
     <div class="container">
       <footer>
