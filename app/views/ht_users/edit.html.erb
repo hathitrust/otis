@@ -16,9 +16,32 @@
         $('#ht_user_iprestrict').attr('disabled', false);
       }
     }
+
     $('#edit_ht_user_form').submit(function() {
       $('#ht_user_iprestrict').attr('disabled', false);
     })
+
+    // Get the date from the date input and do some maths with it.
+    // If the current date is >= the "danger" cutoff then add the danger class,
+    // otherwise remove it.
+    // Also, the "Expire Now" button is disabled when user is already expired,
+    // so enable it once the date changes.
+    function check_expiration() {
+      var expires_soon_in_days = <%= ExpirationDate::EXPIRES_SOON_IN_DAYS %>;
+      var result = new Date(Date.parse($('#ht_user_expires').val()));
+      result.setDate(result.getDate() - expires_soon_in_days);
+      if (new Date(Date.now()) >= result) {
+        $('#ht_user_expires').addClass('bg-danger');
+      } else {
+        $('#ht_user_expires').removeClass('bg-danger');
+      }
+      $('#ht_user_expire_now').prop('disabled', false);
+    }
+
+    function set_expiration(date) {
+      $('#ht_user_expires').val(date);
+      check_expiration();
+    }
   </script>
 
   <%= form_with(model: @user, local: true, id: 'edit_ht_user_form') do |form| %>

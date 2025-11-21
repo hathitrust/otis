@@ -145,6 +145,9 @@ class HTUserPresenter < ApplicationPresenter
     form.select(:access, access_options)
   end
 
+  # This is a complex value to render because of the edit field as well
+  # as the two utility buttons.
+  #
   # NOTE: we do not use localized dates for this because the controller would
   # have to parse localized date formats when the value is edited.
   # There are two gems that may (or may not) be able to do this:
@@ -153,21 +156,31 @@ class HTUserPresenter < ApplicationPresenter
   # Both of these appear to be abandonware, so they have not been tried.
   # The calendar widget pushes most of the responsibility onto the browser
   # locale support and ensures we get consistent values.
-  #
-  # The buttons should maybe be pushed back out into edit.html.erb
   def edit_expires(form:)
-    expires_class = expiring_soon? ? "bg-danger" : ""
-    html = [form.date_field(:expires, value: expiration_date.to_s, class: expires_class)]
-    unless expired?
-      html << form.button(I18n.t("ht_user.edit.expire_now"), type: :button,
-        onclick: "$('#ht_user_expires').val('#{Date.today}').addClass('bg-danger');".html_safe,
-        class: "btn btn-primary")
-    end
+    expires_class = (expiring_soon? || expired?) ? "bg-danger" : ""
     new_expiration = expiration_date.default_extension_date
-    html << form.button(I18n.t("ht_user.edit.renew_now"), type: :button,
-      onclick: "$('#ht_user_expires').val('#{new_expiration}').removeClass('bg-danger');".html_safe,
-      class: "btn btn-primary")
-    html.join("\n")
+    [
+      form.date_field(
+        :expires,
+        value: expiration_date.to_s,
+        onchange: "check_expiration();".html_safe,
+        class: expires_class
+      ),
+      form.button(
+        I18n.t("ht_user.edit.expire_now"),
+        type: :button,
+        id: "ht_user_expire_now",
+        onclick: "set_expiration('#{Date.today - 1}');".html_safe,
+        class: "btn btn-primary",
+        disabled: expired?
+      ),
+      form.button(
+        I18n.t("ht_user.edit.renew_now"),
+        type: :button,
+        onclick: "set_expiration('#{new_expiration}');".html_safe,
+        class: "btn btn-primary"
+      )
+    ].join("\n")
   end
 
   def edit_expire_type(form:)
