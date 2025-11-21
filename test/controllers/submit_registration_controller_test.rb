@@ -17,14 +17,14 @@ class SubmitRegistrationControllerTest < ActionDispatch::IntegrationTest
     get submit_registration_url @reg.token
     assert_response :success
     assert_equal "new", @controller.action_name
-    assert_select "input[value='Confirm Registration']"
+    assert_select "input[value='Confirm']"
   end
 
   test "succeeds when form is submitted" do
     submit_confirmation
     assert_response :success
     assert_equal "new", @controller.action_name
-    assert_match "confirmed for #{@reg.applicant_email}", ActionView::Base.full_sanitizer.sanitize(@response.body)
+    assert_match "confirmation email at #{@reg.applicant_email}", ActionView::Base.full_sanitizer.sanitize(@response.body)
     assert_not_nil @reg.reload.received
     # Believe it or not, this is just a date comparison
     assert_equal Date.parse(@reg.reload.received.to_s).to_s, Date.parse(Time.zone.now.to_s).to_s

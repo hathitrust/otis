@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "npm run build:css && npm run build:js",
-    "build:css": "cp node_modules/bootstrap-icons/font/fonts/* public/styles/fonts && sass $* assets/styles:public/styles --style=compressed --load-path=node_modules",
+    "build:css": "assets/build_css.sh",
     "build:js": "assets/build.sh",
     "watch:css": "npm run build:css -- --watch",
     "watch:js": "npm run build:js -- --watch=forever"
@@ -31,10 +31,10 @@
   },
   "homepage": "https://github.com/hathitrust/otis#readme",
   "dependencies": {
-    "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "bootstrap-table": "^1.24.1",
     "ckeditor5": "^46.0.3",
+    "firebird-common": "github:hathitrust/firebird-common",
     "jquery": "^3.7.1",
     "select2": "^4.1.0-rc.0",
     "tableexport.jquery.plugin": "^1.33.0",

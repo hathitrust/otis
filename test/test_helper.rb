@@ -17,6 +17,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
 
 SimpleCov.start "rails" do
   # Keep code only used with test environment from muddying the waters.
+  add_filter "clear_database.rake"
   add_filter "migrate_users.rake"
 end
 

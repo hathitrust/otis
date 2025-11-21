@@ -1,11 +1,18 @@
 <div id="maincontent" class="row">
-  <%= form_with(model: @registration, url: submit_registration_url, local: true, method: :get) do |form| %>
+  <%= form_with(model: @registration, url: submit_registration_url, local: true, method: :get, html: {id: 'registration-message'}) do |form| %>
 
   <% service_name = t "ht_registration.values.service_name." + @registration.service_role.name.downcase %>
-  <%= t ".confirm_html", user: @registration.applicant_email, service_name: service_name %>
+    <h2><%= t ".confirm_heading" %></h2>
+      <div>
+      <p><%= t ".confirm_instruction1" %></p>
+      <ul>
+        <li><%= t ".confirm_email_html", email: @registration.applicant_email %></li>
+        <li><%= t ".confirm_service_html", service: service_name%></li>
+      </ul>
+      <p><%= t ".confirm_instruction2" %></p>
+      </div>
 
-  <br/><br/>
-  <%= form.submit t(".confirm_registration"), class: "btn btn-ht-orange" %>
+    <%= form.submit t(".confirm_button"), class: "btn btn-primary" %>
 
-  <% end %>
+    <% end %>
 </div>

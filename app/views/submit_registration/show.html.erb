@@ -1,20 +1,22 @@
 <div id="maincontent" class="row">
 
-  <% if @registration.expired? %>
-    <p><%= t ".expired_html", user: @registration.applicant_email %></p>
-    </p>
-  <% else %>
-    <% service_name = t "ht_registration.values.service_name." + @registration.service_role.name.downcase %>
-    <%= t ".success_html", user: @registration.applicant_email, service_name: service_name %>
-    <% case @message_type %>
-    <% when :success_mfa %>
-      <%= t ".success_mfa_html" %>
-    <% when :success_mfa_addendum %>
-      <%= t ".success_mfa_addendum_html" %>
-    <% when :success_static_ip %>
-      <%= t ".success_static_ip_html", ip: @ip_address %>
+  <div id="registration-message">
+    <% if @registration.expired? %>
+      <p><%= t ".expired_html", user: @registration.applicant_email %></p>
+      </p>
     <% else %>
-      <% # Fall-through should never happen. Display nothing additional %>
+      <% service_name = t "ht_registration.values.service_name." + @registration.service_role.name.downcase %>
+      <div class="d-flex gap-3">
+      <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+      <h2 class="m-0">
+        <%= t ".submitted_heading" %>
+      </h2>
+      </div>
+      <div>
+        <p><%= t ".submitted_success_html", service: service_name %></p>
+        <p><%= t ".submitted_followup_html", email: @registration.applicant_email %></p>
+        <p><%= t ".submitted_you_may_close" %></p>
+      </div>
     <% end %>
-  <% end %>
+  </div>
 </div>

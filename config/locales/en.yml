@@ -429,11 +429,15 @@ en:
       success: User updated.
   submit_registration:
     edit:
-      confirm_html: Click on the button to confirm %{service_name} registration for <strong>%{user}</strong>.
-      confirm_registration: Confirm Registration
+      confirm_button: Confirm
+      confirm_email_html: 'Email: <strong>%{email}</strong>'
+      confirm_heading: Confirm your registration
+      confirm_instruction1: 'To proceed with your request, please review the following information:'
+      confirm_instruction2: If this information is correct, please click Confirm to complete your registration
+      confirm_service_html: 'Service: <strong>HathiTrust %{service}</strong>'
     show:
       expired_html: "<strong>Registration for %{user} has expired. Please contact HathiTrust staff via the email you had been previously sent.</strong>"
-      success_html: "<p>Thank you.</p> <p>%{service_name} registration confirmed for <strong>%{user}</strong>. A HathiTrust staff member will approve your registration and respond shortly by e-mail.</p>"
-      success_mfa_addendum_html: "<p>Your registration indicates you have access to multi-factor authentication (MFA). HathiTrust staff will take measures to ensure interoperability with your institution's authentication system.</p>"
-      success_mfa_html: "<p>Your registration indicates you have access to multi-factor authentication (MFA). <i>As a reminder, this means that any secure access to HathiTrust must be done through your institution's MFA-enabled sign-in portal.</i></p>"
-      success_static_ip_html: "<p>Please take a moment to confirm that <code>%{ip}</code> is a static IP address. If you are not sure, we recommend you contact your network administrator.</p> <p>This is the only IP address from which you will be able to use the service. If your IP address changes in the future, you will need to contact HathiTrust and/or your network administrator.</p>"
+      submitted_followup_html: Once a HathiTrust staff member approves your registration, you will receive a confirmation email at <strong>%{email}</strong>, with additional information and resources.
+      submitted_heading: Thank you for your confirmation!
+      submitted_success_html: Your registration for <strong>HathiTrust %{service}</strong> was successful.
+      submitted_you_may_close: You may now close this window.

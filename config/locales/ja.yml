@@ -429,11 +429,15 @@ ja:
       success: ユーザーが更新されました。
   submit_registration:
     edit:
-      confirm_html: "%{user}の%{service_name}登録を確認するには、ボタンをクリックしてください。"
-      confirm_registration: 登録を確認する
+      confirm_button: 確認
+      confirm_email_html: Eメール：<strong>%{email}</strong>
+      confirm_heading: 登録を確認する
+      confirm_instruction1: リクエストを続行するには、次の情報を確認してください。
+      confirm_instruction2: 情報が正しければ、「確認」をクリックして登録を完了してください。
+      confirm_service_html: サービス：<strong>HathiTrust %{service}</strong>
     show:
       expired_html: "<strong>%{user}の登録が期限切れになりました。事前にお送りしたメールを使用して、HathiTrust のスタッフまでご連絡ください。</strong>"
-      success_html: "<p>ありがとうございます。</p> <p><strong>%{user}</strong>の%{service_name}登録が確認されました。 HathiTrustのスタッフが登録を承認し、すぐに電子メールで返信します。</p>"
-      success_mfa_addendum_html: "<p>登録は、多要素認証（MFA）にアクセスできることを示しています。 HathiTrustのスタッフは、あなたの機関との相互運用性を確保するための措置を講じます 認証システム。</p>"
-      success_mfa_html: "<p>登録は、多要素認証（MFA）にアクセスできることを示しています。 <i>念のため、これはHathiTrustへの安全なアクセスを行う必要があることを意味します 教育機関のMFA対応のサインインポータルを介して。</i></p>"
-      success_static_ip_html: "<p><code>%{ip}</code>が静的IPアドレスであることを確認してください。 よくわからない場合は、ネットワーク管理者に問い合わせることをお勧めします。</p> これは、サービスを使用できる唯一のIPアドレスです。 将来IPアドレスが変更された場合は、HathiTrustに連絡する必要があります またはネットワーク管理者。</p>"
+      submitted_followup_html: HathiTrust のスタッフが登録を承認すると、追加の情報とリソースが記載された確認メールが<strong>%{email}</strong>に届きます。
+      submitted_heading: ご確認ありがとうございます！
+      submitted_success_html: "<strong>HathiTrust %{service}</strong>への登録が完了しました。"
+      submitted_you_may_close: このウィンドウを閉じても構いません。
