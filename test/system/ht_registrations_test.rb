@@ -37,8 +37,8 @@ class HTRegistrationsTest < ApplicationSystemTestCase
 
     # Registrant follows link in the registration e-mail
     visit link
-    click_on "Confirm Registration"
-    assert_content "confirmed for test_reg_applicant@default.invalid"
+    click_on I18n.t("submit_registration.edit.confirm_button")
+    assert_content "Thank you"
     reg_id = HTRegistration.where(applicant_email: "test_reg_applicant@default.invalid").first.id
     # Visit show page for new registration
     visit ht_registration_path(reg_id)
@@ -80,8 +80,8 @@ class HTRegistrationsTest < ApplicationSystemTestCase
 
     # Registrant follows link in the registration e-mail
     visit link
-    click_on "Confirm Registration"
-    assert_content "confirmed for rs_applicant@default.invalid"
+    click_on I18n.t("submit_registration.edit.confirm_button")
+    assert_content "Thank you"
     reg = HTRegistration.where(applicant_email: applicant).first
     reg.env = {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json
     reg.save!

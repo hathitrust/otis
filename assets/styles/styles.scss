@@ -1,70 +1,66 @@
-@import 'bootstrap/scss/bootstrap';
+@import 'firebird-common/src/scss/styles.scss';
 
 $bootstrap-icons-font-dir: 'fonts';
 @import 'bootstrap-icons/font/bootstrap-icons';
 
 // https://infoguides.wtamu.edu/bootstrap/accessibility
-.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a {
-  color: #666666
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav > li > a {
+  color: #666666;
 }
 
 .navbar .navbar-text {
-  color: #666666
+  color: #666666;
 }
 
 #navbarSupportedContent ul > li {
-    font-size:14px;
-}
-
-a {
-  color: #265A87
-}
-
-.text-muted {
-  color:#757575
+  font-size: 14px;
 }
 
 .bg-primary {
-  background-color:#265A87
+  background-color: #265a87;
 }
 
 .label-default {
-  background-color:#757575
+  background-color: #757575;
 }
 
 .label-info {
-  background-color:#20809D
+  background-color: #20809d;
 }
 
-.label-success,.btn-success {
-  background-color:#3A833A
+.label-success,
+.btn-success {
+  background-color: #3a833a;
 }
 
 .label-warning {
-  background-color:#A4660E
+  background-color: #a4660e;
 }
 
-.label-danger, .btn-danger {
-  background-color:#D4403A
+.label-danger,
+.btn-danger {
+  background-color: #d4403a;
 }
 
 .btn-info {
-  background-color: #395B6E;
-  border-color: #395B6E;
+  background-color: #395b6e;
+  border-color: #395b6e;
   // Additions from https://stackoverflow.com/a/25933439 to accommondate dropdown menu in info button
-  &:hover, &:focus, &:active, .open>.dropdown-toggle.btn-info, &:active:focus, &:first-child:active {
+  &:hover,
+  &:focus,
+  &:active,
+  .open > .dropdown-toggle.btn-info,
+  &:active:focus,
+  &:first-child:active {
     background-color: #055160; //$cyan-800
     border-color: #055160; //$cyan-800
   }
 }
 
-.btn-warning {
-  background-color:#f0ad4e
-}
-
 .btn {
   &:focus-visible {
-    outline: 3px solid #086AB4 !important;
+    outline: 3px solid #086ab4 !important;
     outline-offset: 4px;
     box-shadow: 0 0 0 6px white;
     z-index: 3 !important;
@@ -79,17 +75,47 @@ a:focus-visible {
   border-radius: 6px;
 }
 
-.btn-ht-orange {
-  background-color:#C35400;
-  color:#FFFFFF;
-  &:hover, &:focus {
-    background-color:#A14E11;
-    color:#FFFFFF;
+// For the user edit page expiration date input in "expires soon" mode
+// Might be better to get away from coloring the input and making visible
+// a triangle warning icon or a badge when about to expire.
+// This style just makes it so tbe text isn't black on red which is awful.
+// Also, setting the date to a not-expiring-soon state does not remove the red color.
+input.bg-danger {
+  color: #ffffff;
+}
+
+main.registration {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr calc(32rem + 4rem) 1fr;
+  grid-template-rows: 2.25rem auto;
+  background-image: url(/useradmin/images/elephant.svg);
+  background-position: bottom 60px right 0;
+  background-size: 37rem 27.5rem;
+  background-repeat: no-repeat;
+  .landing {
+    grid-column-start: 2;
+    grid-row-start: 2;
+  }
+  #registration-message {
+    padding: 1.25rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    input.btn {
+      width: min-content;
+    }
+    i {
+      display: flex;
+      align-items: center;
+      color: var(--color-primary-600);
+      font-size: 1.5rem;
+    }
   }
 }
 
 label a {
-  font-weight:400
+  font-weight: 400;
 }
 
 code {
@@ -100,5 +126,5 @@ code {
   font-weight: bold;
   font-family: courier;
   font-size: 120%;
-  color: #d65d22
+  color: #d65d22;
 }
