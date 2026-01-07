@@ -57,20 +57,30 @@ class HTDownloadPresenter < ApplicationPresenter
     DATA_FILTER_CONTROLS[field].to_s
   end
 
-  # Only needed for role because displayed value != database value.
-  # Maps display value and query values.
+  # Display all possible values for a given column that has a popup menu
+  # Maps display value and query values (which are the same except for role).
   # Should not be memoized, locale is variable.
+  # Returns a hash of { "search_value" => "Display Value", ... }
   def self.data_filter_data(field)
-    return unless field == :role
+    return if DATA_FILTER_CONTROLS[field] != :select
 
-    map = {}
-    # TODO: this is a little clunky, could extract a class method from
-    # `ApplicationPresenter#field_value` to handle this kind of mucking
-    # about with scopes.
-    [:ssdproxy, :resource_sharing].each do |value|
-      map[value] = I18n.t(value_scope + ".#{field}.#{value}", raise: false)
+    all_values = HTDownload.all_values(field)
+    all_values_map = all_values.to_h { |x| [x, x] }
+    # Postprocess role because displayed values are localized and anyway
+    # differ from the stored values.
+    if field == :role
+      all_values_map.each_key do |value|
+        all_values_map[value] = I18n.t(value_scope + ".#{field}.#{value}", raise: false)
+      end
     end
-    ("json:" + map.to_json).html_safe
+    if field == :full_download
+      # TODO: duplication with `show_full_download`, sidesteps localization.
+      # We have some overly complex ransacker plumbing in here just to support "yes" and "no"
+      # ETT-745 may give us the opportunity to return {0 => "no", 1 => "yes"} or {false => "no", true => "yes"}
+      # and get rid of the ransacker and some other goop.
+      all_values_map = all_values.to_h { |x| x ? ["yes", "yes"] : ["no", "no"] }
+    end
+    ("json:" + all_values_map.to_json).html_safe
   end
 
   # Some CSS in index.html.erb allows the title, imprint, and author fields to be a bit wider

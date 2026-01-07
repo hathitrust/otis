@@ -30,6 +30,18 @@ RSpec.describe HTDownload do
     end
   end
 
+  describe ".all_values" do
+    # Make sure we can get values for all of the columns that have a select control
+    HTDownloadPresenter::DATA_FILTER_CONTROLS.each_key do |field|
+      next if HTDownloadPresenter::DATA_FILTER_CONTROLS[field] != :select
+      context "with #{field}" do
+        it "returns an array of values" do
+          expect(described_class.all_values(field)).to be_a(Array)
+        end
+      end
+    end
+  end
+
   describe ".ransackable_attributes" do
     it "returns an Array" do
       expect(described_class.ransackable_attributes).to be_a(Array)
