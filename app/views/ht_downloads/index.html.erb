@@ -123,7 +123,7 @@
               data-filter-control="<%= control %>"
 
               <% if filter_data %>
-                <%= "data-filter-data='#{filter_data}'".html_safe %>
+                data-filter-data='<%= filter_data.gsub("'", "&#39;").html_safe %>'
               <% end %>
 
               data-sortable="true"
