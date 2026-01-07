@@ -40,6 +40,14 @@ RSpec.describe HTDownload do
         end
       end
     end
+
+    context "with an unsupported field" do
+      it "raises" do
+        expect {
+          described_class.all_values("no such field")
+        }.to raise_error(StandardError)
+      end
+    end
   end
 
   describe ".ransackable_attributes" do
@@ -111,6 +119,19 @@ RSpec.describe HTDownload do
       end
 
       expect(HTDownload.for_role("resource_sharing").size).to be(2)
+    end
+  end
+
+  describe "ransacker" do
+    it "finds a record based on user selection" do
+      now = Time.now
+      create(:ht_download, datetime: now, is_partial: false) do |download|
+        downloads = described_class.ransack(
+          datetime_start: now.to_date.to_s,
+          full_download_eq: "yes"
+        ).result
+        expect(downloads.count).to eq(1)
+      end
     end
   end
 end
