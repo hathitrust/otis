@@ -121,7 +121,8 @@
             <th data-field="<%= field %>"
               class="<%= th_class %>"
               data-filter-control="<%= control %>"
-
+              data-force-export="true"
+              data-visible="<%= field != :seq ? "true" : "false" %>"
               <% if filter_data %>
                 <%= "data-filter-data='#{filter_data}'".html_safe %>
               <% end %>

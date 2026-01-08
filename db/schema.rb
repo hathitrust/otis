@@ -130,6 +130,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.binary :sha
     t.string :role
     t.integer :pages
+    t.string :seq
   end
 
   create_table "hathifiles.hf", id: false, if_not_exists: true do |t|

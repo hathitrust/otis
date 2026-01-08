@@ -170,8 +170,21 @@ end
 
 def create_download
   datetime = Faker::Time.backward
+  # FIXME: is it correct to put nil?
+  # new `full_download` column should be NOT NULL
+  # Sorting table by is_partial is a problem when nil is allowed.
   is_partial = [nil, false, true].sample
-
+  pages = nil
+  seq = nil
+  if is_partial
+    seq = [].tap do |acc|
+      Faker::Number.within(range: 1..20).times do |_i|
+        acc << Faker::Number.within(range: 1..100)
+      end
+    end.sort.uniq
+    pages = seq.count
+    seq = seq.join(",")
+  end
   rep = HTDownload.create(
     in_copyright: [false, true].sample,
     yyyy: datetime.year,
@@ -179,7 +192,8 @@ def create_download
     datetime: datetime,
     htid: UNIQUE_HTIDS.keys.sample,
     is_partial: is_partial,
-    pages: is_partial ? rand(100) : nil,
+    pages: pages,
+    seq: seq,
     role: %w[ssdproxy resource_sharing].sample,
     # FIXME: how about we make sure the email and institution code match?
     email: UNIQUE_EMAILS.keys.sample,

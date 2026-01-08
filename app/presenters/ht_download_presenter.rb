@@ -19,6 +19,7 @@ class HTDownloadPresenter < ApplicationPresenter
     rights_date_used
     full_download
     pages
+    seq
   ].freeze
 
   # Type of filter control to specify for a given column.
@@ -38,7 +39,8 @@ class HTDownloadPresenter < ApplicationPresenter
     author: :input,
     rights_date_used: :select,
     full_download: :select,
-    pages: :select
+    pages: :select,
+    seq: :input
   }.freeze
 
   # Used below to create accessor methods for the relevant hathifiles.hf fields.

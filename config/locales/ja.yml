@@ -39,6 +39,7 @@ ja:
         rights_code: 著作権コード
         rights_date_used: 著作権の日付
         role: 役割
+        seq: ページシーケンス
         title: タイトル
       ht_institution:
         allowed_affiliations: 所属

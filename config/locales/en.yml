@@ -39,6 +39,7 @@ en:
         rights_code: Rights Code
         rights_date_used: Rights Date
         role: Role
+        seq: Page Sequence
         title: Title
       ht_institution:
         allowed_affiliations: Affiliations
