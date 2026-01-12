@@ -10,7 +10,7 @@
 * [Project Set Up](#project-set-up)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-  * [Creating A Pull Request](#creating-a-pull-request)
+  * [Creating A Pull Request](#periodic-maintenance)
 * [Content Structure](#content-structure)
   * [Project Structure](#project-structure)
   * [Site Maps](#site-maps)
@@ -84,9 +84,17 @@ To try the application, go to http://localhost:3000/useradmin and log in as one
 of `{admin,staff,institution}@default.invalid`, in decreasing order of
 administrative power.
 
-### Creating A Pull Request
+### Periodic Maintenance
 
-Nothing beyond the ordinary.
+Update gems and `npm` modules:
+
+```
+docker compose run --rm test bash
+> bundle update --bundler
+> bundle update --all
+> npm update
+
+```
 
 ## Content Structure
 
