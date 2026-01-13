@@ -25,9 +25,9 @@ class HTDownload < ApplicationRecord
   # that always have all possible values, not just the ones on the current page.
   def self.all_values(field)
     case field
-    when :rights_code, :content_provider_code, :digitization_agent_code, :rights_date_used
+    when :rights_code, :content_provider_code, :digitization_agent_code
       joins(:ht_hathifile).distinct.pluck(field)
-    when :role, :inst_code, :pages
+    when :role, :inst_code
       distinct.pluck(field)
     when :institution_name
       joins(:ht_institution).distinct.pluck(:name)
