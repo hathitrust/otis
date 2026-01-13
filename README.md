@@ -10,7 +10,7 @@
 * [Project Set Up](#project-set-up)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-  * [Creating A Pull Request](#creating-a-pull-request)
+  * [Periodic Maintenance](#periodic-maintenance)
 * [Content Structure](#content-structure)
   * [Project Structure](#project-structure)
   * [Site Maps](#site-maps)
@@ -84,9 +84,17 @@ To try the application, go to http://localhost:3000/useradmin and log in as one
 of `{admin,staff,institution}@default.invalid`, in decreasing order of
 administrative power.
 
-### Creating A Pull Request
+### Periodic Maintenance
 
-Nothing beyond the ordinary.
+Update gems and `npm` modules:
+
+```
+docker compose run --rm test bash
+> bundle update --bundler
+> bundle update --all
+> npm update
+
+```
 
 ## Content Structure
 
@@ -105,7 +113,8 @@ lib/tasks/institutions_export.rake  # production cron-job
 lib/tasks/migrate_users.rake        # test/setup
 log/      # Rails logs, pretty verbose but not always useful
 public/   # Static assests, favicons and http status pages
-test/     # Ruby tests (minitest style)
+spec/     # Ruby tests (rspec style -- migrating to this)
+test/     # Ruby tests (minitest style -- migrating from this)
 vendor/   # vendor/geoip, minimal test db
 ```
 
