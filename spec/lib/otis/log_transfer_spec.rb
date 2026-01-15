@@ -40,5 +40,17 @@ RSpec.describe Otis::LogTransfer do
       expect(File.exist?(destination)).to eq(true)
       expect(File.size(destination)).to be > 0
     end
+
+    it "transfers a gzipped version if we asked for the pre-gzipped version" do
+      # Get the log that has a gzip suffix and strip it.
+      source = transfer.imgsrv_logs.find do |log|
+        log["Path"].end_with?(".gz")
+      end["Path"].sub(/\.gz$/, "")
+      # Ask for that nonexistent file
+      destination = transfer.transfer_log(source_path: source, destination_directory: @tmpdir)
+      expect(File.exist?(destination)).to eq(true)
+      expect(destination.end_with?(".gz")).to eq(true)
+      expect(File.size(destination)).to be > 0
+    end
   end
 end
