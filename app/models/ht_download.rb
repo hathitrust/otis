@@ -21,6 +21,25 @@ class HTDownload < ApplicationRecord
     ["ht_hathifile", "ht_institution"]
   end
 
+  # Needed by the presenter for assembling the data for dropdown menus
+  # that always have all possible values, not just the ones on the current page.
+  def self.all_values(field)
+    case field
+    when :rights_code, :content_provider_code, :digitization_agent_code
+      joins(:ht_hathifile).distinct.pluck(field)
+    when :role, :inst_code
+      distinct.pluck(field)
+    when :institution_name
+      joins(:ht_institution).distinct.pluck(:name)
+    # TODO: upcoming schema change in ETT-745 should simplify this.
+    # `map` to invert the Boolean to change partial -> full.
+    when :full_download
+      distinct.pluck(:is_partial).map { |value| !value }
+    else
+      raise "no all_values for field #{field}"
+    end
+  end
+
   def institution_name
     institution&.name
   end
