@@ -131,15 +131,25 @@ module Otis
     private
 
     # Returns true iff all of these are true:
-    # role is "ssdproxy" or "resource_sharing"
+    # activated role is ATRS or RS
     # access is "success"
     # mode is "download"
     # datetime is on or after last import
     def relevant_log_entry?(entry)
-      (entry["role"] == "ssdproxy" || entry["role"] == "resource_sharing") &&
+      (atrs?(entry) || rs?(entry)) &&
         entry["access"] == "success" &&
         entry["mode"] == "download" &&
         Time.parse(entry["datetime"]) >= last_import
+    end
+
+    # Is activated role ATRS? (role is ssdproxy and access_type is ssd_proxy_user)
+    def atrs?(entry)
+      entry["role"] == "ssdproxy" && entry["access_type"] == "ssd_proxy_user"
+    end
+
+    # Is RS role activated? (role is "resource_sharing" and access_type is "resource_sharing_user")
+    def rs?(entry)
+      entry["role"] == "resource_sharing" && entry["access_type"] == "resource_sharing_user"
     end
 
     def create_report(entry)
