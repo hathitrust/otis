@@ -111,6 +111,14 @@ RSpec.describe HTDownload do
     end
   end
 
+  describe "#seq" do
+    it "saves specific sequences" do
+      build(:ht_download, seq: "4,5,6") do |download|
+        expect(download.seq).to eq("4,5,6")
+      end
+    end
+  end
+
   describe "#for_role" do
     it "returns a scope for the given role" do
       2.times do

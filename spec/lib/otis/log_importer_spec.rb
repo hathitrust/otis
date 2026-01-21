@@ -44,9 +44,10 @@ RSpec.describe Otis::LogImporter do
       expect(download[:sha].length).to be > 0
       expect(download[:role].length).to be > 0
       expect(download[:pages]).to be > 0
+      expect(download[:seq].length).to be > 0
     end
 
-    it "records page count for partial records" do
+    it "records page count and sequences for partial records" do
       importer.run
 
       # Both the qualifying ssdproxy records in the fixtures are partial downloads with
@@ -54,6 +55,11 @@ RSpec.describe Otis::LogImporter do
       download = HTDownload.where(role: "ssdproxy").first
       expect(download.is_partial).to be true
       expect(download.pages).to eq 42
+
+      seqs = download.seq.split(",").map(&:to_i)
+      expect(seqs.count).to eq 42
+      expect(seqs.first).to eq 415
+      expect(seqs.last).to eq 456
     end
 
     it "records role" do

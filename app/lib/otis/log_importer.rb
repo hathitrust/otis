@@ -164,7 +164,8 @@ module Otis
         email: translate_remote_user(entry["remote_user_processed"]),
         inst_code: entry["inst_code"],
         role: entry["role"],
-        pages: extract_pages_from_seq(entry["seq"])
+        pages: extract_pages_from_seq(entry["seq"]),
+        seq: entry["seq"]
       )
       # Call `.save` and not `.save!` on this object because its SHA may
       # violate uniqueness, which is perfectly okay.
