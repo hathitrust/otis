@@ -34,4 +34,14 @@ RSpec.describe HTDownloadPresenter do
       end
     end
   end
+
+  describe ".data_visible" do
+    it "does not make seq visible" do
+      expect(described_class.data_visible(:seq)).to be false
+    end
+
+    it "makes pages visible" do
+      expect(described_class.data_visible(:pages)).to be true
+    end
+  end
 end

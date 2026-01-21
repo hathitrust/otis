@@ -19,6 +19,7 @@ class HTDownloadPresenter < ApplicationPresenter
     rights_date_used
     full_download
     pages
+    seq
   ].freeze
 
   # Type of filter control to specify for a given column.
@@ -81,6 +82,10 @@ class HTDownloadPresenter < ApplicationPresenter
       all_values_map = all_values.to_h { |x| x ? ["yes", "yes"] : ["no", "no"] }
     end
     ("json:" + all_values_map.to_json).html_safe
+  end
+
+  def self.data_visible(field)
+    field != :seq
   end
 
   # Some CSS in index.html.erb allows the title, imprint, and author fields to be a bit wider

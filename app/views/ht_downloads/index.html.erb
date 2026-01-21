@@ -89,7 +89,7 @@
     <table id="table"
       class="table table-striped table-bordered table-hover table-condensed"
       data-export-data-type="all"
-      data-export-options='{"fileName": "SSDProxyReport"}'
+      data-export-options='{"fileName": "SSDProxyReport", "numbers": {"html": false, "output": false} }'
       data-export-types="['json', 'xml', 'csv', 'excel']"
       data-filter-control="true"
       data-filter-control-multiple-search="true"
@@ -121,6 +121,7 @@
             <th data-field="<%= field %>"
               class="<%= th_class %>"
               data-filter-control="<%= control %>"
+              data-force-export="true"
 
               <% if filter_data %>
                 data-filter-data='<%= filter_data.gsub("'", "&#39;").html_safe %>'
@@ -128,6 +129,7 @@
 
               data-sortable="true"
               data-tableexport-value="<%= field.to_s.titleize %>"
+              data-visible="<%= HTDownloadPresenter.data_visible(field) %>"
             >
               <%= HTDownloadPresenter.field_label field %>
             </th>

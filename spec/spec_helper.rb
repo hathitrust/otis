@@ -118,3 +118,7 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 end
+
+def sign_in!(username: "admin@default.invalid")
+  post login_as_url, params: {username: username}
+end
