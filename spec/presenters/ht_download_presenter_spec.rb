@@ -27,11 +27,9 @@ RSpec.describe HTDownloadPresenter do
     end
 
     it "displays the correct value for full_download" do
-      create(:ht_download, is_partial: 1) do |download|
-        data = described_class.data_filter_data(:full_download)
-        data = JSON.parse(data.sub(/^json:/, ""))
-        expect(data).to eq({"no" => "no"})
-      end
+      data = described_class.data_filter_data(:full_download)
+      data = JSON.parse(data.sub(/^json:/, ""))
+      expect(data).to eq({"false" => "no", "true" => "yes"})
     end
   end
 

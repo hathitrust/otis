@@ -24,19 +24,19 @@ RSpec.describe "/ht_downloads json", type: :request do
     expect(json_body["rows"].length).to eq(dl_count)
   end
 
-  it "can export list of full_download=yes reports as JSON" do
+  it "can export list of full_download=true reports as JSON" do
     sign_in!
-    get ht_downloads_url(format: :json, filter: "{\"full_download\":\"yes\"}")
+    get ht_downloads_url(format: :json, filter: "{\"full_download\":\"true\"}")
 
     json_body = JSON.parse(@response.body)
     expect(json_body).to be_a_kind_of(Hash)
-    expected = HTDownload.where(pages: nil, is_partial: 0).count
+    expected = HTDownload.where(pages: nil, full_download: true).count
     expect(json_body["rows"].length).to eq(expected)
   end
 
   it "includes correctly formatted seq in partial downloads" do
     sign_in!
-    get ht_downloads_url(format: :json, filter: "{\"full_download\":\"no\"}")
+    get ht_downloads_url(format: :json, filter: "{\"full_download\":\"false\"}")
 
     json_body = JSON.parse(@response.body)
     json_body["rows"].each do |row|

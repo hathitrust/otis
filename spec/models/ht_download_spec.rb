@@ -88,24 +88,10 @@ RSpec.describe HTDownload do
     end
   end
 
-  describe "#full_download" do
-    it "is false when is_partial is true" do |download|
-      build(:ht_download, is_partial: true) do |download|
-        expect(download.full_download).to be(false)
-      end
-    end
-
-    it "is true when is_partial is false" do |download|
-      build(:ht_download, is_partial: false) do |download|
-        expect(download.full_download).to be(true)
-      end
-    end
-  end
-
   describe "#pages" do
     # Note: this is testing the factory
     it "has positive pages when partial" do
-      build(:ht_download, is_partial: 1) do |download|
+      build(:ht_download, full_download: false) do |download|
         expect(download.pages).to be >= 1
       end
     end
@@ -133,7 +119,7 @@ RSpec.describe HTDownload do
   describe "ransacker" do
     it "finds a record based on user selection" do
       now = Time.now
-      create(:ht_download, datetime: now, is_partial: false) do |download|
+      create(:ht_download, datetime: now, full_download: false) do |download|
         downloads = described_class.ransack(
           datetime_start: now.to_date.to_s,
           full_download_eq: "yes"

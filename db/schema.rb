@@ -124,7 +124,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :yyyymm, null: false
     t.timestamp :datetime, null: false
     t.string :htid, null: false
-    t.boolean :is_partial
+    t.boolean :full_download
     t.string :email, null: false
     t.string :inst_code
     t.binary :sha

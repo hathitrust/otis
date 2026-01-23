@@ -38,7 +38,7 @@ RSpec.describe Otis::LogImporter do
       expect(download[:yyyymm].length).to be > 0
       expect(download[:datetime]).to be_a(Time)
       expect(download[:htid].length).to be > 0
-      expect(download[:is_partial]).not_to be_nil
+      expect(download[:full_download]).not_to be_nil
       expect(download[:email].length).to be > 0
       expect(download[:inst_code].length).to be > 0
       expect(download[:sha].length).to be > 0
@@ -53,7 +53,7 @@ RSpec.describe Otis::LogImporter do
       # Both the qualifying ssdproxy records in the fixtures are partial downloads with
       # 42 pages
       download = HTDownload.where(role: "ssdproxy").first
-      expect(download.is_partial).to be true
+      expect(download.full_download).to be false
       expect(download.pages).to eq 42
 
       seqs = download.seq.split(",").map(&:to_i)
@@ -65,11 +65,11 @@ RSpec.describe Otis::LogImporter do
     it "records role" do
       importer.run
 
-      # Both the qualifying records with is_partial=1 in the fixtures are from ssdproxy
-      download = HTDownload.where(is_partial: 1).first
+      # Both the qualifying records with partial download in the fixtures are from ssdproxy
+      download = HTDownload.where(full_download: false).first
       expect(download.role).to eq "ssdproxy"
-      # The resource sharing example is not partial
-      download = HTDownload.where(is_partial: 0).first
+      # The resource sharing example is full
+      download = HTDownload.where(full_download: true).first
       expect(download.role).to eq "resource_sharing"
     end
 
