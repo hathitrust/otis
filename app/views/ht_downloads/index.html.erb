@@ -15,6 +15,21 @@
     params.dateEnd = $('#date-end').val();
     return params
   }
+
+  window.buttons = () => ({
+    btnUsersAdd: {
+      text: 'Download CSV',
+      icon: 'bi-download',
+      event () {
+        alert('FIXME: populate the URL with the appropriate ht_downloads format=csv link')
+        window.location = 'http://127.0.0.1:3000/useradmin/ht_institutions?format=csv&locale=en';
+      },
+      attributes: {
+        title: 'Download CSV'
+      }
+    }
+  })
+
 </script>
 
 <style type="text/css">
@@ -88,9 +103,7 @@
   <div class="row">
     <table id="table"
       class="table table-striped table-bordered table-hover table-condensed"
-      data-export-data-type="all"
-      data-export-options='{"fileName": "SSDProxyReport", "numbers": {"html": false, "output": false} }'
-      data-export-types="['json', 'xml', 'csv', 'excel']"
+      data-buttons="buttons"
       data-filter-control="true"
       data-filter-control-multiple-search="true"
       data-filter-default=""
@@ -100,10 +113,9 @@
       data-query-params="queryParams"
       data-query-params-type=""
       data-search="false"
+      data-show-button-text="true"
       data-show-columns="true"
-      data-show-export="true"
       data-show-extended-pagination="true"
-      data-show-filter-control-switch="true"
       data-show-search-clear-button="false"
       data-side-pagination="server"
       data-sort-select-options="true"
@@ -121,14 +133,12 @@
             <th data-field="<%= field %>"
               class="<%= th_class %>"
               data-filter-control="<%= control %>"
-              data-force-export="true"
 
               <% if filter_data %>
                 data-filter-data='<%= filter_data.gsub("'", "&#39;").html_safe %>'
               <% end %>
 
               data-sortable="true"
-              data-tableexport-value="<%= field.to_s.titleize %>"
               data-visible="<%= HTDownloadPresenter.data_visible(field) %>"
             >
               <%= HTDownloadPresenter.field_label field %>
