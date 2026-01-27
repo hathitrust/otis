@@ -27,11 +27,19 @@ RSpec.describe HTDownloadPresenter do
     end
 
     it "displays the correct value for full_download" do
-      create(:ht_download, is_partial: 1) do |download|
-        data = described_class.data_filter_data(:full_download)
-        data = JSON.parse(data.sub(/^json:/, ""))
-        expect(data).to eq({"no" => "no"})
-      end
+      data = described_class.data_filter_data(:full_download)
+      data = JSON.parse(data.sub(/^json:/, ""))
+      expect(data).to eq({"false" => "no", "true" => "yes"})
+    end
+  end
+
+  describe ".data_visible" do
+    it "does not make seq visible" do
+      expect(described_class.data_visible(:seq)).to be false
+    end
+
+    it "makes pages visible" do
+      expect(described_class.data_visible(:pages)).to be true
     end
   end
 end

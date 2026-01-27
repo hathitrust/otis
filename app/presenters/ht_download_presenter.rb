@@ -19,6 +19,7 @@ class HTDownloadPresenter < ApplicationPresenter
     rights_date_used
     full_download
     pages
+    seq
   ].freeze
 
   # Type of filter control to specify for a given column.
@@ -72,15 +73,14 @@ class HTDownloadPresenter < ApplicationPresenter
       all_values_map.each_key do |value|
         all_values_map[value] = I18n.t(value_scope + ".#{field}.#{value}", raise: false)
       end
-    end
-    if field == :full_download
-      # TODO: duplication with `show_full_download`, sidesteps localization.
-      # We have some overly complex ransacker plumbing in here just to support "yes" and "no"
-      # ETT-745 may give us the opportunity to return {0 => "no", 1 => "yes"} or {false => "no", true => "yes"}
-      # and get rid of the ransacker and some other goop.
-      all_values_map = all_values.to_h { |x| x ? ["yes", "yes"] : ["no", "no"] }
+    elsif field == :full_download
+      all_values_map = {false => "no", true => "yes"}
     end
     ("json:" + all_values_map.to_json).html_safe
+  end
+
+  def self.data_visible(field)
+    field != :seq
   end
 
   # Some CSS in index.html.erb allows the title, imprint, and author fields to be a bit wider

@@ -152,6 +152,15 @@ module Otis
       entry["role"] == "resource_sharing" && entry["access_type"] == "resource_sharing_user"
     end
 
+    def full_download?(entry)
+      case entry["is_partial"]
+      when 0
+        true
+      when 1
+        false
+      end
+    end
+
     def create_report(entry)
       datetime = Time.parse entry["datetime"]
       report = HTDownload.new(
@@ -160,11 +169,12 @@ module Otis
         yyyymm: datetime.strftime("%Y%m"),
         datetime: datetime,
         htid: entry["id"],
-        is_partial: entry["is_partial"],
+        full_download: full_download?(entry),
         email: translate_remote_user(entry["remote_user_processed"]),
         inst_code: entry["inst_code"],
         role: entry["role"],
-        pages: extract_pages_from_seq(entry["seq"])
+        pages: extract_pages_from_seq(entry["seq"]),
+        seq: entry["seq"]
       )
       # Call `.save` and not `.save!` on this object because its SHA may
       # violate uniqueness, which is perfectly okay.

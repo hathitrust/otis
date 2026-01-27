@@ -170,7 +170,12 @@ end
 
 def create_download
   datetime = Faker::Time.backward
-  is_partial = [nil, false, true].sample
+  full_download = [nil, false, true].sample
+
+  if !full_download
+    pages = rand(1..20)
+    seq = (1..100).to_a.sample(pages).sort.join(",")
+  end
 
   rep = HTDownload.create(
     in_copyright: [false, true].sample,
@@ -178,8 +183,9 @@ def create_download
     yyyymm: datetime.strftime("%Y%m"),
     datetime: datetime,
     htid: UNIQUE_HTIDS.keys.sample,
-    is_partial: is_partial,
-    pages: is_partial ? rand(100) : nil,
+    full_download: full_download,
+    pages: pages,
+    seq: seq,
     role: %w[ssdproxy resource_sharing].sample,
     # FIXME: how about we make sure the email and institution code match?
     email: UNIQUE_EMAILS.keys.sample,

@@ -31,10 +31,8 @@ class HTDownload < ApplicationRecord
       distinct.pluck(field)
     when :institution_name
       joins(:ht_institution).distinct.pluck(:name)
-    # TODO: upcoming schema change in ETT-745 should simplify this.
-    # `map` to invert the Boolean to change partial -> full.
     when :full_download
-      distinct.pluck(:is_partial).map { |value| !value }
+      [true, false]
     else
       raise "no all_values for field #{field}"
     end
@@ -52,16 +50,8 @@ class HTDownload < ApplicationRecord
     ht_hathifile
   end
 
-  def full_download
-    !is_partial
-  end
-
   ransacker :datetime do
     Arel.sql("DATE(#{table_name}.datetime)")
-  end
-
-  ransacker :full_download do
-    Arel.sql("(CASE WHEN #{table_name}.is_partial = '0' THEN 'yes' WHEN #{table_name}.is_partial = '1' THEN 'no' END)")
   end
 
   def sha
@@ -75,7 +65,7 @@ class HTDownload < ApplicationRecord
   # Unhexing the data allows us to use binary(20) in the schema instead of varchar(40) but
   # it is unfriendly to look at.
   def calculate_sha
-    input = [:datetime, :htid, :in_copyright, :is_partial, :email, :inst_code].map do |attr|
+    input = [:datetime, :htid, :in_copyright, :full_download, :email, :inst_code].map do |attr|
       self[attr].to_s
     end.join(" ")
     # Unhex: transform each hex representation into a character; see comments at

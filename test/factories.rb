@@ -161,8 +161,9 @@ FactoryBot.define do
     yyyymm { datetime.strftime("%Y%m") }
     datetime { datetime }
     htid { Faker::Lorem.unique.characters(number: 10) }
-    is_partial { [false, true].sample }
-    pages { is_partial ? rand(1..100) : nil }
+    full_download { [false, true].sample }
+    pages { full_download ? nil : rand(1..20) }
+    seq { full_download ? nil : (1..100).to_a.sample(pages).sort.join(",") }
     email { Faker::Internet.email }
     inst_code { Faker::Internet.unique.domain_word }
     role { %w[resource_sharing ssdproxy].sample }
