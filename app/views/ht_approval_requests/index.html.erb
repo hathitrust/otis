@@ -8,9 +8,16 @@
   <%= form_tag(ht_approval_requests_path, method: :post) do %>
 
   <h2 class="float-start"><%= t ".active_requests" %></h2>
-  <table id="active_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-show-search-clear-button="true"
-         data-locale="<%= language_region_locale %>"
+  <table
+    id="active-requests"
+    class="table table-striped"
+    data-height="460"
+    data-locale="<%= language_region_locale %>"
+    data-search="true"
+    data-show-columns="true"
+    data-show-search-clear-button="true"
+    data-toggle="table"
+    data-virtual-scroll="true"
   >
     <thead class="thead-dark">
     <tr>
@@ -61,9 +68,16 @@
   <% end %>
   <% end # form-tag %>
   <h2 class="float-start"><%= t ".inactive_requests" %></h2>
-  <table id="inactive_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-show-search-clear-button="true"
-         data-locale="<%= language_region_locale %>"
+  <table
+    id="inactive-requests"
+    class="table table-striped"
+    data-height="460"
+    data-locale="<%= language_region_locale %>"
+    data-search="true"
+    data-show-columns="true"
+    data-show-search-clear-button="true"
+    data-toggle="table"
+    data-virtual-scroll="true"
   >
     <thead class="thead-dark">
     <tr>

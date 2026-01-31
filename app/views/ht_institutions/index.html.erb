@@ -7,9 +7,16 @@
 
   <h2 class="float-start"><%= t ".enabled_institutions" %></h2>
 
-  <table id="active_institutions" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-show-search-clear-button="true"
-         data-locale="<%= language_region_locale %>"
+  <table id="active_institutions"
+    class="table table-striped"
+    data-height="460"
+    data-locale="<%= language_region_locale %>"
+    data-toggle="table"
+    data-search="true"
+    data-show-columns="true"
+    data-show-search-clear-button="true"
+    
+    data-virtual-scroll="true"
   >
     <thead class="thead-dark">
     <tr>
@@ -32,9 +39,17 @@
   <% fields = HTInstitutionPresenter::INDEX_FIELDS_INACTIVE %>
   <h2 class="float-start"><%= t ".other_institutions" %></h2>
 
-  <table id="expired_users" class="table table-striped" data-toggle="table" data-height="460" data-virtual-scroll="true"
-         data-search="true" data-thead-classes="thead-dark" data-show-search-clear-button="true"
-         data-locale="<%= language_region_locale %>"
+  <table
+    id="expired_users"
+    class="table table-striped"
+    data-height="460"
+    data-locale="<%= language_region_locale %>"
+    data-search="true"
+    data-show-columns="true"
+    data-show-search-clear-button="true"
+    data-thead-classes="thead-dark"
+    data-toggle="table"
+    data-virtual-scroll="true"
   >
     <thead>
     
