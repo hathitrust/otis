@@ -30,5 +30,6 @@ $.fn.select2.amd.define('select2/i18n/ja',[],require("select2/dist/js/i18n/ja"))
 
 import Export from 'bootstrap-table/dist/extensions/export/bootstrap-table-export.js'
 import FilterControl from 'bootstrap-table/dist/extensions/filter-control/bootstrap-table-filter-control.min.js'
+import Cookie from 'bootstrap-table/dist/extensions/cookie/bootstrap-table-cookie.min.js'
 
 import 'tableexport.jquery.plugin'

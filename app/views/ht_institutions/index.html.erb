@@ -7,8 +7,12 @@
 
   <h2 class="float-start"><%= t ".enabled_institutions" %></h2>
 
-  <table id="active_institutions"
+  <table id="active-institutions"
     class="table table-striped"
+    data-cookie="true"
+    data-cookie-expire="7d"
+    data-cookie-id-table="active-institutions"
+    data-cookies-enabled="['bs.table.hiddenColumns']"
     data-height="460"
     data-locale="<%= language_region_locale %>"
     data-toggle="table"
@@ -40,8 +44,12 @@
   <h2 class="float-start"><%= t ".other_institutions" %></h2>
 
   <table
-    id="expired_users"
+    id="other-institutions"
     class="table table-striped"
+    data-cookie="true"
+    data-cookie-expire="7d"
+    data-cookie-id-table="other-institutions"
+    data-cookies-enabled="['bs.table.hiddenColumns']"
     data-height="460"
     data-locale="<%= language_region_locale %>"
     data-search="true"
