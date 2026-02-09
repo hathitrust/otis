@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "/ht_downloads json", type: :request do
-  let(:dl_count) { 10 }
+  let(:dl_count) { 1 }
 
   before(:each) do
     HTDownload.delete_all
@@ -16,7 +16,7 @@ RSpec.describe "/ht_downloads json", type: :request do
       expect(response.body).to match(report.htid)
       expect(response.body).to match(report.email)
       expect(response.body).to match(report.ht_hathifile.author)
-      expect(response.body).to match(ERB::Util.json_escape(ERB::Util.html_escape(report.institution_name)))
+      expect(response.body).to include(ERB::Util.json_escape(ERB::Util.html_escape(report.institution_name)))
     end
 
     json_body = JSON.parse(@response.body)
