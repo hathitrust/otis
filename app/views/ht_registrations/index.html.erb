@@ -8,10 +8,20 @@
   <h2 class="float-start"><%= t(".current_registrations") %></h2>
   
   <% fields = HTRegistrationPresenter::INDEX_FIELDS %>
-  <table id="registrations-table" class="table table-striped" data-toggle="table"
-         data-height="800" data-virtual-scroll="true" data-search="true"
-         data-show-search-clear-button="true"
-         data-locale="<%= language_region_locale %>"
+  <table
+    id="registrations-table"
+    class="table table-striped"
+    data-cookie="true"
+    data-cookie-expire="<%= HTRegistrationPresenter.data_cookie_expire %>"
+    data-cookie-id-table="registrations"
+    data-cookies-enabled="['bs.table.hiddenColumns']"
+    data-height="800"
+    data-locale="<%= language_region_locale %>"
+    data-search="true"
+    data-show-columns="true"
+    data-show-search-clear-button="true"
+    data-toggle="table" 
+    data-virtual-scroll="true"
   >
     <thead>
       <tr>

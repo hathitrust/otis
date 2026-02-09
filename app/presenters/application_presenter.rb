@@ -34,6 +34,11 @@ class ApplicationPresenter < SimpleDelegator
     I18n.t(field, scope: attribute_scope)
   end
 
+  # Wrapper around config so views can get this info from a more "local" source.
+  def self.data_cookie_expire
+    Otis.config.ui.data_cookie_expire
+  end
+
   def initialize(obj, controller: nil, action: :show)
     super(obj)
     @controller = controller

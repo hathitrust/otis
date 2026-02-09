@@ -44,3 +44,9 @@ image:
     email_signature_logo:
       name: "hathitrust-email-signature-logo.png"
       size: "150x44"
+
+ui:
+  # Value for the data-cookie-expire attribute in all of our Bootstrap Tables that support
+  # hiding/showing columns. We allow these settings to persist for 90 days so staff don't
+  # have to keep futzing when them all the time.
+  data_cookie_expire: "90d"
