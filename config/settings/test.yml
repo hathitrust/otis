@@ -21,7 +21,7 @@ relative_url_root: '/'
 
 keycard:
   database:
-    adapter: mysql2
+    adapter: trilogy
     database: ht_repository
     username: otis
     password: otis
@@ -29,7 +29,7 @@ keycard:
 
 checkpoint:
   database:
-    adapter: mysql2
+    adapter: trilogy
     database: ht_repository
     username: otis
     password: otis
