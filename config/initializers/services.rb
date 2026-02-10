@@ -39,3 +39,5 @@ end
 Services.register(:whois) { Whois::Client.new }
 
 Services.register(:geoip) { MaxMind::GeoIP2::Reader.new(database: Otis.config.geoip_path) }
+
+Services.register(:cache_buster) { Time.now.to_i }

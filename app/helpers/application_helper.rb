@@ -23,4 +23,9 @@ module ApplicationHelper
   def language_region_locale(locale = I18n.locale)
     {en: "en-US", ja: "ja-JP"}.fetch(locale.to_sym, "en-US")
   end
+
+  # Append a cache-busting version parameter to assets based on a timestamp
+  def cache_bust_url(url)
+    url + "?v=#{Services.cache_buster}"
+  end
 end

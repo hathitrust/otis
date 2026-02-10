@@ -7,13 +7,13 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "/scripts/scripts.css" %>
-    <%= stylesheet_link_tag "/styles/styles.css" %>
-    <%= javascript_include_tag "/scripts/scripts.js" %>
+    <%= stylesheet_link_tag cache_bust_url("/scripts/scripts.css") %>
+    <%= stylesheet_link_tag cache_bust_url("/styles/styles.css") %>
+    <%= javascript_include_tag cache_bust_url("/scripts/scripts.js") %>
 
     <% if ckeditor? # application_helper.rb %>
-      <%= stylesheet_link_tag "/scripts/ckeditor.css" %>
-      <%= javascript_include_tag src="/scripts/ckeditor.js" %>
+      <%= stylesheet_link_tag cache_bust_url("/scripts/ckeditor.css") %>
+      <%= javascript_include_tag cache_bust_url("/scripts/ckeditor.js") %>
     <% end %>
 
     <% # Keyboard-related overrides that trigger when a bootstrap-table search  %>

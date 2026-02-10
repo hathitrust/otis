@@ -6,8 +6,8 @@
     </title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "/scripts/scripts.css" %>
-    <%= stylesheet_link_tag "/styles/styles.css" %>
+    <%= stylesheet_link_tag cache_bust_url("/scripts/scripts.css") %>
+    <%= stylesheet_link_tag cache_bust_url("/styles/styles.css") %>
   </head>
 
   <body>
