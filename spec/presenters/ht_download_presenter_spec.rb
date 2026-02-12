@@ -11,11 +11,11 @@ RSpec.describe HTDownloadPresenter do
     # TODO: this does not check that there is any particular content for any of the fields.
     described_class::DATA_FILTER_CONTROLS.select { |_k, v| v == :select }
       .each_key do |field|
-      context "with #{field}" do
-        it "returns a specially formatted JSON String" do
-          expect(described_class.data_filter_data(field)).to match(/^json:{.*?}$/)
+        context "with #{field}" do
+          it "returns a specially formatted JSON String" do
+            expect(described_class.data_filter_data(field)).to match(/^json:{.*?}$/)
+          end
         end
-      end
     end
 
     it "displays the correct value for role" do
