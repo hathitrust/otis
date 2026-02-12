@@ -8,7 +8,7 @@
 # Use mysql2 as the database for Active Record
 #
 default: &default
-  adapter: mysql2
+  adapter: trilogy
   database: ht_repository
   username: otis
   password: otis

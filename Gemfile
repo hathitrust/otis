@@ -36,12 +36,11 @@ gem "jira-ruby", "~> 2.3"
 gem "kaminari"
 gem "keycard", github: "mlibrary/keycard"
 gem "maxmind-geoip2"
-# 0.5.7 causes segfaults in tests
-gem "mysql2", "0.5.6"
+gem "trilogy"
 gem "ostruct"
 gem "ransack"
 # Freeze Sequel version number because of Checkpoint prepared statement issues
-gem "sequel", "5.52.0"
+gem "sequel"
 # ActiveModel extension that automatically strips all attributes of leading and trailing whitespace before validation
 gem "strip_attributes"
 gem "whois"
