@@ -33,7 +33,7 @@
   "dependencies": {
     "bootstrap-icons": "^1.11.3",
     "bootstrap-table": "^1.24.1",
-    "ckeditor5": "^46.0.3",
+    "ckeditor5": "^48.0.0",
     "firebird-common": "github:hathitrust/firebird-common",
     "jquery": "^3.7.1",
     "select2": "^4.1.0-rc.0",
