@@ -21,13 +21,13 @@ jobs:
           ./bin/setup-dev.sh
 
       - name: Run standardrb
-        run: docker compose run test bundle exec standardrb
+        run: docker compose run --rm test bundle exec standardrb
 
       - name: Run i18n-tasks health
-        run: docker compose run test bundle exec i18n-tasks health
+        run: docker compose run --rm test bundle exec i18n-tasks health
 
       - name: Run tests
-        run: docker compose run test
+        run: docker compose run --rm test
 
       - name: Report to Coveralls
         uses: coverallsapp/github-action@v2
