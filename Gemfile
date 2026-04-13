@@ -12,7 +12,7 @@ gem "puma"
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem "web-console", ">= 3.3.0"
-  gem "listen", "< 3.2", ">= 3.0.5"
+  gem "listen", ">= 3.0.5", "< 3.11"
 end
 
 group :test do
@@ -32,7 +32,7 @@ gem "checkpoint"
 gem "csv"
 gem "dotenv-rails"
 gem "ettin"
-gem "jira-ruby", "~> 2.3"
+gem "jira-ruby", "~> 3.1"
 gem "kaminari"
 gem "keycard", github: "mlibrary/keycard"
 gem "maxmind-geoip2"
