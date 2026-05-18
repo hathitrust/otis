@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "jira-ruby"
+require "yaml"
 
 module Otis
   class JiraClient
@@ -9,12 +10,14 @@ module Otis
     ].freeze
     JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/browse/").to_s.freeze
 
+    # Note, Jira config is split between credentials (`JiraClient.credentials`)
+    # and the non-sensitive stuff in config/settings.yml exposed via `Otis.config.jira....`
     def self.create_client
       if Rails.env.production?
         # :nocov:
         JIRA::Client.new({
-          username: Rails.application.credentials.jira[:username],
-          password: Rails.application.credentials.jira[:password],
+          username: credentials[:username],
+          password: credentials[:password],
           site: Otis.config.jira.site,
           context_path: Otis.config.jira.context_path,
           auth_type: :basic,
@@ -24,6 +27,13 @@ module Otis
       else
         NullClient.new
       end
+    end
+
+    # Read YML file at OTIS_JIRA_CONFIG or config/jira.yml
+    # and return a hash with :username and :password
+    def self.credentials
+      config_path = ENV.fetch("OTIS_JIRA_CONFIG", Rails.root.join("config", "jira.yml").to_s)
+      YAML.safe_load_file(config_path, symbolize_names: true)
     end
 
     def self.jira_url(ticket)
