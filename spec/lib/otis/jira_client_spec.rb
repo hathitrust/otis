@@ -26,4 +26,11 @@ RSpec.describe Otis::JiraClient do
       end
     end
   end
+
+  describe ".jira_url" do
+    it "returns a URL with the provided ticket" do
+      expect(described_class.jira_url("TEST_TICKET")).to start_with("https")
+        .and match("TEST_TICKET")
+    end
+  end
 end
