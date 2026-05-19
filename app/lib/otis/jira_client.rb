@@ -32,8 +32,12 @@ module Otis
     # Read YML file at OTIS_JIRA_CONFIG or config/jira.yml
     # and return a hash with :username and :password
     def self.credentials
-      config_path = ENV.fetch("OTIS_JIRA_CONFIG", Rails.root.join("config", "jira.yml").to_s)
-      YAML.safe_load_file(config_path, symbolize_names: true)
+      YAML.safe_load_file(credentials_path, symbolize_names: true)
+    end
+
+    # OTIS_JIRA_CONFIG or config/jira.yml
+    def self.credentials_path
+      ENV.fetch("OTIS_JIRA_CONFIG", Rails.root.join("config", "jira.yml").to_s)
     end
 
     def self.jira_url(ticket)
