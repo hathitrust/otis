@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "jira-ruby"
+require "yaml"
 
 module Otis
   class JiraClient
@@ -9,21 +10,35 @@ module Otis
     ].freeze
     JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/browse/").to_s.freeze
 
+    # Note, Jira config is split between credentials (`JiraClient.credentials`)
+    # and the non-sensitive stuff in config/settings.yml exposed via `Otis.config.jira....`
     def self.create_client
+      client = JIRA::Client.new({
+        username: credentials[:username],
+        password: credentials[:password],
+        site: Otis.config.jira.site,
+        context_path: Otis.config.jira.context_path,
+        auth_type: :basic,
+        http_debug: true
+      })
+      # In future we will use webmock (see ETT-533) and remove NullClient entirely.
+      # For now, creating the unused `JIRA::Client` exercises this part of the code
+      # even if the client is quietly discarded before use.
       if Rails.env.production?
-        # :nocov:
-        JIRA::Client.new({
-          username: Rails.application.credentials.jira[:username],
-          password: Rails.application.credentials.jira[:password],
-          site: Otis.config.jira.site,
-          context_path: Otis.config.jira.context_path,
-          auth_type: :basic,
-          http_debug: true
-        })
-        # :nocov:
-      else
-        NullClient.new
+        return client
       end
+      NullClient.new
+    end
+
+    # Read YML file at OTIS_JIRA_CONFIG or config/jira.yml
+    # and return a hash with :username and :password
+    def self.credentials
+      YAML.safe_load_file(credentials_path, symbolize_names: true)
+    end
+
+    # OTIS_JIRA_CONFIG or config/jira.yml
+    def self.credentials_path
+      ENV.fetch("OTIS_JIRA_CONFIG", Rails.root.join("config", "jira.yml").to_s)
     end
 
     def self.jira_url(ticket)
