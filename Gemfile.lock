@@ -111,6 +111,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    cgi (0.5.1)
     checkpoint (1.2.0)
       ettin (~> 1.1)
       sequel (~> 5.100)
@@ -182,11 +183,12 @@ GEM
       prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    jira-ruby (2.3.0)
+    jira-ruby (3.1.0)
       activesupport
       atlassian-jwt
+      cgi
       multipart-post
-      oauth (~> 0.5, >= 0.5.0)
+      oauth (~> 1.0)
     json (2.19.3)
     jwt (2.10.2)
       base64
@@ -204,9 +206,10 @@ GEM
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
-    listen (3.0.8)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
+    listen (3.10.0)
+      logger
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
     llhttp-ffi (0.5.1)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
@@ -246,9 +249,13 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.2-x86_64-linux-gnu)
       racc (~> 1.4)
-    oauth (0.6.2)
+    oauth (1.1.3)
+      base64 (~> 0.1)
+      oauth-tty (~> 1.0, >= 1.0.6)
       snaky_hash (~> 2.0)
-      version_gem (~> 1.1)
+      version_gem (~> 1.1, >= 1.1.9)
+    oauth-tty (1.0.6)
+      version_gem (~> 1.1, >= 1.1.9)
     ostruct (0.6.3)
     parallel (1.28.0)
     parser (3.3.11.1)
@@ -262,7 +269,7 @@ GEM
       date
       stringio
     public_suffix (7.0.5)
-    puma (7.2.0)
+    puma (8.0.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.6)
@@ -365,7 +372,7 @@ GEM
     ruby-progressbar (1.13.0)
     rubyzip (3.2.2)
     securerandom (0.4.1)
-    selenium-webdriver (4.41.0)
+    selenium-webdriver (4.43.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -401,7 +408,7 @@ GEM
     terminal-table (4.0.0)
       unicode-display_width (>= 1.1.1, < 4)
     thor (1.5.0)
-    timecop (0.9.10)
+    timecop (0.9.11)
     timeout (0.6.1)
     trilogy (2.12.3)
       bigdecimal
@@ -446,10 +453,10 @@ DEPENDENCIES
   factory_bot_rails
   faker
   i18n-tasks
-  jira-ruby (~> 2.3)
+  jira-ruby (~> 3.1)
   kaminari
   keycard!
-  listen (>= 3.0.5, < 3.2)
+  listen (>= 3.0.5, < 3.11)
   maxmind-geoip2
   ostruct
   puma
