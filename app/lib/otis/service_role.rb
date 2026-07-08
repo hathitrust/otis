@@ -12,7 +12,7 @@ module Otis
         full_name: "Cataloging",
         name: "Cataloging",
         service: :caa,
-        usertype: [:external] # No attested staff members with this role
+        usertype: [:staff] # No attested external members with this role currently
       },
       corrections: {
         access: :total,
@@ -52,7 +52,7 @@ module Otis
         full_name: "Resource Sharing",
         name: "Resource Sharing",
         service: :rs,
-        usertype: [:external, :staff]
+        usertype: [:external, :staff] # The fact that we have staff with RS is probably a temporary anomaly
       },
       ssd: {
         access: :normal,
