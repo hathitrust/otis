@@ -22,7 +22,7 @@ RSpec.describe HTDownloadPresenter do
       create(:ht_download, role: :resource_sharing) do |download|
         data = described_class.data_filter_data(:role)
         data = JSON.parse(data.sub(/^json:/, ""))
-        expect(data).to eq({"resource_sharing" => "Resource Sharing"})
+        expect(data).to eq({"resource_sharing" => "RS"})
       end
     end
 
