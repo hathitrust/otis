@@ -13,9 +13,10 @@ class HTUserRenewalError < StandardError
 end
 
 class HTUser < ApplicationRecord
-  ROLES = %i[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd resource_sharing].freeze
-  USERTYPES = %i[staff external student].freeze
-  ACCESSES = %i[total normal].freeze
+  # Authoritative lists of possible values
+  ROLES = Otis::ServiceRole.keys.map { |role_key| Otis::ServiceRole.new(role_key).role.to_s }.freeze
+  USERTYPES = Otis::ServiceRole.keys.map { |role_key| Otis::ServiceRole.new(role_key).user_type.to_s }.uniq.freeze
+  ACCESSES = Otis::ServiceRole.keys.map { |role_key| Otis::ServiceRole.new(role_key).access.to_s }.uniq.freeze
   EXPIRES_TYPES = ExpirationDate::EXPIRES_TYPE.collect { |k, _v| k }.freeze
   self.primary_key = "email"
 
@@ -31,6 +32,11 @@ class HTUser < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true
   validates :userid, presence: true
+
+  validates :usertype, presence: true
+  validates :role, presence: true
+  validates :access, presence: true
+
   validates :expires, presence: true
   validates :inst_id, presence: true
   validates :approver, presence: true
@@ -49,6 +55,20 @@ class HTUser < ApplicationRecord
   # Checkpoint override
   def resource_id
     email
+  end
+
+  def role=(new_role)
+    self[:role] = new_role
+    @service_role = nil
+    # Safe dereference for legacy roles.
+    self[:access] = service_role&.access
+    self[:usertype] = service_role&.user_type
+  end
+
+  def service_role
+    @service_role ||= Otis::ServiceRole.for_user_role(role)
+  rescue Otis::UnknownRoleError
+    nil
   end
 
   # Work around the fact that Rails' built-in typecasting clobbers various bogus
