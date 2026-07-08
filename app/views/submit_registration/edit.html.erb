@@ -1,7 +1,7 @@
 <div id="maincontent" class="row">
   <%= form_with(model: @registration, url: submit_registration_url, local: true, method: :get, html: {id: 'registration-message'}) do |form| %>
 
-  <% service_name = t "ht_registration.values.service_name." + @registration.service_role.name.downcase %>
+  <% service_name = t "ht_registration.values.service_name." + @registration.service.name.downcase %>
     <h2><%= t ".confirm_heading" %></h2>
       <div>
       <p><%= t ".confirm_instruction1" %></p>

@@ -100,7 +100,7 @@ class HTRegistration < ApplicationRecord
     :ht_registration
   end
 
-  def service_role
-    @service_role ||= Otis::ServiceRole.new(role)
+  def service
+    @service ||= Otis::Service.new(role)
   end
 end

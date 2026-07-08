@@ -4,7 +4,7 @@ module Otis
   # These are used in Jira EA tickets and in the landing/confirmation pages for registrants.
   # Maps between the legacy database `role` fields and the more modern way we expose
   # them to the public.
-  class ServiceRole
+  class Service
     # This is re-used so let's just have one instance
     CAA_NAMES = {
       name: "CAA",

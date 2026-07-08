@@ -93,12 +93,12 @@ module Otis
     def ea_fields
       {
         fields: {
-          :summary => "#{registration.service_role.full_name} Registration for #{registration.applicant_name} <#{registration.applicant_email}>",
+          :summary => "#{registration.service.full_name} Registration for #{registration.applicant_name} <#{registration.applicant_email}>",
           :project => {key: Otis.config.jira.elevated_access_project},
-          :labels => [registration.service_role.name],
+          :labels => [registration.service.name],
           :issuetype => {id: EA_REGISTRATION_ISSUETYPE_ID},
           EA_REGISTRATION_LINK_FIELD => submit_url,
-          EA_REGISTRATION_EA_TYPE_FIELD => {value: registration.service_role.name},
+          EA_REGISTRATION_EA_TYPE_FIELD => {value: registration.service.name},
           # MS will use this to kick off the email, don't set it here unless we want to send the email automatically
           # EA_REGISTRATION_EA_WORKFLOW_FIELD => {value: "Registration email pending"},
           EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email,
