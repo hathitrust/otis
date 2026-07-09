@@ -12,7 +12,7 @@ RSpec.describe Otis::ServiceRole do
     HTUser::ROLES.each do |user_role|
       it "maps HTUser role #{user_role} to a valid service role key" do
         expect(
-          described_class.keys.include?(
+          described_class.key?(
             described_class.for_user_role(user_role).service_role
           )
         ).to eq(true)
