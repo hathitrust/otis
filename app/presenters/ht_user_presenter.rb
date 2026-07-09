@@ -4,8 +4,8 @@ class HTUserPresenter < ApplicationPresenter
   include ActionView::Helpers::DateHelper
 
   ALL_FIELDS = %i[
-    email userid displayname activitycontact approver authorizer usertype
-    role access expire_type expires renewal_status iprestrict mfa institution
+    email userid displayname activitycontact approver authorizer
+    role expire_type expires renewal_status iprestrict mfa institution
   ].freeze
 
   INDEX_FIELDS = %i[email displayname role institution expires renewal_status iprestrict mfa].freeze
@@ -14,11 +14,11 @@ class HTUserPresenter < ApplicationPresenter
   FIELD_SIZE = 40
 
   def self.role_name(role)
-    I18n.t role, scope: "ht_user.values.role", default: nil
+    Otis::ServiceRole.for_user_role(role).name
   end
 
   def self.role_description(role)
-    I18n.t role, scope: "ht_user.role_descriptions", default: nil
+    Otis::ServiceRole.for_user_role(role).description
   end
 
   def ht_counts_fields
@@ -123,6 +123,10 @@ class HTUserPresenter < ApplicationPresenter
     renewal_status_badge
   end
 
+  def show_role
+    service_role.full_name
+  end
+
   def select_for_renewal_checkbox_id
     "ht_users_#{email}"
   end
@@ -139,10 +143,6 @@ class HTUserPresenter < ApplicationPresenter
     return "" if approval_request.nil?
 
     HTApprovalRequestPresenter.new(approval_request)&.badge
-  end
-
-  def edit_access(form:)
-    form.select(:access, access_options)
   end
 
   # This is a complex value to render because of the edit field as well
@@ -208,24 +208,15 @@ class HTUserPresenter < ApplicationPresenter
     form.select(:role, role_options)
   end
 
-  def edit_usertype(form:)
-    form.select(:usertype, usertype_options)
-  end
-
-  def access_options
-    @access_options ||= HTUser::ACCESSES.sort.map { |access| [I18n.t("ht_user.values.access.#{access}"), access] }
-  end
-
   def expire_type_options
     @expiretype_options ||= ExpirationDate::EXPIRES_TYPE.keys.sort.map { |type| [I18n.t("ht_user.values.expire_type.#{type}"), type] }
   end
 
   def role_options
-    @role_options ||= HTUser::ROLES.sort.map { |role| [I18n.t("ht_user.values.role.#{role}"), role] }
-  end
-
-  def usertype_options
-    @usertype_options ||= HTUser::USERTYPES.sort.map { |type| [I18n.t("ht_user.values.usertype.#{type}"), type] }
+    @role_options ||= Otis::ServiceRole.keys.map do |role_key|
+      service_role = Otis::ServiceRole.new(role_key)
+      [service_role.full_name, service_role.role]
+    end.sort_by { |option| option[0] }
   end
 
   def expiration_badge

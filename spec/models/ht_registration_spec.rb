@@ -9,12 +9,12 @@ RSpec.describe HTRegistration do
   end
 
   describe "#service" do
-    it "exposes a valid service" do
-      expect(build(:ht_registration, role: "ssd").service).to be_a(Otis::Service)
+    it "exposes a valid service role" do
+      expect(build(:ht_registration, role: "ssd").service_role).to be_a(Otis::ServiceRole)
     end
 
-    it "exposes a service with the correct name" do
-      expect(build(:ht_registration, role: "ssd").service.name).to eq("SSD")
+    it "exposes a service role with the correct name" do
+      expect(build(:ht_registration, role: "ssd").service_role.name).to eq("SSD")
     end
   end
 end

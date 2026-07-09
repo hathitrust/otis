@@ -11,9 +11,7 @@ class HTRegistration < ApplicationRecord
   alias_attribute :approved, :finished
   alias_attribute :submitted, :received
 
-  # FIXME: the roles in HTUser are expected to be simplified to look more like this.
-  # Once that happens this list should be replaced with the one from HTUser
-  ROLES = %i[crms quality resource_sharing ssd ssdproxy staffdeveloper].freeze
+  ROLES = Otis::ServiceRole.keys.freeze
 
   def self.expiration_date
     Date.today - 1.week
@@ -100,7 +98,7 @@ class HTRegistration < ApplicationRecord
     :ht_registration
   end
 
-  def service
-    @service ||= Otis::Service.new(role)
+  def service_role
+    @service_role ||= Otis::ServiceRole.new(role)
   end
 end

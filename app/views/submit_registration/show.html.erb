@@ -5,7 +5,6 @@
       <p><%= t ".expired_html", user: @registration.applicant_email %></p>
       </p>
     <% else %>
-      <% service_name = t "ht_registration.values.service_name." + @registration.service.name.downcase %>
       <div class="d-flex gap-3">
       <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
       <h2 class="m-0">
@@ -13,7 +12,7 @@
       </h2>
       </div>
       <div>
-        <p><%= t ".submitted_success_html", service: service_name %></p>
+        <p><%= t ".submitted_success_html", service: @registration.service_role.full_name %></p>
         <p><%= t ".submitted_followup_html", email: @registration.applicant_email %></p>
         <p><%= t ".submitted_you_may_close" %></p>
       </div>

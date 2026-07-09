@@ -1,10 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe Otis::ServiceRole do
-  describe ".role_keys" do
+  describe ".keys" do
     it "returns a nonempty Array" do
-      expect(described_class.role_keys).to be_a(Array)
-      expect(described_class.role_keys.size.positive?).to eq(true)
+      expect(described_class.keys).to be_a(Array)
+      expect(described_class.keys.size.positive?).to eq(true)
+    end
+  end
+
+  describe ".for_user_role" do
+    HTUser::ROLES.each do |user_role|
+      it "maps HTUser role #{user_role} to a valid service role key" do
+        expect(
+          described_class.keys.include?(
+            described_class.for_user_role(user_role).service_role
+          )
+        ).to eq(true)
+      end
     end
   end
 
@@ -20,15 +32,9 @@ RSpec.describe Otis::ServiceRole do
     end
 
     it "can create a #{described_class} for every role" do
-      described_class.role_keys.each do |role|
+      described_class.keys.each do |role|
         expect(described_class.new(role)).to be_a(described_class)
       end
-    end
-  end
-
-  describe "#service" do
-    it "exposes a valid Service" do
-      expect(described_class.new(:ssd).service).to be_a(Otis::Service)
     end
   end
 end
