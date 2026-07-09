@@ -70,6 +70,10 @@ module Otis
       SERVICE_ROLES.keys
     end
 
+    def self.key?(...)
+      SERVICE_ROLES.key?(...)
+    end
+
     # Create a service role using the legacy ht_user.role value
     def self.for_user_role(user_role)
       service_role = USER_ROLE_TO_SERVICE_ROLE[user_role.to_sym]
