@@ -14,18 +14,16 @@ on:
                 - staging
                 - production
 
+
 jobs:
     deploy:
-            runs-on: ubuntu-latest
-            permissions:
-                contents: read
-                packages: write
-            steps:
-                - name: Deploy to ${{inputs.environments}}
-                  uses: hathitrust/github_actions/deploy@v1
-                  with:
-                    image: ghcr.io/${{ github.repository }}:${{ inputs.branch_hash || github.sha}}
-                    file: environments/${{ github.event.repository.name }}/${{inputs.environments}}/otis-image.txt
-                    CONFIG_REPO_RW_APP_ID: ${{ vars.CONFIG_REPO_RW_APP_ID }}
-                    CONFIG_REPO_FULL_NAME: ${{ vars.CONFIG_REPO_FULL_NAME }}
-                    CONFIG_REPO_RW_KEY: ${{secrets.CONFIG_REPO_RW_KEY}}
+        permissions:
+            contents: read
+            packages: write
+        name: Deploy to ${{inputs.environments}}
+        uses: hathitrust/github_actions/.github/workflows/deploy.yml@01b5414ee8d41485319b355b347002d269d42d30 # v2.0.0
+        with:
+            image: ghcr.io/${{ github.repository }}:${{ inputs.branch_hash || github.sha}}
+            file: environments/${{ github.event.repository.name }}/${{inputs.environments}}/otis-image.txt
+            CONFIG_REPO_FULL_NAME: ${{ vars.CONFIG_REPO_FULL_NAME }}
+        secrets: inherit

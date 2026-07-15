@@ -28,21 +28,18 @@ on:
 
 jobs:
     build-image:
-        runs-on: ubuntu-latest
         permissions:
             contents: read
             packages: write
-
-        steps:
-            - name: Build Image
-              uses: hathitrust/github_actions/build@v1
-              with:
-                image: ghcr.io/${{ github.repository }}
-                dockerfile: Dockerfile
-                img_tag: ${{ inputs.img_tag }}
-                tag: ${{ inputs.ref }}
-                push_latest: ${{ inputs.push_latest}}
-                registry_token: ${{ github.token }}
-                rebuild: ${{ inputs.rebuild }}
-                build-args: 'version="commit ${{ github.sha }}"'
-                platforms: ${{ inputs.platforms }}
+        name: Build Image
+        uses: hathitrust/github_actions/.github/workflows/build.yml@01b5414ee8d41485319b355b347002d269d42d30 # v2.0.0
+        with:
+            image: ghcr.io/${{ github.repository }}
+            dockerfile: Dockerfile
+            img_tag: ${{ inputs.img_tag }}
+            tag: ${{ inputs.ref }}
+            push_latest: ${{ inputs.push_latest}}
+            rebuild: ${{ inputs.rebuild }}
+            build-args: 'version="commit ${{ github.sha }}"'
+            platforms: ${{ inputs.platforms }}
+        secrets: inherit
