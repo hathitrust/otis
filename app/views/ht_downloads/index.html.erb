@@ -1,4 +1,6 @@
 <script>
+  var cached_query_params = {};
+
   function applyDateRangeFilter() {
     $('#table').bootstrapTable('refresh')
   }
@@ -13,6 +15,8 @@
   function queryParams(params) {
     params.dateStart = $('#date-start').val();
     params.dateEnd = $('#date-end').val();
+    console.log(`queryParams ${JSON.stringify(params)}`);
+    cached_query_params = params;
     return params
   }
 
@@ -21,8 +25,22 @@
       text: 'Download CSV',
       icon: 'bi-download',
       event () {
-        alert('FIXME: populate the URL with the appropriate ht_downloads format=csv link')
-        window.location = 'http://127.0.0.1:3000/useradmin/ht_institutions?format=csv&locale=en';
+        //var currentFilters = $('#table').bootstrapTable('getOptions').filterControls;
+        //console.log(currentFilters);
+        //console.log($('#table').bootstrapTable);
+        //console.log($('#table').bootstrapTable('getOptions'));
+        //console.log('FIXME: populate the URL with the appropriate ht_downloads format=csv link')
+        //window.location = 'http://127.0.0.1:3000/useradmin/ht_institutions?format=csv&locale=en';
+        var url = new URL($('#table').bootstrapTable('getOptions').url, window.location);
+        url.searchParams.set('format', 'csv');
+        for (const [key, value] of Object.entries(cached_query_params)) {
+          console.log(`${key}: ${value}`);
+          url.searchParams.append(key, value);
+        }
+        //url.searchParams.append(cached_query_params);
+        console.log(url);
+        //console.log(`${$('#table').bootstrapTable('getOptions').url}?${$.param(cached_query_params)}`)
+        window.location = url;
       },
       attributes: {
         title: 'Download CSV'
@@ -30,6 +48,15 @@
     }
   })
 
+  window.addEventListener('load', (event) => {
+    //console.log('The page and all resources have fully loaded.');
+    // Your code here (e.g., initializing canvas, calculating image sizes)
+
+    $('#table').on('column-search.bs.table', function (_event, key, value) {
+      // onColumnSearch(column-search.bs.table)
+      console.log(`column-search.bs.table 1: ${key} ${value}`);
+    })
+  });
 </script>
 
 <style type="text/css">
@@ -125,7 +152,7 @@
       data-sort-select-options="true"
       data-toggle="table"
       data-toolbar="#toolbar"
-      data-url="ht_downloads?format=json&locale=<%= I18n.locale %>"
+      data-url="ht_downloads?format=json"
     >
       <thead class="thead-dark">    
         <tr>

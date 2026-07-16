@@ -76,6 +76,11 @@ class HTDownloadsController < ApplicationController
       format.json do
         render json: json_query
       end
+      format.csv do
+        # TODO: does params[:file_name] get set? if so how?
+        file_name = (params[:file_name] || "ht_downloads") + ".csv"
+        send_data csv_query, filename: file_name
+      end
     end
   end
 
@@ -109,6 +114,27 @@ class HTDownloadsController < ApplicationController
       totalNotFiltered: HTDownload.count,
       rows: result.map { |line| line_to_json line }
     }
+  end
+
+  def csv_query
+    require "csv"
+    search = HTDownload
+      .includes(:ht_hathifile, :ht_institution)
+      .ransack(matchers)
+    # Apply the sort field and order, or default if not provided.
+    # Ransack requires lower case sort direction.
+    sort_name = RANSACK_ORDER.fetch(params[:sortName], "datetime")
+    sort_order = params.fetch(:sortOrder, "asc")
+    search.sorts = "#{sort_name} #{sort_order.downcase}"
+    # Extract HTDownload::ActiveRecord_Relation
+    result = search.result
+    CSV.generate do |csv|
+      csv << result.first.csv_cols
+      #csv << ["FIXME COLUMNS"]
+      result.each do |res|
+        csv << res.csv_vals
+      end
+    end
   end
 
   # Use presenter to translate HTDownload into JSON hash.
