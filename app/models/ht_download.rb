@@ -58,6 +58,15 @@ class HTDownload < ApplicationRecord
     self[:sha] = calculate_sha
   end
 
+  # FIXME: need to exclude SHA and add in the hathifiles DB metadata fields.
+  def csv_cols
+    attributes.keys
+  end
+
+  def csv_vals
+    attributes.values
+  end
+
   private
 
   # Should be equivalent enough to what was previous being done inside MariaDB:
