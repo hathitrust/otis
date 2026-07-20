@@ -100,5 +100,7 @@ class HTRegistration < ApplicationRecord
 
   def service_role
     @service_role ||= Otis::ServiceRole.new(role)
+  rescue Otis::UnknownRoleError
+    nil
   end
 end

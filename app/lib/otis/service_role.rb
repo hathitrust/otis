@@ -81,7 +81,7 @@ module Otis
     def self.for_user_role(user_role)
       service_role = USER_ROLE_TO_SERVICE_ROLE[user_role.to_sym]
       if service_role.nil?
-        raise UnknownRoleError, "unable to create ServiceRole for unknown role #{user_role}"
+        raise UnknownRoleError, "unable to create ServiceRole for unknown user role #{user_role}"
       end
 
       new(service_role)
@@ -89,6 +89,10 @@ module Otis
 
     def initialize(role_key)
       @service_role = role_key.to_sym
+      if !SERVICE_ROLES.key?(@service_role)
+        raise UnknownRoleError, "unable to create ServiceRole for unknown role #{role_key}"
+      end
+
       @access = SERVICE_ROLES[@service_role][:access]
       @description = SERVICE_ROLES[@service_role][:description]
       @full_name = SERVICE_ROLES[@service_role][:full_name]
