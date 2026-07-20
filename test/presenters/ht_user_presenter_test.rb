@@ -102,14 +102,3 @@ class HTUserPresenterTest < ActiveSupport::TestCase
     assert_match "label", user.field_value(:email)
   end
 end
-
-class HTUserPresenterRoleDisplay < ActiveSupport::TestCase
-  def setup
-    @user = HTUserPresenter.new(build(:ht_user, role: "crms"))
-  end
-
-  test "User with a role has a natural-language name and description" do
-    assert @user.role_name.length.positive?
-    assert @user.role_description.length.positive?
-  end
-end

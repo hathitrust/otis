@@ -13,10 +13,6 @@ class HTUserPresenter < ApplicationPresenter
   READ_ONLY_FIELDS = (HT_COUNTS_FIELDS + %i[email renewal_status institution]).freeze
   FIELD_SIZE = 40
 
-  def self.role_name(role)
-    Otis::ServiceRole.for_user_role(role).name
-  end
-
   def self.role_description(role)
     Otis::ServiceRole.for_user_role(role).description
   end
@@ -48,14 +44,6 @@ class HTUserPresenter < ApplicationPresenter
     else
       simple_email_link
     end
-  end
-
-  def role_name
-    HTUserPresenter.role_name role
-  end
-
-  def role_description
-    HTUserPresenter.role_description role
   end
 
   # Override for MFA which may or may not be editable on the edit page.

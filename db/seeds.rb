@@ -63,7 +63,7 @@ def create_ht_user(expired: false)
     auth_requested: [false, true].sample
   )
   c.save
-  create_ht_approval_request(u)
+  create_ht_approval_request(u) unless expired
 end
 
 def create_ht_approval_request(user)
