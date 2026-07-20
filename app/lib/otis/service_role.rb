@@ -15,7 +15,7 @@ module Otis
     SERVICE_ROLES = {
       atrs: {
         access: :normal,
-        description: "Correct or add to the bibliographic records of HathiTrust volumes",
+        description: "Act as a proxy for users who have print disabilities",
         full_name: "Accessible Text Request Service",
         name: "ATRS",
         role: :ssdproxy,
