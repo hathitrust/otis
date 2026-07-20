@@ -45,8 +45,8 @@ class HTRegistration < ApplicationRecord
   validates :token_hash, presence: true, if: :sent
   validates :contact_info, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
 
-  # HathiTrust-level authorizer is only required for non-ATRS users.
-  validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["ssd", "ssdproxy"].include? reg.role }
+  # HathiTrust-level authorizer is only required for users other than ATRS and SSD.
+  validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["atrs", "ssd"].include? reg.role }
 
   # mfa = multi factor authentication
   validates_inclusion_of :mfa_addendum, in: [true, false]
