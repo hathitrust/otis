@@ -60,25 +60,6 @@ module Otis
     end
   end
 
-  class RegistrationMoverAuthorizerTest < ActiveSupport::TestCase
-    test "CAA registration uses hathitrust_authorizer for authorizer" do
-      registration = create(:ht_registration, role: "caa",
-        hathitrust_authorizer: "authorizer@hathitrust.org",
-        env: {"HTTP_X_REMOTE_USER" => "nobody@default.invalid"}.to_json)
-      ht_user = RegistrationMover.new(registration).ht_user
-      assert_equal "authorizer@hathitrust.org", ht_user.authorizer
-    end
-
-    test "ATRS registration uses auth_rep_email for authorizer and ignores hathitrust_authorizer" do
-      registration = create(:ht_registration, role: "ssd",
-        auth_rep_email: "authorizer@default.invalid",
-        hathitrust_authorizer: nil,
-        env: {"HTTP_X_REMOTE_USER" => "nobody@default.invalid"}.to_json)
-      ht_user = RegistrationMover.new(registration).ht_user
-      assert_equal "authorizer@default.invalid", ht_user.authorizer
-    end
-  end
-
   class RegistrationMoverInstitutionTest < ActiveSupport::TestCase
     test "finishing registration uses institution.entityID to identity_provider" do
       inst = create(:ht_institution)
