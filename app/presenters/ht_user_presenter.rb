@@ -124,7 +124,7 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def show_role
-    service_role.full_name
+    service_role.present? ? service_role.full_name : "Legacy role <code>#{role}</code>".html_safe
   end
 
   def select_for_renewal_checkbox_id

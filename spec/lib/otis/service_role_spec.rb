@@ -18,6 +18,12 @@ RSpec.describe Otis::ServiceRole do
         ).to eq(true)
       end
     end
+
+    it "raises `Otis::UnknownRoleError` on unknown role" do
+      expect {
+        described_class.for_user_role(:bogus_role)
+      }.to raise_error(Otis::UnknownRoleError)
+    end
   end
 
   describe ".new" do
@@ -25,10 +31,10 @@ RSpec.describe Otis::ServiceRole do
       expect(described_class.new(:ssd)).to be_a(described_class)
     end
 
-    it "raises if given invalid role" do
+    it "raises StandardError if given invalid role" do
       expect {
         described_class.new(:bogus_role)
-      }.to raise_error(/unknown role/)
+      }.to raise_error(StandardError)
     end
 
     it "can create a #{described_class} for every role" do

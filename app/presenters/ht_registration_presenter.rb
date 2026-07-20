@@ -187,6 +187,10 @@ class HTRegistrationPresenter < ApplicationPresenter
     HTML
   end
 
+  def show_role
+    service_role.present? ? service_role.full_name : "Legacy role <code>#{role}</code>".html_safe
+  end
+
   def show_sent
     return "" unless sent.present?
 

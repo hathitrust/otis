@@ -60,12 +60,15 @@ class HTUser < ApplicationRecord
   def role=(new_role)
     self[:role] = new_role
     @service_role = nil
-    self[:access] = service_role.access
-    self[:usertype] = service_role.user_type
+    # Safe dereference for legacy roles.
+    self[:access] = service_role&.access
+    self[:usertype] = service_role&.user_type
   end
 
   def service_role
     @service_role ||= Otis::ServiceRole.for_user_role(role)
+  rescue Otis::UnknownRoleError
+    nil
   end
 
   # Work around the fact that Rails' built-in typecasting clobbers various bogus

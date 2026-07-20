@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 module Otis
+  class UnknownRoleError < StandardError
+    # Raised when trying to create a `ServiceRole` from a legacy `ht_users.role`
+    # that does not have a modern equivalent, e.g. `staffsysadmin`
+  end
+
   # An Object that encapsulates business logic around ht_registration.role amd ht_user.role values.
   # ht_registration uses SERVICE_ROLES.keys and maps them to slightly modified legacy values
   # when a user is created.
   # Maybe we can just go with the new SERVICE_ROLES.keys values in ht_users.role sooner or later
   # but care must be taken since the babel Perl code relies on certain legacy values.
-  # TODO: consider moving this data to YML?
-
   class ServiceRole
     SERVICE_ROLES = {
       atrs: {
@@ -77,14 +80,15 @@ module Otis
     # Create a service role using the legacy ht_user.role value
     def self.for_user_role(user_role)
       service_role = USER_ROLE_TO_SERVICE_ROLE[user_role.to_sym]
+      if service_role.nil?
+        raise UnknownRoleError, "unable to create ServiceRole for unknown role #{user_role}"
+      end
+
       new(service_role)
     end
 
     def initialize(role_key)
       @service_role = role_key.to_sym
-      unless SERVICE_ROLES.key?(@service_role)
-        raise "unable to create ServiceRole for unknown role #{@service_role}"
-      end
       @access = SERVICE_ROLES[@service_role][:access]
       @description = SERVICE_ROLES[@service_role][:description]
       @full_name = SERVICE_ROLES[@service_role][:full_name]
