@@ -55,5 +55,20 @@ RSpec.describe Otis::RegistrationMover do
         end
       end
     end
+
+    it "copies the expected values to a new user" do
+      registration = create(:ht_registration, role: :caa, env: test_env)
+      ht_user = described_class.new(registration).ht_user
+      expect(ht_user.activitycontact).to eq(registration.contact_info)
+      expect(ht_user.approver).to eq(registration.auth_rep_email)
+      expect(ht_user.authorizer).to eq(registration.hathitrust_authorizer)
+      expect(ht_user.displayname).to eq(registration.applicant_name)
+      expect(ht_user.email).to eq(registration.applicant_email)
+      expect(ht_user.expire_type).to eq(registration.expire_type)
+      expect(ht_user.identity_provider).not_to be(nil)
+      expect(ht_user.inst_id).to eq(registration.inst_id)
+      expect(ht_user.role).to eq("quality")
+      expect(ht_user.userid).to eq("nobody@default.invalid")
+    end
   end
 end

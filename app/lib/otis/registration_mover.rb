@@ -12,6 +12,7 @@ module Otis
       institution = HTInstitution.find(@registration.inst_id)
       @ht_user = @registration.existing_user || HTUser.new(email: @registration.applicant_email)
       @ht_user.update(
+        activitycontact: @registration.contact_info,
         approver: @registration.auth_rep_email,
         authorizer: authorizer,
         displayname: @registration.applicant_name,
