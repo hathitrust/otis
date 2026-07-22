@@ -21,7 +21,9 @@ UNIQUE_INST_IDS = {}
 UNIQUE_EMAILS = {}
 UNIQUE_HTIDS = {}
 
-def create_ht_user(expires:)
+LEGACY_ROLES = %i[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd resource_sharing].freeze
+
+def create_ht_user(expired: false)
   email = Faker::Internet.email
   UNIQUE_EMAILS[email] = true
   u = HTUser.new(
@@ -32,9 +34,9 @@ def create_ht_user(expires:)
     approver: @approvers.sample,
     authorizer: Faker::Internet.email,
     usertype: HTUser::USERTYPES.sample.to_s,
-    role: HTUser::ROLES.sample.to_s,
+    role: (expired ? LEGACY_ROLES : HTUser::ROLES).sample.to_s,
     access: HTUser::ACCESSES.sample.to_s,
-    expires: expires,
+    expires: (expired ? Faker::Time.backward : Faker::Time.forward),
     expire_type: HTUser::EXPIRES_TYPES.sample,
     mfa: [false, true].sample
   )
@@ -50,7 +52,8 @@ def create_ht_user(expires:)
       "#{Faker::Internet.public_ip_v4_address}, #{Faker::Internet.public_ip_v4_address}"
     end
   end
-  u.save!
+  # Expired users may have legacy roles, so validate only if not expired.
+  u.save!(validate: !expired)
   c = HTCount.new(
     userid: u.userid,
     accesscount: Faker::Number.within(range: 1..10_000),
@@ -60,7 +63,7 @@ def create_ht_user(expires:)
     auth_requested: [false, true].sample
   )
   c.save
-  create_ht_approval_request(u)
+  create_ht_approval_request(u) unless expired
 end
 
 def create_ht_approval_request(user)
@@ -250,13 +253,13 @@ end
 end
 
 # active users
-150.times do
-  create_ht_user(expires: Faker::Time.forward)
+100.times do
+  create_ht_user
 end
 
 # expired users
-5.times do
-  create_ht_user(expires: Faker::Time.backward)
+50.times do
+  create_ht_user(expired: true)
 end
 
 10.times do

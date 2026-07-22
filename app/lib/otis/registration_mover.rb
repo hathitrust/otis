@@ -11,12 +11,18 @@ module Otis
 
       institution = HTInstitution.find(@registration.inst_id)
       @ht_user = @registration.existing_user || HTUser.new(email: @registration.applicant_email)
-      @ht_user.update(userid: userid, displayname: @registration.applicant_name,
-        inst_id: @registration.inst_id, identity_provider: institution.entityID,
-        approver: @registration.auth_rep_email, authorizer: authorizer,
+      @ht_user.update(
+        activitycontact: @registration.contact_info,
+        approver: @registration.auth_rep_email,
+        authorizer: authorizer,
+        displayname: @registration.applicant_name,
         expire_type: @registration.expire_type,
         expires: ExpirationDate.new(Time.zone.now, @registration.expire_type).default_extension_date,
-        usertype: :external, access: access, role: @registration.role)
+        identity_provider: institution.entityID,
+        inst_id: @registration.inst_id,
+        role: user_role(@registration.role),
+        userid: userid
+      )
       if institution.mfa?
         @ht_user.mfa = true
       else
@@ -29,24 +35,21 @@ module Otis
 
     private
 
-    # ssdproxy role grants normal access, all other roles grant total access
-    def access
-      case @registration.role
-      when "resource_sharing", "ssdproxy"
-        "normal"
-      else
-        "total"
-      end
+    # Map `ServiceRole` key to legacy `ht_users.role`
+    def user_role(service_role)
+      Otis::ServiceRole.new(service_role).role
     end
 
     def iprestrict
       @registration.mfa_addendum.present? ? "any" : @registration.ip_address
     end
 
-    # For CAA users, hathitrust_authorizer should be present and we should use that.
-    # auth_rep_email is the fallback.
+    # For CAA/RS/CRMS/HT users, hathitrust_authorizer should be present and we should use that.
+    # Note July 2026: there are no registrations without `hathitrust_authorizer` and the model
+    # validator requires it for these roles. (The `present?` check may be unnecessary.)
+    # `auth_rep_email` is the fallback.
     def authorizer
-      if !["ssd", "ssdproxy"].include?(@registration.role) && @registration.hathitrust_authorizer.present?
+      if !["ssd", "atrs"].include?(@registration.role) && @registration.hathitrust_authorizer.present?
         @registration.hathitrust_authorizer
       else
         @registration.auth_rep_email
