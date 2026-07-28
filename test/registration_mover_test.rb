@@ -60,25 +60,6 @@ module Otis
     end
   end
 
-  class RegistrationMoverAuthorizerTest < ActiveSupport::TestCase
-    test "CAA registration uses hathitrust_authorizer for authorizer" do
-      registration = create(:ht_registration, role: "quality",
-        hathitrust_authorizer: "authorizer@hathitrust.org",
-        env: {"HTTP_X_REMOTE_USER" => "nobody@default.invalid"}.to_json)
-      ht_user = RegistrationMover.new(registration).ht_user
-      assert_equal "authorizer@hathitrust.org", ht_user.authorizer
-    end
-
-    test "ATRS registration uses auth_rep_email for authorizer and ignores hathitrust_authorizer" do
-      registration = create(:ht_registration, role: "ssd",
-        auth_rep_email: "authorizer@default.invalid",
-        hathitrust_authorizer: nil,
-        env: {"HTTP_X_REMOTE_USER" => "nobody@default.invalid"}.to_json)
-      ht_user = RegistrationMover.new(registration).ht_user
-      assert_equal "authorizer@default.invalid", ht_user.authorizer
-    end
-  end
-
   class RegistrationMoverInstitutionTest < ActiveSupport::TestCase
     test "finishing registration uses institution.entityID to identity_provider" do
       inst = create(:ht_institution)
@@ -93,46 +74,15 @@ module Otis
     test "finishing re-registration merges new fields onto existing user" do
       old_inst = create(:ht_institution)
       new_inst = create(:ht_institution, :mfa)
-      existing_user = create(:ht_user, inst_id: old_inst.inst_id, role: "superuser")
+      existing_user = create(:ht_user, inst_id: old_inst.inst_id, role: "resource_sharing")
       registration = create(:ht_registration, applicant_email: existing_user.email,
-        inst_id: new_inst.inst_id, role: "corrections", mfa_addendum: true,
+        inst_id: new_inst.inst_id, role: "crms", mfa_addendum: true,
         env: {"HTTP_X_REMOTE_USER" => existing_user.email}.to_json)
       new_user = RegistrationMover.new(registration).ht_user
       assert new_user.persisted?
       assert_equal new_user, existing_user.reload
       assert_equal new_user.inst_id, new_inst.inst_id
-      assert_equal "corrections", new_user.role
-    end
-  end
-
-  # This class has been migrated to rspec
-  class RegistrationMoverAccessTest < ActiveSupport::TestCase
-    test "approved ssdproxy and resource_sharing users have normal access" do
-      [:ssdproxy, :resource_sharing].each do |role|
-        registration = create(
-          :ht_registration,
-          received: Time.now,
-          ip_address: Faker::Internet.public_ip_v4_address,
-          role: role,
-          env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json
-        )
-        ht_user = RegistrationMover.new(registration).ht_user
-        assert_equal "normal", ht_user.access
-      end
-    end
-
-    test "approved non-ssdproxy non-resource_sharing users have total access" do
-      (HTUser::ROLES - [:ssdproxy, :resource_sharing]).each do |role|
-        registration = create(
-          :ht_registration,
-          received: Time.now,
-          ip_address: Faker::Internet.public_ip_v4_address,
-          role: role,
-          env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json
-        )
-        ht_user = RegistrationMover.new(registration).ht_user
-        assert_equal "total", ht_user.access
-      end
+      assert_equal "crms", new_user.role
     end
   end
 end

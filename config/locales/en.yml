@@ -38,7 +38,7 @@ en:
         pages: Pages
         rights_code: Rights Code
         rights_date_used: Rights Date
-        role: Role
+        role: Service Role
         seq: Page Sequences
         title: Title
       ht_institution:
@@ -61,7 +61,6 @@ en:
         objid: ID
         time: Time
       ht_registration:
-        access: Access
         applicant: Applicant
         applicant_date: Applicant Date
         applicant_email: Applicant E-mail
@@ -99,9 +98,7 @@ en:
         sent: Sent
         status: Status
         submitted: Submitted
-        usertype: User Type
       ht_user:
-        access: Access
         accesses: Accesses
         activitycontact: Activity Contact
         approver: Approver
@@ -118,7 +115,6 @@ en:
         renewal_status: Renewal Status
         role: Role
         userid: User ID
-        usertype: User Type
     errors:
       models:
         ht_approval_request:
@@ -256,11 +252,6 @@ en:
       edit: Edit
     update:
       success: Contact updated.
-  ht_download:
-    values:
-      role:
-        resource_sharing: Resource Sharing
-        ssdproxy: ATRS Provider
   ht_downloads:
     index:
       clear_filter: Clear Filters
@@ -312,19 +303,6 @@ en:
   ht_registration:
     badges:
       expired: Expired
-    values:
-      role:
-        crms: Copyright Review
-        quality: Quality Review
-        resource_sharing: Resource Sharing
-        ssd: Accessible Text Request Service Patron
-        ssdproxy: Accessible Text Request Service Provider
-        staffdeveloper: Staff Developer
-      service_name:
-        atrs: Accessible Text Request Service
-        caa: Collection Administration Access
-        rs: Resource Sharing
-        ssd: Accessible Text Request Service Patron
   ht_registrations:
     approve:
       already_approved: Registration already approved.
@@ -363,24 +341,7 @@ en:
       expire_now: Expire Now
       iprestrict_prompt: If multiple IP addresses, enter as a comma-separated list.
       renew_now: Renew Now
-    role_descriptions:
-      cataloging: Correct or add to the bibliographic records of HathiTrust volumes
-      corrections: Support of corrections or updates to HathiTrust volumes
-      crms: Perform copyright review on HathiTrust volumes
-      developer: Experimental search API role – do not use
-      inprintstatus: Perform in-print status review of volumes in HathiTrust
-      quality: Evaluate the quality of digital volumes in HathiTrust
-      replacement: Create replacement copies of individual pages of volumes in HathiTrust
-      resource_sharing: Use full-view texts to fulfill ILL and document delivery requests
-      ssd: Users who have print disabilities
-      ssdproxy: Act as a proxy for users who have print disabilities
-      staffdeveloper: Develop software for HathiTrust services or operations
-      staffsysadmin: Operate or maintain HathiTrust repository infrastructure
-      superuser: UM staff developer – includes roles staffdeveloper and staffsysadmin
     values:
-      access:
-        normal: Normal
-        total: Total
       expire_type:
         expiresannually: 1 year
         expiresbiannually: 2 years
@@ -392,24 +353,6 @@ en:
         any: Any
       mfa:
         unavailable: Unavailable
-      role:
-        cataloging: Cataloging Support
-        corrections: Corrections Support
-        crms: Copyright Reviewer
-        developer: Experimental search API role – do not use
-        inprintstatus: In-print Status Reviewer
-        quality: Quality Reviewer
-        replacement: Page Replacement Support
-        resource_sharing: Resource Sharing
-        ssd: Accessible Text Request Service Patron
-        ssdproxy: Accessible Text Request Service Provider
-        staffdeveloper: Staff Developer
-        staffsysadmin: Staff Systems Administrator
-        superuser: UM Staff Developer
-      usertype:
-        external: External
-        staff: Staff
-        student: Student
   ht_users:
     edit:
       cancel: Cancel

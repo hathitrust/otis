@@ -11,6 +11,7 @@ FactoryBot.define do
     expires { Faker::Time.forward }
     iprestrict { Faker::Internet.public_ip_v4_address }
     ht_institution
+    role { HTUser::ROLES.sample }
 
     trait :active
 
@@ -129,7 +130,7 @@ FactoryBot.define do
     applicant_email { Faker::Internet.email }
     applicant_date { Faker::Date.backward(days: 180) }
     jira_ticket { Faker::Alphanumeric.alpha(number: 6).upcase }
-    role { HTRegistration::ROLES.sample.to_s }
+    role { HTRegistration::ROLES.sample }
     expire_type { HTUser::EXPIRES_TYPES.sample.to_s }
     auth_rep_name { Faker::Name.name }
     auth_rep_email { Faker::Internet.email }

@@ -61,7 +61,6 @@ ja:
         objid: ID
         time: 時間
       ht_registration:
-        access: アクセス
         applicant: 申請者
         applicant_date: 申請者の年月日
         applicant_email: 申請者のEメール
@@ -99,9 +98,7 @@ ja:
         sent: 送信された
         status: 状態
         submitted: 送信された
-        usertype: ユーザータイプ
       ht_user:
-        access: アクセス
         accesses: アクセス数
         activitycontact: 活動連絡先
         approver: 秘書
@@ -118,7 +115,6 @@ ja:
         renewal_status: 更新状況
         role: 役割
         userid: ユーザーID
-        usertype: ユーザータイプ
     errors:
       models:
         ht_approval_request:
@@ -256,11 +252,6 @@ ja:
       edit: 編集
     update:
       success: 連絡先が更新されました。
-  ht_download:
-    values:
-      role:
-        resource_sharing: リソースの共有
-        ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
   ht_downloads:
     index:
       clear_filter: フィルターをクリアする
@@ -312,19 +303,6 @@ ja:
   ht_registration:
     badges:
       expired: 期限切れ
-    values:
-      role:
-        crms: 著作権レビュー
-        quality: 品質レビュー
-        resource_sharing: リソースの共有
-        ssd: アクセシブルなテキストリクエストサービスパトロン
-        ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
-        staffdeveloper: スタッフ開発者
-      service_name:
-        atrs: アクセシブルなテキストリクエストサービス
-        caa: コレクション管理アクセス
-        rs: リソースの共有
-        ssd: アクセシブルなテキストリクエストサービスパトロン
   ht_registrations:
     approve:
       already_approved: 登録はすでに完了しています。
@@ -363,24 +341,7 @@ ja:
       expire_now: 期限切れにする
       iprestrict_prompt: 複数のIPアドレスの場合は、コンマ区切りのリストとして入力します。
       renew_now: 更新する
-    role_descriptions:
-      cataloging: HathiTrustボリュームの書誌レコードを修正または追加します
-      corrections: HathiTrustボリュームの修正または更新のサポート
-      crms: HathiTrustボリュームの著作権レビューを実行します
-      developer: 実験的な検索APIの役割：使用禁止
-      inprintstatus: HathiTrustのボリュームの印刷中のステータスレビューを実行します
-      quality: HathiTrustのデジタルボリュームの品質を評価する
-      replacement: HathiTrustでボリュームの個々のページの置換コピーを作成します
-      resource_sharing: ILLおよび文書配送リクエストを満たすためにフルビューテキストを使用する
-      ssd: 印刷障害のあるユーザー
-      ssdproxy: 印刷障害を持つユーザーのプロキシとして機能する
-      staffdeveloper: HathiTrustのサービスまたは運用のためのソフトウェアを開発する
-      staffsysadmin: HathiTrustリポジトリインフラストラクチャを運用または保守する
-      superuser: UMスタッフ開発者–ロールstaffdeveloperとstaffsysadminが含まれます
     values:
-      access:
-        normal: 正常
-        total: 全権
       expire_type:
         expiresannually: 1年間
         expiresbiannually: 2年間
@@ -392,24 +353,6 @@ ja:
         any: 任意
       mfa:
         unavailable: 利用できません
-      role:
-        cataloging: カタログサポート
-        corrections: 修正サポート
-        crms: 著作権レビューア
-        developer: 実験的な検索APIの役割 -- 使用禁止
-        inprintstatus: 印刷中のステータスレビューア
-        quality: 品質レビューア
-        replacement: ページ置換サポート
-        resource_sharing: リソースの共有
-        ssd: アクセシブルなテキストリクエストサービスパトロン
-        ssdproxy: アクセシブルなテキストリクエストサービスプロバイダー
-        staffdeveloper: スタッフ開発者
-        staffsysadmin: スタッフシステム管理者
-        superuser: UMスタッフ開発者
-      usertype:
-        external: 外部
-        staff: スタッフ
-        student: 学生
   ht_users:
     edit:
       cancel: キャンセル

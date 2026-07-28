@@ -11,9 +11,7 @@ class HTRegistration < ApplicationRecord
   alias_attribute :approved, :finished
   alias_attribute :submitted, :received
 
-  # FIXME: the roles in HTUser are expected to be simplified to look more like this.
-  # Once that happens this list should be replaced with the one from HTUser
-  ROLES = %i[crms quality resource_sharing ssd ssdproxy staffdeveloper].freeze
+  ROLES = Otis::ServiceRole.keys.freeze
 
   def self.expiration_date
     Date.today - 1.week
@@ -47,8 +45,8 @@ class HTRegistration < ApplicationRecord
   validates :token_hash, presence: true, if: :sent
   validates :contact_info, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
 
-  # HathiTrust-level authorizer is only required for non-ATRS users.
-  validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["ssd", "ssdproxy"].include? reg.role }
+  # HathiTrust-level authorizer is only required for users other than ATRS and SSD.
+  validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["atrs", "ssd"].include? reg.role }
 
   # mfa = multi factor authentication
   validates_inclusion_of :mfa_addendum, in: [true, false]
@@ -102,5 +100,7 @@ class HTRegistration < ApplicationRecord
 
   def service_role
     @service_role ||= Otis::ServiceRole.new(role)
+  rescue Otis::UnknownRoleError
+    nil
   end
 end

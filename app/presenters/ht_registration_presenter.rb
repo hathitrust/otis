@@ -187,6 +187,10 @@ class HTRegistrationPresenter < ApplicationPresenter
     HTML
   end
 
+  def show_role
+    service_role.present? ? service_role.full_name : "Legacy role <code>#{role}</code>".html_safe
+  end
+
   def show_sent
     return "" unless sent.present?
 
@@ -241,6 +245,6 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def role_options
-    @role_options ||= HTRegistration::ROLES.sort.map { |role| [I18n.t("ht_registration.values.role.#{role}"), role] }
+    @role_options ||= HTRegistration::ROLES.sort.map { |role| [Otis::ServiceRole.new(role).full_name, role] }
   end
 end

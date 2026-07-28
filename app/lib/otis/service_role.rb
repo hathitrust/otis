@@ -1,56 +1,104 @@
 # frozen_string_literal: true
 
 module Otis
-  # These are used in Jira EA tickets and in the landing/confirmation pages for registrants.
-  # Maps between the legacy database `role` fields and the more modern way we expose
-  # them to the public.
+  class UnknownRoleError < StandardError
+    # Raised when trying to create a `ServiceRole` from a legacy `ht_users.role`
+    # that does not have a modern equivalent, e.g. `staffsysadmin`
+  end
+
+  # An Object that encapsulates business logic around ht_registration.role amd ht_user.role values.
+  # ht_registration uses SERVICE_ROLES.keys and maps them to slightly modified legacy values
+  # when a user is created.
+  # Maybe we can just go with the new SERVICE_ROLES.keys values in ht_users.role sooner or later
+  # but care must be taken since the babel Perl code relies on certain legacy values.
   class ServiceRole
-    # This is re-used so let's just have one instance
-    CAA_NAMES = {
-      name: "CAA",
-      full_name: "CAA"
-    }.freeze
-
-    ROLE_TO_SERVICE_NAME = {
-      crms: CAA_NAMES,
-      quality: CAA_NAMES,
-      resource_sharing: {
-        name: "RS",
-        full_name: "Resource Sharing"
-      },
-      # We don't have any batch registration or Jira automation support for the SSD role,
-      # so for now this is only included for completeness.
-      ssd: {
-        name: "SSD",
-        full_name: "SSD"
-      },
-      ssdproxy: {
+    SERVICE_ROLES = {
+      atrs: {
+        access: :normal,
+        description: "Act as a proxy for users who have print disabilities",
+        full_name: "Accessible Text Request Service",
         name: "ATRS",
-        full_name: "ATRS"
+        role: :ssdproxy,
+        user_type: :external
       },
-      # Just using CAA as the default
-      staffdeveloper: CAA_NAMES
+      caa: {
+        access: :total,
+        description: "Support corrections or updates to HathiTrust volumes",
+        full_name: "Collection Admin Access",
+        name: "CAA",
+        role: :quality,
+        user_type: :external
+      },
+      crms: {
+        access: :total,
+        description: "Perform copyright review on HathiTrust volumes",
+        full_name: "Copyright Review",
+        name: "CRMS",
+        role: :crms,
+        user_type: :external
+      },
+      ht_staff: {
+        access: :total,
+        description: "Full access to all materials for HathiTrust staff members",
+        full_name: "HathiTrust Staff",
+        name: "Staff",
+        role: :ht_staff,
+        user_type: :staff
+      },
+      resource_sharing: {
+        access: :normal,
+        description: "Use full-view texts to fulfill ILL and document delivery requests",
+        full_name: "Resource Sharing",
+        name: "RS",
+        role: :resource_sharing,
+        user_type: :external
+      },
+      ssd: {
+        access: :normal,
+        description: "Users who have print disabilities",
+        full_name: "SSD User",
+        name: "SSD",
+        role: :ssd,
+        user_type: :student
+      }
     }.freeze
 
-    attr_reader :role
+    # Reverse lookup for HTUser class to create ServiceRole from its
+    # old fashioned role values.
+    USER_ROLE_TO_SERVICE_ROLE = SERVICE_ROLES.map { |k, v| [v[:role], k] }.to_h
 
-    def initialize(role)
-      @role = role.to_sym
+    attr_reader :access, :description, :full_name, :name, :role, :service_role, :user_type
+
+    def self.keys
+      SERVICE_ROLES.keys
     end
 
-    # For creating EA tickets and to a lesser extent the landing page for registrants.
-    # This sidesteps localization or coexists with it in uncomfortable ways.
-    # @return String
-    def name
-      @name ||= ROLE_TO_SERVICE_NAME[role][:name]
+    def self.key?(...)
+      SERVICE_ROLES.key?(...)
     end
 
-    # Like `#name`, but expands "RS" into "Resource Sharing" for ticket summary and description.
-    # Leaves "ATRS" and "CAA" alone.
-    # For now this is the only acronym that gets expanded but we may want to do the others.
-    # @return String
-    def full_name
-      @full_name ||= ROLE_TO_SERVICE_NAME[role][:full_name]
+    # Create a service role using the legacy ht_user.role value
+    def self.for_user_role(user_role)
+      service_role = USER_ROLE_TO_SERVICE_ROLE[user_role.to_sym]
+      if service_role.nil?
+        raise UnknownRoleError, "unable to create ServiceRole for unknown user role #{user_role}"
+      end
+
+      new(service_role)
+    end
+
+    def initialize(role_key)
+      @service_role = role_key.to_sym
+      if !SERVICE_ROLES.key?(@service_role)
+        raise UnknownRoleError, "unable to create ServiceRole for unknown role #{role_key}"
+      end
+
+      @access = SERVICE_ROLES[@service_role][:access]
+      @description = SERVICE_ROLES[@service_role][:description]
+      @full_name = SERVICE_ROLES[@service_role][:full_name]
+      @name = SERVICE_ROLES[@service_role][:name]
+      @role = SERVICE_ROLES[@service_role][:role]
+      @user_type = SERVICE_ROLES[@service_role][:user_type]
     end
   end
 end
