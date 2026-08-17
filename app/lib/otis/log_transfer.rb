@@ -18,7 +18,10 @@ module Otis
 
     # Call rclone to list the relevant log files from ictc and macc
     # @return Hash from JSON returned by `rclone` sorted chronologically from earliest
-    def imgsrv_logs
+    # possible values for `apps`: imgsrv, imgsrv_downloads, ssd, pt, catalog, www, ls
+    # TODO: rename to app_logs
+    def imgsrv_logs(apps: ["imgsrv_downloads"])
+      apps_clause = apps.join(",")
       @imgsrv_logs ||= begin
         cmd = <<~RCLONE.gsub(/\s+/, " ").strip
           rclone
@@ -27,7 +30,7 @@ module Otis
           -R
           --files-only
           --no-mimetype
-          --include '/{macc,ictc}-ht-web-*.umdl.umich.edu/var/log/babel/access-imgsrv_downloads.log*'
+          --include '/{macc,ictc}-ht-web-*.umdl.umich.edu/var/log/babel/access-{#{apps_clause}}.log*'
           ulib-logs:/ulib-logs/archive
         RCLONE
         @query_time = Time.now
