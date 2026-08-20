@@ -32,7 +32,7 @@ module Otis
       # Write files into a temp directory and delete them as they are processed
       # so they don't pile up.
       Dir.mktmpdir("otis_log_import") do |tempdir|
-        @transfer.imgsrv_logs.each do |log_struct|
+        @transfer.app_logs.each do |log_struct|
           mod_time = Time.parse log_struct["ModTime"]
           # Bail out if mod time is less than (earlier than) last import
           if mod_time < last_import

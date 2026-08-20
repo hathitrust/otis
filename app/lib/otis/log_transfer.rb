@@ -19,8 +19,7 @@ module Otis
     # Call rclone to list the relevant log files from ictc and macc
     # @return Hash from JSON returned by `rclone` sorted chronologically from earliest
     # possible values for `apps`: imgsrv, imgsrv_downloads, ssd, pt, catalog, www, ls
-    # TODO: rename to app_logs
-    def imgsrv_logs(apps: ["imgsrv_downloads"])
+    def app_logs(apps: ["imgsrv_downloads"])
       apps_clause = apps.join(",")
       @imgsrv_logs ||= begin
         cmd = <<~RCLONE.gsub(/\s+/, " ").strip
