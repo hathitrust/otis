@@ -21,7 +21,7 @@ module Otis
     # possible values for `apps`: imgsrv, imgsrv_downloads, ssd, pt, catalog, www, ls
     def app_logs(apps: ["imgsrv_downloads"])
       apps_clause = apps.join(",")
-      @imgsrv_logs ||= begin
+      @app_logs ||= begin
         cmd = <<~RCLONE.gsub(/\s+/, " ").strip
           rclone
           --config #{rclone_config_path}
