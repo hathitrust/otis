@@ -11,12 +11,19 @@ module Otis
 
       institution = HTInstitution.find(@registration.inst_id)
       @ht_user = @registration.existing_user || HTUser.new(email: @registration.applicant_email)
-      @ht_user.update(userid: userid, displayname: @registration.applicant_name,
-        inst_id: @registration.inst_id, identity_provider: institution.entityID,
-        approver: @registration.auth_rep_email, authorizer: authorizer,
+      @ht_user.update(
+        access: access,
+        approver: @registration.auth_rep_email,
+        authorizer: authorizer,
+        displayname: @registration.applicant_name,
         expire_type: @registration.expire_type,
         expires: ExpirationDate.new(Time.zone.now, @registration.expire_type).default_extension_date,
-        usertype: :external, access: access, role: @registration.role)
+        identity_provider: institution.entityID,
+        inst_id: @registration.inst_id,
+        role: @registration.role,
+        userid: userid,
+        usertype: :external
+      )
       if institution.mfa?
         @ht_user.mfa = true
       else
