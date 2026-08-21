@@ -21,20 +21,19 @@ module Otis
     # possible values for `apps`: imgsrv, imgsrv_downloads, ssd, pt, catalog, www, ls
     def app_logs(apps: ["imgsrv_downloads"])
       apps_clause = apps.join(",")
-      @app_logs ||= begin
-        cmd = <<~RCLONE.gsub(/\s+/, " ").strip
-          rclone
-          --config #{rclone_config_path}
-          lsjson
-          -R
-          --files-only
-          --no-mimetype
-          --include '/{macc,ictc}-ht-web-*.umdl.umich.edu/var/log/babel/access-{#{apps_clause}}.log*'
-          ulib-logs:/ulib-logs/archive
-        RCLONE
-        @query_time = Time.now
-        JSON.parse(`#{cmd}`)
-      end.sort! do |a, b|
+      cmd = <<~RCLONE.gsub(/\s+/, " ").strip
+        rclone
+        --config #{rclone_config_path}
+        lsjson
+        -R
+        --files-only
+        --no-mimetype
+        --include '/{macc,ictc}-ht-web-*.umdl.umich.edu/var/log/babel/access-{#{apps_clause}}.log*'
+        ulib-logs:/ulib-logs/archive
+      RCLONE
+      @query_time = Time.now
+      app_logs = JSON.parse(`#{cmd}`)
+      app_logs.sort do |a, b|
         Time.parse(a["ModTime"]) <=> Time.parse(b["ModTime"])
       end
     end
