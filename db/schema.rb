@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :role
     t.string :expire_type
     # Institution-level ATRS point of contact
-    # Not preserved when registrant is moved to ht_users
+    # Map contact_info -> ht_user.activitycontact
     t.string :contact_info
     # Map auth_rep_email -> ht_users.approver
     t.string :auth_rep_name

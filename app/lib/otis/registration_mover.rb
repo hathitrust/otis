@@ -13,6 +13,7 @@ module Otis
       @ht_user = @registration.existing_user || HTUser.new(email: @registration.applicant_email)
       @ht_user.update(
         access: access,
+        activitycontact: @registration.contact_info,
         approver: @registration.auth_rep_email,
         authorizer: authorizer,
         displayname: @registration.applicant_name,

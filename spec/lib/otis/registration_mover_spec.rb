@@ -31,5 +31,10 @@ RSpec.describe Otis::RegistrationMover do
         end
       end
     end
+
+    it "maps `otis_registrations.contact_info` to `ht_user.activitycontact`" do
+      registration = create(:ht_registration, contact_info: "contact_info@default.invalid")
+      expect(described_class.new(registration).ht_user.activitycontact).to eq "contact_info@default.invalid"
+    end
   end
 end
