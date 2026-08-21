@@ -20,17 +20,7 @@ module Otis
     # @return Hash from JSON returned by `rclone` sorted chronologically from earliest
     # possible values for `apps`: imgsrv, imgsrv_downloads, ssd, pt, catalog, www, ls
     def app_logs(apps: ["imgsrv_downloads"])
-      apps_clause = apps.join(",")
-      cmd = <<~RCLONE.gsub(/\s+/, " ").strip
-        rclone
-        --config #{rclone_config_path}
-        lsjson
-        -R
-        --files-only
-        --no-mimetype
-        --include '/{macc,ictc}-ht-web-*.umdl.umich.edu/var/log/babel/access-{#{apps_clause}}.log*'
-        ulib-logs:/ulib-logs/archive
-      RCLONE
+      cmd = rclone_lsjson_command(apps: apps)
       @query_time = Time.now
       app_logs = JSON.parse(`#{cmd}`)
       app_logs.sort do |a, b|
@@ -55,6 +45,20 @@ module Otis
     end
 
     private
+
+    def rclone_lsjson_command(apps:)
+      apps_clause = apps.join(",")
+      <<~RCLONE.gsub(/\s+/, " ").strip
+        rclone
+        --config #{rclone_config_path}
+        lsjson
+        -R
+        --files-only
+        --no-mimetype
+        --include '/{macc,ictc}-ht-web-*.umdl.umich.edu/var/log/babel/access-{#{apps_clause}}.log*'
+        ulib-logs:/ulib-logs/archive
+      RCLONE
+    end
 
     def rclone_copyto_command(source_path:, destination:)
       <<~RCLONE.gsub(/\s+/, " ").strip
