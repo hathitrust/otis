@@ -18,21 +18,12 @@ module Otis
 
     # Call rclone to list the relevant log files from ictc and macc
     # @return Hash from JSON returned by `rclone` sorted chronologically from earliest
-    def imgsrv_logs
-      @imgsrv_logs ||= begin
-        cmd = <<~RCLONE.gsub(/\s+/, " ").strip
-          rclone
-          --config #{rclone_config_path}
-          lsjson
-          -R
-          --files-only
-          --no-mimetype
-          --include '/{macc,ictc}-ht-web-*.umdl.umich.edu/var/log/babel/access-imgsrv_downloads.log*'
-          ulib-logs:/ulib-logs/archive
-        RCLONE
-        @query_time = Time.now
-        JSON.parse(`#{cmd}`)
-      end.sort! do |a, b|
+    # possible values for `apps`: imgsrv, imgsrv_downloads, ssd, pt, catalog, www, ls
+    def app_logs(apps: ["imgsrv_downloads"])
+      cmd = rclone_lsjson_command(apps: apps)
+      @query_time = Time.now
+      app_logs = JSON.parse(`#{cmd}`)
+      app_logs.sort do |a, b|
         Time.parse(a["ModTime"]) <=> Time.parse(b["ModTime"])
       end
     end
@@ -54,6 +45,20 @@ module Otis
     end
 
     private
+
+    def rclone_lsjson_command(apps:)
+      apps_clause = apps.join(",")
+      <<~RCLONE.gsub(/\s+/, " ").strip
+        rclone
+        --config #{rclone_config_path}
+        lsjson
+        -R
+        --files-only
+        --no-mimetype
+        --include '/{macc,ictc}-ht-web-*.umdl.umich.edu/var/log/babel/access-{#{apps_clause}}.log*'
+        ulib-logs:/ulib-logs/archive
+      RCLONE
+    end
 
     def rclone_copyto_command(source_path:, destination:)
       <<~RCLONE.gsub(/\s+/, " ").strip
