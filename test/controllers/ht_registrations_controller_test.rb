@@ -47,7 +47,6 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_match @registration.contact_info, @response.body
     assert_match ERB::Util.html_escape(@registration.auth_rep_name), @response.body
     assert_match @registration.auth_rep_email, @response.body
-    assert_match Date.parse(@registration.auth_rep_date).year.to_s, @response.body
     assert_match ERB::Util.html_escape(@registration.applicant_name), @response.body
     assert_match @registration.applicant_email, @response.body
     assert_match Date.parse(@registration.applicant_date).year.to_s, @response.body
@@ -168,7 +167,6 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_match 'name="ht_registration[contact_info]"', @response.body
     assert_match 'name="ht_registration[auth_rep_name]"', @response.body
     assert_match 'name="ht_registration[auth_rep_email]"', @response.body
-    assert_match 'name="ht_registration[auth_rep_date]"', @response.body
     assert_match 'name="ht_registration[applicant_name]"', @response.body
     assert_match 'name="ht_registration[applicant_email]"', @response.body
     assert_match 'name="ht_registration[applicant_date]"', @response.body
@@ -190,7 +188,6 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_equal(log.data["params"]["contact_info"], params[:contact_info])
     assert_equal(log.data["params"]["auth_rep_name"], params[:auth_rep_name])
     assert_equal(log.data["params"]["auth_rep_email"], params[:auth_rep_email])
-    assert_equal(log.data["params"]["auth_rep_date"], params[:auth_rep_date])
     assert_equal(log.data["params"]["applicant_name"], params[:applicant_name])
     assert_equal(log.data["params"]["applicant_email"], params[:applicant_email])
     assert_equal(log.data["params"]["applicant_date"], params[:applicant_date])
@@ -200,8 +197,7 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
   test "alerts on create failure due to missing fields" do
     params = FactoryBot.build(:ht_registration).attributes.except(
       "auth_rep_name",
-      "auth_rep_email",
-      "auth_rep_date"
+      "auth_rep_email"
     ).symbolize_keys
 
     HTRegistration.delete_all
@@ -261,7 +257,6 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
     assert_match 'name="ht_registration[jira_ticket]"', @response.body
     assert_match 'name="ht_registration[auth_rep_name]"', @response.body
     assert_match 'name="ht_registration[auth_rep_email]"', @response.body
-    assert_match 'name="ht_registration[auth_rep_date]"', @response.body
     assert_match 'name="ht_registration[applicant_name]"', @response.body
     assert_match 'name="ht_registration[applicant_email]"', @response.body
     assert_match 'name="ht_registration[applicant_date]"', @response.body

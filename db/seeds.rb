@@ -147,7 +147,6 @@ def create_ht_registration
     applicant_date: Faker::Date.backward(days: 180),
     auth_rep_name: Faker::Name.name,
     auth_rep_email: Faker::Internet.email,
-    auth_rep_date: Faker::Date.backward(days: 180),
     hathitrust_authorizer: Faker::Internet.email,
     inst_id: UNIQUE_INST_IDS.keys.sample,
     role: HTRegistration::ROLES.sample.to_s,

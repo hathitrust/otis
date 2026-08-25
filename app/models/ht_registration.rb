@@ -35,10 +35,9 @@ class HTRegistration < ApplicationRecord
   validates :role, presence: true
   validates :expire_type, presence: true
 
-  # auth_rep = authorized representative
+  # auth_rep is "Approver" in UI
   validates :auth_rep_name, presence: true
   validates :auth_rep_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
-  validates :auth_rep_date, presence: true
 
   validates :applicant_name, presence: true
   validates :applicant_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}

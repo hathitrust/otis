@@ -134,7 +134,6 @@ FactoryBot.define do
     expire_type { HTUser::EXPIRES_TYPES.sample.to_s }
     auth_rep_name { Faker::Name.name }
     auth_rep_email { Faker::Internet.email }
-    auth_rep_date { Faker::Date.backward(days: 180) }
     hathitrust_authorizer { Faker::Internet.email }
     mfa_addendum { [true, false].sample }
     contact_info { Faker::Internet.email }

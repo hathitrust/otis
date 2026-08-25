@@ -68,7 +68,6 @@ en:
         applicant_name: Applicant Name
         approved: Approved
         auth_rep: Approver
-        auth_rep_date: Approver Date
         auth_rep_email: Approver E-mail
         auth_rep_name: Approver Name
         contact_info: Contact Info

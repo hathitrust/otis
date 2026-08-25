@@ -60,7 +60,6 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     # Map auth_rep_email -> ht_users.approver
     t.string :auth_rep_name
     t.string :auth_rep_email
-    t.string :auth_rep_date
     # Needed for CAA but not for ATRS
     # Map hathitrust_authorizer -> ht_user.authorizer
     t.string :hathitrust_authorizer

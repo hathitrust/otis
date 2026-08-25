@@ -68,7 +68,6 @@ ja:
         applicant_name: 申請者の表示名
         approved: 承認された
         auth_rep: 承認者
-        auth_rep_date: 承認者の年月日
         auth_rep_email: 承認者のEメール
         auth_rep_name: 承認者の表示名
         contact_info: 連絡先情報

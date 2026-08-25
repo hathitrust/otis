@@ -5,7 +5,7 @@ require "resolv"
 class HTRegistrationPresenter < ApplicationPresenter
   ALL_FIELDS = %i[
     applicant_name applicant_email applicant_date inst_id jira_ticket
-    role expire_type auth_rep_name auth_rep_email auth_rep_date
+    role expire_type auth_rep_name auth_rep_email
     contact_info hathitrust_authorizer mfa_addendum
     sent submitted approved ip_address
   ].freeze
@@ -51,14 +51,9 @@ class HTRegistrationPresenter < ApplicationPresenter
 
   private
 
+  # Approver
   def show_auth_rep
-    [auth_rep_name, show_auth_rep_email, show_auth_rep_date].join "<br/>"
-  end
-
-  def show_auth_rep_date
-    return "" unless auth_rep_date.present?
-
-    I18n.l auth_rep_date.to_date, format: :long
+    [auth_rep_name, show_auth_rep_email].join "<br/>"
   end
 
   def show_auth_rep_email
@@ -208,11 +203,6 @@ class HTRegistrationPresenter < ApplicationPresenter
     return "" unless submitted?
 
     I18n.l submitted.to_date, format: :long
-  end
-
-  # See comments about localization and date entry in ht_user_presenter.rb
-  def edit_auth_rep_date(form:)
-    form.date_field :auth_rep_date, value: auth_rep_date.to_s
   end
 
   def edit_applicant_date(form:)
