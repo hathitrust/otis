@@ -70,7 +70,7 @@ ja:
         auth_rep: 承認者
         auth_rep_email: 承認者のEメール
         auth_rep_name: 承認者の表示名
-        contact_info: 連絡先情報
+        contact_info: 活動の連絡先
         detail:
           mismatch: 不突合
           ok: OK

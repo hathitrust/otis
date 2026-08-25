@@ -23,7 +23,7 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     select "1 year", from: "Expire Type"
     fill_in "Approver Name", with: "Test Registration Approver"
     fill_in "Approver E-mail", with: "test_reg_approver@default.invalid"
-    fill_in "Contact Info", with: "contact_info@default.invalid"
+    fill_in "Activity Contact", with: "contact_info@default.invalid"
     fill_in "HathiTrust Authorizer", with: "nobody@hathitrust.org"
     # Capybara is unable to find and click a checkbox directly
     check "ht_registration_mfa_addendum"
@@ -65,7 +65,7 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     select "1 year", from: "Expire Type"
     fill_in "Approver Name", with: "Test Registration Approver"
     fill_in "Approver E-mail", with: "rs_approver@default.invalid"
-    fill_in "Contact Info", with: "contact_info@default.invalid"
+    fill_in "Activity Contact", with: "contact_info@default.invalid"
     fill_in "HathiTrust Authorizer", with: "nobody@hathitrust.org"
     # Capybara is unable to find and click a checkbox directly
     check "ht_registration_mfa_addendum"

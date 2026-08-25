@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :jira_ticket
     t.string :role
     t.string :expire_type
-    # Institution-level ATRS point of contact
+    # Institution-level EA point of contact surfaced as "Activity Contact" in UI
     # Map contact_info -> ht_user.activitycontact
     t.string :contact_info
     # Anything `auth_rep` is surfaced as "Approver" in UI
