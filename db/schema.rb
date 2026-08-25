@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     # Institution-level ATRS point of contact
     # Map contact_info -> ht_user.activitycontact
     t.string :contact_info
+    # Anything `auth_rep` is surfaced as "Approver" in UI
     # Map auth_rep_email -> ht_users.approver
     t.string :auth_rep_name
     t.string :auth_rep_email

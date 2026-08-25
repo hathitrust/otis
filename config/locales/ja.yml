@@ -67,10 +67,10 @@ ja:
         applicant_email: 申請者のEメール
         applicant_name: 申請者の表示名
         approved: 承認された
-        auth_rep: 認証担当者
-        auth_rep_date: 認証担当者の年月日
-        auth_rep_email: 認証担当者のEメール
-        auth_rep_name: 認証担当者の表示名
+        auth_rep: 承認者
+        auth_rep_date: 承認者の年月日
+        auth_rep_email: 承認者のEメール
+        auth_rep_name: 承認者の表示名
         contact_info: 連絡先情報
         detail:
           mismatch: 不突合
