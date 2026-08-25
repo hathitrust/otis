@@ -21,9 +21,8 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     fill_in "Ticket", with: "GS-001"
     select "Staff Developer", from: "Role"
     select "1 year", from: "Expire Type"
-    fill_in "Auth Rep Name", with: "Test Registration Auth Rep"
-    fill_in "Auth Rep E-mail", with: "test_reg_auth_rep@default.invalid"
-    fill_in "Auth Rep Date", with: "01/01/2022"
+    fill_in "Approver Name", with: "Test Registration Approver"
+    fill_in "Approver E-mail", with: "test_reg_approver@default.invalid"
     fill_in "Contact Info", with: "contact_info@default.invalid"
     fill_in "HathiTrust Authorizer", with: "nobody@hathitrust.org"
     # Capybara is unable to find and click a checkbox directly
@@ -64,9 +63,8 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     fill_in "Ticket", with: "GS-001"
     select "Resource Sharing", from: "Role"
     select "1 year", from: "Expire Type"
-    fill_in "Auth Rep Name", with: "Test Registration Auth Rep"
-    fill_in "Auth Rep E-mail", with: "rs_auth_rep@default.invalid"
-    fill_in "Auth Rep Date", with: "01/01/2025"
+    fill_in "Approver Name", with: "Test Registration Approver"
+    fill_in "Approver E-mail", with: "rs_approver@default.invalid"
     fill_in "Contact Info", with: "contact_info@default.invalid"
     fill_in "HathiTrust Authorizer", with: "nobody@hathitrust.org"
     # Capybara is unable to find and click a checkbox directly
