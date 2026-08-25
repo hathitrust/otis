@@ -47,6 +47,19 @@ RSpec.describe Otis::RegistrationMover do
             )
             expect(described_class.new(registration).ht_user.authorizer).to eq test_authorizer
           end
+
+          # The `HTRegistration` model enforces presence of hathitrust_authorizer so here
+          # we build without saving. This could happen if someone futzed with the DB directly.
+          it "falls back on auth_rep_email if no hathitrust_authorizer for #{role} role" do
+            registration = build(
+              :ht_registration,
+              auth_rep_email: test_auth_rep,
+              env: test_env,
+              hathitrust_authorizer: nil,
+              role: role
+            )
+            expect(described_class.new(registration).ht_user.authorizer).to eq test_auth_rep
+          end
         end
       end
 
