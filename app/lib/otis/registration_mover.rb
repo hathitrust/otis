@@ -51,7 +51,7 @@ module Otis
       @registration.mfa_addendum.present? ? "any" : @registration.ip_address
     end
 
-    # For CAA users, hathitrust_authorizer should be present and we should use that.
+    # For CAA and RS users, hathitrust_authorizer should be present and we should use that.
     # auth_rep_email is the fallback.
     def authorizer
       if !["ssd", "ssdproxy"].include?(@registration.role) && @registration.hathitrust_authorizer.present?

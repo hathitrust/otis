@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Otis::RegistrationMover do
-  let(:fake_id) { fake_shib_id }
-  let(:fake_env) { {"HTTP_X_REMOTE_USER" => fake_id}.to_json }
+  let(:test_id) { fake_shib_id }
+  let(:test_env) { {"HTTP_X_REMOTE_USER" => test_id}.to_json }
+  let(:test_authorizer) { "authorizer@hathitrust.org" }
+  let(:test_auth_rep) { "auth_rep@default.invalid" }
 
   describe "#ht_user" do
     # Note: `describe` blocks at this level are alphabetized by target `ht_user` attribute
@@ -12,14 +14,14 @@ RSpec.describe Otis::RegistrationMover do
     describe "access" do
       [:ssdproxy, :resource_sharing].each do |role|
         it "#{role} role gets 'normal' access" do
-          registration = create(:ht_registration, role: role, env: fake_env)
+          registration = create(:ht_registration, role: role, env: test_env)
           expect(described_class.new(registration).ht_user.access).to eq "normal"
         end
       end
 
       (HTUser::ROLES - [:ssdproxy, :resource_sharing]).each do |role|
         it "#{role} role gets 'total' access" do
-          registration = create(:ht_registration, role: role, env: fake_env)
+          registration = create(:ht_registration, role: role, env: test_env)
           expect(described_class.new(registration).ht_user.access).to eq "total"
         end
       end
@@ -32,10 +34,42 @@ RSpec.describe Otis::RegistrationMover do
       end
     end
 
+    describe "authorizer" do
+      context "with CAA/RS registration" do
+        [:quality, :resource_sharing].each do |role|
+          it "uses hathitrust_authorizer for #{role} role" do
+            registration = create(
+              :ht_registration,
+              auth_rep_email: test_auth_rep,
+              env: test_env,
+              hathitrust_authorizer: test_authorizer,
+              role: role
+            )
+            expect(described_class.new(registration).ht_user.authorizer).to eq test_authorizer
+          end
+        end
+      end
+
+      context "with ATRS/SSD registration" do
+        [:ssd, :ssdproxy].each do |role|
+          it "uses auth_rep_email for #{role} role authorizer and ignores hathitrust_authorizer" do
+            registration = create(
+              :ht_registration,
+              auth_rep_email: test_auth_rep,
+              env: test_env,
+              hathitrust_authorizer: test_authorizer,
+              role: role
+            )
+            expect(described_class.new(registration).ht_user.authorizer).to eq test_auth_rep
+          end
+        end
+      end
+    end
+
     describe "identity_provider/inst_id" do
       it "maps entityID to identity_provider and copies inst_id" do
         inst = create(:ht_institution)
-        registration = create(:ht_registration, inst_id: inst.inst_id, env: fake_env)
+        registration = create(:ht_registration, inst_id: inst.inst_id, env: test_env)
         ht_user = described_class.new(registration).ht_user
         expect(ht_user.identity_provider).to eq(inst.entityID)
         expect(ht_user.inst_id).to eq(inst.inst_id)
@@ -46,7 +80,7 @@ RSpec.describe Otis::RegistrationMover do
       context "with MFA-enabled institution" do
         it "creates MFA-enabled user with no IP restriction" do
           mfa_inst = create(:ht_institution, shib_authncontext_class: "https://refeds.org/profile/mfa")
-          registration = create(:ht_registration, inst_id: mfa_inst.inst_id, env: fake_env)
+          registration = create(:ht_registration, inst_id: mfa_inst.inst_id, env: test_env)
           ht_user = described_class.new(registration).ht_user
           expect(ht_user.mfa?).to eq(true)
           expect(ht_user.iprestrict).to eq(nil)
@@ -61,7 +95,7 @@ RSpec.describe Otis::RegistrationMover do
               :ht_registration,
               mfa_addendum: true,
               inst_id: non_mfa_inst.inst_id,
-              env: fake_env
+              env: test_env
             )
             ht_user = described_class.new(registration).ht_user
             expect(ht_user.mfa?).to eq(false)
@@ -76,7 +110,7 @@ RSpec.describe Otis::RegistrationMover do
               :ht_registration,
               mfa_addendum: false,
               inst_id: non_mfa_inst.inst_id,
-              env: fake_env
+              env: test_env
             )
             ht_user = described_class.new(registration).ht_user
             expect(ht_user.mfa?).to eq(false)
@@ -88,8 +122,8 @@ RSpec.describe Otis::RegistrationMover do
 
     describe "userid" do
       it "uses downcased shibboleth id for userid" do
-        registration = create(:ht_registration, env: fake_env)
-        expect(described_class.new(registration).ht_user.userid).to eq(fake_id.downcase)
+        registration = create(:ht_registration, env: test_env)
+        expect(described_class.new(registration).ht_user.userid).to eq(test_id.downcase)
       end
 
       context "with umich IDP" do
