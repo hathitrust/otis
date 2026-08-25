@@ -45,9 +45,13 @@ class HTRegistration < ApplicationRecord
   validates :applicant_date, presence: true
 
   validates :token_hash, presence: true, if: :sent
-  validates :contact_info, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
 
-  # HathiTrust-level authorizer is only required for non-ATRS users.
+  # Prevent "Contact Info can't be blank and Contact Info is invalid" errors by using two validations.
+  # TODO: can do the same for auth_rep_email and applicant_email
+  validates :contact_info, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
+  validates :contact_info, presence: true
+
+  # HathiTrust-level authorizer is only required for non-ATRS/SSD users.
   validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["ssd", "ssdproxy"].include? reg.role }
 
   # mfa = multi factor authentication
