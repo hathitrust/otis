@@ -11,12 +11,20 @@ module Otis
 
       institution = HTInstitution.find(@registration.inst_id)
       @ht_user = @registration.existing_user || HTUser.new(email: @registration.applicant_email)
-      @ht_user.update(userid: userid, displayname: @registration.applicant_name,
-        inst_id: @registration.inst_id, identity_provider: institution.entityID,
-        approver: @registration.auth_rep_email, authorizer: authorizer,
+      @ht_user.update(
+        access: access,
+        activitycontact: @registration.contact_info,
+        approver: @registration.auth_rep_email,
+        authorizer: authorizer,
+        displayname: @registration.applicant_name,
         expire_type: @registration.expire_type,
         expires: ExpirationDate.new(Time.zone.now, @registration.expire_type).default_extension_date,
-        usertype: :external, access: access, role: @registration.role)
+        identity_provider: institution.entityID,
+        inst_id: @registration.inst_id,
+        role: @registration.role,
+        userid: userid,
+        usertype: :external
+      )
       if institution.mfa?
         @ht_user.mfa = true
       else
@@ -43,7 +51,7 @@ module Otis
       @registration.mfa_addendum.present? ? "any" : @registration.ip_address
     end
 
-    # For CAA users, hathitrust_authorizer should be present and we should use that.
+    # For CAA and RS users, hathitrust_authorizer should be present and we should use that.
     # auth_rep_email is the fallback.
     def authorizer
       if !["ssd", "ssdproxy"].include?(@registration.role) && @registration.hathitrust_authorizer.present?

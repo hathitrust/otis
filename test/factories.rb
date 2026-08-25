@@ -128,6 +128,7 @@ FactoryBot.define do
     applicant_name { Faker::Name.name }
     applicant_email { Faker::Internet.email }
     applicant_date { Faker::Date.backward(days: 180) }
+    ip_address { Faker::Internet.public_ip_v4_address }
     jira_ticket { Faker::Alphanumeric.alpha(number: 6).upcase }
     role { HTRegistration::ROLES.sample.to_s }
     expire_type { HTUser::EXPIRES_TYPES.sample.to_s }
