@@ -148,6 +148,7 @@ def create_ht_registration
     auth_rep_name: Faker::Name.name,
     auth_rep_email: Faker::Internet.email,
     hathitrust_authorizer: Faker::Internet.email,
+    hathitrust_authorizer_name: Faker::Name.name,
     inst_id: UNIQUE_INST_IDS.keys.sample,
     role: HTRegistration::ROLES.sample.to_s,
     expire_type: HTUser::EXPIRES_TYPES.sample,

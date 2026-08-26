@@ -50,6 +50,8 @@ class HTRegistrationsControllerShowTest < ActionDispatch::IntegrationTest
     assert_match ERB::Util.html_escape(@registration.applicant_name), @response.body
     assert_match @registration.applicant_email, @response.body
     assert_match Date.parse(@registration.applicant_date).year.to_s, @response.body
+    assert_match ERB::Util.html_escape(@registration.hathitrust_authorizer_name), @response.body
+    assert_match @registration.hathitrust_authorizer, @response.body
   end
 
   test "show page contains edit and delete buttons" do
@@ -171,6 +173,8 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_match 'name="ht_registration[applicant_email]"', @response.body
     assert_match 'name="ht_registration[applicant_date]"', @response.body
     assert_match 'name="ht_registration[mfa_addendum]"', @response.body
+    assert_match 'name="ht_registration[hathitrust_authorizer]"', @response.body
+    assert_match 'name="ht_registration[hathitrust_authorizer_name]"', @response.body
   end
 
   test "can create" do
@@ -192,6 +196,8 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     assert_equal(log.data["params"]["applicant_email"], params[:applicant_email])
     assert_equal(log.data["params"]["applicant_date"], params[:applicant_date])
     assert_equal(log.data["params"]["mfa_addendum"], params[:mfa_addendum].to_s)
+    assert_equal(log.data["params"]["hathitrust_authorizer"], params[:hathitrust_authorizer])
+    assert_equal(log.data["params"]["hathitrust_authorizer_name"], params[:hathitrust_authorizer_name])
   end
 
   test "alerts on create failure due to missing fields" do
@@ -262,6 +268,8 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
     assert_match 'name="ht_registration[applicant_date]"', @response.body
     assert_match 'name="ht_registration[mfa_addendum]"', @response.body
     assert_match 'name="ht_registration[contact_info]"', @response.body
+    assert_match 'name="ht_registration[hathitrust_authorizer]"', @response.body
+    assert_match 'name="ht_registration[hathitrust_authorizer_name]"', @response.body
   end
 
   test "can update fields" do

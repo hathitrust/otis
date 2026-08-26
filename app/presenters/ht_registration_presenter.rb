@@ -6,7 +6,7 @@ class HTRegistrationPresenter < ApplicationPresenter
   ALL_FIELDS = %i[
     applicant_name applicant_email applicant_date inst_id jira_ticket
     role expire_type auth_rep_name auth_rep_email
-    contact_info hathitrust_authorizer mfa_addendum
+    hathitrust_authorizer_name hathitrust_authorizer contact_info mfa_addendum
     sent submitted approved ip_address
   ].freeze
 

@@ -86,7 +86,8 @@ ja:
           existing_user: 既存のユーザー
         env: 認証データ
         expire_type: 有効期限タイプ
-        hathitrust_authorizer: HathiTrustの認証担当者
+        hathitrust_authorizer: 認証担当者のEメール
+        hathitrust_authorizer_name: 認証担当者の表示名
         inst_id: 機関
         institution:
           mfa: 多要素認証

@@ -86,7 +86,8 @@ en:
           existing_user: Existing User
         env: Authentication Data
         expire_type: Expire Type
-        hathitrust_authorizer: HathiTrust Authorizer
+        hathitrust_authorizer: Authorizer E-mail
+        hathitrust_authorizer_name: Authorizer Name
         inst_id: Institution
         institution:
           mfa: MFA

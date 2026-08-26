@@ -24,7 +24,8 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     fill_in "Approver Name", with: "Test Registration Approver"
     fill_in "Approver E-mail", with: "test_reg_approver@default.invalid"
     fill_in "Activity Contact", with: "contact_info@default.invalid"
-    fill_in "HathiTrust Authorizer", with: "nobody@hathitrust.org"
+    fill_in "Authorizer Name", with: "Test Registration Authorizer"
+    fill_in "Authorizer E-mail", with: "authorizer@default.invalid"
     # Capybara is unable to find and click a checkbox directly
     check "ht_registration_mfa_addendum"
     click_on "Submit Changes"
@@ -66,7 +67,8 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     fill_in "Approver Name", with: "Test Registration Approver"
     fill_in "Approver E-mail", with: "rs_approver@default.invalid"
     fill_in "Activity Contact", with: "contact_info@default.invalid"
-    fill_in "HathiTrust Authorizer", with: "nobody@hathitrust.org"
+    fill_in "Authorizer Name", with: "Test Registration Authorizer"
+    fill_in "Authorizer E-mail", with: "rs_authorizer@default.invalid"
     # Capybara is unable to find and click a checkbox directly
     check "ht_registration_mfa_addendum"
     click_on "Submit Changes"

@@ -135,6 +135,7 @@ FactoryBot.define do
     auth_rep_name { Faker::Name.name }
     auth_rep_email { Faker::Internet.email }
     hathitrust_authorizer { Faker::Internet.email }
+    hathitrust_authorizer_name { Faker::Name.name }
     mfa_addendum { [true, false].sample }
     contact_info { Faker::Internet.email }
     association :ht_institution, strategy: :create

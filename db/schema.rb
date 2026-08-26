@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     # Needed for CAA but not for ATRS
     # Map hathitrust_authorizer -> ht_user.authorizer
     t.string :hathitrust_authorizer
+    t.string :hathitrust_authorizer_name
     t.boolean :mfa_addendum, default: false
     t.text :token_hash
     t.timestamp :sent
