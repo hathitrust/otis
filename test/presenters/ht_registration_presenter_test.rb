@@ -19,13 +19,8 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   end
 
   test "#field_value :auth_rep" do
-    assert_match %r{#{@reg.auth_rep_name}.+mailto:#{@reg.auth_rep_email}.+<br/>.+},
+    assert_match %r{#{@reg.auth_rep_name}.+mailto:#{@reg.auth_rep_email}},
       @reg.field_value(:auth_rep)
-  end
-
-  test "#field_value :auth_rep_date" do
-    # Localized value, can't make assumptions about content
-    assert_not_nil @reg.field_value(:auth_rep_date)
   end
 
   test "#field_value :auth_rep_email displays as mailto link" do

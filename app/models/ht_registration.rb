@@ -35,10 +35,9 @@ class HTRegistration < ApplicationRecord
   validates :role, presence: true
   validates :expire_type, presence: true
 
-  # auth_rep = authorized representative
+  # auth_rep is "Approver" in UI
   validates :auth_rep_name, presence: true
   validates :auth_rep_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
-  validates :auth_rep_date, presence: true
 
   validates :applicant_name, presence: true
   validates :applicant_email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
@@ -53,6 +52,9 @@ class HTRegistration < ApplicationRecord
 
   # HathiTrust-level authorizer is only required for non-ATRS/SSD users.
   validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["ssd", "ssdproxy"].include? reg.role }
+  validates :hathitrust_authorizer, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
+
+  validates :hathitrust_authorizer_name, presence: true, if: ->(reg) { !["ssd", "ssdproxy"].include? reg.role }
 
   # mfa = multi factor authentication
   validates_inclusion_of :mfa_addendum, in: [true, false]

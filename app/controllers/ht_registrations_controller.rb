@@ -14,8 +14,8 @@ class HTRegistrationsController < ApplicationController
     contact_info
     auth_rep_name
     auth_rep_email
-    auth_rep_date
     hathitrust_authorizer
+    hathitrust_authorizer_name
     mfa_addendum
   ].freeze
 
