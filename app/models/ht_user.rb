@@ -169,6 +169,12 @@ class HTUser < ApplicationRecord
     req.save!
   end
 
+  # We don't keep this info in `ht_users` but it is useful in the Otis UI.
+  # Retrieve the approver name from the most recent finished registration.
+  def approver_name
+    last_registration&.auth_rep_name
+  end
+
   def csv_cols
     attributes.keys + ["inst_name"]
   end
@@ -184,5 +190,13 @@ class HTUser < ApplicationRecord
                                      expiration_date(true).days_until_expiration < 1)
       ht_approval_request.not_approved.not_renewed.destroy_all
     end
+  end
+
+  # The most recent finished registration for this user.
+  def last_registration
+    HTRegistration.where(applicant_email: email)
+      .where("finished IS NOT NULL")
+      .order(finished: :desc)
+      .first
   end
 end

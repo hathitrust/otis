@@ -4,13 +4,13 @@ class HTUserPresenter < ApplicationPresenter
   include ActionView::Helpers::DateHelper
 
   ALL_FIELDS = %i[
-    email userid displayname activitycontact approver authorizer usertype
+    email userid displayname approver approver_name authorizer activitycontact usertype
     role access expire_type expires renewal_status iprestrict mfa institution
   ].freeze
 
   INDEX_FIELDS = %i[email displayname role institution expires renewal_status iprestrict mfa].freeze
   HT_COUNTS_FIELDS = %i[accesses last_access].freeze
-  READ_ONLY_FIELDS = (HT_COUNTS_FIELDS + %i[email renewal_status institution]).freeze
+  READ_ONLY_FIELDS = (HT_COUNTS_FIELDS + %i[email approver_name renewal_status institution]).freeze
   FIELD_SIZE = 40
 
   def self.role_name(role)

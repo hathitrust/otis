@@ -104,8 +104,9 @@ ja:
         access: アクセス
         accesses: アクセス数
         activitycontact: 活動連絡先
-        approver: 秘書
-        authorizer: 承認者
+        approver: 承認者のEメール
+        approver_name: 承認者の表示名
+        authorizer: 認証担当者のEメール
         displayname: 表示名
         email: Eメール
         expire_type: 有効期限タイプ

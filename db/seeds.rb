@@ -20,6 +20,13 @@ require "faker"
 UNIQUE_INST_IDS = {}
 UNIQUE_EMAILS = {}
 UNIQUE_HTIDS = {}
+# Simulate the typical situation in which some approvers are shared.
+APPROVERS = Array.new(30) do
+  {email: Faker::Internet.email, name: Faker::Name.name}
+end
+AUTHORIZERS = Array.new(30) do
+  {email: Faker::Internet.email, name: Faker::Name.name}
+end
 
 def create_ht_user(expires:)
   email = Faker::Internet.email
@@ -29,8 +36,8 @@ def create_ht_user(expires:)
     displayname: Faker::Name.name,
     email: email,
     activitycontact: Faker::Internet.email,
-    approver: @approvers.sample,
-    authorizer: Faker::Internet.email,
+    approver: APPROVERS.sample[:email],
+    authorizer: AUTHORIZERS.sample[:email],
     usertype: HTUser::USERTYPES.sample.to_s,
     role: HTUser::ROLES.sample.to_s,
     access: HTUser::ACCESSES.sample.to_s,
@@ -126,6 +133,7 @@ def create_ht_contact_type
 end
 
 def fake_env
+  idp_domain = Faker::Internet.unique.domain_word + "." + Faker::Internet.domain_suffix
   {
     HTTP_X_REMOTE_USER: "https://shibboleth.umich.edu/idp/shibboleth!http://www.hathitrust.org/shibboleth-sp!#{Faker::Internet.base64}",
     HTTP_X_SHIB_AUTHENTICATION_METHOD: "https://refeds.org/profile/mfa",
@@ -133,22 +141,24 @@ def fake_env
     HTTP_X_SHIB_DISPLAYNAME: Faker::Name.name,
     HTTP_X_SHIB_EDUPERSONPRINCIPALNAME: Faker::Internet.unique.email,
     HTTP_X_SHIB_EDUPERSONSCOPEDAFFILIATION: "staff@#{Faker::Internet.domain_name}",
-    HTTP_X_SHIB_IDENTITY_PROVIDER: "https://shibboleth.umich.edu/idp/shibboleth",
+    HTTP_X_SHIB_IDENTITY_PROVIDER: "https://shibboleth.#{idp_domain}/idp/shibboleth",
     HTTP_X_SHIB_MAIL: Faker::Internet.unique.email,
     HTTP_X_SHIB_PERSISTENT_ID: "https://shibboleth.umich.edu/idp/shibboleth!http://www.hathitrust.org/shibboleth-sp!#{Faker::Internet.base64};https://shibboleth.umich.edu/idp/shibboleth!http://www.hathitrust.org/shibboleth-sp!#{Faker::Internet.base64}"
   }.to_json
 end
 
-def create_ht_registration
+def create_ht_registration(create_user: false)
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
+  approver = APPROVERS.sample
+  authorizer = AUTHORIZERS.sample
   reg = HTRegistration.create(
     applicant_name: Faker::Name.name,
     applicant_email: Faker::Internet.email,
     applicant_date: Faker::Date.backward(days: 180),
-    auth_rep_name: Faker::Name.name,
-    auth_rep_email: Faker::Internet.email,
-    hathitrust_authorizer: Faker::Internet.email,
-    hathitrust_authorizer_name: Faker::Name.name,
+    auth_rep_name: approver[:name],
+    auth_rep_email: approver[:email],
+    hathitrust_authorizer: authorizer[:email],
+    hathitrust_authorizer_name: authorizer[:name],
     inst_id: UNIQUE_INST_IDS.keys.sample,
     role: HTRegistration::ROLES.sample.to_s,
     expire_type: HTUser::EXPIRES_TYPES.sample,
@@ -156,13 +166,17 @@ def create_ht_registration
     mfa_addendum: [true, false].sample,
     contact_info: Faker::Internet.email
   )
-  if rand < 0.5
+  if create_user || rand < 0.5
     reg.sent = Faker::Date.backward(days: 30)
     reg.token_hash = HTRegistration.digest SecureRandom.urlsafe_base64(16)
-    if rand < 0.5
+    if create_user || rand < 0.5
       reg.received = Faker::Date.backward(days: 3)
       reg.env = fake_env
       reg.ip_address = Faker::Internet.public_ip_v4_address
+    end
+    if create_user
+      Otis::RegistrationMover.new(reg).ht_user
+      reg.approve!
     end
     reg.save!
   end
@@ -222,7 +236,7 @@ HTContactType.create(
   create_ht_contact_type
 end
 
-10.times do
+20.times do
   inst_id = create_ht_institution(1)
   create_ht_billing_member(inst_id) if [0, 1].sample.zero?
   create_ht_contact(inst_id) if [0, 1].sample.zero?
@@ -240,18 +254,14 @@ end
   create_ht_institution(3)
 end
 
+# Incomplete registrations
 20.times do
   create_ht_registration
 end
 
-# We should simulate the typical situation in which some approvers are shared.
-@approvers = Array.new(30) do
-  Faker::Internet.email
-end
-
-# active users
+# Active users via completed registration
 150.times do
-  create_ht_user(expires: Faker::Time.forward)
+  create_ht_registration(create_user: true)
 end
 
 # expired users
