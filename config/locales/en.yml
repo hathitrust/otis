@@ -19,6 +19,7 @@ en:
         email: E-mail
         id: ID
         inst_id: Institution
+        name: Name
       ht_contact_type:
         description: Description
         id: ID
@@ -104,7 +105,8 @@ en:
         access: Access
         accesses: Accesses
         activitycontact: Activity Contact
-        approver: Approver
+        approver: Approver E-mail
+        approver_name: Approver Name
         authorizer: Authorizer
         displayname: Display Name
         email: E-mail
@@ -220,8 +222,6 @@ en:
   ht_contact_types:
     create:
       success: Contact Type created.
-    destroy:
-      success: Contact Type removed.
     form:
       cancel: Cancel
       submit_changes: Submit Changes
@@ -231,8 +231,6 @@ en:
     new:
       new_contact_type: New Contact Type
     show:
-      confirm_delete: Please confirm deletion of contact type "%{name}"
-      delete: Delete Contact Type
       edit: Edit
     update:
       success: Contact Type updated.

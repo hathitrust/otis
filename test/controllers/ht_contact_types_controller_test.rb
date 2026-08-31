@@ -133,27 +133,27 @@ class HTContactTypesControllerCreateTest < ActionDispatch::IntegrationTest
 
   test "Can create" do
     type_params = attributes_for(:ht_contact_type)
-    type_id = type_params[:id]
     post ht_contact_types_url, params: {ht_contact_type: type_params}
-    assert_redirected_to ht_contact_type_url(type_id)
-    assert_not_nil(HTContactType.find(type_id))
+    new_type = HTContactType.last
+    assert_redirected_to ht_contact_type_url(new_type.id)
+    assert_not_nil(HTContactType.find(new_type.id))
   end
 
   test "logs create" do
     type_params = attributes_for(:ht_contact_type)
-    type_id = type_params[:id]
     post ht_contact_types_url, params: {ht_contact_type: type_params}
-    log = HTContactType.find(type_id).ht_logs.first
-    assert_equal(type_id.to_s, log.data["params"]["id"])
+    new_type = HTContactType.last
+    log = HTContactType.find(new_type.id).ht_logs.first
+    assert_equal(new_type.name, log.data["params"]["name"])
     assert_not_nil(log.time)
   end
 
   test "alerts on create failure due to missing description" do
     type_params = attributes_for(:ht_contact_type).except(:description)
-    HTContactType.delete_all
+    old_count = HTContactType.count
     post ht_contact_types_url, params: {ht_contact_type: type_params}
     assert_equal "create", @controller.action_name
-    assert_equal 0, HTContactType.count
+    assert_equal old_count, HTContactType.count
     assert_not_empty flash[:alert]
   end
 end
@@ -206,45 +206,5 @@ class HTContactTypesControllerEditTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "update", @controller.action_name
     assert_not_empty flash[:alert]
-  end
-end
-
-class HTContactTypesControllerDeleteTest < ActionDispatch::IntegrationTest
-  setup do
-    sign_in! username: "admin@default.invalid"
-  end
-
-  test "delete destroys the contact type" do
-    @type = create(:ht_contact_type)
-    type_id = @type.id
-    delete ht_contact_type_url @type
-    assert_response :redirect
-    assert_equal "destroy", @controller.action_name
-    assert_not_empty flash[:notice]
-    assert_redirected_to %r{ht_contact_types}
-    follow_redirect!
-    assert_raises ActiveRecord::RecordNotFound do
-      HTContactType.find type_id
-    end
-  end
-
-  test "destroy fails when type is in use by contact" do
-    @type = create(:ht_contact_type)
-    type_id = @type.id
-    @contact = create(:ht_contact, contact_type: @type.id)
-    delete ht_contact_type_url @type
-    assert_response :success
-    assert_equal "destroy", @controller.action_name
-    assert_not_empty flash[:alert]
-    assert_not_nil HTContactType.find type_id
-  end
-
-  test "logs destroy" do
-    @type = create(:ht_contact_type)
-    type_id = @type.id
-    delete ht_contact_type_url @type
-    log = HTLog.where(objid: type_id, model: :HTContactType).order(:time).last
-    assert_equal(type_id.to_s, log.data["params"]["id"])
-    assert_not_nil(log.time)
   end
 end

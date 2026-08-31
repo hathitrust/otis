@@ -4,7 +4,7 @@ class HTUserPresenter < ApplicationPresenter
   include ActionView::Helpers::DateHelper
 
   ALL_FIELDS = %i[
-    email userid displayname activitycontact approver authorizer usertype
+    email userid displayname approver approver_name authorizer activitycontact usertype
     role access expire_type expires renewal_status iprestrict mfa institution
   ].freeze
 

@@ -3,8 +3,8 @@
 class HTUsersController < ApplicationController
   before_action :fetch_user, only: %i[show edit]
 
-  PERMITTED_UPDATE_FIELDS = %i[userid displayname activitycontact approver authorizer
-    usertype role access expires expire_type iprestrict mfa].freeze
+  PERMITTED_UPDATE_FIELDS = %i[userid displayname activitycontact approver approver_name
+    authorizer usertype role access expires expire_type iprestrict mfa].freeze
 
   def index
     users = HTUser.includes(:ht_institution, :ht_approval_request).order("ht_institutions.name").order(HTApprovalRequest.most_recent_order)
@@ -21,17 +21,18 @@ class HTUsersController < ApplicationController
 
   def update
     @user = HTUser.find(params[:id])
-
     # Any extension of term counts as a renewal for our purposes.
     renewing = user_params[:expires].present? && user_params[:expires] > @user.expires.to_date.to_s
-
-    if @user.update(user_params)
+    # Roll back change to user if change to renewal or approver contact fails.
+    ActiveRecord::Base.transaction do
+      @user.update!(user_params)
       @user.add_or_update_renewal(approver: current_user.id, force: true) if renewing
+      update_approver!
       log_action(@user, user_params)
-      update_user_success
-    else
-      update_user_failure
     end
+    update_user_success
+  rescue ActiveRecord::RecordInvalid => e
+    update_user_failure(e)
   end
 
   private
@@ -40,8 +41,9 @@ class HTUsersController < ApplicationController
     HTUserPresenter.new(user, controller: self, action: params[:action].to_sym)
   end
 
-  def update_user_failure
-    flash.now[:alert] = @user.errors.full_messages.to_sentence
+  def update_user_failure(exception)
+    failed_record = exception.record
+    flash.now[:alert] = "Validation failed: " + failed_record.errors.full_messages.to_sentence + " (#{failed_record.class})"
     fetch_user
     render "edit"
   end
@@ -58,6 +60,9 @@ class HTUsersController < ApplicationController
   def user_params
     @user_params ||= begin
       p = params.require(:ht_user).permit(*PERMITTED_UPDATE_FIELDS)
+      # Permit :approver_name to silence "unpermitted parameter" warnings
+      # but we don't want to update the user with it.
+      p.delete(:approver_name)
       (p[:mfa] == "1") ? p.merge({iprestrict: nil}) : p
     end
   end
@@ -74,5 +79,17 @@ class HTUsersController < ApplicationController
         csv << user.csv_vals
       end
     end
+  end
+
+  # Create or update the EA Approver contact based on approver and approver_name parameters
+  def update_approver!
+    return unless params[:ht_user].key?(:approver_name)
+
+    HTContact.add_or_update(
+      contact_type: HTContactType.ea_approver.id,
+      email: @user.approver,
+      inst_id: @user.inst_id,
+      name: params[:ht_user][:approver_name]
+    )
   end
 end

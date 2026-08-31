@@ -19,6 +19,7 @@ ja:
         email: Eメール
         id: ID
         inst_id: 機関
+        name: 表示名
       ht_contact_type:
         description: 説明
         id: ID
@@ -104,7 +105,8 @@ ja:
         access: アクセス
         accesses: アクセス数
         activitycontact: 活動連絡先
-        approver: 秘書
+        approver: 承認者のEメール
+        approver_name: 承認者の表示名
         authorizer: 承認者
         displayname: 表示名
         email: Eメール
@@ -220,8 +222,6 @@ ja:
   ht_contact_types:
     create:
       success: 連絡先種類が作成されました。
-    destroy:
-      success: 連絡先種類が削除されました。
     form:
       cancel: キャンセル
       submit_changes: 変更を送信する
@@ -231,8 +231,6 @@ ja:
     new:
       new_contact_type: 新しい連絡先種類
     show:
-      confirm_delete: 連絡先種類「%{name}」の削除を確認してください。
-      delete: 連絡先種類を削除する
       edit: 編集
     update:
       success: 連絡先種類が更新されました。

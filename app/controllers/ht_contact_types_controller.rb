@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTContactTypesController < ApplicationController
-  before_action :fetch_contact_type, only: %i[destroy edit show]
+  before_action :fetch_contact_type, only: %i[edit show]
 
   PERMITTED_UPDATE_FIELDS = %i[name description].freeze
   PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[id]
@@ -38,18 +38,6 @@ class HTContactTypesController < ApplicationController
       flash.now[:alert] = @contact_type.errors.full_messages.to_sentence
       @contact_type = presenter @contact_type
       render :new
-    end
-  end
-
-  def destroy
-    # Log here, because after #destroy the object becomes invalid
-    log params.permit!
-    if @contact_type.destroy
-      flash[:notice] = t(".success")
-      redirect_to ht_contact_types_url
-    else
-      flash.now[:alert] = @contact_type.errors.full_messages.to_sentence
-      render :show
     end
   end
 

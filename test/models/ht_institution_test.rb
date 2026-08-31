@@ -4,8 +4,7 @@ require "test_helper"
 
 class HTInstitutionTest < ActiveSupport::TestCase
   def setup
-    @enabled = create(:ht_institution, enabled: true)
-    @disabled = create(:ht_institution, enabled: false)
+    HTInstitution.delete_all
   end
 
   test ".ransackable_attributes" do
@@ -17,11 +16,13 @@ class HTInstitutionTest < ActiveSupport::TestCase
   end
 
   test "enabled scope" do
-    assert_equal HTInstitution.enabled.first.inst_id, @enabled.inst_id
+    enabled = create(:ht_institution, enabled: true)
+    assert_equal HTInstitution.enabled.first.inst_id, enabled.inst_id
   end
 
   test "other scope" do
-    assert_equal HTInstitution.other.first.inst_id, @disabled.inst_id
+    disabled = create(:ht_institution, enabled: false)
+    assert_equal HTInstitution.other.first.inst_id, disabled.inst_id
   end
 
   test "correct Checkpoint resource_type and resource_id" do

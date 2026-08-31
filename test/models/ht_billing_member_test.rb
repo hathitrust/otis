@@ -2,6 +2,11 @@
 
 require "test_helper"
 class HTBillingMemberTest < ActiveSupport::TestCase
+  def setup
+    HTBillingMember.delete_all
+    HTInstitution.delete_all
+  end
+
   test "can persist an HTBillingMember" do
     inst = build(:ht_billing_member)
     inst.save
