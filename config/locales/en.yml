@@ -19,6 +19,7 @@ en:
         email: E-mail
         id: ID
         inst_id: Institution
+        name: Name
       ht_contact_type:
         description: Description
         id: ID

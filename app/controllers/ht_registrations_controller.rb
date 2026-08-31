@@ -141,4 +141,16 @@ class HTRegistrationsController < ApplicationController
   rescue => e
     flash[:alert] = "Failure to communicate with Jira: #{e.message}"
   end
+
+  # Synchronize otis_contacts, making sure an EA Approver exists with this e-mail and name
+  # FIXME: move this to contact model
+  def update_approver_contact
+    approver = HTContact.find_by(email: auth_rep_email, name: auth_rep_name, inst_id: inst_id)
+    if approver.nil?
+      approver = new(email: auth_rep_email, name: auth_rep_name, inst_id: inst_id)
+    else
+      approver.name = name
+    end
+    approver.save!
+  end
 end

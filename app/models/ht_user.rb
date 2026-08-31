@@ -170,9 +170,10 @@ class HTUser < ApplicationRecord
   end
 
   # We don't keep this info in `ht_users` but it is useful in the Otis UI.
-  # Retrieve the approver name from the most recent finished registration.
+  # Retrieve the approver name from otis_contacts.
+  #FIXME: add constant for APPROVER contact type
   def approver_name
-    last_registration&.auth_rep_name
+    approver_contact&.name
   end
 
   def csv_cols
@@ -185,18 +186,16 @@ class HTUser < ApplicationRecord
 
   private
 
+  # Returns the HTContact with the "EA Approver" contact type
+  #FIXME: need some tests
+  def approver_contact
+    HTContact.where(email: approver, contact_type: HTContactType.ea_approver).first
+  end
+
   def clean_requests
     if saved_change_to_approver? || (saved_change_to_expires? &&
                                      expiration_date(true).days_until_expiration < 1)
       ht_approval_request.not_approved.not_renewed.destroy_all
     end
-  end
-
-  # The most recent finished registration for this user.
-  def last_registration
-    HTRegistration.where(applicant_email: email)
-      .where("finished IS NOT NULL")
-      .order(finished: :desc)
-      .first
   end
 end

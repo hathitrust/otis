@@ -4,11 +4,12 @@ RSpec.describe HTRegistration do
   # `described_class` for FactoryBot
   let(:factory) { :ht_user }
   let(:test_email) { "test@default.invalid" }
+  let(:test_approver) { "test-approver@default.invalid" }
   let(:test_approver_name) { "Test Approver" }
 
   around(:each) do |example|
     described_class.delete_all
-    HTRegistration.delete_all
+    HTApprover.delete_all
     example.run
   end
 
@@ -19,19 +20,17 @@ RSpec.describe HTRegistration do
   end
 
   describe "#approver_name" do
-    context "with existing registrations" do
-      it "returns the registration's most recent approver" do
-        create(:ht_registration, applicant_email: test_email, finished: Time.now - 400.days, auth_rep_name: "old")
-        create(:ht_registration, applicant_email: test_email, finished: Time.now - 800.days, auth_rep_name: "older")
-        create(:ht_registration, applicant_email: test_email, finished: Time.now, auth_rep_name: test_approver_name)
-        user = build(factory, email: test_email)
+    context "with a known approver" do
+      it "returns the approver's name" do
+        create(:ht_approver, email: test_approver, name: test_approver_name)
+        user = build(factory, approver: test_approver)
         expect(user.approver_name).to eq test_approver_name
       end
     end
 
-    context "with no existing registration" do
+    context "with unknown approver" do
       it "returns nil" do
-        user = build(:ht_user)
+        user = build(factory, approver: test_approver)
         expect(user.approver_name).to eq nil
       end
     end

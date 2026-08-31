@@ -133,27 +133,28 @@ class HTContactTypesControllerCreateTest < ActionDispatch::IntegrationTest
 
   test "Can create" do
     type_params = attributes_for(:ht_contact_type)
-    type_id = type_params[:id]
     post ht_contact_types_url, params: {ht_contact_type: type_params}
-    assert_redirected_to ht_contact_type_url(type_id)
-    assert_not_nil(HTContactType.find(type_id))
+    new_type = HTContactType.last
+    assert_redirected_to ht_contact_type_url(new_type.id)
+    assert_not_nil(HTContactType.find(new_type.id))
   end
 
   test "logs create" do
     type_params = attributes_for(:ht_contact_type)
-    type_id = type_params[:id]
     post ht_contact_types_url, params: {ht_contact_type: type_params}
-    log = HTContactType.find(type_id).ht_logs.first
-    assert_equal(type_id.to_s, log.data["params"]["id"])
+    new_type = HTContactType.last
+    log = new_type.ht_logs.first
+    #puts "\n\nDATA #{log.data["params"]}\n\n"
+    assert_equal(new_type.name, log.data["params"]["name"])
     assert_not_nil(log.time)
   end
 
   test "alerts on create failure due to missing description" do
     type_params = attributes_for(:ht_contact_type).except(:description)
-    HTContactType.delete_all
+    #HTContactType.delete_all
     post ht_contact_types_url, params: {ht_contact_type: type_params}
     assert_equal "create", @controller.action_name
-    assert_equal 0, HTContactType.count
+    assert_equal 2, HTContactType.count
     assert_not_empty flash[:alert]
   end
 end

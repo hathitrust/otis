@@ -11,19 +11,20 @@
 raise StandardError, "Not for production use" if Rails.env.production?
 
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_approval_requests")
+ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_approvers")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_logs")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_registrations")
 ActiveRecord::Base.connection.execute("DELETE FROM otis_downloads")
+ActiveRecord::Base.connection.execute("DELETE FROM otis_contacts")
+ActiveRecord::Base.connection.execute("DELETE FROM otis_contact_types")
 ActiveRecord::Base.connection.execute("DELETE FROM hathifiles.hf")
 
 require "faker"
+#FIXME: turn these into Sets? or do e.g. HTInstitution.pluck(:inst_id).sample
 UNIQUE_INST_IDS = {}
 UNIQUE_EMAILS = {}
 UNIQUE_HTIDS = {}
-# Simulate the typical situation in which some approvers are shared.
-APPROVERS = Array.new(30) do
-  {email: Faker::Internet.email, name: Faker::Name.name}
-end
+# Simulate the typical situation in which some authorizers are shared.
 AUTHORIZERS = Array.new(30) do
   {email: Faker::Internet.email, name: Faker::Name.name}
 end
@@ -36,7 +37,7 @@ def create_ht_user(expires:)
     displayname: Faker::Name.name,
     email: email,
     activitycontact: Faker::Internet.email,
-    approver: APPROVERS.sample[:email],
+    approver: HTContact.where(contact_type: APPROVER_CONTACT_TYPE.id).sample[:email],
     authorizer: AUTHORIZERS.sample[:email],
     usertype: HTUser::USERTYPES.sample.to_s,
     role: HTUser::ROLES.sample.to_s,
@@ -117,20 +118,12 @@ def create_ht_billing_member(inst_id)
   )
 end
 
-def create_ht_contact(inst_id)
-  HTContact.create(
-    inst_id: inst_id,
-    contact_type: HTContactType.all.sample.id,
-    email: Faker::Internet.email
-  )
-end
-
-def create_ht_contact_type
-  HTContactType.create(
-    name: Faker::Job.position,
-    description: Faker::Lorem.sentence(word_count: 10)
-  )
-end
+#def create_ht_contact_type
+#  HTContactType.create(
+#    name: Faker::Job.position,
+#    description: Faker::Lorem.sentence(word_count: 10)
+#  )
+#end
 
 def fake_env
   idp_domain = Faker::Internet.unique.domain_word + "." + Faker::Internet.domain_suffix
@@ -149,17 +142,17 @@ end
 
 def create_ht_registration(create_user: false)
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
-  approver = APPROVERS.sample
+  approver = HTContact.where(contact_type: APPROVER_CONTACT_TYPE.id).sample
   authorizer = AUTHORIZERS.sample
   reg = HTRegistration.create(
     applicant_name: Faker::Name.name,
     applicant_email: Faker::Internet.email,
     applicant_date: Faker::Date.backward(days: 180),
-    auth_rep_name: approver[:name],
-    auth_rep_email: approver[:email],
+    auth_rep_name: approver.name,
+    auth_rep_email: approver.email,
     hathitrust_authorizer: authorizer[:email],
     hathitrust_authorizer_name: authorizer[:name],
-    inst_id: UNIQUE_INST_IDS.keys.sample,
+    inst_id: HTInstitution.enabled.pluck(:inst_id).sample,
     role: HTRegistration::ROLES.sample.to_s,
     expire_type: HTUser::EXPIRES_TYPES.sample,
     jira_ticket: "XXX-#{ticket_no}",
@@ -227,19 +220,10 @@ def create_hathifile_entry
   hf.save!
 end
 
-HTContactType.create(
-  name: "ETAS",
-  description: "Emergency Temporary Access Service"
-)
-
-5.times do
-  create_ht_contact_type
-end
-
+# First create the institutions
 20.times do
   inst_id = create_ht_institution(1)
   create_ht_billing_member(inst_id) if [0, 1].sample.zero?
-  create_ht_contact(inst_id) if [0, 1].sample.zero?
 end
 
 2.times do
@@ -252,6 +236,16 @@ end
 
 2.times do
   create_ht_institution(3)
+end
+
+# Approvers
+30.times do
+  HTContact.create(
+    contact_type: HTContactType.ea_approver,
+    email: Faker::Internet.email,
+    inst_id: HTInstitution.enabled.pluck(:inst_id).sample,
+    name: Faker::Name.name
+  )
 end
 
 # Incomplete registrations

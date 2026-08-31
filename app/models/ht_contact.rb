@@ -14,4 +14,25 @@ class HTContact < ApplicationRecord
   validates :inst_id, presence: true
   validates :contact_type, presence: true
   validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
+  validates :name, presence: true
+
+  # Look up an contact for display in an ht_users view.
+  # Returns `HTContact` or `nil`
+  #def self.with(email:)
+  #  find_by(email: email)
+  #end
+
+  # Add or update based on email and name.
+  # Can be triggered by adding or editing a registration, or editing a user.
+  def self.add(email:, inst_id:, name:)
+    approver = find_by(email: email)
+    if approver.nil?
+      approver = new(email: email, name: name)
+    else
+      approver.name = name
+      approver.inst_id = inst_id
+    end
+    approver.save!
+    approver
+  end
 end
