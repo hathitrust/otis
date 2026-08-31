@@ -47,10 +47,8 @@ class HTContactsControllerCSVTest < ActionDispatch::IntegrationTest
     @inst = create(:ht_institution, entityID: "http://example.com", inst_id: "I")
     @type1 = create(:ht_contact_type, name: "T1")
     @type2 = create(:ht_contact_type, name: "T2")
-    @contact1 = HTContact.new(inst_id: @inst.inst_id, contact_type: @type1.id, email: "a@b")
-    @contact1.save!
-    @contact2 = HTContact.new(inst_id: @inst.inst_id, contact_type: @type2.id, email: "c@d")
-    @contact2.save!
+    @contact1 = create(:ht_contact, inst_id: @inst.inst_id, contact_type: @type1.id, email: "a@b")
+    @contact2 = create(:ht_contact, inst_id: @inst.inst_id, contact_type: @type2.id, email: "c@d")
   end
 
   test "export list of all contacts as CSV" do

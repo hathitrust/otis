@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HTContactPresenter < ApplicationPresenter
-  ALL_FIELDS = %i[id inst_id contact_type email].freeze
+  ALL_FIELDS = %i[id inst_id contact_type email name].freeze
   READ_ONLY_FIELDS = %i[id].freeze
   FIELD_SIZE = 30
 

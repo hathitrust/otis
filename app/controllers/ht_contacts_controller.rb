@@ -3,7 +3,7 @@
 class HTContactsController < ApplicationController
   before_action :fetch_contact, only: %i[destroy edit show]
 
-  PERMITTED_UPDATE_FIELDS = %i[inst_id contact_type email].freeze
+  PERMITTED_UPDATE_FIELDS = %i[inst_id contact_type email name].freeze
   PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[id]
 
   def new

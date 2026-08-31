@@ -14,4 +14,5 @@ class HTContact < ApplicationRecord
   validates :inst_id, presence: true
   validates :contact_type, presence: true
   validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
+  validates :name, presence: true
 end

@@ -119,6 +119,7 @@ FactoryBot.define do
   factory :ht_contact do
     sequence(:id) { |n| n.to_s }
     email { Faker::Internet.email }
+    name { Faker::Name.name }
     association :ht_institution, strategy: :create
     association :ht_contact_type, strategy: :create
   end

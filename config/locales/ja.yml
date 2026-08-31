@@ -19,6 +19,7 @@ ja:
         email: Eメール
         id: ID
         inst_id: 機関
+        name: 表示名
       ht_contact_type:
         description: 説明
         id: ID

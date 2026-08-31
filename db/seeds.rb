@@ -114,7 +114,8 @@ def create_ht_contact(inst_id)
   HTContact.create(
     inst_id: inst_id,
     contact_type: HTContactType.all.sample.id,
-    email: Faker::Internet.email
+    email: Faker::Internet.email,
+    name: Faker::Name.name
   )
 end
 
