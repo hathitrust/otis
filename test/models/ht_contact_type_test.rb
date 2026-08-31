@@ -25,7 +25,7 @@ class HTContactTypeTest < ActiveSupport::TestCase
   end
 
   test "correct Checkpoint resource_type and resource_id" do
-    type = build(:ht_contact_type, name: "Something", description: "Something")
+    type = create(:ht_contact_type, name: "Something", description: "Something")
     assert_equal :ht_contact_type, type.resource_type
     assert_equal type.id, type.resource_id
   end

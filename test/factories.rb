@@ -111,13 +111,11 @@ FactoryBot.define do
   end
 
   factory :ht_contact_type do
-    sequence(:id) { |n| n.to_s }
     name { Faker::Lorem.unique.characters(number: 10) }
     description { Faker::Lorem.sentence(word_count: 10) }
   end
 
   factory :ht_contact do
-    sequence(:id) { |n| n.to_s }
     email { Faker::Internet.email }
     name { Faker::Name.name }
     association :ht_institution, strategy: :create
@@ -125,7 +123,6 @@ FactoryBot.define do
   end
 
   factory :ht_registration do
-    sequence(:id) { |n| n.to_s }
     applicant_name { Faker::Name.name }
     applicant_email { Faker::Internet.email }
     applicant_date { Faker::Date.backward(days: 180) }
@@ -156,7 +153,6 @@ FactoryBot.define do
   end
 
   factory :ht_download do
-    sequence(:id) { |n| n.to_s }
     datetime = Faker::Time.backward
     in_copyright { [false, true].sample }
     yyyy { datetime.year }
