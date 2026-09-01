@@ -2,11 +2,8 @@
 
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+
+require "faker"
 
 raise StandardError, "Not for production use" if Rails.env.production?
 
@@ -18,25 +15,24 @@ ActiveRecord::Base.connection.execute("DELETE FROM otis_contact_types")
 ActiveRecord::Base.connection.execute("DELETE FROM otis_downloads")
 ActiveRecord::Base.connection.execute("DELETE FROM hathifiles.hf")
 
-require "faker"
-UNIQUE_INST_IDS = {}
-UNIQUE_EMAILS = {}
-UNIQUE_HTIDS = {}
+UNIQUE_EMAILS = Set.new
+UNIQUE_HTIDS = Set.new
 
-def create_ht_user(expires:)
+def create_expired_user
   email = Faker::Internet.email
-  UNIQUE_EMAILS[email] = true
+  UNIQUE_EMAILS << email
+  approver = HTContact.where(contact_type: HTContactType.ea_approver.id).sample
   u = HTUser.new(
     userid: Faker::Internet.unique.email,
     displayname: Faker::Name.name,
     email: email,
     activitycontact: Faker::Internet.email,
-    approver: @approvers.sample,
+    approver: approver.email,
     authorizer: Faker::Internet.email,
     usertype: HTUser::USERTYPES.sample.to_s,
     role: HTUser::ROLES.sample.to_s,
     access: HTUser::ACCESSES.sample.to_s,
-    expires: expires,
+    expires: Faker::Time.backward,
     expire_type: HTUser::EXPIRES_TYPES.sample,
     mfa: [false, true].sample
   )
@@ -97,7 +93,6 @@ def create_ht_institution(enabled)
     emergency_status: [nil, "^(faculty|staff|student)@" + domain].sample,
     last_update: Faker::Time.backward
   )
-  UNIQUE_INST_IDS[inst_id] = true
   inst_id
 end
 
@@ -135,30 +130,37 @@ def fake_env
   }.to_json
 end
 
-def create_ht_registration
+def create_ht_registration(create_user: false)
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
+  approver = HTContact.where(contact_type: HTContactType.ea_approver.id).sample
   reg = HTRegistration.create(
     applicant_name: Faker::Name.name,
     applicant_email: Faker::Internet.email,
     applicant_date: Faker::Date.backward(days: 180),
-    auth_rep_name: Faker::Name.name,
-    auth_rep_email: Faker::Internet.email,
+    auth_rep_name: approver.name,
+    auth_rep_email: approver.email,
     hathitrust_authorizer: Faker::Internet.email,
     hathitrust_authorizer_name: Faker::Name.name,
-    inst_id: UNIQUE_INST_IDS.keys.sample,
+    inst_id: HTInstitution.enabled.pluck(:inst_id).sample,
     role: HTRegistration::ROLES.sample.to_s,
     expire_type: HTUser::EXPIRES_TYPES.sample,
     jira_ticket: "XXX-#{ticket_no}",
     mfa_addendum: [true, false].sample,
     contact_info: Faker::Internet.email
   )
-  if rand < 0.5
+  if create_user || rand < 0.5
     reg.sent = Faker::Date.backward(days: 30)
     reg.token_hash = HTRegistration.digest SecureRandom.urlsafe_base64(16)
-    if rand < 0.5
+    if create_user || rand < 0.5
       reg.received = Faker::Date.backward(days: 3)
       reg.env = fake_env
       reg.ip_address = Faker::Internet.public_ip_v4_address
+    end
+    if create_user
+      user = Otis::RegistrationMover.new(reg).ht_user
+      UNIQUE_EMAILS << user.email
+      reg.approve!
+      create_ht_approval_request(user)
     end
     reg.save!
   end
@@ -178,21 +180,20 @@ def create_download
     yyyy: datetime.year,
     yyyymm: datetime.strftime("%Y%m"),
     datetime: datetime,
-    htid: UNIQUE_HTIDS.keys.sample,
+    htid: UNIQUE_HTIDS.to_a.sample,
     full_download: full_download,
     pages: pages,
     seq: seq,
     role: %w[ssdproxy resource_sharing].sample,
-    # FIXME: how about we make sure the email and institution code match?
-    email: UNIQUE_EMAILS.keys.sample,
-    inst_code: UNIQUE_INST_IDS.keys.sample
+    email: UNIQUE_EMAILS.to_a.sample,
+    inst_code: HTInstitution.enabled.pluck(:inst_id).sample
   )
   rep.save
 end
 
 def create_hathifile_entry
   htid = Faker::Alphanumeric.alpha(number: [2, 3]) + "." + Faker::Alphanumeric.alphanumeric(number: 14)
-  UNIQUE_HTIDS[htid] = true
+  UNIQUE_HTIDS << htid
   hf = HTHathifile.create(
     htid: htid,
     access: [nil, true, false].sample,
@@ -229,23 +230,28 @@ end
   create_ht_institution(3)
 end
 
+# Approvers
+30.times do
+  HTContact.create(
+    contact_type: HTContactType.ea_approver.id,
+    email: Faker::Internet.email,
+    inst_id: HTInstitution.enabled.pluck(:inst_id).sample,
+    name: Faker::Name.name
+  )
+end
+
+# Incomplete registrations
 20.times do
   create_ht_registration
 end
 
-# We should simulate the typical situation in which some approvers are shared.
-@approvers = Array.new(30) do
-  Faker::Internet.email
-end
-
-# active users
+# Active users via completed registration
 150.times do
-  create_ht_user(expires: Faker::Time.forward)
+  create_ht_registration(create_user: true)
 end
 
-# expired users
-5.times do
-  create_ht_user(expires: Faker::Time.backward)
+15.times do
+  create_expired_user
 end
 
 10.times do
