@@ -12,6 +12,34 @@ class HTContactType < ApplicationRecord
 
   before_destroy :check_contacts, prepend: true
 
+  # These are the built-in contact types that should be available at all times.
+  # ETAS is not explicitly used by the Otis code.
+  # EA Approver is required in order to keep `ht_users` and `otis_registrations` updated.
+  BUILTIN_TYPES = [
+    {
+      name: "ETAS",
+      description: "Emergency Temporary Access Service"
+    },
+    {
+      name: "EA Approver",
+      description: "Approver for Elevated Access Registration and Renewal"
+    }
+  ]
+
+  # Create DB entries for the built-in types if necessary.
+  def self.initialize_builtin_types!
+    BUILTIN_TYPES.each do |type|
+      unless exists?(name: type[:name])
+        create(name: type[:name], description: type[:description])
+      end
+    end
+  end
+
+  # Return `HTContactType` corresponding to "EA Approver"
+  def self.ea_approver
+    where(name: "EA Approver").first
+  end
+
   private
 
   def check_contacts

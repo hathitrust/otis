@@ -13,6 +13,8 @@ raise StandardError, "Not for production use" if Rails.env.production?
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_approval_requests")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_logs")
 ActiveRecord::Base.connection.execute("DELETE FROM ht_web.otis_registrations")
+ActiveRecord::Base.connection.execute("DELETE FROM otis_contacts")
+ActiveRecord::Base.connection.execute("DELETE FROM otis_contact_types")
 ActiveRecord::Base.connection.execute("DELETE FROM otis_downloads")
 ActiveRecord::Base.connection.execute("DELETE FROM hathifiles.hf")
 
@@ -119,13 +121,6 @@ def create_ht_contact(inst_id)
   )
 end
 
-def create_ht_contact_type
-  HTContactType.create(
-    name: Faker::Job.position,
-    description: Faker::Lorem.sentence(word_count: 10)
-  )
-end
-
 def fake_env
   {
     HTTP_X_REMOTE_USER: "https://shibboleth.umich.edu/idp/shibboleth!http://www.hathitrust.org/shibboleth-sp!#{Faker::Internet.base64}",
@@ -214,14 +209,8 @@ def create_hathifile_entry
   hf.save!
 end
 
-HTContactType.create(
-  name: "ETAS",
-  description: "Emergency Temporary Access Service"
-)
+HTContactType.initialize_builtin_types!
 
-5.times do
-  create_ht_contact_type
-end
 
 10.times do
   inst_id = create_ht_institution(1)
