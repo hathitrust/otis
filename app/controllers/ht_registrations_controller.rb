@@ -31,6 +31,7 @@ class HTRegistrationsController < ApplicationController
     @registration = presenter HTRegistration.new(reg_params)
     if @registration.save
       update_ea_ticket!
+      update_approver!
       log
       flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to @registration
@@ -52,6 +53,7 @@ class HTRegistrationsController < ApplicationController
     fetch_presenter
     if @registration.update(reg_params)
       update_ea_ticket!
+      update_approver!
       log
       flash[:notice] = t(".success", name: @registration.applicant_name)
       redirect_to action: :show
@@ -140,5 +142,17 @@ class HTRegistrationsController < ApplicationController
     Otis::JiraClient::Registration.new(@registration).approve!
   rescue => e
     flash[:alert] = "Failure to communicate with Jira: #{e.message}"
+  end
+
+  # Create or update the EA Approver contact based on auth_rep_*
+  def update_approver!
+    HTContact.add_or_update(
+      contact_type: HTContactType.ea_approver.id,
+      email: @registration.auth_rep_email,
+      inst_id: @registration.inst_id,
+      name: @registration.auth_rep_name
+    )
+  rescue => e
+    flash[:alert] = "Failure to update approver contact: #{e.message}"
   end
 end
