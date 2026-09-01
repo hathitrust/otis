@@ -7,6 +7,7 @@ module Otis
     EXPECTED_INSTITUTIONS_COUNT = 7 # includes social and private
     EXPECTED_SAML_ENTITIES_COUNT = 5 # just the enabled=1 ones
     def setup
+      HTInstitution.delete_all
       remove_generated_files
       5.times do
         create(:ht_institution, enabled: 1) # Enabled for login
