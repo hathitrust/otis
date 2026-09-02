@@ -105,7 +105,8 @@ en:
         access: Access
         accesses: Accesses
         activitycontact: Activity Contact
-        approver: Approver
+        approver: Approver E-mail
+        approver_name: Approver Name
         authorizer: Authorizer
         displayname: Display Name
         email: E-mail

@@ -169,6 +169,12 @@ class HTUser < ApplicationRecord
     req.save!
   end
 
+  # We don't keep this info in `ht_users` but it is useful in the Otis UI.
+  # Retrieve the approver name from otis_contacts.
+  def approver_name
+    approver_contact&.name
+  end
+
   def csv_cols
     attributes.keys + ["inst_name"]
   end
@@ -184,5 +190,10 @@ class HTUser < ApplicationRecord
                                      expiration_date(true).days_until_expiration < 1)
       ht_approval_request.not_approved.not_renewed.destroy_all
     end
+  end
+
+  # Returns the HTContact with the "EA Approver" contact type
+  def approver_contact
+    HTContact.where(email: approver, contact_type: HTContactType.ea_approver).first
   end
 end

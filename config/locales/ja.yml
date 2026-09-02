@@ -105,7 +105,8 @@ ja:
         access: アクセス
         accesses: アクセス数
         activitycontact: 活動連絡先
-        approver: 秘書
+        approver: 承認者のEメール
+        approver_name: 承認者の表示名
         authorizer: 承認者
         displayname: 表示名
         email: Eメール
