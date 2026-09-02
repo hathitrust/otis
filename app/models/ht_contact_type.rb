@@ -15,6 +15,7 @@ class HTContactType < ApplicationRecord
   # These are the built-in contact types that should be available at all times.
   # ETAS is not explicitly used by the Otis code.
   # EA Approver is required in order to keep `ht_users` and `otis_registrations` updated.
+  # This need be public only so rspec can see how many types there should be.
   BUILTIN_TYPES = [
     {
       name: "ETAS",
@@ -30,7 +31,7 @@ class HTContactType < ApplicationRecord
   def self.initialize_builtin_types!
     BUILTIN_TYPES.each do |type|
       unless exists?(name: type[:name])
-        create(name: type[:name], description: type[:description])
+        create(**type)
       end
     end
   end
