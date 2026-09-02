@@ -222,8 +222,6 @@ en:
   ht_contact_types:
     create:
       success: Contact Type created.
-    destroy:
-      success: Contact Type removed.
     form:
       cancel: Cancel
       submit_changes: Submit Changes
@@ -233,8 +231,6 @@ en:
     new:
       new_contact_type: New Contact Type
     show:
-      confirm_delete: Please confirm deletion of contact type "%{name}"
-      delete: Delete Contact Type
       edit: Edit
     update:
       success: Contact Type updated.

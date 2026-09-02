@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   end
 
   scope format: false, constraints: {id: /.+/} do
-    resources :ht_contact_types
+    resources :ht_contact_types, except: [:destroy]
   end
 
   get "/ht_downloads", to: "ht_downloads#index", as: :ht_downloads
