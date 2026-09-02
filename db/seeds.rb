@@ -49,16 +49,19 @@ def create_expired_user
     end
   end
   u.save!
-  c = HTCount.new(
-    userid: u.userid,
+  create_ht_counts(u)
+  create_ht_approval_request(u)
+end
+
+def create_ht_counts(user)
+  HTCount.new(
+    userid: user.userid,
     accesscount: Faker::Number.within(range: 1..10_000),
     last_access: Faker::Time.backward,
     warned: [false, true].sample,
     certified: [false, true].sample,
     auth_requested: [false, true].sample
-  )
-  c.save
-  create_ht_approval_request(u)
+  ).save!
 end
 
 def create_ht_approval_request(user)
@@ -160,6 +163,7 @@ def create_ht_registration(create_user: false)
       user = Otis::RegistrationMover.new(reg).ht_user
       UNIQUE_EMAILS << user.email
       reg.approve!
+      create_ht_counts(user)
       create_ht_approval_request(user)
     end
     reg.save!
