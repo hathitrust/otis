@@ -71,7 +71,7 @@ class HTDownloadPresenter < ApplicationPresenter
     # differ from the stored values.
     if field == :role
       all_values_map.each_key do |value|
-        all_values_map[value] = I18n.t(value_scope + ".#{field}.#{value}", raise: false)
+        all_values_map[value] = Otis::ServiceRole.for_user_role(value).name
       end
     elsif field == :full_download
       all_values_map = {false => "no", true => "yes"}
@@ -117,7 +117,7 @@ class HTDownloadPresenter < ApplicationPresenter
   end
 
   def show_role
-    "<span class=\"text-nowrap\">#{localize_value(:role)}</span>"
+    "<span class=\"text-nowrap\">#{Otis::ServiceRole.for_user_role(role).name}</span>"
   end
 
   def show_email
