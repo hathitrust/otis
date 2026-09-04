@@ -150,10 +150,10 @@ class HTContactTypesControllerCreateTest < ActionDispatch::IntegrationTest
 
   test "alerts on create failure due to missing description" do
     type_params = attributes_for(:ht_contact_type).except(:description)
-    HTContactType.delete_all
+    old_count = HTContactType.count
     post ht_contact_types_url, params: {ht_contact_type: type_params}
     assert_equal "create", @controller.action_name
-    assert_equal 0, HTContactType.count
+    assert_equal old_count, HTContactType.count
     assert_not_empty flash[:alert]
   end
 end
