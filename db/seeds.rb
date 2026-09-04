@@ -214,8 +214,6 @@ def create_hathifile_entry
   hf.save!
 end
 
-HTContactType.initialize_builtin_types!
-
 10.times do
   inst_id = create_ht_institution(1)
   create_ht_billing_member(inst_id) if [0, 1].sample.zero?

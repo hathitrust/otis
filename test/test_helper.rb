@@ -58,8 +58,6 @@ Otis::Application.load_tasks
 Rake::Task.define_task(:environment)
 Rake::Task["otis:migrate_users"].invoke
 
-HTContactType.initialize_builtin_types!
-
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
 end

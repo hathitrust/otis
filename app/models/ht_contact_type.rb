@@ -10,6 +10,12 @@ class HTContactType < ApplicationRecord
 
   has_many :ht_logs, -> { HTLog.ht_contact_type }, foreign_key: :objid, primary_key: :id
 
+  # This should run ony once, and ensure the expected rows are in place before
+  # this class does anything else.
+  ActiveSupport.on_load(:ht_contact_type) do
+    initialize_builtin_types!
+  end
+
   # These are the built-in contact types that should be available at all times.
   # ETAS is not explicitly used by the Otis code.
   # EA Approver is required in order to keep `ht_users` and `otis_registrations` updated.
@@ -38,4 +44,6 @@ class HTContactType < ApplicationRecord
   def self.ea_approver
     where(name: "EA Approver").first
   end
+
+  ActiveSupport.run_load_hooks(:ht_contact_type, self)
 end
