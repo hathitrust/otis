@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 0) do # rubocop:disable Metrics/BlockLength
     t.string :inst_id
     t.integer :contact_type
     t.string :email
+    t.string :name
   end
 
   create_table :otis_contact_types do |t|

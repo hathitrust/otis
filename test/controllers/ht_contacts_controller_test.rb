@@ -47,10 +47,8 @@ class HTContactsControllerCSVTest < ActionDispatch::IntegrationTest
     @inst = create(:ht_institution, entityID: "http://example.com", inst_id: "I")
     @type1 = create(:ht_contact_type, name: "T1")
     @type2 = create(:ht_contact_type, name: "T2")
-    @contact1 = HTContact.new(inst_id: @inst.inst_id, contact_type: @type1.id, email: "a@b")
-    @contact1.save!
-    @contact2 = HTContact.new(inst_id: @inst.inst_id, contact_type: @type2.id, email: "c@d")
-    @contact2.save!
+    @contact1 = create(:ht_contact, inst_id: @inst.inst_id, contact_type: @type1.id, email: "a@b")
+    @contact2 = create(:ht_contact, inst_id: @inst.inst_id, contact_type: @type2.id, email: "c@d")
   end
 
   test "export list of all contacts as CSV" do
@@ -179,20 +177,18 @@ class HTContactsControllerCreateTest < ActionDispatch::IntegrationTest
 
   test "can create" do
     contact_params = FactoryBot.build(:ht_contact).attributes.except("created_at", "updated_at").symbolize_keys
-    contact_id = contact_params[:id]
     post ht_contacts_url, params: {ht_contact: contact_params}
-
-    assert_redirected_to ht_contact_url(contact_id)
-
-    assert_not_nil(HTContact.find(contact_id))
+    new_contact = HTContact.last
+    assert_redirected_to ht_contact_url(new_contact.id)
+    assert_not_nil(HTContact.find(new_contact.id))
   end
 
   test "logs create" do
     contact_params = FactoryBot.build(:ht_contact).attributes.except("created_at", "updated_at").symbolize_keys
-    contact_id = contact_params[:id]
     post ht_contacts_url, params: {ht_contact: contact_params}
-    log = HTContact.find(contact_id).ht_logs.first
-    assert_equal(contact_id.to_s, log.data["params"]["id"])
+    new_contact = HTContact.last
+    log = HTContact.find(new_contact.id).ht_logs.first
+    assert_equal(new_contact.email, log.data["params"]["email"])
     assert_not_nil(log.time)
   end
 
