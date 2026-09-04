@@ -76,6 +76,11 @@ class HTDownloadsController < ApplicationController
       format.json do
         render json: json_query
       end
+      format.csv do
+        # TODO: does params[:file_name] get set? if so how?
+        file_name = (params[:file_name] || "ht_downloads") + ".csv"
+        send_data csv_query, filename: file_name
+      end
     end
   end
 
@@ -111,6 +116,26 @@ class HTDownloadsController < ApplicationController
     }
   end
 
+  def csv_query
+    require "csv"
+    search = HTDownload
+      .includes(:ht_hathifile, :ht_institution)
+      .ransack(matchers)
+    # Apply the sort field and order, or default if not provided.
+    # Ransack requires lower case sort direction.
+    sort_name = RANSACK_ORDER.fetch(params[:sortName], "datetime")
+    sort_order = params.fetch(:sortOrder, "asc")
+    search.sorts = "#{sort_name} #{sort_order.downcase}"
+    # Extract HTDownload::ActiveRecord_Relation
+    result = search.result
+    CSV.generate do |csv|
+      csv << HTDownloadPresenter::ALL_FIELDS.map { |field| HTDownloadPresenter.field_label(field) }
+      result.each do |line|
+        csv << line_to_csv(line)
+      end
+    end
+  end
+
   # Use presenter to translate HTDownload into JSON hash.
   # This is called for each object in the result.
   def line_to_json(report)
@@ -118,6 +143,14 @@ class HTDownloadsController < ApplicationController
     HTDownloadPresenter::ALL_FIELDS.to_h do |field|
       [field, report.field_value(field)]
     end
+  end
+
+  # Same field set as #line_to_json, but as a flat array of plain-text
+  # values -- #field_value can return HTML (e.g. linked email/institution_name)
+  # which is fine for the JSON-backed table but not for a CSV cell.
+  def line_to_csv(report)
+    report = presenter report
+    HTDownloadPresenter::ALL_FIELDS.map { |field| report.csv_value(field) }
   end
 
   def presenter(report)
