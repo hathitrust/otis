@@ -19,12 +19,11 @@ class HTContact < ApplicationRecord
   # Add or update based on email and contact type id.
   # Can be triggered by adding or editing a registration, or editing a user.
   # Use `tap` instead of passing a block to `find_or_initialize_by` because we want
-  # to update name and institution even if record already exists. Although they are
+  # to update the contact's name even if record already exists. Although they are
   # unlikely to change substantially, new registration data should probably override
   # old.
   def self.add_or_update(contact_type:, email:, inst_id:, name:)
-    find_or_initialize_by(email: email, contact_type: contact_type).tap do |approver|
-      approver.inst_id = inst_id
+    find_or_initialize_by(email: email, contact_type: contact_type, inst_id: inst_id).tap do |approver|
       approver.name = name
       approver.save!
     end

@@ -76,7 +76,7 @@ RSpec.describe HTContact do
   end
 
   describe ".add_or_update" do
-    context "with no matching email + type" do
+    context "with no matching email + type + inst_id" do
       it "creates a mew contact" do
         expect {
           described_class.add_or_update(**test_params)
@@ -95,7 +95,7 @@ RSpec.describe HTContact do
         {
           contact_type: test_type,
           email: test_email,
-          inst_id: create(:ht_institution).id,
+          inst_id: test_inst_id,
           name: "Existing Name"
         }
       }
