@@ -46,3 +46,51 @@ RSpec.describe "/ht_downloads json", type: :request do
     end
   end
 end
+
+RSpec.describe "/ht_downloads csv", type: :request do
+  let(:dl_count) { 1 }
+
+  before(:each) do
+    HTDownload.delete_all
+    dl_count.times { create(:ht_download) }
+  end
+
+  it "exports the same fields shown on the index page, as a header row plus a data row per report" do
+    sign_in!
+    get ht_downloads_url(format: :csv)
+
+    csv = CSV.parse(response.body, headers: true)
+    expected_headers = HTDownloadPresenter::ALL_FIELDS.map { |field| HTDownloadPresenter.field_label(field) }
+    expect(csv.headers).to eq(expected_headers)
+    expect(csv.length).to eq(dl_count)
+
+    report = HTDownload.first
+    row = csv.first
+    expect(row[HTDownloadPresenter.field_label(:htid)]).to eq(report.htid)
+    expect(row[HTDownloadPresenter.field_label(:email)]).to eq(report.email)
+    expect(row[HTDownloadPresenter.field_label(:institution_name)]).to eq(report.institution_name)
+  end
+
+  it "does not include HTML markup or escaped entities in the exported values" do
+    sign_in!
+    report = HTDownload.first
+    report.ht_hathifile.update!(title: "Tom & Jerry's <Adventures>")
+
+    get ht_downloads_url(format: :csv)
+
+    expect(response.body).not_to match(/<a[ >]|<\/a>|<span[ >]|<\/span>/)
+    expect(response.body).not_to include("&amp;", "&lt;", "&gt;")
+    expect(response.body).to include("Tom & Jerry's <Adventures>")
+  end
+
+  it "returns a header-only CSV, rather than erroring, when no reports match the filter" do
+    sign_in!
+    get ht_downloads_url(format: :csv, filter: "{\"htid\":\"no-such-htid\"}")
+
+    expect(response).to have_http_status(:ok)
+    csv = CSV.parse(response.body, headers: true)
+    expected_headers = HTDownloadPresenter::ALL_FIELDS.map { |field| HTDownloadPresenter.field_label(field) }
+    expect(csv.headers).to eq(expected_headers)
+    expect(csv.length).to eq(0)
+  end
+end

@@ -129,10 +129,9 @@ class HTDownloadsController < ApplicationController
     # Extract HTDownload::ActiveRecord_Relation
     result = search.result
     CSV.generate do |csv|
-      csv << result.first.csv_cols
-      #csv << ["FIXME COLUMNS"]
-      result.each do |res|
-        csv << res.csv_vals
+      csv << HTDownloadPresenter::ALL_FIELDS.map { |field| HTDownloadPresenter.field_label(field) }
+      result.each do |line|
+        csv << line_to_csv(line)
       end
     end
   end
@@ -144,6 +143,14 @@ class HTDownloadsController < ApplicationController
     HTDownloadPresenter::ALL_FIELDS.to_h do |field|
       [field, report.field_value(field)]
     end
+  end
+
+  # Same field set as #line_to_json, but as a flat array of plain-text
+  # values -- #field_value can return HTML (e.g. linked email/institution_name)
+  # which is fine for the JSON-backed table but not for a CSV cell.
+  def line_to_csv(report)
+    report = presenter report
+    HTDownloadPresenter::ALL_FIELDS.map { |field| report.csv_value(field) }
   end
 
   def presenter(report)
