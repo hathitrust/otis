@@ -36,8 +36,6 @@
     "ckeditor5": "^48.0.0",
     "firebird-common": "github:hathitrust/firebird-common",
     "jquery": "^3.7.1",
-    "select2": "^4.1.0-rc.0",
-    "tableexport.jquery.plugin": "^1.33.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    "select2": "^4.1.0-rc.0"
   }
 }

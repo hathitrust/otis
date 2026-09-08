@@ -106,6 +106,24 @@ class HTDownloadPresenter < ApplicationPresenter
     end
   end
 
+  # Plain-text equivalent of #field_value, for output formats (e.g. CSV)
+  # where #show_role/#show_datetime's HTML wrapping and #show_email/
+  # #show_institution_name's links aren't wanted.
+  def csv_value(field)
+    case field
+    when :role
+      localize_value(:role)
+    when :datetime
+      datetime.to_formatted_s(:db)
+    when :full_download
+      full_download ? "yes" : "no"
+    when *HF_FIELDS
+      hf.nil? ? "" : hf.send(field)
+    else
+      send(field).to_s
+    end
+  end
+
   private
 
   # More or less standard `show_X` methods when we want to customize the display.
