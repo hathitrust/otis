@@ -77,9 +77,7 @@ class HTDownloadsController < ApplicationController
         render json: json_query
       end
       format.csv do
-        # TODO: does params[:file_name] get set? if so how?
-        file_name = (params[:file_name] || "ht_downloads") + ".csv"
-        send_data csv_query, filename: file_name
+        send_data csv_query, filename: "ht_downloads.csv"
       end
     end
   end
