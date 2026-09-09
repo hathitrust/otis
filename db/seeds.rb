@@ -18,16 +18,26 @@ ActiveRecord::Base.connection.execute("DELETE FROM hathifiles.hf")
 UNIQUE_EMAILS = Set.new
 UNIQUE_HTIDS = Set.new
 
+# An approver belongs to exactly one institution (see ETT-1782), so find or make one
+# scoped to inst_id instead of reusing any approver contact at random.
+def approver_contact_for(inst_id)
+  HTContact.where(contact_type: HTContactType.ea_approver.id, inst_id: inst_id).sample ||
+    HTContact.create!(
+      contact_type: HTContactType.ea_approver.id,
+      inst_id: inst_id,
+      email: Faker::Internet.email,
+      name: Faker::Name.name
+    )
+end
+
 def create_expired_user
   email = Faker::Internet.email
   UNIQUE_EMAILS << email
-  approver = HTContact.where(contact_type: HTContactType.ea_approver.id).sample
   u = HTUser.new(
     userid: Faker::Internet.unique.email,
     displayname: Faker::Name.name,
     email: email,
     activitycontact: Faker::Internet.email,
-    approver: approver.email,
     authorizer: Faker::Internet.email,
     usertype: HTUser::USERTYPES.sample.to_s,
     role: HTUser::ROLES.sample.to_s,
@@ -48,6 +58,7 @@ def create_expired_user
       "#{Faker::Internet.public_ip_v4_address}, #{Faker::Internet.public_ip_v4_address}"
     end
   end
+  u.approver = approver_contact_for(u.inst_id).email
   u.save!
   create_ht_counts(u)
   create_ht_approval_request(u)
@@ -135,7 +146,8 @@ end
 
 def create_ht_registration(create_user: false)
   ticket_no = Faker::Number.between(from: 1000, to: 9999)
-  approver = HTContact.where(contact_type: HTContactType.ea_approver.id).sample
+  inst_id = HTInstitution.enabled.pluck(:inst_id).sample
+  approver = approver_contact_for(inst_id)
   reg = HTRegistration.create(
     applicant_name: Faker::Name.name,
     applicant_email: Faker::Internet.email,
@@ -144,7 +156,7 @@ def create_ht_registration(create_user: false)
     auth_rep_email: approver.email,
     hathitrust_authorizer: Faker::Internet.email,
     hathitrust_authorizer_name: Faker::Name.name,
-    inst_id: HTInstitution.enabled.pluck(:inst_id).sample,
+    inst_id: inst_id,
     role: HTRegistration::ROLES.sample.to_s,
     expire_type: HTUser::EXPIRES_TYPES.sample,
     jira_ticket: "XXX-#{ticket_no}",

@@ -86,10 +86,10 @@ class HTContactsController < ApplicationController
   def contacts_csv
     require "csv"
     CSV.generate do |csv|
-      csv << %i[ID Institution Type E-mail]
+      csv << %i[ID Institution Type E-mail Name]
       @contacts.each do |contact|
         csv << [contact.id, contact.ht_institution.name,
-          contact.ht_contact_type.name, contact.email]
+          contact.ht_contact_type.name, contact.email, contact.name]
       end
     end
   end

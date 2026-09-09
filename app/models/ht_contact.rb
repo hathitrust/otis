@@ -13,17 +13,23 @@ class HTContact < ApplicationRecord
 
   validates :inst_id, presence: true
   validates :contact_type, presence: true
-  validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}
+  validates :email, presence: true, format: {with: URI::MailTo::EMAIL_REGEXP}, uniqueness: {scope: :contact_type}
   validates :name, presence: true
 
   # Add or update based on email and contact type id.
   # Can be triggered by adding or editing a registration, or editing a user.
-  # Use `tap` instead of passing a block to `find_or_initialize_by` because we want
-  # to update the contact's name even if record already exists. Although they are
-  # unlikely to change substantially, new registration data should probably override
-  # old.
+  # A contact belongs to exactly one institution, so if a contact already exists for this
+  # email and type at a *different* institution, that's a mistake (e.g. a typo'd approver
+  # email) rather than a legitimate change, and we refuse to silently move it.
   def self.add_or_update(contact_type:, email:, inst_id:, name:)
-    find_or_initialize_by(email: email, contact_type: contact_type, inst_id: inst_id).tap do |approver|
+    contact = find_or_initialize_by(email: email, contact_type: contact_type)
+    if contact.persisted? && contact.inst_id != inst_id
+      contact.errors.add(:inst_id, "already registered to a different institution (#{contact.ht_institution&.name || contact.inst_id})")
+      raise ActiveRecord::RecordInvalid, contact
+    end
+
+    contact.tap do |approver|
+      approver.inst_id = inst_id
       approver.name = name
       approver.save!
     end

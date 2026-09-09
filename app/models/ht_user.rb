@@ -192,8 +192,10 @@ class HTUser < ApplicationRecord
     end
   end
 
-  # Returns the HTContact with the "EA Approver" contact type
+  # Returns the HTContact with the "EA Approver" contact type, scoped to this user's own
+  # institution. The same approver email can have a separate contact row per institution
+  # (see HTContact.add_or_update), so this must filter by inst_id too, not just email.
   def approver_contact
-    HTContact.where(email: approver, contact_type: HTContactType.ea_approver).first
+    HTContact.where(email: approver, contact_type: HTContactType.ea_approver, inst_id: inst_id).first
   end
 end

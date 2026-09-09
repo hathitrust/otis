@@ -46,6 +46,11 @@ RSpec.describe HTContact do
       it "must match email regex" do
         expect(build(factory, email: test_bogus_email).valid?).to be false
       end
+
+      it "must be unique per contact type" do
+        create(factory, email: test_email, contact_type: test_type)
+        expect(build(factory, email: test_email, contact_type: test_type).valid?).to be false
+      end
     end
 
     describe "inst_id" do
@@ -76,8 +81,8 @@ RSpec.describe HTContact do
   end
 
   describe ".add_or_update" do
-    context "with no matching email + type + inst_id" do
-      it "creates a mew contact" do
+    context "with no matching email + type" do
+      it "creates a new contact" do
         expect {
           described_class.add_or_update(**test_params)
         }.to change { described_class.count }.by(1)
@@ -90,7 +95,7 @@ RSpec.describe HTContact do
       end
     end
 
-    context "with existing record" do
+    context "with existing record at the same institution" do
       let(:existing_record) {
         {
           contact_type: test_type,
@@ -100,7 +105,7 @@ RSpec.describe HTContact do
         }
       }
 
-      it "does not create a mew contact" do
+      it "does not create a new contact" do
         create(factory, **existing_record)
         expect {
           described_class.add_or_update(**test_params)
@@ -111,6 +116,37 @@ RSpec.describe HTContact do
         create(factory, **existing_record)
         approver = described_class.add_or_update(**test_params)
         expect(approver.attributes.except("id")).to eq test_params.stringify_keys
+      end
+    end
+
+    context "with existing record at a different institution" do
+      let(:other_inst_id) { create(:ht_institution).id }
+      let(:existing_record) {
+        {
+          contact_type: test_type,
+          email: test_email,
+          inst_id: other_inst_id,
+          name: "Existing Name"
+        }
+      }
+
+      it "raises instead of creating a new contact" do
+        create(factory, **existing_record)
+        expect {
+          described_class.add_or_update(**test_params)
+        }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(described_class.count).to eq 1
+      end
+
+      it "does not change the existing contact's institution" do
+        create(factory, **existing_record)
+        expect {
+          begin
+            described_class.add_or_update(**test_params)
+          rescue ActiveRecord::RecordInvalid
+            nil
+          end
+        }.not_to change { described_class.find_by(email: test_email, contact_type: test_type).inst_id }
       end
     end
   end

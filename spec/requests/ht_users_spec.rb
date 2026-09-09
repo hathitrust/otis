@@ -42,11 +42,11 @@ RSpec.describe "HTUsers", type: :request do
       end
     end
 
-    context "with bogus Approver Name" do
+    context "with a blank Approver Name" do
       let(:new_displayname) { "New Displayname" }
       let(:new_approver_name) { "" }
 
-      it "does not update User or Contact" do
+      it "updates the User but leaves the Contact alone" do
         user = create(:ht_user)
         sign_in!
         patch ht_user_url user, params: {
@@ -56,11 +56,29 @@ RSpec.describe "HTUsers", type: :request do
           }
         }
         user.reload
-        expect(response).to have_http_status(:ok)
-        expect(user.approver_name).not_to eq(new_approver_name)
-        # Roll back the update on user when contact update fails.
-        expect(user.displayname).not_to eq(new_displayname)
-        expect(flash.alert).to match(/validation failed/i)
+        # The edit form always submits approver_name, even when there's no
+        # existing approver contact, so a blank value should not block the
+        # rest of the update.
+        expect(response).to have_http_status(:redirect)
+        expect(user.displayname).to eq(new_displayname)
+        expect(user.approver_name).to be_nil
+        expect(flash.notice).to match(/updated/)
+      end
+    end
+
+    context "with an unchanged Approver Name" do
+      it "does not write a new Contact" do
+        user = create(:ht_user)
+        contact = create(:ht_contact, email: user.approver, ht_contact_type: HTContactType.ea_approver, name: "Same Approver", inst_id: user.inst_id)
+        sign_in!
+        expect {
+          patch ht_user_url user, params: {
+            ht_user: {
+              "approver_name" => contact.name
+            }
+          }
+        }.not_to change { HTContact.count }
+        expect(response).to have_http_status(:redirect)
       end
     end
   end

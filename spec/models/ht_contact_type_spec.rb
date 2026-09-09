@@ -53,6 +53,32 @@ RSpec.describe HTContactType do
       described_class.initialize_builtin_types!
       expect(described_class.ea_approver).to be_a(described_class)
     end
+
+    it "creates the built-in types if they do not already exist" do
+      expect { described_class.ea_approver }
+        .to change { described_class.count }.by(described_class::BUILTIN_TYPES.count)
+    end
+
+    it "does not create duplicates when called again" do
+      described_class.ea_approver
+      expect { described_class.ea_approver }.not_to change { described_class.count }
+    end
+  end
+
+  describe "#destroy" do
+    it "is prevented when referenced by an HTContact" do
+      contact_type = create(factory)
+      create(:ht_contact, ht_contact_type: contact_type)
+      expect(contact_type.destroy).to be false
+      expect(contact_type.errors[:base]).to be_present
+      expect(described_class.exists?(contact_type.id)).to be true
+    end
+
+    it "succeeds when not referenced by any HTContact" do
+      contact_type = create(factory)
+      expect(contact_type.destroy).to be_truthy
+      expect(described_class.exists?(contact_type.id)).to be false
+    end
   end
 
   # FIXME: remove these when we have tests for ApplicationRecord or Otis::Authorization::Resource

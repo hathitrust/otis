@@ -81,15 +81,21 @@ class HTUsersController < ApplicationController
     end
   end
 
-  # Create or update the EA Approver contact based on approver and approver_name parameters
+  # Create or update the EA Approver contact based on approver and approver_name parameters.
+  # The edit form always submits approver_name, even for users with no approver contact yet,
+  # so a blank or unchanged value means the admin didn't intend to change it (as opposed to
+  # wanting to blank out an existing contact's name, which isn't a supported operation).
   def update_approver!
     return unless params[:ht_user].key?(:approver_name)
+
+    new_name = params[:ht_user][:approver_name]
+    return if new_name.blank? || new_name == @user.approver_name
 
     HTContact.add_or_update(
       contact_type: HTContactType.ea_approver.id,
       email: @user.approver,
       inst_id: @user.inst_id,
-      name: params[:ht_user][:approver_name]
+      name: new_name
     )
   end
 end
