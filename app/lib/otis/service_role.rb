@@ -15,7 +15,7 @@ module Otis
     SERVICE_ROLES = {
       atrs: {
         access: :normal,
-        description: "Act as a proxy for users who have print disabilities",
+        description: "Retrieve HathiTrust texts to fulfill accomodations requests from eligible users with print disabilities",
         full_name: "Accessible Text Request Service",
         name: "ATRS",
         role: :ssdproxy,
@@ -63,7 +63,7 @@ module Otis
       },
       resource_sharing: {
         access: :normal,
-        description: "Use full-view texts to fulfill ILL and document delivery requests",
+        description: "Use HathiTrust texts to fulfill ILL and document delivery requests",
         full_name: "Resource Sharing",
         name: "RS",
         role: :resource_sharing,
