@@ -12,7 +12,7 @@ class HTRegistrationTest < ActiveSupport::TestCase
   end
 
   test "#resource_id" do
-    reg = build(:ht_registration)
+    reg = create(:ht_registration)
     assert_equal reg.id, reg.resource_id
   end
 

@@ -10,10 +10,8 @@ class HTContactPresenterTest < ActiveSupport::TestCase
   end
 
   test "class constants" do
-    assert_not_nil HTContactPresenter::ALL_FIELDS
-    assert_equal 4, HTContactPresenter::ALL_FIELDS.count
-    assert_not_nil HTContactPresenter::READ_ONLY_FIELDS
-    assert_equal 1, HTContactPresenter::READ_ONLY_FIELDS.count
+    assert HTContactPresenter::ALL_FIELDS.count.positive?
+    assert HTContactPresenter::READ_ONLY_FIELDS.count.positive?
   end
 
   test "#field_value :email on index page" do

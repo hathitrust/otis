@@ -4,7 +4,7 @@ require "test_helper"
 
 class HTRegistrationPresenterTest < ActiveSupport::TestCase
   def setup
-    @reg = HTRegistrationPresenter.new(build(:ht_registration))
+    @reg = HTRegistrationPresenter.new(create(:ht_registration))
   end
 
   test "class constants" do
@@ -79,13 +79,12 @@ class HTRegistrationPresenterTest < ActiveSupport::TestCase
   end
 
   test "#cancel_path for new object goes to index" do
-    assert_not_nil @reg.cancel_path
-    assert_no_match "/ht_registrations/#{@reg.id}", @reg.cancel_path
+    reg = HTRegistrationPresenter.new(build(:ht_registration))
+    assert_no_match "/ht_registrations/#{reg.id}", reg.cancel_path
   end
 
   test "#cancel_path for persisted object goes to object" do
-    reg = HTRegistrationPresenter.new(create(:ht_registration))
-    assert_match "/ht_registrations/#{reg.id}", reg.cancel_path
+    assert_match "/ht_registrations/#{@reg.id}", @reg.cancel_path
   end
 end
 

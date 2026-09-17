@@ -3,7 +3,7 @@
 class HTContactsController < ApplicationController
   before_action :fetch_contact, only: %i[destroy edit show]
 
-  PERMITTED_UPDATE_FIELDS = %i[inst_id contact_type email].freeze
+  PERMITTED_UPDATE_FIELDS = %i[inst_id contact_type email name].freeze
   PERMITTED_CREATE_FIELDS = PERMITTED_UPDATE_FIELDS + %i[id]
 
   def new
@@ -86,10 +86,10 @@ class HTContactsController < ApplicationController
   def contacts_csv
     require "csv"
     CSV.generate do |csv|
-      csv << %i[ID Institution Type E-mail]
+      csv << %i[ID Institution Type E-mail Name]
       @contacts.each do |contact|
         csv << [contact.id, contact.ht_institution.name,
-          contact.ht_contact_type.name, contact.email]
+          contact.ht_contact_type.name, contact.email, contact.name]
       end
     end
   end
