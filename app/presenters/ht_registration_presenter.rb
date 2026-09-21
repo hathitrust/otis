@@ -235,6 +235,9 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def role_options
-    @role_options ||= HTRegistration::ROLES.sort.map { |role| [Otis::ServiceRole.new(role).full_name, role] }
+    @role_options ||= HTRegistration::ROLES.map do |role|
+      service_role = Otis::ServiceRole.for_user_role(role)
+      [service_role.full_name, role]
+    end.sort_by { |option| option[0] }
   end
 end

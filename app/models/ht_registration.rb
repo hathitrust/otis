@@ -11,7 +11,9 @@ class HTRegistration < ApplicationRecord
   alias_attribute :approved, :finished
   alias_attribute :submitted, :received
 
-  ROLES = Otis::ServiceRole.keys.freeze
+  # Registrations use the same kind of "semi-legacy" role values as `HTUser`.
+  # i.e., role names that may not match the service role names e.g. "ssdproxy" == "ATRS"
+  ROLES = Otis::ServiceRole.keys.map { |role_key| Otis::ServiceRole.new(role_key).role.to_s }.freeze
 
   def self.expiration_date
     Date.today - 1.week
@@ -49,10 +51,10 @@ class HTRegistration < ApplicationRecord
   validates :contact_info, presence: true
 
   # HathiTrust-level authorizer is only required for non-ATRS/SSD users.
-  validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["atrs", "ssd"].include? reg.role }
+  validates :hathitrust_authorizer, presence: true, if: ->(reg) { !["ssdproxy", "ssd"].include? reg.role }
   validates :hathitrust_authorizer, allow_blank: true, format: {with: URI::MailTo::EMAIL_REGEXP}
 
-  validates :hathitrust_authorizer_name, presence: true, if: ->(reg) { !["atrs", "ssd"].include? reg.role }
+  validates :hathitrust_authorizer_name, presence: true, if: ->(reg) { !["ssdproxy", "ssd"].include? reg.role }
 
   # mfa = multi factor authentication
   validates_inclusion_of :mfa_addendum, in: [true, false]
@@ -105,7 +107,7 @@ class HTRegistration < ApplicationRecord
   end
 
   def service_role
-    @service_role ||= Otis::ServiceRole.new(role)
+    @service_role ||= Otis::ServiceRole.for_user_role(role)
   rescue Otis::UnknownRoleError
     nil
   end

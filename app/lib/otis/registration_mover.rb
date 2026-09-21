@@ -20,7 +20,7 @@ module Otis
         expires: ExpirationDate.new(Time.zone.now, @registration.expire_type).default_extension_date,
         identity_provider: institution.entityID,
         inst_id: @registration.inst_id,
-        role: user_role(@registration.role),
+        role: @registration.role,
         userid: userid
       )
       if institution.mfa?
@@ -35,11 +35,6 @@ module Otis
 
     private
 
-    # Map `ServiceRole` key to legacy `ht_users.role`
-    def user_role(service_role)
-      Otis::ServiceRole.new(service_role).role
-    end
-
     def iprestrict
       @registration.mfa_addendum.present? ? "any" : @registration.ip_address
     end
@@ -49,7 +44,7 @@ module Otis
     # validator requires it for these roles. (The `present?` check may be unnecessary.)
     # `auth_rep_email` is the fallback.
     def authorizer
-      if !["ssd", "atrs"].include?(@registration.role) && @registration.hathitrust_authorizer.present?
+      if !["ssd", "ssdproxy"].include?(@registration.role) && @registration.hathitrust_authorizer.present?
         @registration.hathitrust_authorizer
       else
         @registration.auth_rep_email

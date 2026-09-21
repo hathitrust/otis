@@ -12,11 +12,12 @@ RSpec.describe Otis::RegistrationMover do
     # Attributes that are just copied from registration to user do not necessarily have
     # tests unless they were added to address a bug or change request.
     describe "access/usertype/role" do
-      Otis::ServiceRole.keys.each do |role_key|
-        context "with service role #{role_key}" do
+      HTRegistration::ROLES.each do |role|
+        context "with service #{role} role" do
           it "creates a user with an expected user_type, access, and role" do
-            registration = create(:ht_registration, role: role_key, env: test_env)
+            registration = create(:ht_registration, role: role, env: test_env)
             new_user = described_class.new(registration).ht_user
+            expect(new_user.role).to eq(role)
             expect(HTUser::ROLES.member?(new_user.role)).to eq(true)
             expect(HTUser::ACCESSES.member?(new_user.access)).to eq(true)
             expect(HTUser::USERTYPES.member?(new_user.usertype)).to eq(true)
@@ -34,7 +35,7 @@ RSpec.describe Otis::RegistrationMover do
 
     describe "authorizer" do
       context "with non-ATRS non-SSD registration" do
-        (HTRegistration::ROLES - [:atrs, :ssd]).each do |role|
+        (HTRegistration::ROLES - ["ssd", "ssdproxy"]).each do |role|
           it "uses hathitrust_authorizer for #{role} role" do
             registration = create(
               :ht_registration,
@@ -62,7 +63,7 @@ RSpec.describe Otis::RegistrationMover do
       end
 
       context "with ATRS/SSD registration" do
-        [:atrs, :ssd].each do |role|
+        ["ssd", "ssdproxy"].each do |role|
           it "uses auth_rep_email for #{role} role authorizer and ignores hathitrust_authorizer" do
             registration = create(
               :ht_registration,
@@ -176,7 +177,7 @@ RSpec.describe Otis::RegistrationMover do
           :ht_registration,
           applicant_email: existing_user.email,
           inst_id: new_inst.inst_id,
-          role: "atrs",
+          role: "ssdproxy",
           mfa_addendum: true,
           env: {"HTTP_X_REMOTE_USER" => existing_user.email}.to_json
         )

@@ -27,7 +27,7 @@ RSpec.describe HTRegistration do
     describe "hathitrust_authorizer" do
       context "with ATRS and SSD roles" do
         it "may be absent but must match e-mail pattern if present" do
-          [:atrs, :ssd].each do |role|
+          ["ssd", "ssdproxy"].each do |role|
             expect(build(factory, hathitrust_authorizer: nil, role: role).valid?).to be true
             expect(build(factory, hathitrust_authorizer: "qwerty", role: role).valid?).to be false
             expect(build(factory, hathitrust_authorizer: "qwerty@default.invalid").valid?).to be true
@@ -37,7 +37,7 @@ RSpec.describe HTRegistration do
 
       context "with other roles" do
         it "must be present and match e-mail pattern" do
-          (HTRegistration::ROLES - [:atrs, :ssd]).each do |role|
+          (HTRegistration::ROLES - ["ssd", "ssdproxy"]).each do |role|
             expect(build(factory, hathitrust_authorizer: nil, role: role).valid?).to be false
             expect(build(factory, hathitrust_authorizer: "qwerty", role: role).valid?).to be false
             expect(build(factory, hathitrust_authorizer: "qwerty@default.invalid").valid?).to be true
@@ -49,7 +49,7 @@ RSpec.describe HTRegistration do
     describe "hathitrust_authorizer_name" do
       context "with ATRS and SSD roles" do
         it "may be absent" do
-          [:atrs, :ssd].each do |role|
+          ["ssd", "ssdproxy"].each do |role|
             expect(build(factory, hathitrust_authorizer_name: nil, role: role).valid?).to be true
             expect(build(factory, hathitrust_authorizer_name: "qwerty", role: role).valid?).to be true
           end
@@ -58,7 +58,7 @@ RSpec.describe HTRegistration do
 
       context "with other roles" do
         it "must be present" do
-          (HTRegistration::ROLES - [:atrs, :ssd]).each do |role|
+          (HTRegistration::ROLES - ["ssd", "ssdproxy"]).each do |role|
             expect(build(factory, hathitrust_authorizer_name: nil, role: role).valid?).to be false
             expect(build(factory, hathitrust_authorizer_name: "qwerty", role: role).valid?).to be true
           end
@@ -69,11 +69,11 @@ RSpec.describe HTRegistration do
 
   describe "#service_role" do
     it "exposes a valid service role" do
-      expect(build(:ht_registration, role: "ssd").service_role).to be_a(Otis::ServiceRole)
+      expect(build(:ht_registration, role: "quality").service_role).to be_a(Otis::ServiceRole)
     end
 
     it "exposes a service role with the correct name" do
-      expect(build(:ht_registration, role: "ssd").service_role.name).to eq("SSD")
+      expect(build(:ht_registration, role: "quality").service_role.name).to eq("CAA")
     end
   end
 end
