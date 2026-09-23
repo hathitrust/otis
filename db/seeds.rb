@@ -18,6 +18,8 @@ ActiveRecord::Base.connection.execute("DELETE FROM hathifiles.hf")
 UNIQUE_EMAILS = Set.new
 UNIQUE_HTIDS = Set.new
 
+LEGACY_ROLES = %i[corrections cataloging ssdproxy crms quality staffdeveloper staffsysadmin replacement ssd resource_sharing].freeze
+
 # An approver belongs to exactly one institution (see ETT-1782), so find or make one
 # scoped to inst_id instead of reusing any approver contact at random.
 def approver_contact_for(inst_id)
@@ -39,9 +41,9 @@ def create_expired_user
     email: email,
     activitycontact: Faker::Internet.email,
     authorizer: Faker::Internet.email,
-    usertype: HTUser::USERTYPES.sample.to_s,
-    role: HTUser::ROLES.sample.to_s,
-    access: HTUser::ACCESSES.sample.to_s,
+    usertype: Otis::ServiceRole::USER_USERTYPES.sample,
+    role: LEGACY_ROLES.sample.to_s,
+    access: Otis::ServiceRole::USER_ACCESSES.sample,
     expires: Faker::Time.backward,
     expire_type: HTUser::EXPIRES_TYPES.sample,
     mfa: [false, true].sample
@@ -59,9 +61,9 @@ def create_expired_user
     end
   end
   u.approver = approver_contact_for(u.inst_id).email
-  u.save!
+  # Expired users may have legacy roles, so don't validate
+  u.save!(validate: false)
   create_ht_counts(u)
-  create_ht_approval_request(u)
 end
 
 def create_ht_counts(user)
@@ -157,7 +159,7 @@ def create_ht_registration(create_user: false)
     hathitrust_authorizer: Faker::Internet.email,
     hathitrust_authorizer_name: Faker::Name.name,
     inst_id: inst_id,
-    role: HTRegistration::ROLES.sample.to_s,
+    role: Otis::ServiceRole::USER_ROLES.sample,
     expire_type: HTUser::EXPIRES_TYPES.sample,
     jira_ticket: "XXX-#{ticket_no}",
     mfa_addendum: [true, false].sample,
@@ -262,11 +264,11 @@ end
 end
 
 # Active users via completed registration
-150.times do
+100.times do
   create_ht_registration(create_user: true)
 end
 
-15.times do
+50.times do
   create_expired_user
 end
 
