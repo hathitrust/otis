@@ -78,10 +78,29 @@ module Otis
         user_type: :student
       }
     }.freeze
+    private_constant :SERVICE_ROLES
+
+    # The structure used by user and registration presenters when editing roles:
+    # an Array of name-values e.g., `["Accessible Text Request Service", "ssdproxy"]`
+    ROLE_OPTIONS = SERVICE_ROLES.map do |_k, v|
+      [v[:full_name], v[:role]]
+    end.sort_by do |option|
+      option[0]
+    end.freeze
+
+    # The USER_X constants are reference lists used for DB seeding and tests.
+    # There should be no reason to use these in the production code.
+    #
+    # All possible string values for `otis_registrations.role` and `ht_user.role`.
+    USER_ROLES = SERVICE_ROLES.map { |_k, v| v[:role].to_s }.uniq.freeze
+    # Ditto for `access` and `user_type`, except these are only relevant to `ht_user`
+    USER_ACCESSES = SERVICE_ROLES.map { |_k, v| v[:access].to_s }.uniq.freeze
+    USER_USERTYPES = SERVICE_ROLES.map { |_k, v| v[:user_type].to_s }.uniq.freeze
 
     # Reverse lookup for HTUser class to create ServiceRole from its
     # old fashioned role values.
-    USER_ROLE_TO_SERVICE_ROLE = SERVICE_ROLES.map { |k, v| [v[:role], k] }.to_h
+    USER_ROLE_TO_SERVICE_ROLE = SERVICE_ROLES.map { |k, v| [v[:role], k] }.to_h.freeze
+    private_constant :USER_ROLE_TO_SERVICE_ROLE
 
     attr_reader :access, :description, :full_name, :name, :role, :service_role, :user_type
 
@@ -93,7 +112,7 @@ module Otis
       SERVICE_ROLES.key?(...)
     end
 
-    # Create a service role using the legacy ht_user.role value
+    # Create a service role using the DB ht_user.role value
     def self.for_user_role(user_role)
       service_role = USER_ROLE_TO_SERVICE_ROLE[user_role.to_sym]
       if service_role.nil?

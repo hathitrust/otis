@@ -13,10 +13,7 @@ class HTUserRenewalError < StandardError
 end
 
 class HTUser < ApplicationRecord
-  # Authoritative lists of possible values
-  ROLES = Otis::ServiceRole.keys.map { |role_key| Otis::ServiceRole.new(role_key).role.to_s }.freeze
-  USERTYPES = Otis::ServiceRole.keys.map { |role_key| Otis::ServiceRole.new(role_key).user_type.to_s }.uniq.freeze
-  ACCESSES = Otis::ServiceRole.keys.map { |role_key| Otis::ServiceRole.new(role_key).access.to_s }.uniq.freeze
+  # Possible values, used by tests and DB seeds.
   EXPIRES_TYPES = ExpirationDate::EXPIRES_TYPE.collect { |k, _v| k }.freeze
   self.primary_key = "email"
 

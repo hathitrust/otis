@@ -11,10 +11,6 @@ class HTRegistration < ApplicationRecord
   alias_attribute :approved, :finished
   alias_attribute :submitted, :received
 
-  # Registrations use the same kind of "semi-legacy" role values as `HTUser`.
-  # i.e., role names that may not match the service role names e.g. "ssdproxy" == "ATRS"
-  ROLES = Otis::ServiceRole.keys.map { |role_key| Otis::ServiceRole.new(role_key).role.to_s }.freeze
-
   def self.expiration_date
     Date.today - 1.week
   end

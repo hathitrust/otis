@@ -12,15 +12,15 @@ RSpec.describe Otis::RegistrationMover do
     # Attributes that are just copied from registration to user do not necessarily have
     # tests unless they were added to address a bug or change request.
     describe "access/usertype/role" do
-      HTRegistration::ROLES.each do |role|
-        context "with service #{role} role" do
+      Otis::ServiceRole::USER_ROLES.each do |role|
+        context "with #{role} role" do
           it "creates a user with an expected user_type, access, and role" do
             registration = create(:ht_registration, role: role, env: test_env)
             new_user = described_class.new(registration).ht_user
             expect(new_user.role).to eq(role)
-            expect(HTUser::ROLES.member?(new_user.role)).to eq(true)
-            expect(HTUser::ACCESSES.member?(new_user.access)).to eq(true)
-            expect(HTUser::USERTYPES.member?(new_user.usertype)).to eq(true)
+            expect(Otis::ServiceRole::USER_ROLES.member?(new_user.role)).to eq(true)
+            expect(Otis::ServiceRole::USER_ACCESSES.member?(new_user.access)).to eq(true)
+            expect(Otis::ServiceRole::USER_USERTYPES.member?(new_user.usertype)).to eq(true)
           end
         end
       end
@@ -35,7 +35,7 @@ RSpec.describe Otis::RegistrationMover do
 
     describe "authorizer" do
       context "with non-ATRS non-SSD registration" do
-        (HTRegistration::ROLES - ["ssd", "ssdproxy"]).each do |role|
+        (Otis::ServiceRole::USER_ROLES - ["ssd", "ssdproxy"]).each do |role|
           it "uses hathitrust_authorizer for #{role} role" do
             registration = create(
               :ht_registration,

@@ -9,7 +9,7 @@ RSpec.describe Otis::ServiceRole do
   end
 
   describe ".for_user_role" do
-    HTUser::ROLES.each do |user_role|
+    described_class::USER_ROLES.each do |user_role|
       it "maps HTUser role #{user_role} to a valid service role key" do
         expect(
           described_class.key?(

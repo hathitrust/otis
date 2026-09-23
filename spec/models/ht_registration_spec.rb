@@ -37,7 +37,7 @@ RSpec.describe HTRegistration do
 
       context "with other roles" do
         it "must be present and match e-mail pattern" do
-          (HTRegistration::ROLES - ["ssd", "ssdproxy"]).each do |role|
+          (Otis::ServiceRole::USER_ROLES - ["ssd", "ssdproxy"]).each do |role|
             expect(build(factory, hathitrust_authorizer: nil, role: role).valid?).to be false
             expect(build(factory, hathitrust_authorizer: "qwerty", role: role).valid?).to be false
             expect(build(factory, hathitrust_authorizer: "qwerty@default.invalid").valid?).to be true
@@ -58,7 +58,7 @@ RSpec.describe HTRegistration do
 
       context "with other roles" do
         it "must be present" do
-          (HTRegistration::ROLES - ["ssd", "ssdproxy"]).each do |role|
+          (Otis::ServiceRole::USER_ROLES - ["ssd", "ssdproxy"]).each do |role|
             expect(build(factory, hathitrust_authorizer_name: nil, role: role).valid?).to be false
             expect(build(factory, hathitrust_authorizer_name: "qwerty", role: role).valid?).to be true
           end

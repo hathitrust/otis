@@ -198,18 +198,11 @@ class HTUserPresenter < ApplicationPresenter
   end
 
   def edit_role(form:)
-    form.select(:role, role_options)
+    form.select(:role, Otis::ServiceRole::ROLE_OPTIONS)
   end
 
   def expire_type_options
     @expiretype_options ||= ExpirationDate::EXPIRES_TYPE.keys.sort.map { |type| [I18n.t("ht_user.values.expire_type.#{type}"), type] }
-  end
-
-  def role_options
-    @role_options ||= Otis::ServiceRole.keys.map do |role_key|
-      service_role = Otis::ServiceRole.new(role_key)
-      [service_role.full_name, service_role.role]
-    end.sort_by { |option| option[0] }
   end
 
   def expiration_badge
