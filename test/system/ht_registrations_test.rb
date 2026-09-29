@@ -19,7 +19,7 @@ class HTRegistrationsTest < ApplicationSystemTestCase
     first(".selection").click
     first(".select-institution option").click
     fill_in "Ticket", with: "GS-001"
-    select "Staff Developer", from: "Role"
+    select "HathiTrust Staff", from: "Role"
     select "1 year", from: "Expire Type"
     fill_in "Approver Name", with: "Test Registration Approver"
     fill_in "Approver E-mail", with: "test_reg_approver@default.invalid"

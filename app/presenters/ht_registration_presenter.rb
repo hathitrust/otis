@@ -182,6 +182,10 @@ class HTRegistrationPresenter < ApplicationPresenter
     HTML
   end
 
+  def show_role
+    service_role.present? ? service_role.full_name : "Legacy role <code>#{role}</code>".html_safe
+  end
+
   def show_sent
     return "" unless sent.present?
 
@@ -223,14 +227,10 @@ class HTRegistrationPresenter < ApplicationPresenter
   end
 
   def edit_role(form:)
-    form.select(:role, role_options)
+    form.select(:role, Otis::ServiceRole::ROLE_OPTIONS)
   end
 
   def expire_type_options
     @expiretype_options ||= ExpirationDate::EXPIRES_TYPE.keys.sort.map { |type| [I18n.t("ht_user.values.expire_type.#{type}"), type] }
-  end
-
-  def role_options
-    @role_options ||= HTRegistration::ROLES.sort.map { |role| [I18n.t("ht_registration.values.role.#{role}"), role] }
   end
 end

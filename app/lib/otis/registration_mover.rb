@@ -12,7 +12,6 @@ module Otis
       institution = HTInstitution.find(@registration.inst_id)
       @ht_user = @registration.existing_user || HTUser.new(email: @registration.applicant_email)
       @ht_user.update(
-        access: access,
         activitycontact: @registration.contact_info,
         approver: @registration.auth_rep_email,
         authorizer: authorizer,
@@ -22,8 +21,7 @@ module Otis
         identity_provider: institution.entityID,
         inst_id: @registration.inst_id,
         role: @registration.role,
-        userid: userid,
-        usertype: :external
+        userid: userid
       )
       if institution.mfa?
         @ht_user.mfa = true
@@ -37,22 +35,14 @@ module Otis
 
     private
 
-    # ssdproxy role grants normal access, all other roles grant total access
-    def access
-      case @registration.role
-      when "resource_sharing", "ssdproxy"
-        "normal"
-      else
-        "total"
-      end
-    end
-
     def iprestrict
       @registration.mfa_addendum.present? ? "any" : @registration.ip_address
     end
 
-    # For CAA and RS users, hathitrust_authorizer should be present and we should use that.
-    # auth_rep_email is the fallback.
+    # For CAA/RS/CRMS/HT users, hathitrust_authorizer should be present and we should use that.
+    # Note July 2026: there are no registrations without `hathitrust_authorizer` and the model
+    # validator requires it for these roles. (The `present?` check may be unnecessary.)
+    # `auth_rep_email` is the fallback.
     def authorizer
       if !["ssd", "ssdproxy"].include?(@registration.role) && @registration.hathitrust_authorizer.present?
         @registration.hathitrust_authorizer

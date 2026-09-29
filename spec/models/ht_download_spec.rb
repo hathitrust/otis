@@ -5,9 +5,7 @@ RSpec.describe HTDownload do
 
   around(:each) do |example|
     described_class.delete_all
-    ClimateControl.modify(TEST_TMP: "") do
-      example.run
-    end
+    example.run
   end
 
   describe ".new" do
