@@ -111,6 +111,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    cgi (0.5.2)
     checkpoint (1.2.0)
       ettin (~> 1.1)
       sequel (~> 5.100)
@@ -443,6 +444,7 @@ DEPENDENCIES
   accept_language
   canister
   capybara (>= 2.15, < 4.0)
+  cgi
   checkpoint
   climate_control
   csv
