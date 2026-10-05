@@ -28,6 +28,7 @@ end
 ##############################################################################
 gem "accept_language"
 gem "canister"
+gem "cgi"
 gem "checkpoint"
 gem "csv"
 gem "dotenv-rails"
