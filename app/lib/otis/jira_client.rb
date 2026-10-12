@@ -10,26 +10,6 @@ module Otis
     ].freeze
     JIRA_BASE_URL = URI.join(Otis.config.jira.site, "/browse/").to_s.freeze
 
-    # Note, Jira config is split between credentials (`JiraClient.credentials`)
-    # and the non-sensitive stuff in config/settings.yml exposed via `Otis.config.jira....`
-    def self.create_client
-      client = JIRA::Client.new({
-        username: credentials[:username],
-        password: credentials[:password],
-        site: Otis.config.jira.site,
-        context_path: Otis.config.jira.context_path,
-        auth_type: :basic,
-        http_debug: true
-      })
-      # In future we will use webmock (see ETT-533) and remove NullClient entirely.
-      # For now, creating the unused `JIRA::Client` exercises this part of the code
-      # even if the client is quietly discarded before use.
-      if Rails.env.production?
-        return client
-      end
-      NullClient.new
-    end
-
     # Read YML file at OTIS_JIRA_CONFIG or config/jira.yml
     # and return a hash with :username and :password
     def self.credentials
@@ -46,7 +26,16 @@ module Otis
     end
 
     def initialize
-      @client = self.class.create_client
+      credentials = self.class.credentials
+      @client = JIRA::Client.new({
+        username: credentials[:username],
+        password: credentials[:password],
+        site: Otis.config.jira.site,
+        context_path: Otis.config.jira.context_path,
+        auth_type: :basic,
+        # `http_debug` can be useful to have in production, annoying noise in development/test.
+        http_debug: Rails.env.production?
+      })
     end
 
     # Returns JIRA::Resource::Issue if it exists, otherwise raises `JIRA::HTTPError`.
@@ -56,36 +45,9 @@ module Otis
 
     # Example:
     #   internal_comment! issue: find("EA-33"), comment: "This is a comment"
+    # Returns true of false on success or failure
     def internal_comment!(issue:, comment:)
       issue.comments.build.save! body: comment, properties: INTERNAL_COMMENT_PROPERTIES
-    end
-
-    # Fake JIRA::Client used outside production. Responds to most methods by returning self,
-    # which means NullClient.Issue => NullClient
-    class NullClient
-      DEFAULT_TICKET = "EA-1"
-      BOGUS_TICKET = "EA-000"
-      def method_missing(method_name, *arguments, &block)
-        self
-      end
-
-      def respond_to_missing?(method_name, include_private = false)
-        true
-      end
-
-      def key
-        DEFAULT_TICKET
-      end
-
-      def find(ticket)
-        # This can be used when testing error handling under Docker
-        if ticket == BOGUS_TICKET
-          # JIRA::HTTPError takes an HTTP response, so do not depend on the contents
-          # of the "Does not exist" message.
-          raise JIRA::HTTPError, "Does not exist"
-        end
-        self
-      end
     end
   end
 end

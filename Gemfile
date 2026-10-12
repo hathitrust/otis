@@ -62,6 +62,7 @@ group :development, :test do
   gem "standard"
   # Flux capacitor goodies for testing code that uses `Time.now`
   gem "timecop"
+  gem "webmock"
 end
 
 group :test do

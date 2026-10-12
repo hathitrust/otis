@@ -90,15 +90,18 @@ module Otis
       end
     end
 
+    # TODO: this method, and the summary/labels/type methods below it, should probably be private.
+    # Set to public for the time being so the specs can make sure we are passing the right kinds
+    # of values derived from `ServiceRole` -- our automations depend on these being predictable values.
     def ea_fields
       {
         fields: {
           :summary => ea_field_summary,
           :project => {key: Otis.config.jira.elevated_access_project},
-          :labels => ea_labels,
+          :labels => ea_field_labels,
           :issuetype => {id: EA_REGISTRATION_ISSUETYPE_ID},
           EA_REGISTRATION_LINK_FIELD => submit_url,
-          EA_REGISTRATION_EA_TYPE_FIELD => ea_type,
+          EA_REGISTRATION_EA_TYPE_FIELD => ea_field_type,
           # MS will use this to kick off the email, don't set it here unless we want to send the email automatically
           # EA_REGISTRATION_EA_WORKFLOW_FIELD => {value: "Registration email pending"},
           EA_REGISTRATION_EMAIL_FIELD => registration.applicant_email,
@@ -115,11 +118,11 @@ module Otis
       "#{registration.service_role.full_name} Registration for #{registration.applicant_name} <#{registration.applicant_email}>"
     end
 
-    def ea_labels
+    def ea_field_labels
       [registration.service_role.name]
     end
 
-    def ea_type
+    def ea_field_type
       {value: registration.service_role.name}
     end
 
@@ -150,15 +153,11 @@ module Otis
     # Search for the issue's available transitions to find a destination status
     # case-insensitively matching the provided name, and transition to it.
     def transition_to!(name)
-      # There's just so much we can do with NullClient
-      return unless Rails.env.production?
-
-      all_transitions = issue.transitions.all
-      transition = all_transitions.find do |trans|
+      transition = issue.transitions.all.find do |trans|
         trans.to.name.downcase == name.downcase
       end
       if transition.nil?
-        raise "could not find #{name} in #{all_transitions.collect { |trans| trans.to.name }}"
+        raise "could not find transition '#{name}' in #{issue.transitions.all.collect { |trans| trans.to.name }}"
       end
       issue.transitions.build.save!(transition: {id: transition.id})
     end

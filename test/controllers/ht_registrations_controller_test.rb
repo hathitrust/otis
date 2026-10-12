@@ -226,7 +226,7 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     params = attributes_for(:ht_registration, applicant_email: user.email, inst_id: user.inst_id, jira_ticket: "GS-123")
     HTRegistration.delete_all
     post ht_registrations_url, params: {ht_registration: params}
-    assert_equal Otis::JiraClient::NullClient::DEFAULT_TICKET, HTRegistration.first.jira_ticket
+    assert_equal EXISTING_TICKET, HTRegistration.first.jira_ticket
   end
 
   test "creates registration with new EA ticket if no ticket is submitted" do
@@ -234,13 +234,12 @@ class HTRegistrationsControllerCreateTest < ActionDispatch::IntegrationTest
     params = attributes_for(:ht_registration, applicant_email: user.email, inst_id: user.inst_id, jira_ticket: "")
     HTRegistration.delete_all
     post ht_registrations_url, params: {ht_registration: params}
-    assert_equal Otis::JiraClient::NullClient::DEFAULT_TICKET, HTRegistration.first.jira_ticket
+    assert_equal EXISTING_TICKET, HTRegistration.first.jira_ticket
   end
 
   test "creates registration with warning due to simulated Jira error" do
-    bogus_ticket = Otis::JiraClient::NullClient::BOGUS_TICKET
     user = create(:ht_user)
-    params = attributes_for(:ht_registration, applicant_email: user.email, inst_id: user.inst_id, jira_ticket: bogus_ticket)
+    params = attributes_for(:ht_registration, applicant_email: user.email, inst_id: user.inst_id, jira_ticket: NONEXISTENT_TICKET)
     HTRegistration.delete_all
     post ht_registrations_url, params: {ht_registration: params}
     assert_equal 1, HTRegistration.count
@@ -312,18 +311,17 @@ class HTRegistrationsControllerEditTest < ActionDispatch::IntegrationTest
   test "updates with new EA ticket if GS ticket is submitted" do
     patch ht_registration_url @registration, params: {ht_registration: {"jira_ticket" => "GS-123"}}
     relookup = HTRegistration.find(@registration.id)
-    assert_equal Otis::JiraClient::NullClient::DEFAULT_TICKET, relookup.jira_ticket
+    assert_equal EXISTING_TICKET, relookup.jira_ticket
   end
 
   test "updates with new EA ticket if no ticket is submitted" do
     patch ht_registration_url @registration, params: {ht_registration: {"jira_ticket" => ""}}
     relookup = HTRegistration.find(@registration.id)
-    assert_equal Otis::JiraClient::NullClient::DEFAULT_TICKET, relookup.jira_ticket
+    assert_equal EXISTING_TICKET, relookup.jira_ticket
   end
 
   test "updates with warning due to simulated Jira error" do
-    bogus_ticket = Otis::JiraClient::NullClient::BOGUS_TICKET
-    patch ht_registration_url @registration, params: {ht_registration: {"jira_ticket" => bogus_ticket}}
+    patch ht_registration_url @registration, params: {ht_registration: {"jira_ticket" => NONEXISTENT_TICKET}}
     assert_response :redirect
     assert_match "Jira", flash[:alert]
   end
@@ -378,7 +376,7 @@ class ApproveHTRegistrationTest < ActionDispatch::IntegrationTest
     registration = create(:ht_registration, received: Time.now,
       ip_address: Faker::Internet.public_ip_v4_address,
       env: {"HTTP_X_REMOTE_USER" => fake_shib_id}.to_json,
-      jira_ticket: Otis::JiraClient::NullClient::BOGUS_TICKET)
+      jira_ticket: NONEXISTENT_TICKET)
     sign_in! username: ADMIN_USER
     post(approve_ht_registration_path(registration))
     follow_redirect!
