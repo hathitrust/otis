@@ -61,7 +61,10 @@ RSpec.describe Otis::JiraClient do
   end
 
   describe "#internal_comment!" do
-    it "does something" do
+    # This is a rather unsatisfying test. We're more interested in not encountering
+    # an exception in the underlying Jira client. Otis ignores the return value
+    # because it is not clear what to do with it.
+    it "returns `true`" do
       expect(
         client.internal_comment!(
           issue: client.find(EXISTING_TICKET),
