@@ -45,7 +45,7 @@ module Otis
 
     # Example:
     #   internal_comment! issue: find("EA-33"), comment: "This is a comment"
-    # Returns true of false on success or failure
+    # Returns true or false on success or failure
     def internal_comment!(issue:, comment:)
       issue.comments.build.save! body: comment, properties: INTERNAL_COMMENT_PROPERTIES
     end
