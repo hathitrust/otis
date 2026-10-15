@@ -33,7 +33,7 @@ gem "checkpoint"
 gem "csv"
 gem "dotenv-rails"
 gem "ettin"
-gem "jira-ruby", "~> 2.3"
+gem "jira-ruby"
 gem "kaminari"
 gem "keycard", github: "mlibrary/keycard"
 gem "maxmind-geoip2"
@@ -62,6 +62,7 @@ group :development, :test do
   gem "standard"
   # Flux capacitor goodies for testing code that uses `Time.now`
   gem "timecop"
+  gem "webmock"
 end
 
 group :test do

@@ -28,6 +28,7 @@ Selenium::WebDriver.logger.ignore(:browser_options)
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require_relative "fake_form"
+require_relative "../spec/webmock_jira"
 require "rails/test_help"
 
 Services.register(:whois) do

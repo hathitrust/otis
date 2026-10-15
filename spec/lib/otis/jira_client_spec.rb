@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Otis::JiraClient do
+  let(:client) { described_class.new }
+
   describe ".credentials" do
     it "provides a username and password" do
       expect(described_class.credentials[:username]).to be_a(String)
@@ -31,6 +33,44 @@ RSpec.describe Otis::JiraClient do
     it "returns a URL with the provided ticket" do
       expect(described_class.jira_url("TEST_TICKET")).to start_with("https")
         .and match("TEST_TICKET")
+    end
+  end
+
+  describe ".new" do
+    it "creates #{described_class}" do
+      expect(described_class.new).to be_a(described_class)
+    end
+  end
+
+  describe "#find" do
+    context "with a real ticket" do
+      it "returns JIRA::Resource::Issue" do
+        expect(
+          client.find(EXISTING_TICKET)
+        ).to be_a(JIRA::Resource::Issue)
+      end
+    end
+
+    context "with a nonexistent ticket" do
+      it "raises" do
+        expect {
+          client.find(NONEXISTENT_TICKET)
+        }.to raise_error(JIRA::HTTPError)
+      end
+    end
+  end
+
+  describe "#internal_comment!" do
+    # This is a rather unsatisfying test. We're more interested in not encountering
+    # an exception in the underlying Jira client. Otis ignores the return value
+    # because it is not clear what to do with it.
+    it "returns `true`" do
+      expect(
+        client.internal_comment!(
+          issue: client.find(EXISTING_TICKET),
+          comment: "this is a comment"
+        )
+      ).to eq(true)
     end
   end
 end
